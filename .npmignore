@@ -1,0 +1,10 @@
+.idea
+coverage
+doc
+node_modules
+test
+.gitignore
+.npmignore
+.eslintrc.yml
+.jsdoc2md.json
+.travis.yml

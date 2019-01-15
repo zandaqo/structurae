@@ -1,0 +1,51 @@
+{
+  "name": "structurae",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint ./lib/*.js ./test/*.js",
+    "coverage:report": "cat ./coverage/lcov.info | codecov",
+    "doc:api": "jsdoc2md > doc/API.md"
+  },
+  "directories": {
+    "lib": "lib",
+    "doc": "doc",
+    "test": "test"
+  },
+  "author": "Maga D. Zandaqo <denelxan@gmail.com> (http://maga.name)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zandaqo/structurae.git"
+  },
+  "homepage": "https://github.com/zandaqo/structurae#readme",
+  "bugs": {
+    "url": "https://github.com/zandaqo/structurae/issues"
+  },
+  "devDependencies": {
+    "@types/jest": "^23.3.12",
+    "codecov": "^3.1.0",
+    "eslint": "^5.11.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "jest": "^23.6.0",
+    "jsdoc-to-markdown": "^4.0.1"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "**/lib/**",
+      "!**/node_modules/**",
+      "!**/test/**"
+    ],
+    "coverageDirectory": "<rootDir>/coverage",
+    "coverageReporters": [
+      "lcov"
+    ]
+  },
+  "engines": {
+    "node": ">=10.4.0"
+  }
+}

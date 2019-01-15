@@ -1,0 +1,19 @@
+extends: airbnb-base
+env:
+  node: true
+  jest: true
+globals:
+  BigInt: false
+rules:
+  no-bitwise: 0
+  no-plusplus: 0
+  valid-typeof: 1
+  no-param-reassign:
+  - 2
+  - props: false
+  valid-jsdoc:
+  - 2
+  - prefer:
+      return: returns
+    requireReturnDescription: false
+    requireParamDescription: false
