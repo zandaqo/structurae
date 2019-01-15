@@ -1,7 +1,7 @@
 ## Classes
 
 <dl>
-<dt><a href="#Grid">Grid</a></dt>
+<dt><a href="#Grid">Grid</a> ⇐ <code><a href="#IndexedCollection">IndexedCollection</a></code></dt>
 <dd></dd>
 <dt><a href="#PackedInt">PackedInt</a></dt>
 <dd></dd>
@@ -25,7 +25,7 @@
 <dd></dd>
 <dt><a href="#IndexedCollection">IndexedCollection</a> : <code>ArrayConstructor</code> | <code>Int8ArrayConstructor</code> | <code>Int8ArrayConstructor</code> | <code>Uint8ArrayConstructor</code> | <code>Uint8ClampedArrayConstructor</code> | <code>Int16ArrayConstructor</code> | <code>Uint16ArrayConstructor</code> | <code>Int32ArrayConstructor</code> | <code>Uint32ArrayConstructor</code> | <code>Float32ArrayConstructor</code> | <code>Float64ArrayConstructor</code></dt>
 <dd></dd>
-<dt><a href="#Matcher">Matcher</a> : <code>Array.&lt;number, number&gt;</code> | <code>Array.&lt;BigInt, BigInt&gt;</code></dt>
+<dt><a href="#Matcher">Matcher</a> : <code>Array</code></dt>
 <dd></dd>
 <dt><a href="#FieldDescription">FieldDescription</a> : <code>Object</code></dt>
 <dd></dd>
@@ -33,10 +33,11 @@
 
 <a name="Grid"></a>
 
-## Grid
+## Grid ⇐ [<code>IndexedCollection</code>](#IndexedCollection)
 **Kind**: global class  
+**Extends**: [<code>IndexedCollection</code>](#IndexedCollection)  
 
-* [Grid](#Grid)
+* [Grid](#Grid) ⇐ [<code>IndexedCollection</code>](#IndexedCollection)
     * [new Grid(...args)](#new_Grid_new)
     * _instance_
         * [.setColumns(columns)](#Grid+setColumns) ⇒ <code>void</code>
@@ -58,20 +59,6 @@ in that case creates and empty grid of specified parameter.
 | --- | --- |
 | ...args | <code>\*</code> \| [<code>GridOptions</code>](#GridOptions) | 
 
-**Example**  
-```js
-new ArrayGrid('a')
-//=> ArrayGrid ['a']
-
-new ArrayGrid(2)
-//=> ArrayGrid [undefined, undefined]
-
-new ArrayGrid({ rows: 3, columns: 2 })
-//=> ArrayGrid [0, 0, 0, 0, 0, 0]
-
-new ArrayGrid({ rows: 3, columns: 2, pad: 1 })
-//=> ArrayGrid [1, 1, 1, 1, 1, 1]
-```
 <a name="Grid+setColumns"></a>
 
 ### grid.setColumns(columns) ⇒ <code>void</code>
@@ -969,8 +956,15 @@ const ArrayGrid = Grid(Array);
 **Kind**: global typedef  
 <a name="Matcher"></a>
 
-## Matcher : <code>Array.&lt;number, number&gt;</code> \| <code>Array.&lt;BigInt, BigInt&gt;</code>
+## Matcher : <code>Array</code>
 **Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| 0 | <code>number</code> | value |
+| 1 | <code>number</code> | mask |
+
 <a name="FieldDescription"></a>
 
 ## FieldDescription : <code>Object</code>

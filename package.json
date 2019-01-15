@@ -1,8 +1,17 @@
 {
   "name": "structurae",
-  "version": "0.0.1",
-  "description": "",
+  "version": "0.0.2",
+  "description": "Data structures for performance-sensitive modern JavaScript applications.",
   "main": "index.js",
+  "keywords": [
+    "optimization",
+    "binary",
+    "data structures",
+    "sorted",
+    "array",
+    "bitfield",
+    "bigint"
+  ],
   "scripts": {
     "test": "jest",
     "lint": "eslint ./lib/*.js ./test/*.js",
