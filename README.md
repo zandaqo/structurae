@@ -6,9 +6,9 @@
 
 A collection of data structures for performance-sensitive modern JavaScript applications that includes:
 
-- Grid - extends built-in indexed collections to handle 2 dimensional data (e.g. nested arrays).
-- PackedInt - stores and operates on data in Numbers and BigInts treating them as bitfields.
-- SortedArray - extends built-in Array to efficiently handle sorted data.
+- [Grid](https://github.com/zandaqo/structurae#grid) - extends built-in indexed collections to handle 2 dimensional data (e.g. nested arrays).
+- [PackedInt](https://github.com/zandaqo/structurae#PackedInt) - stores and operates on data in Numbers and BigInts treating them as bitfields.
+- [SortedArray](https://github.com/zandaqo/structurae#SortedArray) - extends built-in Array to efficiently handle sorted data.
 
 ## Installation
 ```
@@ -39,15 +39,15 @@ grid.length
 grid[0]
 //=> 0
 
-// only invoking the constructor with the options object will result in special behavior
-// otherwise all parameters are passed to the base class as they are:
-const arrayGrid = new ArrayGrid(1,2,3);
-arrayGrid.length
-//=> 3
+// send data as the second parameter to instantiate a grid with data:
+const  dataGrid = new ArrayGrid([{rows: 5, columns: 4 }, 1, 2, 3, 4, 5, 6, 7, 8]);
+grid.length
+//=> 20
+grid[0]
+//=> 0
 
-// to instantiate a grid with data simply invoke constructor with the data and set its columns size later:
-const  dataGrid = new ArrayGrid(1, 2, 3, 4, 5, 6, 7, 8);
-dataGrid.setColumns(4);
+// you can change dimensions of the grid by setting columns number at any time:
+dataGrid.columns = 2;
 ```
 
 You can get and set elements using their row and column indexes:
@@ -67,7 +67,7 @@ grid.getCoordinates(1);
 //=> [0, 1]
 ```
 
-A grid be turned to and from an array of nested arrays using respectively `Grid#fromArrays` and `Grid#toArrays` methods:
+A grid can be turned to and from an array of nested arrays using respectively `Grid#fromArrays` and `Grid#toArrays` methods:
 ```javascript
 const grid = ArrayGrid.fromArrays([[1,2], [3, 4]]);
 //=> ArrayGrid [ 1, 2, 3, 4 ]

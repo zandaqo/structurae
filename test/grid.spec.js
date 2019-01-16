@@ -13,6 +13,13 @@ describe('Grid', () => {
 
 
   describe('constructor', () => {
+    it('creates an instance of grid with default dimensions if no options or data are provided', () => {
+      const grid = new Int8Grid();
+      expect(grid.offset).toBe(1);
+      expect(grid.length).toBe(2);
+      expect(grid[0]).toBe(0);
+    });
+
     it('creates an instance of grid with dimensions if dimentions are provided', () => {
       const grid = new Int8Grid({ rows: 2, columns: 10 });
       expect(grid.offset).toBe(4);
@@ -26,31 +33,26 @@ describe('Grid', () => {
       expect(grid[0]).toBe(-1);
     });
 
-    it('creates an instance of grid without dimensions', () => {
-      const emptyGrid = new Int8Grid();
-      expect(emptyGrid.offset).toBe(0);
-      expect(emptyGrid.length).toBe(0);
-      const gridFromData = new Int8Grid([1, 2, 4, 6]);
-      expect(gridFromData.offset).toBe(0);
+    it('creates an instance of grid with data', () => {
+      const gridFromData = new Int8Grid({ rows: 2, columns: 2 }, [1, 2, 3, 4]);
+      expect(gridFromData.offset).toBe(1);
       expect(gridFromData.length).toBe(4);
-      const gridFromLength = new Int8Grid(10);
-      expect(gridFromLength.offset).toBe(0);
-      expect(gridFromLength.length).toBe(10);
+      expect(gridFromData[0]).toBe(1);
     });
   });
 
-  describe('setColumns', () => {
+  describe('set columns', () => {
     it('sets dimensions to existing grid', () => {
-      const grid = new Uint32Grid(10);
-      grid.setColumns(5);
+      const grid = new Uint32Grid();
+      grid.columns = 5;
       expect(grid.offset).toBe(3);
     });
   });
 
   describe('get', () => {
     it('returns an item at given coordinates', () => {
-      const grid = new Uint32Grid([1, 2, 3, 4, 5, 6, 7, 8]);
-      grid.setColumns(4);
+      const grid = new Uint32Grid({}, [1, 2, 3, 4, 5, 6, 7, 8]);
+      grid.columns = 4;
       expect(grid.get(0, 0)).toBe(1);
       expect(grid.get(0, 3)).toBe(4);
       expect(grid.get(1, 2)).toBe(7);
@@ -84,6 +86,15 @@ describe('Grid', () => {
     });
   });
 
+  describe('species', () => {
+    it('returns instance of the base class when sliced', () => {
+      const grid = new Uint32Grid({ rows: 10, columns: 10 });
+      const slice = grid.slice(0, 10);
+      expect(slice instanceof Uint32Grid).toBe(false);
+      expect(slice instanceof Uint32Array).toBe(true);
+    });
+  });
+
   describe('toArrays', () => {
     it('returns the grid as an array of arrays where each array correspond to a row in the grid', () => {
       const grid = new Uint32Grid({ rows: 4, columns: 4 });
@@ -94,7 +105,7 @@ describe('Grid', () => {
       expect(emptyArrays[0].length).toBe(4);
     });
 
-    it('', () => {
+    it('removes padding from each row if `withPadding` option is falsy', () => {
       const arrays = [[1, 2, 3], [4, 5], [6, 7, 8, 9]];
       const grid = Uint32Grid.fromArrays(arrays);
       const arraysFromGrid = grid.toArrays();
@@ -104,7 +115,6 @@ describe('Grid', () => {
       expect(arraysFromGrid[2].length).toBe(4);
     });
   });
-
 
   describe('fromArrays', () => {
     const arrays = [[1, 2, 3], [4, 5], [6, 7, 8, 9]];
