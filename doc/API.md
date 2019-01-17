@@ -1,7 +1,7 @@
 ## Classes
 
 <dl>
-<dt><a href="#Grid">Grid</a> ⇐ <code><a href="#IndexedCollection">IndexedCollection</a></code></dt>
+<dt><a href="#Grid">Grid</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
 <dd></dd>
 <dt><a href="#PackedInt">PackedInt</a></dt>
 <dd></dd>
@@ -13,63 +13,93 @@
 ## Functions
 
 <dl>
-<dt><a href="#GridFactory">GridFactory(Base)</a> ⇒ <code><a href="#Grid">Grid</a></code></dt>
+<dt><a href="#GridMixin">GridMixin(Base)</a> ⇒ <code><a href="#Grid">Grid</a></code></dt>
 <dd><p>Creates a Grid class extending a given Array-like class.</p>
 </dd>
+<dt><a href="#Comparator">Comparator(a, b)</a> ⇒ <code>number</code></dt>
+<dd></dd>
 </dl>
 
 ## Typedefs
 
 <dl>
-<dt><a href="#GridOptions">GridOptions</a> : <code>Object</code></dt>
+<dt><a href="#CollectionConstructor">CollectionConstructor</a> : <code>ArrayConstructor</code> | <code>Int8ArrayConstructor</code> | <code>Int8ArrayConstructor</code> | <code>Uint8ArrayConstructor</code> | <code>Uint8ClampedArrayConstructor</code> | <code>Int16ArrayConstructor</code> | <code>Uint16ArrayConstructor</code> | <code>Int32ArrayConstructor</code> | <code>Uint32ArrayConstructor</code> | <code>Float32ArrayConstructor</code> | <code>Float64ArrayConstructor</code></dt>
 <dd></dd>
-<dt><a href="#IndexedCollection">IndexedCollection</a> : <code>ArrayConstructor</code> | <code>Int8ArrayConstructor</code> | <code>Int8ArrayConstructor</code> | <code>Uint8ArrayConstructor</code> | <code>Uint8ClampedArrayConstructor</code> | <code>Int16ArrayConstructor</code> | <code>Uint16ArrayConstructor</code> | <code>Int32ArrayConstructor</code> | <code>Uint32ArrayConstructor</code> | <code>Float32ArrayConstructor</code> | <code>Float64ArrayConstructor</code></dt>
+<dt><a href="#Collection">Collection</a> : <code>Array</code> | <code>Int8Array</code> | <code>Int8Array</code> | <code>Uint8Array</code> | <code>Uint8ClampedArray</code> | <code>Int16Array</code> | <code>Uint16Array</code> | <code>Int32Array</code> | <code>Uint32Array</code> | <code>Float32Array</code> | <code>Float64Array</code></dt>
+<dd></dd>
+<dt><a href="#Coordinates">Coordinates</a> : <code>Array</code></dt>
+<dd></dd>
+<dt><a href="#AnyNumber">AnyNumber</a> : <code>number</code> | <code>BigInt</code></dt>
+<dd></dd>
+<dt><a href="#FieldName">FieldName</a> : <code>number</code> | <code>string</code></dt>
+<dd></dd>
+<dt><a href="#UnpackedInt">UnpackedInt</a> : <code>Object.&lt;string, number&gt;</code></dt>
+<dd></dd>
+<dt><a href="#Field">Field</a> : <code>Object</code></dt>
 <dd></dd>
 <dt><a href="#Matcher">Matcher</a> : <code>Array</code></dt>
 <dd></dd>
-<dt><a href="#FieldDescription">FieldDescription</a> : <code>Object</code></dt>
+<dt><a href="#Masks">Masks</a> : <code>Object.&lt;string, AnyNumber&gt;</code></dt>
 <dd></dd>
 </dl>
 
 <a name="Grid"></a>
 
-## Grid ⇐ [<code>IndexedCollection</code>](#IndexedCollection)
+## Grid ⇐ [<code>CollectionConstructor</code>](#CollectionConstructor)
 **Kind**: global class  
-**Extends**: [<code>IndexedCollection</code>](#IndexedCollection)  
+**Extends**: [<code>CollectionConstructor</code>](#CollectionConstructor)  
 
-* [Grid](#Grid) ⇐ [<code>IndexedCollection</code>](#IndexedCollection)
-    * [new Grid(...args)](#new_Grid_new)
+* [Grid](#Grid) ⇐ [<code>CollectionConstructor</code>](#CollectionConstructor)
+    * [new Grid([options], [data])](#new_Grid_new)
     * _instance_
-        * [.setColumns(columns)](#Grid+setColumns) ⇒ <code>void</code>
+        * [.columns](#Grid+columns) ⇒ <code>void</code>
+        * [.columns](#Grid+columns) : <code>number</code>
+        * [.rows](#Grid+rows) : <code>number</code>
         * [.get(row, column)](#Grid+get) ⇒ <code>\*</code>
         * [.set(row, column, value)](#Grid+set) ⇒ <code>\*</code>
-        * [.getCoordinates(index)](#Grid+getCoordinates) ⇒ <code>Array.&lt;number&gt;</code>
+        * [.getCoordinates(index)](#Grid+getCoordinates) ⇒ [<code>Coordinates</code>](#Coordinates)
         * [.toArrays([withPadding])](#Grid+toArrays) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
     * _static_
         * [.fromArrays(arrays, [pad])](#Grid.fromArrays) ⇒ [<code>Grid</code>](#Grid)
 
 <a name="new_Grid_new"></a>
 
-### new Grid(...args)
+### new Grid([options], [data])
 Passes all arguments to the Base class except if called with a special set of grid options,
 in that case creates and empty grid of specified parameter.
 
 
-| Param | Type |
-| --- | --- |
-| ...args | <code>\*</code> \| [<code>GridOptions</code>](#GridOptions) | 
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [options] | <code>Object</code> |  |  |
+| [options.rows] | <code>number</code> | <code>1</code> | the number of rows |
+| [options.columns] | <code>number</code> | <code>2</code> | the number of columns |
+| [options.pad] | <code>\*</code> | <code>0</code> | the initial value of cells |
+| [data] | [<code>Collection</code>](#Collection) |  |  |
 
-<a name="Grid+setColumns"></a>
+<a name="Grid+columns"></a>
 
-### grid.setColumns(columns) ⇒ <code>void</code>
+### grid.columns ⇒ <code>void</code>
 Specifies the number of columns of the grid.
 
-**Kind**: instance method of [<code>Grid</code>](#Grid)  
+**Kind**: instance property of [<code>Grid</code>](#Grid)  
 
 | Param | Type |
 | --- | --- |
 | columns | <code>number</code> | 
 
+<a name="Grid+columns"></a>
+
+### grid.columns : <code>number</code>
+Number of columns in the grid.
+
+**Kind**: instance property of [<code>Grid</code>](#Grid)  
+<a name="Grid+rows"></a>
+
+### grid.rows : <code>number</code>
+Number of rows in the grid.
+
+**Kind**: instance property of [<code>Grid</code>](#Grid)  
 <a name="Grid+get"></a>
 
 ### grid.get(row, column) ⇒ <code>\*</code>
@@ -110,11 +140,11 @@ a.get(0, 1);
 ```
 <a name="Grid+getCoordinates"></a>
 
-### grid.getCoordinates(index) ⇒ <code>Array.&lt;number&gt;</code>
+### grid.getCoordinates(index) ⇒ [<code>Coordinates</code>](#Coordinates)
 Gets coordinates of an element at specified index.
 
 **Kind**: instance method of [<code>Grid</code>](#Grid)  
-**Returns**: <code>Array.&lt;number&gt;</code> - coordinates  
+**Returns**: [<code>Coordinates</code>](#Coordinates) - coordinates  
 
 | Param | Type |
 | --- | --- |
@@ -169,28 +199,28 @@ a.get(2, 1);
 **Kind**: global class  
 
 * [PackedInt](#PackedInt)
-    * [new PackedInt(data)](#new_PackedInt_new)
+    * [new PackedInt([data])](#new_PackedInt_new)
     * _instance_
         * [.value](#PackedInt+value) : <code>number</code> \| <code>BigInt</code>
         * [.get(field)](#PackedInt+get) ⇒ <code>number</code>
         * [.set(field, value)](#PackedInt+set) ⇒ [<code>PackedInt</code>](#PackedInt)
         * [.has(...fields)](#PackedInt+has) ⇒ <code>boolean</code>
         * [.match(matcher)](#PackedInt+match) ⇒ <code>boolean</code>
-        * [.toObject()](#PackedInt+toObject) ⇒ <code>Object.&lt;string, number&gt;</code>
+        * [.toObject()](#PackedInt+toObject) ⇒ [<code>UnpackedInt</code>](#UnpackedInt)
     * _static_
-        * [.fields](#PackedInt.fields) : <code>Array.&lt;number&gt;</code> \| [<code>Array.&lt;FieldDescription&gt;</code>](#FieldDescription)
+        * [.fields](#PackedInt.fields) : [<code>Array.&lt;FieldName&gt;</code>](#FieldName) \| [<code>Array.&lt;Field&gt;</code>](#Field)
         * [.size](#PackedInt.size) : <code>number</code>
-        * [.zero](#PackedInt.zero) : <code>number</code> \| <code>BigInt</code>
-        * [.one](#PackedInt.one) : <code>number</code> \| <code>BigInt</code>
-        * [.two](#PackedInt.two) : <code>number</code> \| <code>BigInt</code>
-        * [.masks](#PackedInt.masks) : <code>Object.&lt;string, number&gt;</code>
-        * [.mask](#PackedInt.mask) : <code>number</code> \| <code>BigInt</code>
-        * [.offsets](#PackedInt.offsets) : <code>Object.&lt;string, number&gt;</code>
+        * [.zero](#PackedInt.zero) : [<code>AnyNumber</code>](#AnyNumber)
+        * [.one](#PackedInt.one) : [<code>AnyNumber</code>](#AnyNumber)
+        * [.two](#PackedInt.two) : [<code>AnyNumber</code>](#AnyNumber)
+        * [.masks](#PackedInt.masks) : [<code>Masks</code>](#Masks)
+        * [.mask](#PackedInt.mask) : [<code>AnyNumber</code>](#AnyNumber)
+        * [.offsets](#PackedInt.offsets) : [<code>Masks</code>](#Masks)
         * [.isBigInt](#PackedInt.isBigInt) : <code>boolean</code>
         * [.isSafe](#PackedInt.isSafe) : <code>boolean</code>
         * [.isInitialized](#PackedInt.isInitialized) : <code>boolean</code>
-        * [.encode(data)](#PackedInt.encode) ⇒ <code>number</code>
-        * [.decode(data)](#PackedInt.decode) ⇒ <code>Object.&lt;string, number&gt;</code>
+        * [.encode(data)](#PackedInt.encode) ⇒ [<code>AnyNumber</code>](#AnyNumber)
+        * [.decode(data)](#PackedInt.decode) ⇒ [<code>UnpackedInt</code>](#UnpackedInt)
         * [.isValid(data)](#PackedInt.isValid) ⇒ <code>boolean</code>
         * [.getMinSize(number)](#PackedInt.getMinSize) ⇒ <code>number</code>
         * [.initialize()](#PackedInt.initialize) ⇒ <code>void</code>
@@ -199,11 +229,11 @@ a.get(2, 1);
 
 <a name="new_PackedInt_new"></a>
 
-### new PackedInt(data)
+### new PackedInt([data])
 
-| Param | Type |
-| --- | --- |
-| data | <code>number</code> \| <code>BigInt</code> \| <code>Array.&lt;number&gt;</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| [data] | [<code>AnyNumber</code>](#AnyNumber) \| <code>Array.&lt;number&gt;</code> | <code>0</code> | 
 
 **Example**  
 ```js
@@ -231,7 +261,7 @@ Returns the value of a given field.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| field | <code>string</code> \| <code>number</code> | name of the field |
+| field | [<code>Field</code>](#Field) | name of the field |
 
 **Example**  
 ```js
@@ -256,7 +286,7 @@ Stores a given value in a field.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| field | <code>string</code> | name of the field |
+| field | [<code>Field</code>](#Field) | name of the field |
 | value | <code>number</code> | value of the field |
 
 **Example**  
@@ -282,7 +312,7 @@ Checks if an instance has all the specified fields set to 1. Useful for bit flag
 
 | Param | Type | Description |
 | --- | --- | --- |
-| ...fields | <code>string</code> \| <code>number</code> | names of the fields to check |
+| ...fields | [<code>Field</code>](#Field) | names of the fields to check |
 
 **Example**  
 ```js
@@ -306,7 +336,7 @@ to the same key-value pairs as shown in the examples below.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| matcher | <code>Object.&lt;string, number&gt;</code> \| [<code>Matcher</code>](#Matcher) | an object with key-value pairs,                                                or an array of precomputed matcher values |
+| matcher | [<code>UnpackedInt</code>](#UnpackedInt) \| [<code>Matcher</code>](#Matcher) | an object with key-value pairs,                                                or an array of precomputed matcher values |
 
 **Example**  
 ```js
@@ -334,12 +364,12 @@ new Person([19, 0]).match(matcher);
 ```
 <a name="PackedInt+toObject"></a>
 
-### packedInt.toObject() ⇒ <code>Object.&lt;string, number&gt;</code>
+### packedInt.toObject() ⇒ [<code>UnpackedInt</code>](#UnpackedInt)
 Returns the object representation of the instance,
 with field names as properties with corresponding values.
 
 **Kind**: instance method of [<code>PackedInt</code>](#PackedInt)  
-**Returns**: <code>Object.&lt;string, number&gt;</code> - the object representation of the instance  
+**Returns**: [<code>UnpackedInt</code>](#UnpackedInt) - the object representation of the instance  
 **Example**  
 ```js
 class Person extends PackedInt {}
@@ -353,7 +383,7 @@ person.toObject();
 ```
 <a name="PackedInt.fields"></a>
 
-### PackedInt.fields : <code>Array.&lt;number&gt;</code> \| [<code>Array.&lt;FieldDescription&gt;</code>](#FieldDescription)
+### PackedInt.fields : [<code>Array.&lt;FieldName&gt;</code>](#FieldName) \| [<code>Array.&lt;Field&gt;</code>](#Field)
 **Kind**: static property of [<code>PackedInt</code>](#PackedInt)  
 <a name="PackedInt.size"></a>
 
@@ -361,27 +391,27 @@ person.toObject();
 **Kind**: static property of [<code>PackedInt</code>](#PackedInt)  
 <a name="PackedInt.zero"></a>
 
-### PackedInt.zero : <code>number</code> \| <code>BigInt</code>
+### PackedInt.zero : [<code>AnyNumber</code>](#AnyNumber)
 **Kind**: static property of [<code>PackedInt</code>](#PackedInt)  
 <a name="PackedInt.one"></a>
 
-### PackedInt.one : <code>number</code> \| <code>BigInt</code>
+### PackedInt.one : [<code>AnyNumber</code>](#AnyNumber)
 **Kind**: static property of [<code>PackedInt</code>](#PackedInt)  
 <a name="PackedInt.two"></a>
 
-### PackedInt.two : <code>number</code> \| <code>BigInt</code>
+### PackedInt.two : [<code>AnyNumber</code>](#AnyNumber)
 **Kind**: static property of [<code>PackedInt</code>](#PackedInt)  
 <a name="PackedInt.masks"></a>
 
-### PackedInt.masks : <code>Object.&lt;string, number&gt;</code>
+### PackedInt.masks : [<code>Masks</code>](#Masks)
 **Kind**: static property of [<code>PackedInt</code>](#PackedInt)  
 <a name="PackedInt.mask"></a>
 
-### PackedInt.mask : <code>number</code> \| <code>BigInt</code>
+### PackedInt.mask : [<code>AnyNumber</code>](#AnyNumber)
 **Kind**: static property of [<code>PackedInt</code>](#PackedInt)  
 <a name="PackedInt.offsets"></a>
 
-### PackedInt.offsets : <code>Object.&lt;string, number&gt;</code>
+### PackedInt.offsets : [<code>Masks</code>](#Masks)
 **Kind**: static property of [<code>PackedInt</code>](#PackedInt)  
 <a name="PackedInt.isBigInt"></a>
 
@@ -397,15 +427,15 @@ person.toObject();
 **Kind**: static property of [<code>PackedInt</code>](#PackedInt)  
 <a name="PackedInt.encode"></a>
 
-### PackedInt.encode(data) ⇒ <code>number</code>
+### PackedInt.encode(data) ⇒ [<code>AnyNumber</code>](#AnyNumber)
 Encodes a given list of numbers into a single number according to the schema.
 
 **Kind**: static method of [<code>PackedInt</code>](#PackedInt)  
-**Returns**: <code>number</code> - encoded number  
+**Returns**: [<code>AnyNumber</code>](#AnyNumber) - encoded number  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| data | <code>Array.&lt;number&gt;</code> | the list of numbers to encode |
+| data | [<code>Array.&lt;AnyNumber&gt;</code>](#AnyNumber) | the list of numbers to encode |
 
 **Example**  
 ```js
@@ -419,15 +449,15 @@ Person.encode([20, 1])
 ```
 <a name="PackedInt.decode"></a>
 
-### PackedInt.decode(data) ⇒ <code>Object.&lt;string, number&gt;</code>
+### PackedInt.decode(data) ⇒ [<code>UnpackedInt</code>](#UnpackedInt)
 Decodes an encoded number into it's object representation according to the schema.
 
 **Kind**: static method of [<code>PackedInt</code>](#PackedInt)  
-**Returns**: <code>Object.&lt;string, number&gt;</code> - object representation  
+**Returns**: [<code>UnpackedInt</code>](#UnpackedInt) - object representation  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| data | <code>number</code> | encoded number |
+| data | [<code>AnyNumber</code>](#AnyNumber) | encoded number |
 
 **Example**  
 ```js
@@ -450,7 +480,7 @@ are valid according to the schema.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| data | <code>Array.&lt;number&gt;</code> \| <code>Object.&lt;string, number&gt;</code> | pairs of field name and value to check |
+| data | [<code>AnyNumber</code>](#AnyNumber) \| [<code>UnpackedInt</code>](#UnpackedInt) | pairs of field name and value to check |
 
 **Example**  
 ```js
@@ -509,7 +539,7 @@ to efficiently match against multiple instances.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| matcher | <code>Object.&lt;string, number&gt;</code> | an object containing field names and their values |
+| matcher | [<code>UnpackedInt</code>](#UnpackedInt) | an object containing field names and their values |
 
 <a name="PackedInt.match"></a>
 
@@ -520,7 +550,7 @@ The static version of `PackedInt#match`, matches a given value against a precomp
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>number</code> \| <code>BigInt</code> | a value to check |
+| value | [<code>AnyNumber</code>](#AnyNumber) | a value to check |
 | matcher | [<code>Matcher</code>](#Matcher) | a precomputed set of values |
 
 <a name="SortedArray"></a>
@@ -692,7 +722,7 @@ the elements that are absent in one or another array.
 | a | <code>Array</code> |  | the first array |
 | b | <code>Array</code> |  | the second array |
 | [symmetric] | <code>boolean</code> | <code>false</code> | whether to get symmetric difference. |
-| [comparator] | <code>function</code> |  | the comparator static used to sort the arrays |
+| [comparator] | [<code>Comparator</code>](#Comparator) |  | the comparator static used to sort the arrays |
 
 **Example**  
 ```js
@@ -720,7 +750,7 @@ Returns the amount of differing elements in the first array.
 | a | <code>Array</code> |  | the first array |
 | b | <code>Array</code> |  | the second array |
 | [symmetric] | <code>boolean</code> | <code>false</code> | whether to use symmetric difference |
-| [comparator] | <code>function</code> |  | the comparator static used to sort the arrays |
+| [comparator] | [<code>Comparator</code>](#Comparator) |  | the comparator static used to sort the arrays |
 
 **Example**  
 ```js
@@ -739,7 +769,7 @@ Uses binary search to find the index of an element inside a sorted array.
 | --- | --- | --- | --- |
 | arr | <code>Array</code> |  | the array to search |
 | target | <code>\*</code> |  | the target value to search for |
-| [comparator] | <code>function</code> |  | a custom comparator |
+| [comparator] | [<code>Comparator</code>](#Comparator) |  | a custom comparator |
 | [rank] | <code>boolean</code> | <code>false</code> | whether to return the element's rank if the element isn't found |
 | [start] | <code>number</code> | <code>0</code> | the start position of the search |
 | [end] | <code>number</code> |  | the end position of the search |
@@ -761,7 +791,7 @@ Returns the intersection of two sorted arrays.
 | --- | --- | --- |
 | a | <code>Array</code> | the first array |
 | b | <code>Array</code> | the second array |
-| [comparator] | <code>function</code> | the comparator static used to sort the arrays |
+| [comparator] | [<code>Comparator</code>](#Comparator) | the comparator static used to sort the arrays |
 
 **Example**  
 ```js
@@ -785,7 +815,7 @@ Returns the amount of common elements in two sorted arrays.
 | --- | --- | --- |
 | a | <code>Array</code> | the first array |
 | b | <code>Array</code> | the second array |
-| [comparator] | <code>function</code> | the comparator static used to sort the arrays |
+| [comparator] | [<code>Comparator</code>](#Comparator) | the comparator static used to sort the arrays |
 
 **Example**  
 ```js
@@ -805,7 +835,7 @@ Returns a range of elements of a sorted array from the start through the end inc
 | arr | <code>Array</code> | the array |
 | [start] | <code>number</code> | the starting item |
 | [end] | <code>number</code> | the ending item |
-| [comparator] | <code>function</code> | a custom comparator |
+| [comparator] | [<code>Comparator</code>](#Comparator) | a custom comparator |
 
 **Example**  
 ```js
@@ -830,7 +860,7 @@ Uses binary search to find the rank of an item inside a sorted array.
 | --- | --- | --- |
 | arr | <code>Array</code> | the array to search |
 | target | <code>\*</code> | the target value to search for |
-| [comparator] | <code>function</code> | a custom comparator |
+| [comparator] | [<code>Comparator</code>](#Comparator) | a custom comparator |
 
 **Example**  
 ```js
@@ -854,7 +884,7 @@ Returns the union of two sorted arrays as a sorted array.
 | a | <code>Array</code> |  | the first array |
 | b | <code>Array</code> |  | the second array |
 | [unique] | <code>boolean</code> | <code>false</code> | whether to avoid duplicating items when merging unique arrays |
-| [comparator] | <code>function</code> |  | the comparator static used to sort the arrays |
+| [comparator] | [<code>Comparator</code>](#Comparator) |  | the comparator static used to sort the arrays |
 
 **Example**  
 ```js
@@ -880,7 +910,7 @@ Returns an array of unique elements from a sorted array.
 | Param | Type | Description |
 | --- | --- | --- |
 | arr | <code>Array</code> | the sorted array |
-| [comparator] | <code>function</code> | a custom comparator |
+| [comparator] | [<code>Comparator</code>](#Comparator) | a custom comparator |
 
 **Example**  
 ```js
@@ -898,7 +928,7 @@ Checks whether an array is sorted according to a provided comparator.
 | Param | Type | Description |
 | --- | --- | --- |
 | arr | <code>Array</code> | the array to check |
-| [comparator] | <code>function</code> | a custom comparator |
+| [comparator] | [<code>Comparator</code>](#Comparator) | a custom comparator |
 
 **Example**  
 ```js
@@ -916,44 +946,80 @@ Checks whether an array has any duplicating elements.
 | Param | Type | Description |
 | --- | --- | --- |
 | arr | <code>Array</code> | the array to check |
-| [comparator] | <code>function</code> | a custom comparator |
+| [comparator] | [<code>Comparator</code>](#Comparator) | a custom comparator |
 
 **Example**  
 ```js
 SortedArray.isUnique([1, 2, 2, 3, 4]);
 //=> false
 ```
-<a name="GridFactory"></a>
+<a name="GridMixin"></a>
 
-## GridFactory(Base) ⇒ [<code>Grid</code>](#Grid)
+## GridMixin(Base) ⇒ [<code>Grid</code>](#Grid)
 Creates a Grid class extending a given Array-like class.
 
 **Kind**: global function  
 
 | Param | Type |
 | --- | --- |
-| Base | [<code>IndexedCollection</code>](#IndexedCollection) | 
+| Base | [<code>CollectionConstructor</code>](#CollectionConstructor) | 
 
 **Example**  
 ```js
 const ArrayGrid = Grid(Array);
 ```
-<a name="GridOptions"></a>
+<a name="Comparator"></a>
 
-## GridOptions : <code>Object</code>
+## Comparator(a, b) ⇒ <code>number</code>
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| a | <code>\*</code> | 
+| b | <code>\*</code> | 
+
+<a name="CollectionConstructor"></a>
+
+## CollectionConstructor : <code>ArrayConstructor</code> \| <code>Int8ArrayConstructor</code> \| <code>Int8ArrayConstructor</code> \| <code>Uint8ArrayConstructor</code> \| <code>Uint8ClampedArrayConstructor</code> \| <code>Int16ArrayConstructor</code> \| <code>Uint16ArrayConstructor</code> \| <code>Int32ArrayConstructor</code> \| <code>Uint32ArrayConstructor</code> \| <code>Float32ArrayConstructor</code> \| <code>Float64ArrayConstructor</code>
+**Kind**: global typedef  
+<a name="Collection"></a>
+
+## Collection : <code>Array</code> \| <code>Int8Array</code> \| <code>Int8Array</code> \| <code>Uint8Array</code> \| <code>Uint8ClampedArray</code> \| <code>Int16Array</code> \| <code>Uint16Array</code> \| <code>Int32Array</code> \| <code>Uint32Array</code> \| <code>Float32Array</code> \| <code>Float64Array</code>
+**Kind**: global typedef  
+<a name="Coordinates"></a>
+
+## Coordinates : <code>Array</code>
 **Kind**: global typedef  
 **Properties**
 
 | Name | Type | Description |
 | --- | --- | --- |
-| rows | <code>number</code> | the number of rows |
-| columns | <code>number</code> | the number of columns |
-| pad | <code>\*</code> | the initial value of cells |
+| 0 | <code>number</code> | row index |
+| 1 | <code>number</code> | column index |
 
-<a name="IndexedCollection"></a>
+<a name="AnyNumber"></a>
 
-## IndexedCollection : <code>ArrayConstructor</code> \| <code>Int8ArrayConstructor</code> \| <code>Int8ArrayConstructor</code> \| <code>Uint8ArrayConstructor</code> \| <code>Uint8ClampedArrayConstructor</code> \| <code>Int16ArrayConstructor</code> \| <code>Uint16ArrayConstructor</code> \| <code>Int32ArrayConstructor</code> \| <code>Uint32ArrayConstructor</code> \| <code>Float32ArrayConstructor</code> \| <code>Float64ArrayConstructor</code>
+## AnyNumber : <code>number</code> \| <code>BigInt</code>
 **Kind**: global typedef  
+<a name="FieldName"></a>
+
+## FieldName : <code>number</code> \| <code>string</code>
+**Kind**: global typedef  
+<a name="UnpackedInt"></a>
+
+## UnpackedInt : <code>Object.&lt;string, number&gt;</code>
+**Kind**: global typedef  
+<a name="Field"></a>
+
+## Field : <code>Object</code>
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| name | [<code>FieldName</code>](#FieldName) | name of the field |
+| [size] | <code>number</code> | size in bits |
+
 <a name="Matcher"></a>
 
 ## Matcher : <code>Array</code>
@@ -962,17 +1028,10 @@ const ArrayGrid = Grid(Array);
 
 | Name | Type | Description |
 | --- | --- | --- |
-| 0 | <code>number</code> | value |
-| 1 | <code>number</code> | mask |
+| 0 | [<code>AnyNumber</code>](#AnyNumber) | value |
+| 1 | [<code>AnyNumber</code>](#AnyNumber) | mask |
 
-<a name="FieldDescription"></a>
+<a name="Masks"></a>
 
-## FieldDescription : <code>Object</code>
+## Masks : <code>Object.&lt;string, AnyNumber&gt;</code>
 **Kind**: global typedef  
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| name | <code>string</code> | field name |
-| size | <code>number</code> | size of the field in bits |
-

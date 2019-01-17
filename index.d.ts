@@ -9,6 +9,34 @@ type CollectionConstructor = ArrayConstructor | Int8ArrayConstructor | Uint8Arra
     | Uint8ClampedArrayConstructor | Int16Array | Uint16ArrayConstructor | Int32ArrayConstructor
     | Uint32ArrayConstructor | Float32ArrayConstructor | Float64ArrayConstructor;
 
+interface GridOptions {
+    rows: number;
+    columns: number;
+    pad?: any;
+}
+
+type Coordinates = [number, number]
+
+export declare class Grid {
+    columns: number;
+    rows: number;
+    offset: number;
+    pad: any;
+
+    constructor(options?: GridOptions, data?: Collection);
+    get(row: number, column: number): any;
+    set(row: number, column: number, value: any): this;
+    getCoordinates(index: number): Coordinates;
+    toArrays(withPadding: boolean): any[][];
+    static getOffset(columns: number): number;
+    static fromArrays(arrays: any[][], pad: any): Grid;
+}
+
+interface Constructor<T> {
+    new (...args): T;
+}
+
+export declare function GridMixin<T extends Collection>(Base?: Constructor<T>): Constructor<T & Grid>
 
 type AnyNumber = number | bigint;
 type FieldName = number | string;

@@ -186,11 +186,11 @@ describe('PackedInt', () => {
     it('returns matcher to partially match an instance', () => {
       new Field(0);
       const matcher = Field.getMatcher({ width: 10 });
-      expect(matcher).toEqual([10, 1073807359]);
+      expect(matcher).toEqual([10, -2147418113]);
       new LargePerson(0);
       const bigMatcher = LargePerson.getMatcher({ age: 2, weight: 12 });
       expect(bigMatcher[0]).toBe(BigInt(3074));
-      expect(bigMatcher[1]).toBe(BigInt('9007749010554751'));
+      expect(bigMatcher[1]).toBe(BigInt('18014948265295743'));
     });
   });
 
