@@ -40,7 +40,7 @@ grid[0]
 //=> 0
 
 // send data as the second parameter to instantiate a grid with data:
-const  dataGrid = new ArrayGrid([{rows: 5, columns: 4 }, 1, 2, 3, 4, 5, 6, 7, 8]);
+const  dataGrid = new ArrayGrid({rows: 5, columns: 4 }, [1, 2, 3, 4, 5, 6, 7, 8]);
 grid.length
 //=> 20
 grid[0]

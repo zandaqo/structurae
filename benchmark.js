@@ -1,5 +1,6 @@
 /* eslint no-unused-vars: 0 */
 /* eslint import/no-extraneous-dependencies: 0 */
+/* eslint no-console: 0 */
 
 const Benchmark = require('benchmark');
 const Grid = require('./lib/grid');
@@ -41,7 +42,7 @@ const benchmarkOptions = {
     })
     .run();
 
-  new Benchmark.Suite('Grid Interate:', benchmarkOptions)
+  new Benchmark.Suite('Grid Iterate:', benchmarkOptions)
     .add('Nested arrays', () => {
       for (let i = 0; i < rows; i++) {
         for (let j = 0; j < columns; j++) {

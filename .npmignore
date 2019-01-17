@@ -3,6 +3,7 @@ coverage
 doc
 node_modules
 test
+benchmark.js
 .gitignore
 .npmignore
 .eslintrc.yml
