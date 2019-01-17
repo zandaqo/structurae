@@ -18,10 +18,10 @@ npm i structurae
 ## Usage
 Import structures as needed:
 ```javascript
-import { Grid, PackedInt, SortedArray } from 'structurae';
+import { GridMixin, PackedInt, SortedArray } from 'structurae';
 
 // or
-const { Grid, PackedInt, SortedArray } = require('structurae');
+const { GridMixin, PackedInt, SortedArray } = require('structurae');
 ```
 
 ### Grid
@@ -30,7 +30,7 @@ nested arrays. Grid "unrolls" nested arrays into a single array and pads its "co
 quick lookups with bitwise operations.
 
 ```javascript
-const ArrayGrid = Grid(Array);
+const ArrayGrid = GridMixin(Array);
 
 // create a grid of 5 rows and 4 columns filled with 0
 const grid = new ArrayGrid({rows: 5, columns: 4 });
@@ -62,9 +62,9 @@ grid.get(0, 1);
 
 // use `getCoordinates` method to find out row and column indexes of a given element by its array index:
 grid.getCoordinates(0);
-//=> [0, 0]
+//=> { row: 0, column: 0 }
 grid.getCoordinates(1);
-//=> [0, 1]
+//=> { row: 0, column: 1 }
 ```
 
 A grid can be turned to and from an array of nested arrays using respectively `Grid#fromArrays` and `Grid#toArrays` methods:

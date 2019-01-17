@@ -15,13 +15,17 @@ interface GridOptions {
     pad?: any;
 }
 
-type Coordinates = [number, number]
+interface Coordinates {
+    row: number;
+    column: number;
+}
 
 export declare class Grid {
     columns: number;
     rows: number;
     offset: number;
     pad: any;
+    lastCoordinates: Coordinates;
 
     constructor(options?: GridOptions, data?: Collection);
     get(row: number, column: number): any;

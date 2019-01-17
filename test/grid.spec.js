@@ -79,10 +79,11 @@ describe('Grid', () => {
   describe('getCoordinates', () => {
     it('returns coordinates of a given index', () => {
       const grid = new Uint32Grid({ rows: 4, columns: 4 });
-      expect(grid.getCoordinates(0)).toEqual([0, 0]);
-      expect(grid.getCoordinates(6)).toEqual([1, 2]);
-      expect(grid.getCoordinates(13)).toEqual([3, 1]);
-      expect(grid.getCoordinates(15)).toEqual([3, 3]);
+      expect(grid.getCoordinates(0)).toBe(grid.lastCoordinates);
+      expect(grid.getCoordinates(0)).toEqual({ row: 0, column: 0 });
+      expect(grid.getCoordinates(6)).toEqual({ row: 1, column: 2 });
+      expect(grid.getCoordinates(13)).toEqual({ row: 3, column: 1 });
+      expect(grid.getCoordinates(15)).toEqual({ row: 3, column: 3 });
     });
   });
 
