@@ -20,7 +20,7 @@ interface Coordinates {
     column: number;
 }
 
-export declare class Grid {
+declare class Grid {
     columns: number;
     rows: number;
     offset: number;
@@ -31,7 +31,7 @@ export declare class Grid {
     get(row: number, column: number): any;
     set(row: number, column: number, value: any): this;
     getCoordinates(index: number): Coordinates;
-    toArrays(withPadding: boolean): any[][];
+    toArrays(withPadding?: boolean): any[][];
     static getOffset(columns: number): number;
     static fromArrays(arrays: any[][], pad: any): Grid;
 }
@@ -93,25 +93,29 @@ interface Comparator {
     (a: any, b: any): CompareResult
 }
 
-export class SortedArray extends Array {
-    unique: boolean;
+declare class SortedCollection {
     compare(a: any, b: any): CompareResult;
     isSorted(): boolean;
     isUnique(): boolean;
-    reset(arr: Collection): this;
-    range(start: number, end: number): SortedArray;
+    range(start: number, end: number, subarray?: boolean): SortedCollection;
     rank(element: any): number;
-    uniquify(): this;
-    static getDifference<T extends Collection>(a: T, b: Collection, symmetric?: boolean, comparator?: Comparator): T;
+    static getDifference<T extends Collection>(a: Collection, b: Collection, symmetric?: boolean, comparator?: Comparator, container?: T): T;
     static getDifferenceScore(a: Collection, b: Collection, symmetric?: boolean, comparator?: Comparator): number;
     static getIndex(arr: Collection, target: any, comparator?: Comparator, rank?: boolean, start?: number, end?: number): number;
-    static getIntersection<T extends Collection>(a: T, b: Collection, comparator?: Comparator): T;
+    static getIntersection<T extends Collection>(a: Collection, b: Collection, comparator?: Comparator, container?: T): T;
     static getIntersectionScore(a: Collection, b: Collection, comparator?: Comparator): number;
-    static getRange<T extends Collection>(arr: T, start?: number, end?: number, comparator?: Comparator): T;
-    static getRank(arr: Collection, target: any, comparator?: Comparator): number;
-    static getUnion<T extends Collection>(a: T, b: Collection, unique?: boolean, comparator?: Comparator): T;
-    static getUnique<T extends Collection>(arr: T, comparator?: Comparator): T;
+    static getRange<T extends Collection>(arr: T, start?: number, end?: number, comparator?: Comparator, subarray?: boolean): T;
+    static getUnion<T extends Collection>(a: Collection, b: Collection, unique?: boolean, comparator?: Comparator, container?: T): T;
+    static getUnique<T extends Collection>(arr: Collection, comparator?: Comparator, container?: T): T;
     static isSorted(arr: Collection, comparator?: Comparator): boolean;
     static isUnique(arr: Collection, comparator?: Comparator): boolean;
+}
+
+export declare function SortedMixin<T extends Collection>(Base?: Constructor<T>): Constructor<T & SortedCollection>
+
+export class SortedArray extends SortedMixin(Array) {
+    unique: boolean;
+    set(arr: Collection): this;
+    uniquify(): this;
 }
 

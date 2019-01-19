@@ -4,11 +4,11 @@
 [![Travis branch](https://img.shields.io/travis/zandaqo/structurae.svg?style=flat-square)](https://travis-ci.org/zandaqo/structurae)
 [![Codecov](https://img.shields.io/codecov/c/github/zandaqo/structurae.svg?style=flat-square)](https://codecov.io/github/zandaqo/structurae)
 
-A collection of data structures for performance-sensitive modern JavaScript applications that includes:
+A collection of data structures for high-performance modern JavaScript applications that includes:
 
 - [Grid](https://github.com/zandaqo/structurae#grid) - extends built-in indexed collections to handle 2 dimensional data (e.g. nested arrays).
 - [PackedInt](https://github.com/zandaqo/structurae#PackedInt) - stores and operates on data in Numbers and BigInts treating them as bitfields.
-- [SortedArray](https://github.com/zandaqo/structurae#SortedArray) - extends built-in Array to efficiently handle sorted data.
+- [SortedCollection](https://github.com/zandaqo/structurae#SortedCollection) & [SortedArray](https://github.com/zandaqo/structurae#SortedArray) - extends built-in Array or TypedArrays to efficiently handle sorted data.
 
 ## Installation
 ```
@@ -18,10 +18,10 @@ npm i structurae
 ## Usage
 Import structures as needed:
 ```javascript
-import { GridMixin, PackedInt, SortedArray } from 'structurae';
+import { GridMixin, PackedInt, SortedArray, SortedCollection } from 'structurae';
 
 // or
-const { GridMixin, PackedInt, SortedArray } = require('structurae');
+const { GridMixin, PackedInt, SortedArray, SortedCollection } = require('structurae');
 ```
 
 ### Grid
@@ -249,33 +249,74 @@ Person.match(new Person([19, 1]).toValue(), matcher);
 //=> false
 ```
 
+### SortedCollection
+SortedCollection creates a sorted collection class extending a given built-in indexed collection, such as a TypedArray, 
+with methods to efficiently handle sorted data.
+
+```javascript
+const SortedInt32Array = SortedCollection(Int32Array);
+```
+
+To create a sorted collection from unsorted array-like objects or items use `from` and `of` static methods respectively:
+```js
+SortedInt32Array.from(unsorted);
+//=> SortedInt32Array [ 2, 3, 4, 5, 9 ]
+SortedInt32Array.of(8, 5, 6);
+//=> SortedInt32Array [ 5, 6, 8 ]
+```
+
+`new SortedInt32Array` behaves the same way as `new Int32Array` and should be used with already sorted elements:
+```js
+new SortedInt32Array(...[ 1, 2, 3, 4, 8 ]);
+//=> SortedInt32Array [ 1, 2, 3, 4, 8 ];
+new SortedInt32Array(2,3,4);
+//=> SortedInt32Array [ 2, 3, 4 ];
+```
+
+A custom comparison function can be specified on the collection instance to be used for sorting:
+```js
+//=> SortedInt32Array [ 2, 3, 4, 5, 9 ]
+sortedInt32Array.compare = (a, b) => (a > b ? -1 : a < b ? 1 : 0);
+sortedInt32Array.sort();
+//=> SortedInt32Array [ 9, 5, 4, 3, 2 ]
+```
+
+Sorted collection supports all the methods of its base class:
+```javascript
+//=> SortedInt32Array [ 2, 3, 4, 5, 9 ]
+sortedInt32Array.slice(0, 2)
+//=> SortedInt32Array [ 2, 3 ]
+sortedInt32Array.set([0, 0, 1])
+//=> SortedInt32Array [ 0, 0, 1, 5, 9 ]
+```
+
+`indexOf` and `includes` use binary search that increasingly outperforms the built-in methods as the size of the collection grows.
+
+Sorted collection provides `isSorted` method to check if the collection is sorted,
+ and `range` method to get elements of the collection whose values are between the specified range:
+```js
+//=> SortedInt32Array [ 2, 3, 4, 5, 9 ]
+sortedInt32Array.range(3, 5);
+// => SortedInt32Array [ 3, 4, 5 ]
+sortedInt32Array.range(undefined, 4);
+// => SortedInt32Array [ 2, 3, 4 ]
+sortedInt32Array.range(4);
+// => SortedInt32Array [ 4, 5, 8 ]
+
+// set `subarray` to `true` to use `TypedArray#subarray` for the return value instead of copying it with slice:
+sortedInt32Array.range(3, 5, true).buffer === sortedInt32Array.buffer;
+// => true;
+```
+
+Sorted collection also provides a set of functions to perform common set operations 
+and find statistics of any sorted array-like objects without converting them to sorted collection.
+ Check [API documentation](https://github.com/zandaqo/structurae/blob/master/doc/API.md) for more information.
+
 ### SortedArray
-SortedArray extends built-in Array to efficiently handle sorted data.
+SortedArray extends SortedCollection using built-in Array.
 
-To create a SortedArray from unsorted array-like objects or items use `SortedArray.from` and `SortedArray.of` respectively:
-```js
-SortedArray.from(unsorted);
-//=> SortedArray [ 2, 3, 4, 5, 9 ]
-SortedArray.of(8, 5, 6);
-//=> SortedArray [ 5, 6, 8 ]
-```
-
-`new SortedArray` behaves the same way as `new Array` and should be used with already sorted elements:
-```js
-new SortedArray(...first);
-//=> SortedArray [ 1, 2, 3, 4, 8 ];
-new SortedArray(2,3,4);
-//=> SortedArray [ 2, 3, 4 ];
-```
-
-A custom comparison function can be specified on the array instance to be used for sorting:
-```js
-sortedArray.compare = (a, b) => (a > b ? -1 : a < b ? 1 : 0);
-sortedArray.sort();
-//=> [ 9, 5, 4, 3, 2 ]
-```
-
-SortedArray supports all methods of Array. The methods that change the contents of an array do so while preserving the sorted order:
+SortedArray supports all the methods of Array as well as those provided by SortedCollection.
+ The methods that change the contents of an array do so while preserving the sorted order:
 ```js
 sortedArray.push(1);
 //=> SortedArray [ 1, 2, 3, 4, 5, 9 ]
@@ -283,18 +324,6 @@ sortedArray.unshift(8);
 //=> SortedArray [ 1, 2, 3, 4, 5, 8, 9 ]
 sortedArray.splice(0, 2, 6);
 //=> SortedArray [ 3, 4, 5, 6, 8, 9 ]
-```
-
-`indexOf` and `includes` use binary search that increasingly outperforms the built-in methods as the size of the array grows.
-
-In addition to the Array instance methods, SortedArray provides `isSorted` method to check if the array is sorted, and `range` method to get elements of the array whose values are between the specified range:
-```js
-sortedArray.range(3, 5);
-// => [ 3, 4, 5 ]
-sortedArray.range(undefined, 4);
-// => [ 2, 3, 4 ]
-sortedArray.range(4);
-// => [ 4, 5, 8 ]
 ```
 
 `uniquify` can be used to remove duplicating elements from the array:
@@ -317,8 +346,6 @@ a.push(1);
 a
 //=> SortedArray [ 1, 2 ]
 ```
-
-SortedArray also provides a set of functions to perform common set operations and find statistics of any sorted array-like objects without converting them to SortedArrays. Check [API documentation](https://github.com/zandaqo/structurae/blob/master/doc/API.md) for more information.
 
 ## Documentation
 - [API documentation](https://github.com/zandaqo/structurae/blob/master/doc/API.md)

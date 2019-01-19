@@ -5,9 +5,10 @@
 <dd></dd>
 <dt><a href="#PackedInt">PackedInt</a></dt>
 <dd></dd>
-<dt><a href="#SortedArray">SortedArray</a> ⇐ <code>Array</code></dt>
-<dd><p>Extends built-in Array to efficiently handle sorted data.</p>
-</dd>
+<dt><a href="#SortedArray">SortedArray</a> ⇐ <code><a href="#SortedCollection">SortedCollection</a></code></dt>
+<dd></dd>
+<dt><a href="#SortedCollection">SortedCollection</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
+<dd></dd>
 </dl>
 
 ## Functions
@@ -18,6 +19,9 @@
 </dd>
 <dt><a href="#Comparator">Comparator(a, b)</a> ⇒ <code>number</code></dt>
 <dd></dd>
+<dt><a href="#SortedMixin">SortedMixin(Base)</a> ⇒ <code><a href="#SortedCollection">SortedCollection</a></code></dt>
+<dd><p>Creates a SortedCollection class extending a given Array-like class.</p>
+</dd>
 </dl>
 
 ## Typedefs
@@ -27,7 +31,7 @@
 <dd></dd>
 <dt><a href="#Collection">Collection</a> : <code>Array</code> | <code>Int8Array</code> | <code>Int8Array</code> | <code>Uint8Array</code> | <code>Uint8ClampedArray</code> | <code>Int16Array</code> | <code>Uint16Array</code> | <code>Int32Array</code> | <code>Uint32Array</code> | <code>Float32Array</code> | <code>Float64Array</code></dt>
 <dd></dd>
-<dt><a href="#Coordinates">Coordinates</a> : <code>Array</code></dt>
+<dt><a href="#Coordinates">Coordinates</a> : <code>Object</code></dt>
 <dd></dd>
 <dt><a href="#AnyNumber">AnyNumber</a> : <code>number</code> | <code>BigInt</code></dt>
 <dd></dd>
@@ -555,145 +559,35 @@ The static version of `PackedInt#match`, matches a given value against a precomp
 
 <a name="SortedArray"></a>
 
-## SortedArray ⇐ <code>Array</code>
-Extends built-in Array to efficiently handle sorted data.
-
+## SortedArray ⇐ [<code>SortedCollection</code>](#SortedCollection)
 **Kind**: global class  
-**Extends**: <code>Array</code>  
+**Extends**: [<code>SortedCollection</code>](#SortedCollection)  
 
-* [SortedArray](#SortedArray) ⇐ <code>Array</code>
-    * _instance_
-        * [.compare(a, b)](#SortedArray+compare) ⇒ <code>number</code>
-        * [.isSorted()](#SortedArray+isSorted) ⇒ <code>boolean</code>
-        * [.isUnique()](#SortedArray+isUnique) ⇒ <code>boolean</code>
-        * [.reset(arr)](#SortedArray+reset) ⇒ [<code>SortedArray</code>](#SortedArray)
-        * [.range(start, end)](#SortedArray+range) ⇒ [<code>SortedArray</code>](#SortedArray)
-        * [.rank(element)](#SortedArray+rank) ⇒ <code>number</code>
-        * [.uniquify()](#SortedArray+uniquify) ⇒ [<code>SortedArray</code>](#SortedArray)
-    * _static_
-        * [.getDifference(a, b, [symmetric], [comparator])](#SortedArray.getDifference) ⇒ <code>Array</code>
-        * [.getDifferenceScore(a, b, [symmetric], [comparator])](#SortedArray.getDifferenceScore) ⇒ <code>number</code>
-        * [.getIndex(arr, target, [comparator], [rank], [start], [end])](#SortedArray.getIndex) ⇒ <code>number</code>
-        * [.getIntersection(a, b, [comparator])](#SortedArray.getIntersection) ⇒ <code>Array</code>
-        * [.getIntersectionScore(a, b, [comparator])](#SortedArray.getIntersectionScore) ⇒ <code>number</code>
-        * [.getRange(arr, [start], [end], [comparator])](#SortedArray.getRange) ⇒ <code>Array</code>
-        * ~~[.getRank(arr, target, [comparator])](#SortedArray.getRank) ⇒ <code>number</code>~~
-        * [.getUnion(a, b, [unique], [comparator])](#SortedArray.getUnion) ⇒ <code>Array</code>
-        * [.getUnique(arr, [comparator])](#SortedArray.getUnique) ⇒ <code>Array</code>
-        * [.isSorted(arr, [comparator])](#SortedArray.isSorted) ⇒ <code>boolean</code>
-        * [.isUnique(arr, [comparator])](#SortedArray.isUnique) ⇒ <code>boolean</code>
+* [SortedArray](#SortedArray) ⇐ [<code>SortedCollection</code>](#SortedCollection)
+    * [.set(arr)](#SortedArray+set) ⇒ [<code>SortedArray</code>](#SortedArray)
+    * [.uniquify()](#SortedArray+uniquify) ⇒ [<code>SortedArray</code>](#SortedArray)
+    * [.compare(a, b)](#SortedCollection+compare) ⇒ <code>number</code>
+    * [.isSorted()](#SortedCollection+isSorted) ⇒ <code>boolean</code>
+    * [.isUnique()](#SortedCollection+isUnique) ⇒ <code>boolean</code>
+    * [.range(start, end, [subarray])](#SortedCollection+range) ⇒ [<code>SortedCollection</code>](#SortedCollection)
+    * [.rank(element)](#SortedCollection+rank) ⇒ <code>number</code>
 
-<a name="SortedArray+compare"></a>
+<a name="SortedArray+set"></a>
 
-### sortedArray.compare(a, b) ⇒ <code>number</code>
-The default comparator.
-
-**Kind**: instance method of [<code>SortedArray</code>](#SortedArray)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| a | <code>\*</code> | the first value |
-| b | <code>\*</code> | the second value |
-
-**Example**  
-```js
-//=> SortedArray [ 2, 3, 4, 5, 9 ];
-sortedArray.compare = (a, b) => (a > b ? -1 : a < b ? 1 : 0);
-sortedArray.sort();
-//=> [ 9, 5, 4, 3, 2 ]
-```
-<a name="SortedArray+isSorted"></a>
-
-### sortedArray.isSorted() ⇒ <code>boolean</code>
-Checks if the array is sorted.
-
-**Kind**: instance method of [<code>SortedArray</code>](#SortedArray)  
-**Returns**: <code>boolean</code> - whether the array is sorted  
-**Example**  
-```js
-//=> SortedArray [ 2, 3, 4, 5, 9 ];
-sortedArray.isSorted();
-//=> true
-sortedArray.reverse();
-sortedArray.isSorted();
-//=> false;
-```
-<a name="SortedArray+isUnique"></a>
-
-### sortedArray.isUnique() ⇒ <code>boolean</code>
-Checks if the array has duplicating elements.
-
-**Kind**: instance method of [<code>SortedArray</code>](#SortedArray)  
-**Returns**: <code>boolean</code> - whether the array has duplicating elements  
-**Example**  
-```js
-//=> SortedArray [ 2, 3, 4, 5, 9 ];
-sortedArray.isUnique();
-//=> true
-sortedArray.push(2);
-sortedArray.isUnique();
-//=> false;
-```
-<a name="SortedArray+reset"></a>
-
-### sortedArray.reset(arr) ⇒ [<code>SortedArray</code>](#SortedArray)
+### sortedArray.set(arr) ⇒ [<code>SortedArray</code>](#SortedArray)
 Implements in-place replacement of the array elements.
 
 **Kind**: instance method of [<code>SortedArray</code>](#SortedArray)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| arr | <code>Array</code> | an array of new elements to use |
+| arr | [<code>Collection</code>](#Collection) | an array of new elements to use |
 
 **Example**  
 ```js
 //=> SortedArray [ 2, 3, 4, 5, 9 ];
-sortedArray.reset([1, 2, 3]);
+sortedArray.set([1, 2, 3]);
 //=> SortedArray [ 1, 2, 3 ]
-```
-<a name="SortedArray+range"></a>
-
-### sortedArray.range(start, end) ⇒ [<code>SortedArray</code>](#SortedArray)
-Returns a range of elements of the array that are greater or equal to the provided
-starting element and less or equal to the provided ending element.
-
-**Kind**: instance method of [<code>SortedArray</code>](#SortedArray)  
-**Returns**: [<code>SortedArray</code>](#SortedArray) - the resulting range of elements  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| start | <code>\*</code> | the starting element |
-| end | <code>\*</code> | the ending element |
-
-**Example**  
-```js
-//=> SortedArray [ 2, 3, 4, 5, 9 ];
-sortedArray.range(3, 5);
-// => [ 3, 4, 5 ]
-sortedArray.range(undefined, 4);
-// => [ 2, 3, 4 ]
-sortedArray.range(4);
-// => [ 4, 5, 8 ]
-```
-<a name="SortedArray+rank"></a>
-
-### sortedArray.rank(element) ⇒ <code>number</code>
-Returns the rank of an element in the array.
-
-**Kind**: instance method of [<code>SortedArray</code>](#SortedArray)  
-**Returns**: <code>number</code> - the rank in the array  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| element | <code>\*</code> | the element to look for |
-
-**Example**  
-```js
-//=> SortedArray [ 2, 3, 4, 5, 9 ];
-sortedArray.rank(1);
-// => 0
-sortedArray.rank(6);
-// => 4
 ```
 <a name="SortedArray+uniquify"></a>
 
@@ -707,67 +601,279 @@ Removes duplicating elements from the array.
 sortedArray.uniquify();
 // => SortedArray [ 2, 3, 4, 5, 9 ]
 ```
-<a name="SortedArray.getDifference"></a>
+<a name="SortedCollection+compare"></a>
 
-### SortedArray.getDifference(a, b, [symmetric], [comparator]) ⇒ <code>Array</code>
+### sortedArray.compare(a, b) ⇒ <code>number</code>
+The default comparator.
+
+**Kind**: instance method of [<code>SortedArray</code>](#SortedArray)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| a | <code>\*</code> | the first value |
+| b | <code>\*</code> | the second value |
+
+**Example**  
+```js
+//=> SortedCollection [ 2, 3, 4, 5, 9 ];
+sortedCollection.compare = (a, b) => (a > b ? -1 : a < b ? 1 : 0);
+sortedCollection.sort();
+//=> [ 9, 5, 4, 3, 2 ]
+```
+<a name="SortedCollection+isSorted"></a>
+
+### sortedArray.isSorted() ⇒ <code>boolean</code>
+Checks if the array is sorted.
+
+**Kind**: instance method of [<code>SortedArray</code>](#SortedArray)  
+**Returns**: <code>boolean</code> - whether the array is sorted  
+**Example**  
+```js
+//=> SortedCollection [ 2, 3, 4, 5, 9 ];
+sortedCollection.isSorted();
+//=> true
+sortedCollection.reverse();
+sortedCollection.isSorted();
+//=> false;
+```
+<a name="SortedCollection+isUnique"></a>
+
+### sortedArray.isUnique() ⇒ <code>boolean</code>
+Checks if the array has duplicating elements.
+
+**Kind**: instance method of [<code>SortedArray</code>](#SortedArray)  
+**Returns**: <code>boolean</code> - whether the array has duplicating elements  
+**Example**  
+```js
+//=> SortedCollection [ 2, 3, 3, 4, 5, 9 ];
+sortedCollection.isUnique();
+//=> false;
+```
+<a name="SortedCollection+range"></a>
+
+### sortedArray.range(start, end, [subarray]) ⇒ [<code>SortedCollection</code>](#SortedCollection)
+Returns a range of elements of the array that are greater or equal to the provided
+starting element and less or equal to the provided ending element.
+
+**Kind**: instance method of [<code>SortedArray</code>](#SortedArray)  
+**Returns**: [<code>SortedCollection</code>](#SortedCollection) - the resulting range of elements  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| start | <code>\*</code> | the starting element |
+| end | <code>\*</code> | the ending element |
+| [subarray] | <code>boolean</code> | return a subarray instead of copying resulting value with slice |
+
+**Example**  
+```js
+//=> SortedCollection [ 2, 3, 4, 5, 9 ];
+sortedCollection.range(3, 5);
+// => [ 3, 4, 5 ]
+sortedCollection.range(undefined, 4);
+// => [ 2, 3, 4 ]
+sortedCollection.range(4);
+// => [ 4, 5, 8 ]
+```
+<a name="SortedCollection+rank"></a>
+
+### sortedArray.rank(element) ⇒ <code>number</code>
+Returns the rank of an element in the array.
+
+**Kind**: instance method of [<code>SortedArray</code>](#SortedArray)  
+**Returns**: <code>number</code> - the rank in the array  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| element | <code>\*</code> | the element to look for |
+
+**Example**  
+```js
+//=> SortedCollection [ 2, 3, 4, 5, 9 ];
+sortedCollection.rank(1);
+// => 0
+sortedCollection.rank(6);
+// => 4
+```
+<a name="SortedCollection"></a>
+
+## SortedCollection ⇐ [<code>CollectionConstructor</code>](#CollectionConstructor)
+**Kind**: global class  
+**Extends**: [<code>CollectionConstructor</code>](#CollectionConstructor)  
+
+* [SortedCollection](#SortedCollection) ⇐ [<code>CollectionConstructor</code>](#CollectionConstructor)
+    * _instance_
+        * [.compare(a, b)](#SortedCollection+compare) ⇒ <code>number</code>
+        * [.isSorted()](#SortedCollection+isSorted) ⇒ <code>boolean</code>
+        * [.isUnique()](#SortedCollection+isUnique) ⇒ <code>boolean</code>
+        * [.range(start, end, [subarray])](#SortedCollection+range) ⇒ [<code>SortedCollection</code>](#SortedCollection)
+        * [.rank(element)](#SortedCollection+rank) ⇒ <code>number</code>
+    * _static_
+        * [.getDifference(a, b, [symmetric], [comparator], [container])](#SortedCollection.getDifference) ⇒ <code>Array</code>
+        * [.getDifferenceScore(a, b, [symmetric], [comparator])](#SortedCollection.getDifferenceScore) ⇒ <code>number</code>
+        * [.getIndex(arr, target, [comparator], [rank], [start], [end])](#SortedCollection.getIndex) ⇒ <code>number</code>
+        * [.getIntersection(a, b, [comparator], [container])](#SortedCollection.getIntersection) ⇒ <code>Array</code>
+        * [.getIntersectionScore(a, b, [comparator])](#SortedCollection.getIntersectionScore) ⇒ <code>number</code>
+        * [.getRange(arr, [start], [end], [comparator], [subarray])](#SortedCollection.getRange) ⇒ [<code>Collection</code>](#Collection)
+        * [.getUnion(a, b, [unique], [comparator], [container])](#SortedCollection.getUnion) ⇒ <code>Array</code>
+        * [.getUnique(arr, [comparator], [container])](#SortedCollection.getUnique) ⇒ <code>Array</code>
+        * [.isSorted(arr, [comparator])](#SortedCollection.isSorted) ⇒ <code>boolean</code>
+        * [.isUnique(arr, [comparator])](#SortedCollection.isUnique) ⇒ <code>boolean</code>
+
+<a name="SortedCollection+compare"></a>
+
+### sortedCollection.compare(a, b) ⇒ <code>number</code>
+The default comparator.
+
+**Kind**: instance method of [<code>SortedCollection</code>](#SortedCollection)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| a | <code>\*</code> | the first value |
+| b | <code>\*</code> | the second value |
+
+**Example**  
+```js
+//=> SortedCollection [ 2, 3, 4, 5, 9 ];
+sortedCollection.compare = (a, b) => (a > b ? -1 : a < b ? 1 : 0);
+sortedCollection.sort();
+//=> [ 9, 5, 4, 3, 2 ]
+```
+<a name="SortedCollection+isSorted"></a>
+
+### sortedCollection.isSorted() ⇒ <code>boolean</code>
+Checks if the array is sorted.
+
+**Kind**: instance method of [<code>SortedCollection</code>](#SortedCollection)  
+**Returns**: <code>boolean</code> - whether the array is sorted  
+**Example**  
+```js
+//=> SortedCollection [ 2, 3, 4, 5, 9 ];
+sortedCollection.isSorted();
+//=> true
+sortedCollection.reverse();
+sortedCollection.isSorted();
+//=> false;
+```
+<a name="SortedCollection+isUnique"></a>
+
+### sortedCollection.isUnique() ⇒ <code>boolean</code>
+Checks if the array has duplicating elements.
+
+**Kind**: instance method of [<code>SortedCollection</code>](#SortedCollection)  
+**Returns**: <code>boolean</code> - whether the array has duplicating elements  
+**Example**  
+```js
+//=> SortedCollection [ 2, 3, 3, 4, 5, 9 ];
+sortedCollection.isUnique();
+//=> false;
+```
+<a name="SortedCollection+range"></a>
+
+### sortedCollection.range(start, end, [subarray]) ⇒ [<code>SortedCollection</code>](#SortedCollection)
+Returns a range of elements of the array that are greater or equal to the provided
+starting element and less or equal to the provided ending element.
+
+**Kind**: instance method of [<code>SortedCollection</code>](#SortedCollection)  
+**Returns**: [<code>SortedCollection</code>](#SortedCollection) - the resulting range of elements  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| start | <code>\*</code> | the starting element |
+| end | <code>\*</code> | the ending element |
+| [subarray] | <code>boolean</code> | return a subarray instead of copying resulting value with slice |
+
+**Example**  
+```js
+//=> SortedCollection [ 2, 3, 4, 5, 9 ];
+sortedCollection.range(3, 5);
+// => [ 3, 4, 5 ]
+sortedCollection.range(undefined, 4);
+// => [ 2, 3, 4 ]
+sortedCollection.range(4);
+// => [ 4, 5, 8 ]
+```
+<a name="SortedCollection+rank"></a>
+
+### sortedCollection.rank(element) ⇒ <code>number</code>
+Returns the rank of an element in the array.
+
+**Kind**: instance method of [<code>SortedCollection</code>](#SortedCollection)  
+**Returns**: <code>number</code> - the rank in the array  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| element | <code>\*</code> | the element to look for |
+
+**Example**  
+```js
+//=> SortedCollection [ 2, 3, 4, 5, 9 ];
+sortedCollection.rank(1);
+// => 0
+sortedCollection.rank(6);
+// => 4
+```
+<a name="SortedCollection.getDifference"></a>
+
+### SortedCollection.getDifference(a, b, [symmetric], [comparator], [container]) ⇒ <code>Array</code>
 Returns the difference of two sorted arrays, i.e. elements present in the first array but not
 in the second array. If `symmetric=true` finds the symmetric difference of two arrays, that is,
 the elements that are absent in one or another array.
 
-**Kind**: static method of [<code>SortedArray</code>](#SortedArray)  
+**Kind**: static method of [<code>SortedCollection</code>](#SortedCollection)  
 **Returns**: <code>Array</code> - the difference of the arrays  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| a | <code>Array</code> |  | the first array |
-| b | <code>Array</code> |  | the second array |
+| a | [<code>Collection</code>](#Collection) |  | the first array |
+| b | [<code>Collection</code>](#Collection) |  | the second array |
 | [symmetric] | <code>boolean</code> | <code>false</code> | whether to get symmetric difference. |
 | [comparator] | [<code>Comparator</code>](#Comparator) |  | the comparator static used to sort the arrays |
+| [container] | [<code>Collection</code>](#Collection) |  | an array-like object to hold the results |
 
 **Example**  
 ```js
-SortedArray.getDifference([1, 2, 3, 4, 8], [2, 4, 6, 7, 9]);
+SortedCollection.getDifference([1, 2, 3, 4, 8], [2, 4, 6, 7, 9]);
 //=> [ 1, 3, 8 ]
 
 // symmetric difference of sorted arrays:
-SortedArray.getDifference(first, second, true);
+SortedCollection.getDifference(first, second, true);
 //=> [ 1, 3, 6, 7, 8, 9 ]
 // difference using a custom comparator:
 const customComparator = (a, b) => (a > b ? -1 : a < b ? 1 : 0);
-SortedArray.getDifference([8, 4, 3, 2, 1], [9, 7, 6, 4, 2], false, customComparator);
+SortedCollection.getDifference([8, 4, 3, 2, 1], [9, 7, 6, 4, 2], false, customComparator);
 //=> [ 8, 3, 1 ]
 ```
-<a name="SortedArray.getDifferenceScore"></a>
+<a name="SortedCollection.getDifferenceScore"></a>
 
-### SortedArray.getDifferenceScore(a, b, [symmetric], [comparator]) ⇒ <code>number</code>
+### SortedCollection.getDifferenceScore(a, b, [symmetric], [comparator]) ⇒ <code>number</code>
 Returns the amount of differing elements in the first array.
 
-**Kind**: static method of [<code>SortedArray</code>](#SortedArray)  
+**Kind**: static method of [<code>SortedCollection</code>](#SortedCollection)  
 **Returns**: <code>number</code> - the amount of differing elements  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| a | <code>Array</code> |  | the first array |
-| b | <code>Array</code> |  | the second array |
+| a | [<code>Collection</code>](#Collection) |  | the first array |
+| b | [<code>Collection</code>](#Collection) |  | the second array |
 | [symmetric] | <code>boolean</code> | <code>false</code> | whether to use symmetric difference |
 | [comparator] | [<code>Comparator</code>](#Comparator) |  | the comparator static used to sort the arrays |
 
 **Example**  
 ```js
-SortedArray.getDifferenceScore([1, 2, 3, 4, 8], [2, 4, 6, 7, 9]);
+SortedCollection.getDifferenceScore([1, 2, 3, 4, 8], [2, 4, 6, 7, 9]);
 //=> 3
 ```
-<a name="SortedArray.getIndex"></a>
+<a name="SortedCollection.getIndex"></a>
 
-### SortedArray.getIndex(arr, target, [comparator], [rank], [start], [end]) ⇒ <code>number</code>
+### SortedCollection.getIndex(arr, target, [comparator], [rank], [start], [end]) ⇒ <code>number</code>
 Uses binary search to find the index of an element inside a sorted array.
 
-**Kind**: static method of [<code>SortedArray</code>](#SortedArray)  
+**Kind**: static method of [<code>SortedCollection</code>](#SortedCollection)  
 **Returns**: <code>number</code> - the index of the searched element or it's rank  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| arr | <code>Array</code> |  | the array to search |
+| arr | [<code>Collection</code>](#Collection) |  | the array to search |
 | target | <code>\*</code> |  | the target value to search for |
 | [comparator] | [<code>Comparator</code>](#Comparator) |  | a custom comparator |
 | [rank] | <code>boolean</code> | <code>false</code> | whether to return the element's rank if the element isn't found |
@@ -776,153 +882,132 @@ Uses binary search to find the index of an element inside a sorted array.
 
 **Example**  
 ```js
-SortedArray.getIndex([1, 2, 3, 4, 8], 4);
+SortedCollection.getIndex([1, 2, 3, 4, 8], 4);
 //=> 3
 ```
-<a name="SortedArray.getIntersection"></a>
+<a name="SortedCollection.getIntersection"></a>
 
-### SortedArray.getIntersection(a, b, [comparator]) ⇒ <code>Array</code>
+### SortedCollection.getIntersection(a, b, [comparator], [container]) ⇒ <code>Array</code>
 Returns the intersection of two sorted arrays.
 
-**Kind**: static method of [<code>SortedArray</code>](#SortedArray)  
+**Kind**: static method of [<code>SortedCollection</code>](#SortedCollection)  
 **Returns**: <code>Array</code> - the intersection of the arrays  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| a | <code>Array</code> | the first array |
-| b | <code>Array</code> | the second array |
+| a | [<code>Collection</code>](#Collection) | the first array |
+| b | [<code>Collection</code>](#Collection) | the second array |
 | [comparator] | [<code>Comparator</code>](#Comparator) | the comparator static used to sort the arrays |
+| [container] | [<code>Collection</code>](#Collection) | an array-like object to hold the results |
 
 **Example**  
 ```js
-SortedArray.getIntersection([1, 2, 3, 4, 8], [2, 4, 6, 7, 9]);
+SortedCollection.getIntersection([1, 2, 3, 4, 8], [2, 4, 6, 7, 9]);
 //=> [ 2, 4 ]
 
 // intersection using a custom comparator:
 const customComparator = (a, b) => (a > b ? -1 : a < b ? 1 : 0);
-SortedArray.getIntersection([8, 4, 3, 2, 1], [9, 7, 6, 4, 2], customComparator);
+SortedCollection.getIntersection([8, 4, 3, 2, 1], [9, 7, 6, 4, 2], customComparator);
 //=> [ 4, 2 ]
 ```
-<a name="SortedArray.getIntersectionScore"></a>
+<a name="SortedCollection.getIntersectionScore"></a>
 
-### SortedArray.getIntersectionScore(a, b, [comparator]) ⇒ <code>number</code>
+### SortedCollection.getIntersectionScore(a, b, [comparator]) ⇒ <code>number</code>
 Returns the amount of common elements in two sorted arrays.
 
-**Kind**: static method of [<code>SortedArray</code>](#SortedArray)  
+**Kind**: static method of [<code>SortedCollection</code>](#SortedCollection)  
 **Returns**: <code>number</code> - the amount of different elements  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| a | <code>Array</code> | the first array |
-| b | <code>Array</code> | the second array |
+| a | [<code>Collection</code>](#Collection) | the first array |
+| b | [<code>Collection</code>](#Collection) | the second array |
 | [comparator] | [<code>Comparator</code>](#Comparator) | the comparator static used to sort the arrays |
 
 **Example**  
 ```js
-SortedArray.getIntersection([1, 2, 3, 4, 8], [2, 4, 6, 7, 9]);
+SortedCollection.getIntersection([1, 2, 3, 4, 8], [2, 4, 6, 7, 9]);
 //=> 2
 ```
-<a name="SortedArray.getRange"></a>
+<a name="SortedCollection.getRange"></a>
 
-### SortedArray.getRange(arr, [start], [end], [comparator]) ⇒ <code>Array</code>
+### SortedCollection.getRange(arr, [start], [end], [comparator], [subarray]) ⇒ [<code>Collection</code>](#Collection)
 Returns a range of elements of a sorted array from the start through the end inclusively.
 
-**Kind**: static method of [<code>SortedArray</code>](#SortedArray)  
-**Returns**: <code>Array</code> - the range of items  
+**Kind**: static method of [<code>SortedCollection</code>](#SortedCollection)  
+**Returns**: [<code>Collection</code>](#Collection) - the range of items  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| arr | <code>Array</code> | the array |
+| arr | [<code>Collection</code>](#Collection) | the array |
 | [start] | <code>number</code> | the starting item |
 | [end] | <code>number</code> | the ending item |
 | [comparator] | [<code>Comparator</code>](#Comparator) | a custom comparator |
+| [subarray] | <code>boolean</code> | return a subarray instead of copying resulting value with slice |
 
 **Example**  
 ```js
-SortedArray.getRange([1, 2, 3, 4, 8], 2, 4);
+SortedCollection.getRange([1, 2, 3, 4, 8], 2, 4);
 //=> [ 2, 3, 4 ]
 
 const customComparator = (a, b) => (a > b ? -1 : a < b ? 1 : 0);
-SortedArray.getRange([8, 4, 3, 2, 1], 8, 3, customComparator);
+SortedCollection.getRange([8, 4, 3, 2, 1], 8, 3, customComparator);
 //=> [ 8, 4, 3 ]
 ```
-<a name="SortedArray.getRank"></a>
+<a name="SortedCollection.getUnion"></a>
 
-### ~~SortedArray.getRank(arr, target, [comparator]) ⇒ <code>number</code>~~
-***Deprecated***
-
-Uses binary search to find the rank of an item inside a sorted array.
-
-**Kind**: static method of [<code>SortedArray</code>](#SortedArray)  
-**Returns**: <code>number</code> - the rank of the searched item  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| arr | <code>Array</code> | the array to search |
-| target | <code>\*</code> | the target value to search for |
-| [comparator] | [<code>Comparator</code>](#Comparator) | a custom comparator |
-
-**Example**  
-```js
-SortedArray.getRank([1, 2, 3, 4, 8], 5);
-//=> 4
-
-const customComparator = (a, b) => (a > b ? -1 : a < b ? 1 : 0);
-SortedArray.getRank([8, 4, 3, 2, 1], 5, customComparator);
-//=> 3
-```
-<a name="SortedArray.getUnion"></a>
-
-### SortedArray.getUnion(a, b, [unique], [comparator]) ⇒ <code>Array</code>
+### SortedCollection.getUnion(a, b, [unique], [comparator], [container]) ⇒ <code>Array</code>
 Returns the union of two sorted arrays as a sorted array.
 
-**Kind**: static method of [<code>SortedArray</code>](#SortedArray)  
+**Kind**: static method of [<code>SortedCollection</code>](#SortedCollection)  
 **Returns**: <code>Array</code> - the union of the arrays  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| a | <code>Array</code> |  | the first array |
-| b | <code>Array</code> |  | the second array |
+| a | [<code>Collection</code>](#Collection) |  | the first array |
+| b | [<code>Collection</code>](#Collection) |  | the second array |
 | [unique] | <code>boolean</code> | <code>false</code> | whether to avoid duplicating items when merging unique arrays |
 | [comparator] | [<code>Comparator</code>](#Comparator) |  | the comparator static used to sort the arrays |
+| [container] | [<code>Collection</code>](#Collection) |  | an array-like object to hold the results |
 
 **Example**  
 ```js
-SortedArray.getUnion([1, 2, 3, 4, 8], [2, 4, 6, 7, 9]);
+SortedCollection.getUnion([1, 2, 3, 4, 8], [2, 4, 6, 7, 9]);
 //=> [ 1, 2, 2, 3, 4, 4, 6, 7, 8, 9 ]
 
 // union of sorted arrays without duplicates:
-SortedArray.getUnion([1, 2, 3, 4, 8], [2, 4, 6, 7, 9], true);
+SortedCollection.getUnion([1, 2, 3, 4, 8], [2, 4, 6, 7, 9], true);
 //=> [ 1, 2, 3, 4, 6, 7, 8, 9 ]
 
 //union using a custom comparator:
-SortedArray.getUnion([8, 4, 3, 2, 1], [9, 7, 6, 4, 2], true, customComparator);
+SortedCollection.getUnion([8, 4, 3, 2, 1], [9, 7, 6, 4, 2], true, customComparator);
 //=> [ 9, 8, 7, 6, 4, 3, 2, 1 ]
 ```
-<a name="SortedArray.getUnique"></a>
+<a name="SortedCollection.getUnique"></a>
 
-### SortedArray.getUnique(arr, [comparator]) ⇒ <code>Array</code>
+### SortedCollection.getUnique(arr, [comparator], [container]) ⇒ <code>Array</code>
 Returns an array of unique elements from a sorted array.
 
-**Kind**: static method of [<code>SortedArray</code>](#SortedArray)  
+**Kind**: static method of [<code>SortedCollection</code>](#SortedCollection)  
 **Returns**: <code>Array</code> - the sorted array without duplicates  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| arr | <code>Array</code> | the sorted array |
+| arr | [<code>Collection</code>](#Collection) | the sorted array |
 | [comparator] | [<code>Comparator</code>](#Comparator) | a custom comparator |
+| [container] | [<code>Collection</code>](#Collection) | an array-like object to hold the results |
 
 **Example**  
 ```js
-SortedArray.getUnique([1, 1, 2, 2, 3, 4]);
+SortedCollection.getUnique([1, 1, 2, 2, 3, 4]);
 //=> [ 1, 2, 3, 4 ]
 ```
-<a name="SortedArray.isSorted"></a>
+<a name="SortedCollection.isSorted"></a>
 
-### SortedArray.isSorted(arr, [comparator]) ⇒ <code>boolean</code>
+### SortedCollection.isSorted(arr, [comparator]) ⇒ <code>boolean</code>
 Checks whether an array is sorted according to a provided comparator.
 
-**Kind**: static method of [<code>SortedArray</code>](#SortedArray)  
+**Kind**: static method of [<code>SortedCollection</code>](#SortedCollection)  
 **Returns**: <code>boolean</code> - whether the array is sorted  
 
 | Param | Type | Description |
@@ -932,15 +1017,15 @@ Checks whether an array is sorted according to a provided comparator.
 
 **Example**  
 ```js
-SortedArray.isSorted([1, 2, 3, 4, 8]);
+SortedCollection.isSorted([1, 2, 3, 4, 8]);
 //=> true
 ```
-<a name="SortedArray.isUnique"></a>
+<a name="SortedCollection.isUnique"></a>
 
-### SortedArray.isUnique(arr, [comparator]) ⇒ <code>boolean</code>
+### SortedCollection.isUnique(arr, [comparator]) ⇒ <code>boolean</code>
 Checks whether an array has any duplicating elements.
 
-**Kind**: static method of [<code>SortedArray</code>](#SortedArray)  
+**Kind**: static method of [<code>SortedCollection</code>](#SortedCollection)  
 **Returns**: <code>boolean</code> - whether the array has duplicating elements  
 
 | Param | Type | Description |
@@ -950,7 +1035,7 @@ Checks whether an array has any duplicating elements.
 
 **Example**  
 ```js
-SortedArray.isUnique([1, 2, 2, 3, 4]);
+SortedCollection.isUnique([1, 2, 2, 3, 4]);
 //=> false
 ```
 <a name="GridMixin"></a>
@@ -978,6 +1063,21 @@ const ArrayGrid = Grid(Array);
 | a | <code>\*</code> | 
 | b | <code>\*</code> | 
 
+<a name="SortedMixin"></a>
+
+## SortedMixin(Base) ⇒ [<code>SortedCollection</code>](#SortedCollection)
+Creates a SortedCollection class extending a given Array-like class.
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| Base | [<code>CollectionConstructor</code>](#CollectionConstructor) | 
+
+**Example**  
+```js
+const SortedCollection = Grid(Uint32Array);
+```
 <a name="CollectionConstructor"></a>
 
 ## CollectionConstructor : <code>ArrayConstructor</code> \| <code>Int8ArrayConstructor</code> \| <code>Int8ArrayConstructor</code> \| <code>Uint8ArrayConstructor</code> \| <code>Uint8ClampedArrayConstructor</code> \| <code>Int16ArrayConstructor</code> \| <code>Uint16ArrayConstructor</code> \| <code>Int32ArrayConstructor</code> \| <code>Uint32ArrayConstructor</code> \| <code>Float32ArrayConstructor</code> \| <code>Float64ArrayConstructor</code>
@@ -988,14 +1088,14 @@ const ArrayGrid = Grid(Array);
 **Kind**: global typedef  
 <a name="Coordinates"></a>
 
-## Coordinates : <code>Array</code>
+## Coordinates : <code>Object</code>
 **Kind**: global typedef  
 **Properties**
 
 | Name | Type | Description |
 | --- | --- | --- |
-| 0 | <code>number</code> | row index |
-| 1 | <code>number</code> | column index |
+| row | <code>number</code> | row index |
+| column | <code>number</code> | column index |
 
 <a name="AnyNumber"></a>
 
