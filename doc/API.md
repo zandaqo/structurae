@@ -59,6 +59,7 @@
         * [.columns](#Grid+columns) ⇒ <code>void</code>
         * [.columns](#Grid+columns) : <code>number</code>
         * [.rows](#Grid+rows) : <code>number</code>
+        * [.getIndex(row, column)](#Grid+getIndex) ⇒ <code>\*</code>
         * [.get(row, column)](#Grid+get) ⇒ <code>\*</code>
         * [.set(row, column, value)](#Grid+set) ⇒ <code>\*</code>
         * [.getCoordinates(index)](#Grid+getCoordinates) ⇒ [<code>Coordinates</code>](#Coordinates)
@@ -104,6 +105,24 @@ Number of columns in the grid.
 Number of rows in the grid.
 
 **Kind**: instance property of [<code>Grid</code>](#Grid)  
+<a name="Grid+getIndex"></a>
+
+### grid.getIndex(row, column) ⇒ <code>\*</code>
+Returns an array index of an element at given coordinates.
+
+**Kind**: instance method of [<code>Grid</code>](#Grid)  
+
+| Param | Type |
+| --- | --- |
+| row | <code>number</code> | 
+| column | <code>number</code> | 
+
+**Example**  
+```js
+const a = ArrayGrid({ rows: 3, columns: 2, pad: 3});
+a.get(1, 0);
+//=> 2
+```
 <a name="Grid+get"></a>
 
 ### grid.get(row, column) ⇒ <code>\*</code>

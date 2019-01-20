@@ -60,14 +60,19 @@ grid.set(0, 1, 10);
 grid.get(0, 1);
 //=> 10
 
-// use `getCoordinates` method to find out row and column indexes of a given element by its array index:
+
+// use `getIndex` to get an array index of an element at given coordinates
+grid.getIndex(0, 1);
+//=> 1
+
+// use `getCoordinates` to find out row and column indexes of a given element by its array index:
 grid.getCoordinates(0);
 //=> { row: 0, column: 0 }
 grid.getCoordinates(1);
 //=> { row: 0, column: 1 }
 ```
 
-A grid can be turned to and from an array of nested arrays using respectively `Grid#fromArrays` and `Grid#toArrays` methods:
+A grid can be turned to and from an array of nested arrays using respectively `Grid.fromArrays` and `Grid#toArrays` methods:
 ```javascript
 const grid = ArrayGrid.fromArrays([[1,2], [3, 4]]);
 //=> ArrayGrid [ 1, 2, 3, 4 ]
@@ -250,7 +255,7 @@ Person.match(new Person([19, 1]).toValue(), matcher);
 ```
 
 ### SortedCollection
-SortedCollection creates a sorted collection class extending a given built-in indexed collection, such as a TypedArray, 
+SortedCollection creates a sorted collection class extending a given built-in indexed collection 
 with methods to efficiently handle sorted data.
 
 ```javascript

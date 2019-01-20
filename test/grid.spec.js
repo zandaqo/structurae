@@ -49,10 +49,18 @@ describe('Grid', () => {
     });
   });
 
+  describe('getIndex', () => {
+    it('returns an array index of an element at given coordinates', () => {
+      const grid = new Uint32Grid({ columns: 4 }, [1, 2, 3, 4, 5, 6, 7, 8]);
+      expect(grid.getIndex(0, 0)).toBe(0);
+      expect(grid.getIndex(0, 3)).toBe(3);
+      expect(grid.getIndex(1, 2)).toBe(6);
+    });
+  });
+
   describe('get', () => {
     it('returns an item at given coordinates', () => {
-      const grid = new Uint32Grid({}, [1, 2, 3, 4, 5, 6, 7, 8]);
-      grid.columns = 4;
+      const grid = new Uint32Grid({ columns: 4 }, [1, 2, 3, 4, 5, 6, 7, 8]);
       expect(grid.get(0, 0)).toBe(1);
       expect(grid.get(0, 3)).toBe(4);
       expect(grid.get(1, 2)).toBe(7);
