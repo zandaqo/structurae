@@ -119,3 +119,29 @@ export class SortedArray extends SortedMixin(Array) {
     uniquify(): this;
 }
 
+interface StructField {
+    name: string;
+    type: string;
+    size?: number;
+    littleEndian?: boolean;
+}
+
+interface StructSchema {
+    [propName: string]: StructField;
+}
+
+export declare class StructArray extends DataView {
+    size: number;
+    private fields: StructField[];
+    private schema: StructSchema;
+    private offset: number;
+    private offsets: object;
+    private stringView: Uint8Array;
+
+    constructor(fields: StructField[], size: number, buffer?: ArrayBuffer, byteOffset?: number, byteLength?: number);
+    get(index: number, field: string): any;
+    set(index: number, field: string, value: any, littleEndian?: boolean): this;
+    getString(offset: number, littleEndian: boolean, size: number): Uint8Array;
+    setString(offset: number, value: Collection): void;
+    toObject(index: number): object;
+}

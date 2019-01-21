@@ -9,6 +9,8 @@
 <dd></dd>
 <dt><a href="#SortedCollection">SortedCollection</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
 <dd></dd>
+<dt><a href="#StructArray">StructArray</a> ⇐ <code>DataView</code></dt>
+<dd></dd>
 </dl>
 
 ## Functions
@@ -44,6 +46,8 @@
 <dt><a href="#Matcher">Matcher</a> : <code>Array</code></dt>
 <dd></dd>
 <dt><a href="#Masks">Masks</a> : <code>Object.&lt;string, AnyNumber&gt;</code></dt>
+<dd></dd>
+<dt><a href="#StructField">StructField</a></dt>
 <dd></dd>
 </dl>
 
@@ -1057,6 +1061,99 @@ Checks whether an array has any duplicating elements.
 SortedCollection.isUnique([1, 2, 2, 3, 4]);
 //=> false
 ```
+<a name="StructArray"></a>
+
+## StructArray ⇐ <code>DataView</code>
+**Kind**: global class  
+**Extends**: <code>DataView</code>  
+
+* [StructArray](#StructArray) ⇐ <code>DataView</code>
+    * [new StructArray(fields, size, [buffer], [byteOffset], [byteLength])](#new_StructArray_new)
+    * [.size](#StructArray+size) : <code>number</code>
+    * [.get(index, field)](#StructArray+get) ⇒ <code>\*</code>
+    * [.set(index, field, value)](#StructArray+set) ⇒ <code>this</code>
+    * [.getString(offset, littleEndian, size)](#StructArray+getString) ⇒ <code>Uint8Array</code>
+    * [.setString(offset, value)](#StructArray+setString) ⇒ <code>Uint8Array</code>
+    * [.getByteOffset(index, field)](#StructArray+getByteOffset) ⇒ <code>number</code>
+    * [.toObject(index)](#StructArray+toObject) ⇒ <code>Object</code>
+
+<a name="new_StructArray_new"></a>
+
+### new StructArray(fields, size, [buffer], [byteOffset], [byteLength])
+
+| Param | Type |
+| --- | --- |
+| fields | [<code>Array.&lt;StructField&gt;</code>](#StructField) | 
+| size | <code>number</code> | 
+| [buffer] | <code>ArrayBuffer</code> | 
+| [byteOffset] | <code>number</code> | 
+| [byteLength] | <code>number</code> | 
+
+<a name="StructArray+size"></a>
+
+### structArray.size : <code>number</code>
+**Kind**: instance property of [<code>StructArray</code>](#StructArray)  
+<a name="StructArray+get"></a>
+
+### structArray.get(index, field) ⇒ <code>\*</code>
+**Kind**: instance method of [<code>StructArray</code>](#StructArray)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+| field | <code>string</code> | 
+
+<a name="StructArray+set"></a>
+
+### structArray.set(index, field, value) ⇒ <code>this</code>
+**Kind**: instance method of [<code>StructArray</code>](#StructArray)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+| field | <code>string</code> | 
+| value | <code>\*</code> | 
+
+<a name="StructArray+getString"></a>
+
+### structArray.getString(offset, littleEndian, size) ⇒ <code>Uint8Array</code>
+**Kind**: instance method of [<code>StructArray</code>](#StructArray)  
+
+| Param | Type |
+| --- | --- |
+| offset | <code>number</code> | 
+| littleEndian | <code>boolean</code> | 
+| size | <code>number</code> | 
+
+<a name="StructArray+setString"></a>
+
+### structArray.setString(offset, value) ⇒ <code>Uint8Array</code>
+**Kind**: instance method of [<code>StructArray</code>](#StructArray)  
+
+| Param | Type |
+| --- | --- |
+| offset | <code>number</code> | 
+| value | [<code>Collection</code>](#Collection) | 
+
+<a name="StructArray+getByteOffset"></a>
+
+### structArray.getByteOffset(index, field) ⇒ <code>number</code>
+**Kind**: instance method of [<code>StructArray</code>](#StructArray)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+| field | <code>number</code> | 
+
+<a name="StructArray+toObject"></a>
+
+### structArray.toObject(index) ⇒ <code>Object</code>
+**Kind**: instance method of [<code>StructArray</code>](#StructArray)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
 <a name="GridMixin"></a>
 
 ## GridMixin(Base) ⇒ [<code>Grid</code>](#Grid)
@@ -1154,3 +1251,16 @@ const SortedCollection = Grid(Uint32Array);
 
 ## Masks : <code>Object.&lt;string, AnyNumber&gt;</code>
 **Kind**: global typedef  
+<a name="StructField"></a>
+
+## StructField
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type |
+| --- | --- |
+| name | <code>string</code> | 
+| type | <code>string</code> | 
+| [size] | <code>number</code> | 
+| [littleEndian] | <code>boolean</code> | 
+

@@ -1,6 +1,6 @@
 {
   "name": "structurae",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Data structures for performance-sensitive modern JavaScript applications.",
   "main": "index.js",
   "keywords": [
@@ -45,6 +45,7 @@
     "jsdoc-to-markdown": "^4.0.1"
   },
   "jest": {
+    "testEnvironment": "node",
     "collectCoverage": true,
     "collectCoverageFrom": [
       "**/lib/**",
