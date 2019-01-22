@@ -70,7 +70,6 @@ describe('StructArray', () => {
       const encoded = people.get(0, 'name');
       expect(encoded.length).toBe(14);
       const decoded = decoder.decode(encoded);
-      // todo pad/unpad strings?
       expect(decoded.slice(0, 4)).toEqual('maga');
     });
   });

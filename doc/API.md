@@ -10,7 +10,8 @@
 <dt><a href="#SortedCollection">SortedCollection</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
 <dd></dd>
 <dt><a href="#StructArray">StructArray</a> ⇐ <code>DataView</code></dt>
-<dd></dd>
+<dd><p>Extends DataView to use ArrayBuffers as indexed collections of C-like structs aka records.</p>
+</dd>
 </dl>
 
 ## Functions
@@ -31,7 +32,7 @@
 <dl>
 <dt><a href="#CollectionConstructor">CollectionConstructor</a> : <code>ArrayConstructor</code> | <code>Int8ArrayConstructor</code> | <code>Int8ArrayConstructor</code> | <code>Uint8ArrayConstructor</code> | <code>Uint8ClampedArrayConstructor</code> | <code>Int16ArrayConstructor</code> | <code>Uint16ArrayConstructor</code> | <code>Int32ArrayConstructor</code> | <code>Uint32ArrayConstructor</code> | <code>Float32ArrayConstructor</code> | <code>Float64ArrayConstructor</code></dt>
 <dd></dd>
-<dt><a href="#Collection">Collection</a> : <code>Array</code> | <code>Int8Array</code> | <code>Int8Array</code> | <code>Uint8Array</code> | <code>Uint8ClampedArray</code> | <code>Int16Array</code> | <code>Uint16Array</code> | <code>Int32Array</code> | <code>Uint32Array</code> | <code>Float32Array</code> | <code>Float64Array</code></dt>
+<dt><a href="#Collection">Collection</a> : <code>Array</code> | <code>Int8Array</code> | <code>Uint8Array</code> | <code>Uint8ClampedArray</code> | <code>Int16Array</code> | <code>Uint16Array</code> | <code>Int32Array</code> | <code>Uint32Array</code> | <code>Float32Array</code> | <code>Float64Array</code></dt>
 <dd></dd>
 <dt><a href="#Coordinates">Coordinates</a> : <code>Object</code></dt>
 <dd></dd>
@@ -1064,11 +1065,13 @@ SortedCollection.isUnique([1, 2, 2, 3, 4]);
 <a name="StructArray"></a>
 
 ## StructArray ⇐ <code>DataView</code>
+Extends DataView to use ArrayBuffers as indexed collections of C-like structs aka records.
+
 **Kind**: global class  
 **Extends**: <code>DataView</code>  
 
 * [StructArray](#StructArray) ⇐ <code>DataView</code>
-    * [new StructArray(fields, size, [buffer], [byteOffset], [byteLength])](#new_StructArray_new)
+    * [new StructArray(fields, [size], [buffer], [byteOffset], [byteLength])](#new_StructArray_new)
     * [.size](#StructArray+size) : <code>number</code>
     * [.get(index, field)](#StructArray+get) ⇒ <code>\*</code>
     * [.set(index, field, value)](#StructArray+set) ⇒ <code>this</code>
@@ -1079,41 +1082,78 @@ SortedCollection.isUnique([1, 2, 2, 3, 4]);
 
 <a name="new_StructArray_new"></a>
 
-### new StructArray(fields, size, [buffer], [byteOffset], [byteLength])
+### new StructArray(fields, [size], [buffer], [byteOffset], [byteLength])
 
-| Param | Type |
-| --- | --- |
-| fields | [<code>Array.&lt;StructField&gt;</code>](#StructField) | 
-| size | <code>number</code> | 
-| [buffer] | <code>ArrayBuffer</code> | 
-| [byteOffset] | <code>number</code> | 
-| [byteLength] | <code>number</code> | 
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| fields | [<code>Array.&lt;StructField&gt;</code>](#StructField) |  | an array field descriptions |
+| [size] | <code>number</code> | <code>1</code> | the amount of structs in the array,                        optional if an existing ArrayBuffer is used |
+| [buffer] | <code>ArrayBuffer</code> |  | an existing ArrayBuffer to use for structs |
+| [byteOffset] | <code>number</code> |  | the byteOffset in an existing ArrayBuffer |
+| [byteLength] | <code>number</code> |  | the byteLength in an existing ArrayBuffer |
 
 <a name="StructArray+size"></a>
 
 ### structArray.size : <code>number</code>
+The amount of structs in the array.
+
 **Kind**: instance property of [<code>StructArray</code>](#StructArray)  
+**Example**  
+```js
+const people = new StructArray([
+  { name: 'age', type: 'Uint8' },
+  { name: 'score', type: 'Float32' },
+], 20);
+
+people.size
+//=> 20
+```
 <a name="StructArray+get"></a>
 
 ### structArray.get(index, field) ⇒ <code>\*</code>
+Returns the value of a given field of a struct at the given index.
+
 **Kind**: instance method of [<code>StructArray</code>](#StructArray)  
+**Returns**: <code>\*</code> - value of the field  
 
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
-| field | <code>string</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| index | <code>number</code> | the index of a struct |
+| field | <code>string</code> | the name of the field |
 
+**Example**  
+```js
+const people = new StructArray([
+  { name: 'age', type: 'Uint8' },
+  { name: 'score', type: 'Float32' },
+], 20);
+
+person.get(0, 'age');
+```
 <a name="StructArray+set"></a>
 
 ### structArray.set(index, field, value) ⇒ <code>this</code>
+Sets a value to a field of a struct at a given index.
+
 **Kind**: instance method of [<code>StructArray</code>](#StructArray)  
 
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
-| field | <code>string</code> | 
-| value | <code>\*</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| index | <code>number</code> | the index of a struct |
+| field | <code>string</code> | the name of the field |
+| value | <code>\*</code> | the value to be set |
 
+**Example**  
+```js
+const people = new StructArray([
+  { name: 'age', type: 'Uint8' },
+  { name: 'score', type: 'Float32' },
+], 20);
+
+person.set(0, 'age', 10);
+person.get(0, 'age');
+//=> 10
+```
 <a name="StructArray+getString"></a>
 
 ### structArray.getString(offset, littleEndian, size) ⇒ <code>Uint8Array</code>
@@ -1138,22 +1178,37 @@ SortedCollection.isUnique([1, 2, 2, 3, 4]);
 <a name="StructArray+getByteOffset"></a>
 
 ### structArray.getByteOffset(index, field) ⇒ <code>number</code>
-**Kind**: instance method of [<code>StructArray</code>](#StructArray)  
+Returns the byte offset in the ArrayBuffer of a given field.
 
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
-| field | <code>number</code> | 
+**Kind**: instance method of [<code>StructArray</code>](#StructArray)  
+**Returns**: <code>number</code> - the byte offset  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| index | <code>number</code> | the index of the struct |
+| field | <code>string</code> | the name of the field |
 
 <a name="StructArray+toObject"></a>
 
 ### structArray.toObject(index) ⇒ <code>Object</code>
+The object representation of a given struct.
+
 **Kind**: instance method of [<code>StructArray</code>](#StructArray)  
 
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| index | <code>number</code> | the index of the struct |
 
+**Example**  
+```js
+const people = new StructArray([
+  { name: 'age', type: 'Uint8' },
+  { name: 'score', type: 'Float32' },
+], 20);
+
+person.set(0, 'age', 10).set(0, 'score', 5.0).toObject(0);
+//=> { age: 10, score: 5.0 }
+```
 <a name="GridMixin"></a>
 
 ## GridMixin(Base) ⇒ [<code>Grid</code>](#Grid)
@@ -1200,7 +1255,7 @@ const SortedCollection = Grid(Uint32Array);
 **Kind**: global typedef  
 <a name="Collection"></a>
 
-## Collection : <code>Array</code> \| <code>Int8Array</code> \| <code>Int8Array</code> \| <code>Uint8Array</code> \| <code>Uint8ClampedArray</code> \| <code>Int16Array</code> \| <code>Uint16Array</code> \| <code>Int32Array</code> \| <code>Uint32Array</code> \| <code>Float32Array</code> \| <code>Float64Array</code>
+## Collection : <code>Array</code> \| <code>Int8Array</code> \| <code>Uint8Array</code> \| <code>Uint8ClampedArray</code> \| <code>Int16Array</code> \| <code>Uint16Array</code> \| <code>Int32Array</code> \| <code>Uint32Array</code> \| <code>Float32Array</code> \| <code>Float64Array</code>
 **Kind**: global typedef  
 <a name="Coordinates"></a>
 
