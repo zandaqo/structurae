@@ -1,6 +1,6 @@
 {
   "name": "structurae",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Data structures for performance-sensitive modern JavaScript applications.",
   "main": "index.js",
   "keywords": [

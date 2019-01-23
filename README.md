@@ -257,8 +257,8 @@ Person.match(new Person([19, 1]).toValue(), matcher);
 
 ### RecordArray
 RecordArray extends DataView to use ArrayBuffer as an array of records or C-like structs. 
-Fields of the records can be of any type supported by DataView plus string type. 
-For a string type, the maximum size in bytes should be set in our schema. 
+Records can contain fields of any type supported by DataView plus strings. 
+For a string, the maximum size in bytes should be defined. 
 
 ```javascript
 // create an array of 20 records where each has 'age', 'score', and 'name' fields
@@ -274,6 +274,17 @@ people.get(0, 'age');
 people.set(0, 'age', 10).set(0, 'score', 5.0);
 people.toObject(0);
 //=> { age: 10, score: 5.0 }
+```
+
+String type is represented with Uint8Arrays. You can use TextEncoder/TextDecoder API to convert them to and from strings.
+```javascript
+people.get(0, 'name');
+//=> Uint8Array(10) [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+const name = new TextEncoder().encode('Smith');
+people.set(0, name).get(0, 'name');
+//=> Uint8Array(10) [83, 109, 105, 116, 104, 0, 0, 0, 0, 0]
+new TextDecoder().decode(people.get(0, 'name'));
+//=> Smith
 ```
 
 ### SortedCollection

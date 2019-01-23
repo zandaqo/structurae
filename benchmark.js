@@ -108,9 +108,9 @@ const benchmarkOptions = {
   const structs = new RecordArray([
     { name: 0, type: 'Float64' },
     { name: 1, type: 'Float64' },
-    { name: 2, type: 'Float64' },
+    { name: 2, type: 'Int32' },
     { name: 3, type: 'Float64' },
-    { name: 4, type: 'Float64' },
+    { name: 4, type: 'Int8' },
     { name: 5, type: 'Float64' },
     { name: 6, type: 'Float64' },
     { name: 7, type: 'Float64' },

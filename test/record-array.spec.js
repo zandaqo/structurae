@@ -2,6 +2,20 @@ const { TextEncoder, TextDecoder } = require('util');
 const RecordArray = require('../lib/record-array');
 
 describe('RecordArray', () => {
+  const recordSchema = [
+    { name: 'a', type: 'Int8' },
+    { name: 'b', type: 'Uint8' },
+    { name: 'c', type: 'Int16', littleEndian: true },
+    { name: 'd', type: 'Uint16' },
+    { name: 'e', type: 'Int32', littleEndian: true },
+    { name: 'f', type: 'Uint32' },
+    { name: 'g', type: 'Float32', littleEndian: true },
+    { name: 'h', type: 'Float64' },
+    { name: 'i', type: 'BigInt64' },
+    { name: 'j', type: 'BigUint64' },
+    { name: 'k', type: 'String', size: 22 },
+  ];
+
   const peopleSchema = [
     { name: 'age', type: 'Int8' },
     { name: 'height', type: 'Float32' },
@@ -9,66 +23,104 @@ describe('RecordArray', () => {
     { name: 'score', type: 'Int32' },
   ];
 
-  const peopleWithString = [
-    { name: 'age', type: 'Int8' },
-    { name: 'name', type: 'String', size: 14 },
-  ];
-
   describe('constructor', () => {
     it('creates an instance of RecordArray', () => {
-      const people = new RecordArray(peopleSchema, 10);
-      expect(people.buffer instanceof ArrayBuffer).toBe(true);
-      expect(people.buffer.byteLength).toBe(160);
-      expect(people instanceof DataView).toBe(true);
-      expect(people.size).toBe(10);
+      const records = new RecordArray(recordSchema, 10);
+      expect(records.buffer instanceof ArrayBuffer).toBe(true);
+      expect(records.buffer.byteLength).toBe(640);
+      expect(records instanceof DataView).toBe(true);
+      expect(records.size).toBe(10);
+      expect(records.stringView instanceof Uint8Array).toBe(true);
     });
 
     it('creates an instance using preexisting ArrayBuffer', () => {
-      const buffer = new ArrayBuffer(320);
-      const people = new RecordArray(peopleSchema, 10, buffer, 160, 160);
-      expect(people.buffer).toBe(buffer);
-      expect(people.byteLength).toBe(160);
-      expect(people.byteOffset).toBe(160);
+      const buffer = new ArrayBuffer(800);
+      const records = new RecordArray(peopleSchema, 10, buffer, 160, 640);
+      expect(records.buffer).toBe(buffer);
+      expect(records.byteLength).toBe(640);
+      expect(records.byteOffset).toBe(160);
     });
 
-    it('creates an instance with string fields', () => {
-      const people = new RecordArray(peopleWithString, 10);
+    it('creates an instance without string fields', () => {
+      const people = new RecordArray(peopleSchema, 10);
       expect(people.buffer.byteLength).toBe(160);
-      expect(people.stringView instanceof Uint8Array).toBe(true);
+      expect(people.stringView instanceof Uint8Array).toBe(false);
     });
   });
 
   describe('get', () => {
     it('returns the value of a given field', () => {
-      const people = new RecordArray(peopleSchema, 10);
-      expect(people.get(0, 'age')).toBe(0);
-      expect(people.get(0, 'weight')).toBe(0);
+      const records = new RecordArray(recordSchema, 10);
+      expect(records.get(0, 'a')).toBe(0);
+      expect(records.get(0, 'b')).toBe(0);
+      expect(records.get(0, 'c')).toBe(0);
+      expect(records.get(0, 'd')).toBe(0);
+      expect(records.get(0, 'e')).toBe(0);
+      expect(records.get(0, 'f')).toBe(0);
+      expect(records.get(0, 'g')).toBe(0);
+      expect(records.get(0, 'h')).toBe(0);
+      expect(records.get(0, 'i')).toBe(BigInt(0));
+      expect(records.get(0, 'j')).toBe(BigInt(0));
     });
 
     it('returns a Uint8Array for a string field', () => {
-      const people = new RecordArray(peopleWithString, 10);
-      const actual = people.get(0, 'name');
+      const records = new RecordArray(recordSchema, 10);
+      const actual = records.get(0, 'k');
       expect(actual instanceof Uint8Array).toBe(true);
-      expect(actual.buffer === people.buffer).toBe(true);
-      expect(actual.length).toBe(14);
+      expect(actual.buffer === records.buffer).toBe(true);
+      expect(actual.length).toBe(22);
+    });
+
+    it('returns 0 if the field type is not found', () => {
+      const records = new RecordArray([{ name: 'a', type: 'NonExistant' }], 1);
+      expect(records.get(0, 'a')).toBe(0);
     });
   });
 
   describe('set', () => {
     it('sets a given value to a given field', () => {
-      const people = new RecordArray(peopleSchema, 10);
-      expect(people.set(0, 'age', 2).get(0, 'age')).toBe(2);
-      expect(people.set(0, 'weight', 2.5).get(0, 'weight')).toBe(2.5);
+      const records = new RecordArray(recordSchema, 10);
+      expect(records.set(0, 'a', 1)
+        .get(0, 'a')).toBe(1);
+      expect(records.set(0, 'b', 1)
+        .get(0, 'b')).toBe(1);
+      expect(records.set(0, 'c', 1)
+        .get(0, 'c')).toBe(1);
+      expect(records.set(0, 'd', 1)
+        .get(0, 'd')).toBe(1);
+      expect(records.set(0, 'e', 1)
+        .get(0, 'e')).toBe(1);
+      expect(records.set(0, 'f', 1)
+        .get(0, 'f')).toBe(1);
+      expect(records.set(0, 'g', 1)
+        .get(0, 'g')).toBe(1);
+      expect(records.set(0, 'h', 1)
+        .get(0, 'h')).toBe(1);
+      expect(records.set(0, 'i', BigInt(1))
+        .get(0, 'i')).toBe(BigInt(1));
+      expect(records.set(0, 'j', BigInt(1))
+        .get(0, 'j')).toBe(BigInt(1));
     });
 
     it('sets a buffer for a string field', () => {
-      const people = new RecordArray(peopleWithString, 10);
+      const records = new RecordArray(recordSchema, 10);
+      const value = new Uint8Array(22);
+      value[0] = 35;
+      value[21] = 33;
+      records.set(0, 'k', value);
+      const actual = records.get(0, 'k');
+      expect(actual).toEqual(value);
+      expect(actual.buffer !== value.buffer).toBe(true);
+    });
+
+    it('sets a smaller buffer for a string field', () => {
+      const records = new RecordArray(recordSchema, 10);
       const encoder = new TextEncoder();
       const decoder = new TextDecoder();
       const value = encoder.encode('maga');
-      people.set(0, 'name', value);
-      const encoded = people.get(0, 'name');
-      expect(encoded.length).toBe(14);
+      records.set(0, 'k', value);
+      const encoded = records.get(0, 'k');
+      expect(encoded.length).toBe(22);
       const decoded = decoder.decode(encoded);
       expect(decoded.slice(0, 4)).toEqual('maga');
     });
