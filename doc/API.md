@@ -1,17 +1,17 @@
 ## Classes
 
 <dl>
+<dt><a href="#BitField">BitField</a></dt>
+<dd></dd>
 <dt><a href="#Grid">Grid</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
 <dd></dd>
-<dt><a href="#PackedInt">PackedInt</a></dt>
-<dd></dd>
+<dt><a href="#RecordArray">RecordArray</a> ⇐ <code>DataView</code></dt>
+<dd><p>Extends DataView to use ArrayBuffer as an array of records or C-like structs.</p>
+</dd>
 <dt><a href="#SortedArray">SortedArray</a> ⇐ <code><a href="#SortedCollection">SortedCollection</a></code></dt>
 <dd></dd>
 <dt><a href="#SortedCollection">SortedCollection</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
 <dd></dd>
-<dt><a href="#StructArray">StructArray</a> ⇐ <code>DataView</code></dt>
-<dd><p>Extends DataView to use ArrayBuffers as indexed collections of C-like structs aka records.</p>
-</dd>
 </dl>
 
 ## Functions
@@ -30,12 +30,6 @@
 ## Typedefs
 
 <dl>
-<dt><a href="#CollectionConstructor">CollectionConstructor</a> : <code>ArrayConstructor</code> | <code>Int8ArrayConstructor</code> | <code>Int8ArrayConstructor</code> | <code>Uint8ArrayConstructor</code> | <code>Uint8ClampedArrayConstructor</code> | <code>Int16ArrayConstructor</code> | <code>Uint16ArrayConstructor</code> | <code>Int32ArrayConstructor</code> | <code>Uint32ArrayConstructor</code> | <code>Float32ArrayConstructor</code> | <code>Float64ArrayConstructor</code></dt>
-<dd></dd>
-<dt><a href="#Collection">Collection</a> : <code>Array</code> | <code>Int8Array</code> | <code>Uint8Array</code> | <code>Uint8ClampedArray</code> | <code>Int16Array</code> | <code>Uint16Array</code> | <code>Int32Array</code> | <code>Uint32Array</code> | <code>Float32Array</code> | <code>Float64Array</code></dt>
-<dd></dd>
-<dt><a href="#Coordinates">Coordinates</a> : <code>Object</code></dt>
-<dd></dd>
 <dt><a href="#AnyNumber">AnyNumber</a> : <code>number</code> | <code>BigInt</code></dt>
 <dd></dd>
 <dt><a href="#FieldName">FieldName</a> : <code>number</code> | <code>string</code></dt>
@@ -48,9 +42,375 @@
 <dd></dd>
 <dt><a href="#Masks">Masks</a> : <code>Object.&lt;string, AnyNumber&gt;</code></dt>
 <dd></dd>
-<dt><a href="#StructField">StructField</a></dt>
+<dt><a href="#CollectionConstructor">CollectionConstructor</a> : <code>ArrayConstructor</code> | <code>Int8ArrayConstructor</code> | <code>Int8ArrayConstructor</code> | <code>Uint8ArrayConstructor</code> | <code>Uint8ClampedArrayConstructor</code> | <code>Int16ArrayConstructor</code> | <code>Uint16ArrayConstructor</code> | <code>Int32ArrayConstructor</code> | <code>Uint32ArrayConstructor</code> | <code>Float32ArrayConstructor</code> | <code>Float64ArrayConstructor</code></dt>
+<dd></dd>
+<dt><a href="#Collection">Collection</a> : <code>Array</code> | <code>Int8Array</code> | <code>Uint8Array</code> | <code>Uint8ClampedArray</code> | <code>Int16Array</code> | <code>Uint16Array</code> | <code>Int32Array</code> | <code>Uint32Array</code> | <code>Float32Array</code> | <code>Float64Array</code></dt>
+<dd></dd>
+<dt><a href="#Coordinates">Coordinates</a> : <code>Object</code></dt>
+<dd></dd>
+<dt><a href="#RecordField">RecordField</a></dt>
 <dd></dd>
 </dl>
+
+<a name="BitField"></a>
+
+## BitField
+**Kind**: global class  
+
+* [BitField](#BitField)
+    * [new BitField([data])](#new_BitField_new)
+    * _instance_
+        * [.value](#BitField+value) : <code>number</code> \| <code>BigInt</code>
+        * [.get(field)](#BitField+get) ⇒ <code>number</code>
+        * [.set(field, value)](#BitField+set) ⇒ [<code>BitField</code>](#BitField)
+        * [.has(...fields)](#BitField+has) ⇒ <code>boolean</code>
+        * [.match(matcher)](#BitField+match) ⇒ <code>boolean</code>
+        * [.toObject()](#BitField+toObject) ⇒ [<code>UnpackedInt</code>](#UnpackedInt)
+    * _static_
+        * [.fields](#BitField.fields) : [<code>Array.&lt;FieldName&gt;</code>](#FieldName) \| [<code>Array.&lt;Field&gt;</code>](#Field)
+        * [.size](#BitField.size) : <code>number</code>
+        * [.zero](#BitField.zero) : [<code>AnyNumber</code>](#AnyNumber)
+        * [.one](#BitField.one) : [<code>AnyNumber</code>](#AnyNumber)
+        * [.two](#BitField.two) : [<code>AnyNumber</code>](#AnyNumber)
+        * [.masks](#BitField.masks) : [<code>Masks</code>](#Masks)
+        * [.mask](#BitField.mask) : [<code>AnyNumber</code>](#AnyNumber)
+        * [.offsets](#BitField.offsets) : [<code>Masks</code>](#Masks)
+        * [.isBigInt](#BitField.isBigInt) : <code>boolean</code>
+        * [.isSafe](#BitField.isSafe) : <code>boolean</code>
+        * [.isInitialized](#BitField.isInitialized) : <code>boolean</code>
+        * [.encode(data)](#BitField.encode) ⇒ [<code>AnyNumber</code>](#AnyNumber)
+        * [.decode(data)](#BitField.decode) ⇒ [<code>UnpackedInt</code>](#UnpackedInt)
+        * [.isValid(data)](#BitField.isValid) ⇒ <code>boolean</code>
+        * [.getMinSize(number)](#BitField.getMinSize) ⇒ <code>number</code>
+        * [.initialize()](#BitField.initialize) ⇒ <code>void</code>
+        * [.getMatcher(matcher)](#BitField.getMatcher) ⇒ [<code>Matcher</code>](#Matcher)
+        * [.match(value, matcher)](#BitField.match) ⇒ <code>boolean</code>
+
+<a name="new_BitField_new"></a>
+
+### new BitField([data])
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [data] | [<code>AnyNumber</code>](#AnyNumber) \| <code>Array.&lt;number&gt;</code> | <code>0</code> | 
+
+**Example**  
+```js
+class Person extends BitField {}
+Person.fields = [
+ { name: 'age', size: 7 },
+ { name: 'gender', size: 1 },
+];
+new Person([20, 1]).value
+//=> 41
+new Person(41).value
+//=> 41
+```
+<a name="BitField+value"></a>
+
+### bitField.value : <code>number</code> \| <code>BigInt</code>
+**Kind**: instance property of [<code>BitField</code>](#BitField)  
+<a name="BitField+get"></a>
+
+### bitField.get(field) ⇒ <code>number</code>
+Returns the value of a given field.
+
+**Kind**: instance method of [<code>BitField</code>](#BitField)  
+**Returns**: <code>number</code> - value value of the field  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| field | [<code>Field</code>](#Field) | name of the field |
+
+**Example**  
+```js
+class Person extends BitField {}
+Person.fields = [
+ { name: 'age', size: 7 },
+ { name: 'gender', size: 1 },
+];
+const person = new Person([20, 1]);
+person.get('age');
+//=> 20
+person.get('gender');
+//=> 1
+```
+<a name="BitField+set"></a>
+
+### bitField.set(field, value) ⇒ [<code>BitField</code>](#BitField)
+Stores a given value in a field.
+
+**Kind**: instance method of [<code>BitField</code>](#BitField)  
+**Returns**: [<code>BitField</code>](#BitField) - the instance  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| field | [<code>Field</code>](#Field) | name of the field |
+| value | <code>number</code> | value of the field |
+
+**Example**  
+```js
+class Person extends BitField {}
+Person.fields = [
+ { name: 'age', size: 7 },
+ { name: 'gender', size: 1 },
+];
+const person = new Person([20, 1]);
+person.get('age');
+//=> 20
+person.set('age', 30).get('age');
+//=> 30
+```
+<a name="BitField+has"></a>
+
+### bitField.has(...fields) ⇒ <code>boolean</code>
+Checks if an instance has all the specified fields set to 1. Useful for bit flags.
+
+**Kind**: instance method of [<code>BitField</code>](#BitField)  
+**Returns**: <code>boolean</code> - whether all the specified fields are set in the instance  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| ...fields | [<code>Field</code>](#Field) | names of the fields to check |
+
+**Example**  
+```js
+const SettingsFlags = BinariusFactory(['notify', 'premium', 'moderator']);
+const settings = SettingsFlags([1, 0, 1]);
+settings.has('notify', 'moderator');
+//=> true
+settings.has('notify', 'premium');
+//=> false
+```
+<a name="BitField+match"></a>
+
+### bitField.match(matcher) ⇒ <code>boolean</code>
+Checks if the instance contains all the key-value pairs listed in matcher.
+Use `ParseInt.getMatcher` to get an array of precomputed values
+that you can use to efficiently compare multiple instances
+to the same key-value pairs as shown in the examples below.
+
+**Kind**: instance method of [<code>BitField</code>](#BitField)  
+**Returns**: <code>boolean</code> - whether the instance matches with the provided fields  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| matcher | [<code>UnpackedInt</code>](#UnpackedInt) \| [<code>Matcher</code>](#Matcher) | an object with key-value pairs,                                                or an array of precomputed matcher values |
+
+**Example**  
+```js
+class Person extends BitField {}
+Person.fields = [
+ { name: 'age', size: 7 },
+ { name: 'gender', size: 1 },
+];
+const person = new Person([20, 1]);
+person.match({ age: 20 });
+//=> true
+person.match({ gender: 1 });
+//=> true
+person.match({ gender: 1, age: 20 });
+//=> true
+person.match({ gender: 1, age: 19 });
+//=> false
+
+// use precomputed matcher
+const matcher = Person.getMatcher({ age: 20});
+new Person([20, 0]).match(matcher);
+//=> true
+new Person([19, 0]).match(matcher);
+//=> false
+```
+<a name="BitField+toObject"></a>
+
+### bitField.toObject() ⇒ [<code>UnpackedInt</code>](#UnpackedInt)
+Returns the object representation of the instance,
+with field names as properties with corresponding values.
+
+**Kind**: instance method of [<code>BitField</code>](#BitField)  
+**Returns**: [<code>UnpackedInt</code>](#UnpackedInt) - the object representation of the instance  
+**Example**  
+```js
+class Person extends BitField {}
+Person.fields = [
+ { name: 'age', size: 7 },
+ { name: 'gender', size: 1 },
+];
+const person = new Person([20, 1]);
+person.toObject();
+//=> { age: 20, gender: 1 }
+```
+<a name="BitField.fields"></a>
+
+### BitField.fields : [<code>Array.&lt;FieldName&gt;</code>](#FieldName) \| [<code>Array.&lt;Field&gt;</code>](#Field)
+**Kind**: static property of [<code>BitField</code>](#BitField)  
+<a name="BitField.size"></a>
+
+### BitField.size : <code>number</code>
+**Kind**: static property of [<code>BitField</code>](#BitField)  
+<a name="BitField.zero"></a>
+
+### BitField.zero : [<code>AnyNumber</code>](#AnyNumber)
+**Kind**: static property of [<code>BitField</code>](#BitField)  
+<a name="BitField.one"></a>
+
+### BitField.one : [<code>AnyNumber</code>](#AnyNumber)
+**Kind**: static property of [<code>BitField</code>](#BitField)  
+<a name="BitField.two"></a>
+
+### BitField.two : [<code>AnyNumber</code>](#AnyNumber)
+**Kind**: static property of [<code>BitField</code>](#BitField)  
+<a name="BitField.masks"></a>
+
+### BitField.masks : [<code>Masks</code>](#Masks)
+**Kind**: static property of [<code>BitField</code>](#BitField)  
+<a name="BitField.mask"></a>
+
+### BitField.mask : [<code>AnyNumber</code>](#AnyNumber)
+**Kind**: static property of [<code>BitField</code>](#BitField)  
+<a name="BitField.offsets"></a>
+
+### BitField.offsets : [<code>Masks</code>](#Masks)
+**Kind**: static property of [<code>BitField</code>](#BitField)  
+<a name="BitField.isBigInt"></a>
+
+### BitField.isBigInt : <code>boolean</code>
+**Kind**: static property of [<code>BitField</code>](#BitField)  
+<a name="BitField.isSafe"></a>
+
+### BitField.isSafe : <code>boolean</code>
+**Kind**: static property of [<code>BitField</code>](#BitField)  
+<a name="BitField.isInitialized"></a>
+
+### BitField.isInitialized : <code>boolean</code>
+**Kind**: static property of [<code>BitField</code>](#BitField)  
+<a name="BitField.encode"></a>
+
+### BitField.encode(data) ⇒ [<code>AnyNumber</code>](#AnyNumber)
+Encodes a given list of numbers into a single number according to the schema.
+
+**Kind**: static method of [<code>BitField</code>](#BitField)  
+**Returns**: [<code>AnyNumber</code>](#AnyNumber) - encoded number  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| data | [<code>Array.&lt;AnyNumber&gt;</code>](#AnyNumber) | the list of numbers to encode |
+
+**Example**  
+```js
+class Person extends BitField {}
+Person.fields = [
+ { name: 'age', size: 7 },
+ { name: 'gender', size: 1 },
+];
+Person.encode([20, 1])
+//=> 41
+```
+<a name="BitField.decode"></a>
+
+### BitField.decode(data) ⇒ [<code>UnpackedInt</code>](#UnpackedInt)
+Decodes an encoded number into it's object representation according to the schema.
+
+**Kind**: static method of [<code>BitField</code>](#BitField)  
+**Returns**: [<code>UnpackedInt</code>](#UnpackedInt) - object representation  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| data | [<code>AnyNumber</code>](#AnyNumber) | encoded number |
+
+**Example**  
+```js
+class Person extends BitField {}
+Person.fields = [
+ { name: 'age', size: 7 },
+ { name: 'gender', size: 1 },
+];
+Person.decode(41);
+//=> { age: 20, gender: 1 }
+```
+<a name="BitField.isValid"></a>
+
+### BitField.isValid(data) ⇒ <code>boolean</code>
+Checks if a given set of values or all given pairs of field name and value
+are valid according to the schema.
+
+**Kind**: static method of [<code>BitField</code>](#BitField)  
+**Returns**: <code>boolean</code> - whether all pairs are valid  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| data | [<code>AnyNumber</code>](#AnyNumber) \| [<code>UnpackedInt</code>](#UnpackedInt) | pairs of field name and value to check |
+
+**Example**  
+```js
+class Person extends BitField {}
+Person.fields = [
+ { name: 'age', size: 7 },
+ { name: 'gender', size: 1 },
+];
+Person.isValid({age: 100})
+//=> true
+Person.isValid({age: 100, gender: 3})
+//=> false
+Person.isValid([100, 1])
+//=> true
+Person.isValid([100, 3])
+//=> false
+```
+<a name="BitField.getMinSize"></a>
+
+### BitField.getMinSize(number) ⇒ <code>number</code>
+Returns the minimum amount of bits necessary to hold a given number.
+
+**Kind**: static method of [<code>BitField</code>](#BitField)  
+**Returns**: <code>number</code> - the amount of bits  
+
+| Param | Type |
+| --- | --- |
+| number | <code>number</code> | 
+
+**Example**  
+```js
+BitField.getMinSize(100)
+//=> 7
+
+BitField.getMinSize(2000)
+//=> 11
+
+BitField.getMinSize(Number.MAX_SAFE_INTEGER)
+//=> 53
+```
+<a name="BitField.initialize"></a>
+
+### BitField.initialize() ⇒ <code>void</code>
+Prepares the class to handle data according to it's schema provided in `BitField.fields`.
+The method is called automatically the first time the constructor is used.
+
+**Kind**: static method of [<code>BitField</code>](#BitField)  
+<a name="BitField.getMatcher"></a>
+
+### BitField.getMatcher(matcher) ⇒ [<code>Matcher</code>](#Matcher)
+Creates an array of values to be used as a matcher
+to efficiently match against multiple instances.
+
+**Kind**: static method of [<code>BitField</code>](#BitField)  
+**Returns**: [<code>Matcher</code>](#Matcher) - an array of precomputed values  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| matcher | [<code>UnpackedInt</code>](#UnpackedInt) | an object containing field names and their values |
+
+<a name="BitField.match"></a>
+
+### BitField.match(value, matcher) ⇒ <code>boolean</code>
+The static version of `BitField#match`, matches a given value against a precomputed matcher.
+
+**Kind**: static method of [<code>BitField</code>](#BitField)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| value | [<code>AnyNumber</code>](#AnyNumber) | a value to check |
+| matcher | [<code>Matcher</code>](#Matcher) | a precomputed set of values |
 
 <a name="Grid"></a>
 
@@ -66,7 +426,7 @@
         * [.rows](#Grid+rows) : <code>number</code>
         * [.getIndex(row, column)](#Grid+getIndex) ⇒ <code>\*</code>
         * [.get(row, column)](#Grid+get) ⇒ <code>\*</code>
-        * [.set(row, column, value)](#Grid+set) ⇒ <code>\*</code>
+        * [.set(row, column, value)](#Grid+set) ⇒ [<code>Grid</code>](#Grid)
         * [.getCoordinates(index)](#Grid+getCoordinates) ⇒ [<code>Coordinates</code>](#Coordinates)
         * [.toArrays([withPadding])](#Grid+toArrays) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
     * _static_
@@ -148,10 +508,11 @@ a.get(0, 1);
 ```
 <a name="Grid+set"></a>
 
-### grid.set(row, column, value) ⇒ <code>\*</code>
+### grid.set(row, column, value) ⇒ [<code>Grid</code>](#Grid)
 Sets the element at given coordinates.
 
 **Kind**: instance method of [<code>Grid</code>](#Grid)  
+**Returns**: [<code>Grid</code>](#Grid) - the instance  
 
 | Param | Type |
 | --- | --- |
@@ -221,366 +582,153 @@ a.get(2, 1);
 | arrays | <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> |  |  |
 | [pad] | <code>\*</code> | <code>0</code> | the value to pad the arrays to create equal sized rows |
 
-<a name="PackedInt"></a>
+<a name="RecordArray"></a>
 
-## PackedInt
+## RecordArray ⇐ <code>DataView</code>
+Extends DataView to use ArrayBuffer as an array of records or C-like structs.
+
 **Kind**: global class  
+**Extends**: <code>DataView</code>  
 
-* [PackedInt](#PackedInt)
-    * [new PackedInt([data])](#new_PackedInt_new)
-    * _instance_
-        * [.value](#PackedInt+value) : <code>number</code> \| <code>BigInt</code>
-        * [.get(field)](#PackedInt+get) ⇒ <code>number</code>
-        * [.set(field, value)](#PackedInt+set) ⇒ [<code>PackedInt</code>](#PackedInt)
-        * [.has(...fields)](#PackedInt+has) ⇒ <code>boolean</code>
-        * [.match(matcher)](#PackedInt+match) ⇒ <code>boolean</code>
-        * [.toObject()](#PackedInt+toObject) ⇒ [<code>UnpackedInt</code>](#UnpackedInt)
-    * _static_
-        * [.fields](#PackedInt.fields) : [<code>Array.&lt;FieldName&gt;</code>](#FieldName) \| [<code>Array.&lt;Field&gt;</code>](#Field)
-        * [.size](#PackedInt.size) : <code>number</code>
-        * [.zero](#PackedInt.zero) : [<code>AnyNumber</code>](#AnyNumber)
-        * [.one](#PackedInt.one) : [<code>AnyNumber</code>](#AnyNumber)
-        * [.two](#PackedInt.two) : [<code>AnyNumber</code>](#AnyNumber)
-        * [.masks](#PackedInt.masks) : [<code>Masks</code>](#Masks)
-        * [.mask](#PackedInt.mask) : [<code>AnyNumber</code>](#AnyNumber)
-        * [.offsets](#PackedInt.offsets) : [<code>Masks</code>](#Masks)
-        * [.isBigInt](#PackedInt.isBigInt) : <code>boolean</code>
-        * [.isSafe](#PackedInt.isSafe) : <code>boolean</code>
-        * [.isInitialized](#PackedInt.isInitialized) : <code>boolean</code>
-        * [.encode(data)](#PackedInt.encode) ⇒ [<code>AnyNumber</code>](#AnyNumber)
-        * [.decode(data)](#PackedInt.decode) ⇒ [<code>UnpackedInt</code>](#UnpackedInt)
-        * [.isValid(data)](#PackedInt.isValid) ⇒ <code>boolean</code>
-        * [.getMinSize(number)](#PackedInt.getMinSize) ⇒ <code>number</code>
-        * [.initialize()](#PackedInt.initialize) ⇒ <code>void</code>
-        * [.getMatcher(matcher)](#PackedInt.getMatcher) ⇒ [<code>Matcher</code>](#Matcher)
-        * [.match(value, matcher)](#PackedInt.match) ⇒ <code>boolean</code>
+* [RecordArray](#RecordArray) ⇐ <code>DataView</code>
+    * [new RecordArray(fields, [size], [buffer], [byteOffset], [byteLength])](#new_RecordArray_new)
+    * [.size](#RecordArray+size) : <code>number</code>
+    * [.get(index, field)](#RecordArray+get) ⇒ <code>\*</code>
+    * [.set(index, field, value)](#RecordArray+set) ⇒ <code>this</code>
+    * [.getString(offset, littleEndian, size)](#RecordArray+getString) ⇒ <code>Uint8Array</code>
+    * [.setString(offset, value)](#RecordArray+setString) ⇒ <code>Uint8Array</code>
+    * [.getByteOffset(index, field)](#RecordArray+getByteOffset) ⇒ <code>number</code>
+    * [.toObject(index)](#RecordArray+toObject) ⇒ <code>Object</code>
 
-<a name="new_PackedInt_new"></a>
+<a name="new_RecordArray_new"></a>
 
-### new PackedInt([data])
+### new RecordArray(fields, [size], [buffer], [byteOffset], [byteLength])
 
-| Param | Type | Default |
-| --- | --- | --- |
-| [data] | [<code>AnyNumber</code>](#AnyNumber) \| <code>Array.&lt;number&gt;</code> | <code>0</code> | 
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| fields | [<code>Array.&lt;RecordField&gt;</code>](#RecordField) |  | an array field descriptions |
+| [size] | <code>number</code> | <code>1</code> | the amount of structs in the array,                        optional if an existing ArrayBuffer is used |
+| [buffer] | <code>ArrayBuffer</code> |  | an existing ArrayBuffer to use for structs |
+| [byteOffset] | <code>number</code> |  | the byteOffset in an existing ArrayBuffer |
+| [byteLength] | <code>number</code> |  | the byteLength in an existing ArrayBuffer |
 
+<a name="RecordArray+size"></a>
+
+### recordArray.size : <code>number</code>
+The amount of structs in the array.
+
+**Kind**: instance property of [<code>RecordArray</code>](#RecordArray)  
 **Example**  
 ```js
-class Person extends PackedInt {}
-Person.fields = [
- { name: 'age', size: 7 },
- { name: 'gender', size: 1 },
-];
-new Person([20, 1]).value
-//=> 41
-new Person(41).value
-//=> 41
-```
-<a name="PackedInt+value"></a>
+const people = new RecordArray([
+  { name: 'age', type: 'Uint8' },
+  { name: 'score', type: 'Float32' },
+], 20);
 
-### packedInt.value : <code>number</code> \| <code>BigInt</code>
-**Kind**: instance property of [<code>PackedInt</code>](#PackedInt)  
-<a name="PackedInt+get"></a>
-
-### packedInt.get(field) ⇒ <code>number</code>
-Returns the value of a given field.
-
-**Kind**: instance method of [<code>PackedInt</code>](#PackedInt)  
-**Returns**: <code>number</code> - value value of the field  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| field | [<code>Field</code>](#Field) | name of the field |
-
-**Example**  
-```js
-class Person extends PackedInt {}
-Person.fields = [
- { name: 'age', size: 7 },
- { name: 'gender', size: 1 },
-];
-const person = new Person([20, 1]);
-person.get('age');
+people.size
 //=> 20
-person.get('gender');
-//=> 1
 ```
-<a name="PackedInt+set"></a>
+<a name="RecordArray+get"></a>
 
-### packedInt.set(field, value) ⇒ [<code>PackedInt</code>](#PackedInt)
-Stores a given value in a field.
+### recordArray.get(index, field) ⇒ <code>\*</code>
+Returns the value of a given field of a struct at the given index.
 
-**Kind**: instance method of [<code>PackedInt</code>](#PackedInt)  
-**Returns**: [<code>PackedInt</code>](#PackedInt) - the instance  
+**Kind**: instance method of [<code>RecordArray</code>](#RecordArray)  
+**Returns**: <code>\*</code> - value of the field  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| field | [<code>Field</code>](#Field) | name of the field |
-| value | <code>number</code> | value of the field |
+| index | <code>number</code> | the index of a struct |
+| field | <code>string</code> | the name of the field |
 
 **Example**  
 ```js
-class Person extends PackedInt {}
-Person.fields = [
- { name: 'age', size: 7 },
- { name: 'gender', size: 1 },
-];
-const person = new Person([20, 1]);
-person.get('age');
-//=> 20
-person.set('age', 30).get('age');
-//=> 30
+const people = new RecordArray([
+  { name: 'age', type: 'Uint8' },
+  { name: 'score', type: 'Float32' },
+], 20);
+
+person.get(0, 'age');
 ```
-<a name="PackedInt+has"></a>
+<a name="RecordArray+set"></a>
 
-### packedInt.has(...fields) ⇒ <code>boolean</code>
-Checks if an instance has all the specified fields set to 1. Useful for bit flags.
+### recordArray.set(index, field, value) ⇒ <code>this</code>
+Sets a value to a field of a struct at a given index.
 
-**Kind**: instance method of [<code>PackedInt</code>](#PackedInt)  
-**Returns**: <code>boolean</code> - whether all the specified fields are set in the instance  
+**Kind**: instance method of [<code>RecordArray</code>](#RecordArray)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| ...fields | [<code>Field</code>](#Field) | names of the fields to check |
+| index | <code>number</code> | the index of a struct |
+| field | <code>string</code> | the name of the field |
+| value | <code>\*</code> | the value to be set |
 
 **Example**  
 ```js
-const SettingsFlags = BinariusFactory(['notify', 'premium', 'moderator']);
-const settings = SettingsFlags([1, 0, 1]);
-settings.has('notify', 'moderator');
-//=> true
-settings.has('notify', 'premium');
-//=> false
+const people = new RecordArray([
+  { name: 'age', type: 'Uint8' },
+  { name: 'score', type: 'Float32' },
+], 20);
+
+person.set(0, 'age', 10);
+person.get(0, 'age');
+//=> 10
 ```
-<a name="PackedInt+match"></a>
+<a name="RecordArray+getString"></a>
 
-### packedInt.match(matcher) ⇒ <code>boolean</code>
-Checks if the instance contains all the key-value pairs listed in matcher.
-Use `ParseInt.getMatcher` to get an array of precomputed values
-that you can use to efficiently compare multiple instances
-to the same key-value pairs as shown in the examples below.
-
-**Kind**: instance method of [<code>PackedInt</code>](#PackedInt)  
-**Returns**: <code>boolean</code> - whether the instance matches with the provided fields  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| matcher | [<code>UnpackedInt</code>](#UnpackedInt) \| [<code>Matcher</code>](#Matcher) | an object with key-value pairs,                                                or an array of precomputed matcher values |
-
-**Example**  
-```js
-class Person extends PackedInt {}
-Person.fields = [
- { name: 'age', size: 7 },
- { name: 'gender', size: 1 },
-];
-const person = new Person([20, 1]);
-person.match({ age: 20 });
-//=> true
-person.match({ gender: 1 });
-//=> true
-person.match({ gender: 1, age: 20 });
-//=> true
-person.match({ gender: 1, age: 19 });
-//=> false
-
-// use precomputed matcher
-const matcher = Person.getMatcher({ age: 20});
-new Person([20, 0]).match(matcher);
-//=> true
-new Person([19, 0]).match(matcher);
-//=> false
-```
-<a name="PackedInt+toObject"></a>
-
-### packedInt.toObject() ⇒ [<code>UnpackedInt</code>](#UnpackedInt)
-Returns the object representation of the instance,
-with field names as properties with corresponding values.
-
-**Kind**: instance method of [<code>PackedInt</code>](#PackedInt)  
-**Returns**: [<code>UnpackedInt</code>](#UnpackedInt) - the object representation of the instance  
-**Example**  
-```js
-class Person extends PackedInt {}
-Person.fields = [
- { name: 'age', size: 7 },
- { name: 'gender', size: 1 },
-];
-const person = new Person([20, 1]);
-person.toObject();
-//=> { age: 20, gender: 1 }
-```
-<a name="PackedInt.fields"></a>
-
-### PackedInt.fields : [<code>Array.&lt;FieldName&gt;</code>](#FieldName) \| [<code>Array.&lt;Field&gt;</code>](#Field)
-**Kind**: static property of [<code>PackedInt</code>](#PackedInt)  
-<a name="PackedInt.size"></a>
-
-### PackedInt.size : <code>number</code>
-**Kind**: static property of [<code>PackedInt</code>](#PackedInt)  
-<a name="PackedInt.zero"></a>
-
-### PackedInt.zero : [<code>AnyNumber</code>](#AnyNumber)
-**Kind**: static property of [<code>PackedInt</code>](#PackedInt)  
-<a name="PackedInt.one"></a>
-
-### PackedInt.one : [<code>AnyNumber</code>](#AnyNumber)
-**Kind**: static property of [<code>PackedInt</code>](#PackedInt)  
-<a name="PackedInt.two"></a>
-
-### PackedInt.two : [<code>AnyNumber</code>](#AnyNumber)
-**Kind**: static property of [<code>PackedInt</code>](#PackedInt)  
-<a name="PackedInt.masks"></a>
-
-### PackedInt.masks : [<code>Masks</code>](#Masks)
-**Kind**: static property of [<code>PackedInt</code>](#PackedInt)  
-<a name="PackedInt.mask"></a>
-
-### PackedInt.mask : [<code>AnyNumber</code>](#AnyNumber)
-**Kind**: static property of [<code>PackedInt</code>](#PackedInt)  
-<a name="PackedInt.offsets"></a>
-
-### PackedInt.offsets : [<code>Masks</code>](#Masks)
-**Kind**: static property of [<code>PackedInt</code>](#PackedInt)  
-<a name="PackedInt.isBigInt"></a>
-
-### PackedInt.isBigInt : <code>boolean</code>
-**Kind**: static property of [<code>PackedInt</code>](#PackedInt)  
-<a name="PackedInt.isSafe"></a>
-
-### PackedInt.isSafe : <code>boolean</code>
-**Kind**: static property of [<code>PackedInt</code>](#PackedInt)  
-<a name="PackedInt.isInitialized"></a>
-
-### PackedInt.isInitialized : <code>boolean</code>
-**Kind**: static property of [<code>PackedInt</code>](#PackedInt)  
-<a name="PackedInt.encode"></a>
-
-### PackedInt.encode(data) ⇒ [<code>AnyNumber</code>](#AnyNumber)
-Encodes a given list of numbers into a single number according to the schema.
-
-**Kind**: static method of [<code>PackedInt</code>](#PackedInt)  
-**Returns**: [<code>AnyNumber</code>](#AnyNumber) - encoded number  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| data | [<code>Array.&lt;AnyNumber&gt;</code>](#AnyNumber) | the list of numbers to encode |
-
-**Example**  
-```js
-class Person extends PackedInt {}
-Person.fields = [
- { name: 'age', size: 7 },
- { name: 'gender', size: 1 },
-];
-Person.encode([20, 1])
-//=> 41
-```
-<a name="PackedInt.decode"></a>
-
-### PackedInt.decode(data) ⇒ [<code>UnpackedInt</code>](#UnpackedInt)
-Decodes an encoded number into it's object representation according to the schema.
-
-**Kind**: static method of [<code>PackedInt</code>](#PackedInt)  
-**Returns**: [<code>UnpackedInt</code>](#UnpackedInt) - object representation  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| data | [<code>AnyNumber</code>](#AnyNumber) | encoded number |
-
-**Example**  
-```js
-class Person extends PackedInt {}
-Person.fields = [
- { name: 'age', size: 7 },
- { name: 'gender', size: 1 },
-];
-Person.decode(41);
-//=> { age: 20, gender: 1 }
-```
-<a name="PackedInt.isValid"></a>
-
-### PackedInt.isValid(data) ⇒ <code>boolean</code>
-Checks if a given set of values or all given pairs of field name and value
-are valid according to the schema.
-
-**Kind**: static method of [<code>PackedInt</code>](#PackedInt)  
-**Returns**: <code>boolean</code> - whether all pairs are valid  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| data | [<code>AnyNumber</code>](#AnyNumber) \| [<code>UnpackedInt</code>](#UnpackedInt) | pairs of field name and value to check |
-
-**Example**  
-```js
-class Person extends PackedInt {}
-Person.fields = [
- { name: 'age', size: 7 },
- { name: 'gender', size: 1 },
-];
-Person.isValid({age: 100})
-//=> true
-Person.isValid({age: 100, gender: 3})
-//=> false
-Person.isValid([100, 1])
-//=> true
-Person.isValid([100, 3])
-//=> false
-```
-<a name="PackedInt.getMinSize"></a>
-
-### PackedInt.getMinSize(number) ⇒ <code>number</code>
-Returns the minimum amount of bits necessary to hold a given number.
-
-**Kind**: static method of [<code>PackedInt</code>](#PackedInt)  
-**Returns**: <code>number</code> - the amount of bits  
+### recordArray.getString(offset, littleEndian, size) ⇒ <code>Uint8Array</code>
+**Kind**: instance method of [<code>RecordArray</code>](#RecordArray)  
 
 | Param | Type |
 | --- | --- |
-| number | <code>number</code> | 
+| offset | <code>number</code> | 
+| littleEndian | <code>boolean</code> | 
+| size | <code>number</code> | 
+
+<a name="RecordArray+setString"></a>
+
+### recordArray.setString(offset, value) ⇒ <code>Uint8Array</code>
+**Kind**: instance method of [<code>RecordArray</code>](#RecordArray)  
+
+| Param | Type |
+| --- | --- |
+| offset | <code>number</code> | 
+| value | [<code>Collection</code>](#Collection) | 
+
+<a name="RecordArray+getByteOffset"></a>
+
+### recordArray.getByteOffset(index, field) ⇒ <code>number</code>
+Returns the byte offset in the ArrayBuffer of a given field.
+
+**Kind**: instance method of [<code>RecordArray</code>](#RecordArray)  
+**Returns**: <code>number</code> - the byte offset  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| index | <code>number</code> | the index of the struct |
+| field | <code>string</code> | the name of the field |
+
+<a name="RecordArray+toObject"></a>
+
+### recordArray.toObject(index) ⇒ <code>Object</code>
+The object representation of a given struct.
+
+**Kind**: instance method of [<code>RecordArray</code>](#RecordArray)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| index | <code>number</code> | the index of the struct |
 
 **Example**  
 ```js
-PackedInt.getMinSize(100)
-//=> 7
+const people = new RecordArray([
+  { name: 'age', type: 'Uint8' },
+  { name: 'score', type: 'Float32' },
+], 20);
 
-PackedInt.getMinSize(2000)
-//=> 11
-
-PackedInt.getMinSize(Number.MAX_SAFE_INTEGER)
-//=> 53
+person.set(0, 'age', 10).set(0, 'score', 5.0).toObject(0);
+//=> { age: 10, score: 5.0 }
 ```
-<a name="PackedInt.initialize"></a>
-
-### PackedInt.initialize() ⇒ <code>void</code>
-Prepares the class to handle data according to it's schema provided in `PackedInt.fields`.
-The method is called automatically the first time the constructor is used.
-
-**Kind**: static method of [<code>PackedInt</code>](#PackedInt)  
-<a name="PackedInt.getMatcher"></a>
-
-### PackedInt.getMatcher(matcher) ⇒ [<code>Matcher</code>](#Matcher)
-Creates an array of values to be used as a matcher
-to efficiently match against multiple instances.
-
-**Kind**: static method of [<code>PackedInt</code>](#PackedInt)  
-**Returns**: [<code>Matcher</code>](#Matcher) - an array of precomputed values  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| matcher | [<code>UnpackedInt</code>](#UnpackedInt) | an object containing field names and their values |
-
-<a name="PackedInt.match"></a>
-
-### PackedInt.match(value, matcher) ⇒ <code>boolean</code>
-The static version of `PackedInt#match`, matches a given value against a precomputed matcher.
-
-**Kind**: static method of [<code>PackedInt</code>](#PackedInt)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| value | [<code>AnyNumber</code>](#AnyNumber) | a value to check |
-| matcher | [<code>Matcher</code>](#Matcher) | a precomputed set of values |
-
 <a name="SortedArray"></a>
 
 ## SortedArray ⇐ [<code>SortedCollection</code>](#SortedCollection)
@@ -1062,153 +1210,6 @@ Checks whether an array has any duplicating elements.
 SortedCollection.isUnique([1, 2, 2, 3, 4]);
 //=> false
 ```
-<a name="StructArray"></a>
-
-## StructArray ⇐ <code>DataView</code>
-Extends DataView to use ArrayBuffers as indexed collections of C-like structs aka records.
-
-**Kind**: global class  
-**Extends**: <code>DataView</code>  
-
-* [StructArray](#StructArray) ⇐ <code>DataView</code>
-    * [new StructArray(fields, [size], [buffer], [byteOffset], [byteLength])](#new_StructArray_new)
-    * [.size](#StructArray+size) : <code>number</code>
-    * [.get(index, field)](#StructArray+get) ⇒ <code>\*</code>
-    * [.set(index, field, value)](#StructArray+set) ⇒ <code>this</code>
-    * [.getString(offset, littleEndian, size)](#StructArray+getString) ⇒ <code>Uint8Array</code>
-    * [.setString(offset, value)](#StructArray+setString) ⇒ <code>Uint8Array</code>
-    * [.getByteOffset(index, field)](#StructArray+getByteOffset) ⇒ <code>number</code>
-    * [.toObject(index)](#StructArray+toObject) ⇒ <code>Object</code>
-
-<a name="new_StructArray_new"></a>
-
-### new StructArray(fields, [size], [buffer], [byteOffset], [byteLength])
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| fields | [<code>Array.&lt;StructField&gt;</code>](#StructField) |  | an array field descriptions |
-| [size] | <code>number</code> | <code>1</code> | the amount of structs in the array,                        optional if an existing ArrayBuffer is used |
-| [buffer] | <code>ArrayBuffer</code> |  | an existing ArrayBuffer to use for structs |
-| [byteOffset] | <code>number</code> |  | the byteOffset in an existing ArrayBuffer |
-| [byteLength] | <code>number</code> |  | the byteLength in an existing ArrayBuffer |
-
-<a name="StructArray+size"></a>
-
-### structArray.size : <code>number</code>
-The amount of structs in the array.
-
-**Kind**: instance property of [<code>StructArray</code>](#StructArray)  
-**Example**  
-```js
-const people = new StructArray([
-  { name: 'age', type: 'Uint8' },
-  { name: 'score', type: 'Float32' },
-], 20);
-
-people.size
-//=> 20
-```
-<a name="StructArray+get"></a>
-
-### structArray.get(index, field) ⇒ <code>\*</code>
-Returns the value of a given field of a struct at the given index.
-
-**Kind**: instance method of [<code>StructArray</code>](#StructArray)  
-**Returns**: <code>\*</code> - value of the field  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| index | <code>number</code> | the index of a struct |
-| field | <code>string</code> | the name of the field |
-
-**Example**  
-```js
-const people = new StructArray([
-  { name: 'age', type: 'Uint8' },
-  { name: 'score', type: 'Float32' },
-], 20);
-
-person.get(0, 'age');
-```
-<a name="StructArray+set"></a>
-
-### structArray.set(index, field, value) ⇒ <code>this</code>
-Sets a value to a field of a struct at a given index.
-
-**Kind**: instance method of [<code>StructArray</code>](#StructArray)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| index | <code>number</code> | the index of a struct |
-| field | <code>string</code> | the name of the field |
-| value | <code>\*</code> | the value to be set |
-
-**Example**  
-```js
-const people = new StructArray([
-  { name: 'age', type: 'Uint8' },
-  { name: 'score', type: 'Float32' },
-], 20);
-
-person.set(0, 'age', 10);
-person.get(0, 'age');
-//=> 10
-```
-<a name="StructArray+getString"></a>
-
-### structArray.getString(offset, littleEndian, size) ⇒ <code>Uint8Array</code>
-**Kind**: instance method of [<code>StructArray</code>](#StructArray)  
-
-| Param | Type |
-| --- | --- |
-| offset | <code>number</code> | 
-| littleEndian | <code>boolean</code> | 
-| size | <code>number</code> | 
-
-<a name="StructArray+setString"></a>
-
-### structArray.setString(offset, value) ⇒ <code>Uint8Array</code>
-**Kind**: instance method of [<code>StructArray</code>](#StructArray)  
-
-| Param | Type |
-| --- | --- |
-| offset | <code>number</code> | 
-| value | [<code>Collection</code>](#Collection) | 
-
-<a name="StructArray+getByteOffset"></a>
-
-### structArray.getByteOffset(index, field) ⇒ <code>number</code>
-Returns the byte offset in the ArrayBuffer of a given field.
-
-**Kind**: instance method of [<code>StructArray</code>](#StructArray)  
-**Returns**: <code>number</code> - the byte offset  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| index | <code>number</code> | the index of the struct |
-| field | <code>string</code> | the name of the field |
-
-<a name="StructArray+toObject"></a>
-
-### structArray.toObject(index) ⇒ <code>Object</code>
-The object representation of a given struct.
-
-**Kind**: instance method of [<code>StructArray</code>](#StructArray)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| index | <code>number</code> | the index of the struct |
-
-**Example**  
-```js
-const people = new StructArray([
-  { name: 'age', type: 'Uint8' },
-  { name: 'score', type: 'Float32' },
-], 20);
-
-person.set(0, 'age', 10).set(0, 'score', 5.0).toObject(0);
-//=> { age: 10, score: 5.0 }
-```
 <a name="GridMixin"></a>
 
 ## GridMixin(Base) ⇒ [<code>Grid</code>](#Grid)
@@ -1249,25 +1250,6 @@ Creates a SortedCollection class extending a given Array-like class.
 ```js
 const SortedCollection = Grid(Uint32Array);
 ```
-<a name="CollectionConstructor"></a>
-
-## CollectionConstructor : <code>ArrayConstructor</code> \| <code>Int8ArrayConstructor</code> \| <code>Int8ArrayConstructor</code> \| <code>Uint8ArrayConstructor</code> \| <code>Uint8ClampedArrayConstructor</code> \| <code>Int16ArrayConstructor</code> \| <code>Uint16ArrayConstructor</code> \| <code>Int32ArrayConstructor</code> \| <code>Uint32ArrayConstructor</code> \| <code>Float32ArrayConstructor</code> \| <code>Float64ArrayConstructor</code>
-**Kind**: global typedef  
-<a name="Collection"></a>
-
-## Collection : <code>Array</code> \| <code>Int8Array</code> \| <code>Uint8Array</code> \| <code>Uint8ClampedArray</code> \| <code>Int16Array</code> \| <code>Uint16Array</code> \| <code>Int32Array</code> \| <code>Uint32Array</code> \| <code>Float32Array</code> \| <code>Float64Array</code>
-**Kind**: global typedef  
-<a name="Coordinates"></a>
-
-## Coordinates : <code>Object</code>
-**Kind**: global typedef  
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| row | <code>number</code> | row index |
-| column | <code>number</code> | column index |
-
 <a name="AnyNumber"></a>
 
 ## AnyNumber : <code>number</code> \| <code>BigInt</code>
@@ -1306,16 +1288,35 @@ const SortedCollection = Grid(Uint32Array);
 
 ## Masks : <code>Object.&lt;string, AnyNumber&gt;</code>
 **Kind**: global typedef  
-<a name="StructField"></a>
+<a name="CollectionConstructor"></a>
 
-## StructField
+## CollectionConstructor : <code>ArrayConstructor</code> \| <code>Int8ArrayConstructor</code> \| <code>Int8ArrayConstructor</code> \| <code>Uint8ArrayConstructor</code> \| <code>Uint8ClampedArrayConstructor</code> \| <code>Int16ArrayConstructor</code> \| <code>Uint16ArrayConstructor</code> \| <code>Int32ArrayConstructor</code> \| <code>Uint32ArrayConstructor</code> \| <code>Float32ArrayConstructor</code> \| <code>Float64ArrayConstructor</code>
+**Kind**: global typedef  
+<a name="Collection"></a>
+
+## Collection : <code>Array</code> \| <code>Int8Array</code> \| <code>Uint8Array</code> \| <code>Uint8ClampedArray</code> \| <code>Int16Array</code> \| <code>Uint16Array</code> \| <code>Int32Array</code> \| <code>Uint32Array</code> \| <code>Float32Array</code> \| <code>Float64Array</code>
+**Kind**: global typedef  
+<a name="Coordinates"></a>
+
+## Coordinates : <code>Object</code>
 **Kind**: global typedef  
 **Properties**
 
-| Name | Type |
-| --- | --- |
-| name | <code>string</code> | 
-| type | <code>string</code> | 
-| [size] | <code>number</code> | 
-| [littleEndian] | <code>boolean</code> | 
+| Name | Type | Description |
+| --- | --- | --- |
+| row | <code>number</code> | row index |
+| column | <code>number</code> | column index |
+
+<a name="RecordField"></a>
+
+## RecordField
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> |  |
+| type | <code>string</code> |  |
+| [size] | <code>number</code> | the maximum size in bytes for a string type |
+| [littleEndian] | <code>boolean</code> |  |
 

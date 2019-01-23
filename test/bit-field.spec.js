@@ -1,11 +1,11 @@
-const PackedInt = require('../lib/packed-int');
+const BitField = require('../lib/bit-field');
 
-describe('PackedInt', () => {
-  class Field extends PackedInt {}
+describe('BitField', () => {
+  class Field extends BitField {}
   Field.fields = [{ name: 'width', size: 16 }, { name: 'height', size: 15 }];
-  class PersonFlags extends PackedInt {}
+  class PersonFlags extends BitField {}
   PersonFlags.fields = ['human', 'gender', 'tall'];
-  class LargePerson extends PackedInt {}
+  class LargePerson extends BitField {}
   LargePerson.fields = [
     { name: 'age', size: 7 },
     { name: 'gender', size: 1 },
@@ -125,7 +125,7 @@ describe('PackedInt', () => {
     });
 
     it('returns number for bigint values less than 53 bits', () => {
-      class MediumField extends PackedInt {}
+      class MediumField extends BitField {}
       MediumField.fields = [{ name: 'width', size: 26 }, { name: 'height', size: 27 }];
       MediumField.initialize();
       expect(MediumField.size).toBe(53);
@@ -149,7 +149,7 @@ describe('PackedInt', () => {
   });
 
   describe('isValid', () => {
-    class Person extends PackedInt {}
+    class Person extends BitField {}
     Person.fields = [{ name: 'age', size: 7 }, { name: 'gender', size: 1 }];
     Person.initialize();
 
@@ -172,13 +172,13 @@ describe('PackedInt', () => {
 
   describe('getMinSize', () => {
     it('calculates the minimum amount of bits to hold a given number', () => {
-      expect(PackedInt.getMinSize(100)).toBe(7);
-      expect(PackedInt.getMinSize(127)).toBe(7);
-      expect(PackedInt.getMinSize(2000)).toBe(11);
-      expect(PackedInt.getMinSize(8000)).toBe(13);
-      expect(PackedInt.getMinSize(2147483647)).toBe(31);
-      expect(PackedInt.getMinSize(7147483647)).toBe(33);
-      expect(PackedInt.getMinSize(Number.MAX_SAFE_INTEGER)).toBe(53);
+      expect(BitField.getMinSize(100)).toBe(7);
+      expect(BitField.getMinSize(127)).toBe(7);
+      expect(BitField.getMinSize(2000)).toBe(11);
+      expect(BitField.getMinSize(8000)).toBe(13);
+      expect(BitField.getMinSize(2147483647)).toBe(31);
+      expect(BitField.getMinSize(7147483647)).toBe(33);
+      expect(BitField.getMinSize(Number.MAX_SAFE_INTEGER)).toBe(53);
     });
   });
 

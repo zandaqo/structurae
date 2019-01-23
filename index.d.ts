@@ -59,7 +59,7 @@ interface Masks {
     [propName: string]: AnyNumber;
 }
 
-export class PackedInt {
+export class BitField {
     value: AnyNumber;
     constructor(data?: AnyNumber|number[]);
     get(field: FieldName): number;
@@ -119,26 +119,26 @@ export class SortedArray extends SortedMixin(Array) {
     uniquify(): this;
 }
 
-interface StructField {
+interface RecordField {
     name: string;
     type: string;
     size?: number;
     littleEndian?: boolean;
 }
 
-interface StructSchema {
-    [propName: string]: StructField;
+interface RecordSchema {
+    [propName: string]: RecordField;
 }
 
-export declare class StructArray extends DataView {
+export declare class RecordArray extends DataView {
     size: number;
-    private fields: StructField[];
-    private schema: StructSchema;
+    private fields: RecordField[];
+    private schema: RecordSchema;
     private offset: number;
     private offsets: object;
     private stringView: Uint8Array;
 
-    constructor(fields: StructField[], size: number, buffer?: ArrayBuffer, byteOffset?: number, byteLength?: number);
+    constructor(fields: RecordField[], size: number, buffer?: ArrayBuffer, byteOffset?: number, byteLength?: number);
     get(index: number, field: string): any;
     set(index: number, field: string, value: any, littleEndian?: boolean): this;
     getString(offset: number, littleEndian: boolean, size: number): Uint8Array;

@@ -3,8 +3,9 @@
 /* eslint no-console: 0 */
 
 const Benchmark = require('benchmark');
-const Grid = require('./lib/grid');
-const PackedInt = require('./lib/packed-int');
+const GridMixin = require('./lib/grid');
+const BitField = require('./lib/bit-field');
+const RecordArray = require('./lib/record-array');
 
 const benchmarkOptions = {
   onStart(event) {
@@ -26,7 +27,7 @@ const benchmarkOptions = {
     () => new Float64Array(columns).map(() => Math.random()),
   );
 
-  const FloatGrid = Grid(Float64Array);
+  const FloatGrid = GridMixin(Float64Array);
   const grid = new FloatGrid({ rows, columns },
     new Float64Array(rows * columns).map(() => Math.random()));
 
@@ -52,7 +53,7 @@ const benchmarkOptions = {
       }
     })
     .add('Grid', () => {
-      for (let i = 0; i < grid.length; i++) {
+      for (let i = 0; i < (rows * columns); i++) {
         grid[i] += 1;
       }
     })
@@ -60,7 +61,7 @@ const benchmarkOptions = {
 }
 
 {
-  class Person extends PackedInt {}
+  class Person extends BitField {}
   Person.fields = [
     { name: 1, size: 4 },
     { name: 2, size: 4 },
@@ -80,24 +81,75 @@ const benchmarkOptions = {
 
   const matchArrays = (a, matcher) => {
     for (let i = 0; i < matcher.length; i++) {
-      if (matcher[i]) {
-        if (matcher[i] !== a[i]) return false;
-      }
+      if (matcher[i] && (matcher[i] !== a[i])) return false;
     }
     return true;
   };
-  const matcher = [0, 2, 3];
-  const packedMatcher = Person.getMatcher({ 1: 0, 2: 2, 3: 3 });
+  const matcher = [0, 2, 3, 4, 5, 6];
+  const packedMatcher = Person.getMatcher({
+    2: 2, 3: 3, 5: 5, 6: 6,
+  });
 
   const peopleArray = new Array(1000).fill(0).map(() => createPersonArray());
   const packedPeopleArray = peopleArray.map(i => new Person(i).value);
 
-  new Benchmark.Suite('PackedInt Match:', benchmarkOptions)
+  new Benchmark.Suite('BitField Match:', benchmarkOptions)
     .add('Native', () => {
       peopleArray.filter(i => matchArrays(i, matcher));
     })
-    .add('PackedInt', () => {
+    .add('BitField', () => {
       packedPeopleArray.filter(i => Person.match(i, packedMatcher));
+    })
+    .run();
+}
+
+{
+  const SIZE = 100;
+  const structs = new RecordArray([
+    { name: 0, type: 'Float64' },
+    { name: 1, type: 'Float64' },
+    { name: 2, type: 'Float64' },
+    { name: 3, type: 'Float64' },
+    { name: 4, type: 'Float64' },
+    { name: 5, type: 'Float64' },
+    { name: 6, type: 'Float64' },
+    { name: 7, type: 'Float64' },
+  ], SIZE);
+
+  const getObject = () => ({
+    1: Math.random(),
+    2: Math.random(),
+    3: Math.random(),
+    4: Math.random(),
+    5: Math.random(),
+    6: Math.random(),
+    7: Math.random(),
+    8: Math.random(),
+  });
+
+  const getIndex = size => (Math.random() * size) | 0;
+  const objects = new Array(SIZE).fill(1).map(() => getObject());
+  for (let i = 0; i < SIZE; i++) {
+    structs.set(i, 0, objects[i][1]);
+    structs.set(i, 1, objects[i][2]);
+    structs.set(i, 2, objects[i][3]);
+    structs.set(i, 3, objects[i][4]);
+    structs.set(i, 4, objects[i][5]);
+    structs.set(i, 5, objects[i][6]);
+    structs.set(i, 6, objects[i][7]);
+    structs.set(i, 7, objects[i][8]);
+  }
+
+  new Benchmark.Suite('RecordArray Get/Set:', benchmarkOptions)
+    .add('Objects', () => {
+      objects[getIndex(SIZE)][getIndex(8)] = objects[getIndex(SIZE)][getIndex(8)];
+    })
+    .add('RecordArray', () => {
+      structs.set(
+        getIndex(SIZE),
+        getIndex(8),
+        structs.get(getIndex(SIZE), getIndex(8)),
+      );
     })
     .run();
 }

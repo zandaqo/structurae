@@ -1,8 +1,8 @@
 const GridMixin = require('./lib/grid');
-const PackedInt = require('./lib/packed-int');
-const SortedCollection = require('./lib/sorted-collection');
+const BitField = require('./lib/bit-field');
+const RecordArray = require('./lib/record-array');
 const SortedArray = require('./lib/sorted-array');
-const StructArray = require('./lib/struct-array');
+const SortedMixin = require('./lib/sorted-collection');
 
 /**
  * @external ArrayBuffer
@@ -20,9 +20,9 @@ const StructArray = require('./lib/struct-array');
  */
 
 module.exports = {
-  SortedArray,
-  SortedCollection,
-  PackedInt,
   GridMixin,
-  StructArray,
+  BitField,
+  RecordArray,
+  SortedArray,
+  SortedMixin,
 };
