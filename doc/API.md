@@ -5,6 +5,8 @@
 <dd></dd>
 <dt><a href="#Grid">Grid</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
 <dd></dd>
+<dt><a href="#Pool">Pool</a> ⇐ <code>Uint16Array</code></dt>
+<dd></dd>
 <dt><a href="#RecordArray">RecordArray</a> ⇐ <code>DataView</code></dt>
 <dd><p>Extends DataView to use ArrayBuffer as an array of records or C-like structs.</p>
 </dd>
@@ -582,6 +584,39 @@ a.get(2, 1);
 | arrays | <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> |  |  |
 | [pad] | <code>\*</code> | <code>0</code> | the value to pad the arrays to create equal sized rows |
 
+<a name="Pool"></a>
+
+## Pool ⇐ <code>Uint16Array</code>
+**Kind**: global class  
+**Extends**: <code>Uint16Array</code>  
+
+* [Pool](#Pool) ⇐ <code>Uint16Array</code>
+    * [new Pool(size)](#new_Pool_new)
+    * [.acquire()](#Pool+acquire) ⇒ <code>number</code>
+    * [.release(index)](#Pool+release) ⇒ <code>void</code>
+
+<a name="new_Pool_new"></a>
+
+### new Pool(size)
+
+| Param | Type | Description |
+| --- | --- | --- |
+| size | <code>number</code> | the size of the pool |
+
+<a name="Pool+acquire"></a>
+
+### pool.acquire() ⇒ <code>number</code>
+**Kind**: instance method of [<code>Pool</code>](#Pool)  
+**Returns**: <code>number</code> - the first available index  
+<a name="Pool+release"></a>
+
+### pool.release(index) ⇒ <code>void</code>
+**Kind**: instance method of [<code>Pool</code>](#Pool)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| index | <code>number</code> | index to be released |
+
 <a name="RecordArray"></a>
 
 ## RecordArray ⇐ <code>DataView</code>
@@ -595,8 +630,8 @@ Extends DataView to use ArrayBuffer as an array of records or C-like structs.
     * [.size](#RecordArray+size) : <code>number</code>
     * [.get(index, field)](#RecordArray+get) ⇒ <code>\*</code>
     * [.set(index, field, value)](#RecordArray+set) ⇒ <code>this</code>
-    * [.getString(offset, littleEndian, size)](#RecordArray+getString) ⇒ <code>Uint8Array</code>
-    * [.setString(offset, value)](#RecordArray+setString) ⇒ <code>Uint8Array</code>
+    * [.getString(offset, size)](#RecordArray+getString) ⇒ <code>Uint8Array</code>
+    * [.setString(offset, value, size)](#RecordArray+setString) ⇒ <code>Uint8Array</code>
     * [.getByteOffset(index, field)](#RecordArray+getByteOffset) ⇒ <code>number</code>
     * [.toObject(index)](#RecordArray+toObject) ⇒ <code>Object</code>
 
@@ -676,24 +711,24 @@ person.get(0, 'age');
 ```
 <a name="RecordArray+getString"></a>
 
-### recordArray.getString(offset, littleEndian, size) ⇒ <code>Uint8Array</code>
+### recordArray.getString(offset, size) ⇒ <code>Uint8Array</code>
 **Kind**: instance method of [<code>RecordArray</code>](#RecordArray)  
 
 | Param | Type |
 | --- | --- |
 | offset | <code>number</code> | 
-| littleEndian | <code>boolean</code> | 
 | size | <code>number</code> | 
 
 <a name="RecordArray+setString"></a>
 
-### recordArray.setString(offset, value) ⇒ <code>Uint8Array</code>
+### recordArray.setString(offset, value, size) ⇒ <code>Uint8Array</code>
 **Kind**: instance method of [<code>RecordArray</code>](#RecordArray)  
 
 | Param | Type |
 | --- | --- |
 | offset | <code>number</code> | 
-| value | [<code>Collection</code>](#Collection) | 
+| value | <code>Uint8Array</code> | 
+| size | <code>number</code> | 
 
 <a name="RecordArray+getByteOffset"></a>
 

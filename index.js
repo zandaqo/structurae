@@ -1,5 +1,6 @@
-const GridMixin = require('./lib/grid');
 const BitField = require('./lib/bit-field');
+const GridMixin = require('./lib/grid');
+const Pool = require('./lib/pool');
 const RecordArray = require('./lib/record-array');
 const SortedArray = require('./lib/sorted-array');
 const SortedMixin = require('./lib/sorted-collection');
@@ -20,8 +21,9 @@ const SortedMixin = require('./lib/sorted-collection');
  */
 
 module.exports = {
-  GridMixin,
   BitField,
+  GridMixin,
+  Pool,
   RecordArray,
   SortedArray,
   SortedMixin,

@@ -6,6 +6,7 @@ const Benchmark = require('benchmark');
 const GridMixin = require('./lib/grid');
 const BitField = require('./lib/bit-field');
 const RecordArray = require('./lib/record-array');
+const Pool = require('./lib/pool');
 
 const benchmarkOptions = {
   onStart(event) {
@@ -150,6 +151,57 @@ const benchmarkOptions = {
         getIndex(8),
         structs.get(getIndex(SIZE), getIndex(8)),
       );
+    })
+    .run();
+}
+
+{
+  const SIZE = 1000 * 16;
+  class NaivePool {
+    constructor(size) {
+      this.register = new Uint8Array(size).fill(0);
+      this.nextAvailable = 0;
+    }
+
+    acquire() {
+      const { nextAvailable, register } = this;
+      if (!~nextAvailable) return -1;
+      const empty = register[nextAvailable];
+      register[nextAvailable] = 1;
+      this.nextAvailable = register.indexOf(0);
+      return empty;
+    }
+
+    release(index) {
+      this.register[index] = 0;
+      this.nextAvailable = index;
+    }
+  }
+  const getIndex = size => (Math.random() * size) | 0;
+
+  const naivePool = new NaivePool(SIZE);
+  const pool = new Pool(SIZE);
+
+  naivePool.register.fill(1);
+  pool.fill(0);
+
+  const SAMPLES = 800;
+  new Benchmark.Suite('Pool:', benchmarkOptions)
+    .add('Naive', () => {
+      for (let i = 0; i < SAMPLES; i++) {
+        naivePool.release(getIndex(SIZE));
+      }
+      for (let i = 0; i < SAMPLES; i++) {
+        naivePool.acquire();
+      }
+    })
+    .add('Pool', () => {
+      for (let i = 0; i < SAMPLES; i++) {
+        pool.release(getIndex(SIZE));
+      }
+      for (let i = 0; i < SAMPLES; i++) {
+        pool.acquire();
+      }
     })
     .run();
 }

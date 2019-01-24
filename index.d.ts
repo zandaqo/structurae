@@ -145,3 +145,10 @@ export declare class RecordArray extends DataView {
     setString(offset: number, value: Collection): void;
     toObject(index: number): object;
 }
+
+export declare class Pool extends Uint16Array {
+    nextAvailable: number;
+    constructor(size: number);
+    acquire(): number;
+    release(index: number): void;
+}

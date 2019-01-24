@@ -25,76 +25,6 @@ import { GridMixin, BitField, RecordArray, SortedArray, SortedMixin } from 'stru
 const { GridMixin, BitField, RecordArray, SortedArray, SortedMixin } = require('structurae');
 ```
 
-### Grid
-Grid extends a provided indexed collection class (Array or TypedArrays) to efficiently handle 2 dimensional data without creating
-nested arrays. Grid "unrolls" nested arrays into a single array and pads its "columns" to the nearest power of 2 in order to employ
-quick lookups with bitwise operations.
-
-```javascript
-const ArrayGrid = GridMixin(Array);
-
-// create a grid of 5 rows and 4 columns filled with 0
-const grid = new ArrayGrid({rows: 5, columns: 4 });
-grid.length
-//=> 20
-grid[0]
-//=> 0
-
-// send data as the second parameter to instantiate a grid with data:
-const  dataGrid = new ArrayGrid({rows: 5, columns: 4 }, [1, 2, 3, 4, 5, 6, 7, 8]);
-grid.length
-//=> 20
-grid[0]
-//=> 0
-
-// you can change dimensions of the grid by setting columns number at any time:
-dataGrid.columns = 2;
-```
-
-You can get and set elements using their row and column indexes:
-```javascript
-grid
-//=> ArrayGrid [1, 2, 3, 4, 5, 6, 7, 8]
-grid.get(0, 1);
-//=> 2
-grid.set(0, 1, 10);
-grid.get(0, 1);
-//=> 10
-
-
-// use `getIndex` to get an array index of an element at given coordinates
-grid.getIndex(0, 1);
-//=> 1
-
-// use `getCoordinates` to find out row and column indexes of a given element by its array index:
-grid.getCoordinates(0);
-//=> { row: 0, column: 0 }
-grid.getCoordinates(1);
-//=> { row: 0, column: 1 }
-```
-
-A grid can be turned to and from an array of nested arrays using respectively `Grid.fromArrays` and `Grid#toArrays` methods:
-```javascript
-const grid = ArrayGrid.fromArrays([[1,2], [3, 4]]);
-//=> ArrayGrid [ 1, 2, 3, 4 ]
-grid.get(1, 1);
-//=> 4
-
-// if arrays are not the same size or their size is not equal to a power two, Grid will pad them with 0 by default
-// the value for padding can be specified as the second argument
-const grid = ArrayGrid.fromArrays([[1, 2], [3, 4, 5]]);
-//=> ArrayGrid [ 1, 2, 0, 0, 3, 4, 5, 0 ]
-grid.get(1, 1);
-//=> 4
-
-grid.toArrays();
-//=> [ [1, 2], [3, 4, 5] ]
-
-// you can choose to keep the padding values
-grid.toArrays(true);
-//=> [ [1, 2, 0, 0], [3, 4, 5, 0] ]
-```
-
 ### BitField
 BitField uses JavaScript Numbers and BigInts as bitfields to store and operate on data using bitwise operations.
 By default, BitField operates on 31 bit long bitfield where bits are indexed from least significant to most:
@@ -254,6 +184,78 @@ Person.match(new Person([20, 1]).toValue(), matcher);
 Person.match(new Person([19, 1]).toValue(), matcher);
 //=> false
 ```
+
+### Grid
+Grid extends a provided indexed collection class (Array or TypedArrays) to efficiently handle 2 dimensional data without creating
+nested arrays. Grid "unrolls" nested arrays into a single array and pads its "columns" to the nearest power of 2 in order to employ
+quick lookups with bitwise operations.
+
+```javascript
+const ArrayGrid = GridMixin(Array);
+
+// create a grid of 5 rows and 4 columns filled with 0
+const grid = new ArrayGrid({rows: 5, columns: 4 });
+grid.length
+//=> 20
+grid[0]
+//=> 0
+
+// send data as the second parameter to instantiate a grid with data:
+const  dataGrid = new ArrayGrid({rows: 5, columns: 4 }, [1, 2, 3, 4, 5, 6, 7, 8]);
+grid.length
+//=> 20
+grid[0]
+//=> 0
+
+// you can change dimensions of the grid by setting columns number at any time:
+dataGrid.columns = 2;
+```
+
+You can get and set elements using their row and column indexes:
+```javascript
+grid
+//=> ArrayGrid [1, 2, 3, 4, 5, 6, 7, 8]
+grid.get(0, 1);
+//=> 2
+grid.set(0, 1, 10);
+grid.get(0, 1);
+//=> 10
+
+
+// use `getIndex` to get an array index of an element at given coordinates
+grid.getIndex(0, 1);
+//=> 1
+
+// use `getCoordinates` to find out row and column indexes of a given element by its array index:
+grid.getCoordinates(0);
+//=> { row: 0, column: 0 }
+grid.getCoordinates(1);
+//=> { row: 0, column: 1 }
+```
+
+A grid can be turned to and from an array of nested arrays using respectively `Grid.fromArrays` and `Grid#toArrays` methods:
+```javascript
+const grid = ArrayGrid.fromArrays([[1,2], [3, 4]]);
+//=> ArrayGrid [ 1, 2, 3, 4 ]
+grid.get(1, 1);
+//=> 4
+
+// if arrays are not the same size or their size is not equal to a power two, Grid will pad them with 0 by default
+// the value for padding can be specified as the second argument
+const grid = ArrayGrid.fromArrays([[1, 2], [3, 4, 5]]);
+//=> ArrayGrid [ 1, 2, 0, 0, 3, 4, 5, 0 ]
+grid.get(1, 1);
+//=> 4
+
+grid.toArrays();
+//=> [ [1, 2], [3, 4, 5] ]
+
+// you can choose to keep the padding values
+grid.toArrays(true);
+//=> [ [1, 2, 0, 0], [3, 4, 5, 0] ]
+```
+
+### Pool
 
 ### RecordArray
 RecordArray extends DataView to use ArrayBuffer as an array of records or C-like structs. 
