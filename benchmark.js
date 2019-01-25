@@ -197,10 +197,10 @@ const benchmarkOptions = {
     })
     .add('Pool', () => {
       for (let i = 0; i < SAMPLES; i++) {
-        pool.release(getIndex(SIZE));
+        pool.free(getIndex(SIZE));
       }
       for (let i = 0; i < SAMPLES; i++) {
-        pool.acquire();
+        pool.get();
       }
     })
     .run();

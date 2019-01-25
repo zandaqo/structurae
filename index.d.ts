@@ -147,7 +147,7 @@ export declare class RecordArray extends DataView {
 }
 
 export declare class Pool extends Uint16Array {
-    nextAvailable: number;
+    private nextAvailable: number;
     constructor(size: number);
     acquire(): number;
     release(index: number): void;

@@ -8,6 +8,7 @@ A collection of data structures for high-performance modern JavaScript applicati
 
 - [Grid](https://github.com/zandaqo/structurae#grid) - extends built-in indexed collections to handle 2 dimensional data (e.g. nested arrays).
 - [BitField](https://github.com/zandaqo/structurae#BitField) - stores and operates on data in Numbers and BigInts treating them as bitfields.
+- [Pool](https://github.com/zandaqo/structurae#Pool) - manages availability of objects in object pools.
 - [RecordArray](https://github.com/zandaqo/structurae#RecordArray) - extends DataView to use ArrayBuffer as an array of records or C-like structs.
 - [SortedCollection](https://github.com/zandaqo/structurae#SortedCollection) & [SortedArray](https://github.com/zandaqo/structurae#SortedArray) - extends built-in Array or TypedArrays to efficiently handle sorted data.
 
@@ -256,6 +257,25 @@ grid.toArrays(true);
 ```
 
 ### Pool
+Implements a fast algorithm to manage availability of objects in an object pool.
+```javascript
+// create a pool of 1600 indexes
+const pool = new Pool(100 * 16);
+
+// get the next available index and make it unavailable
+pool.get();
+//=> 0
+pool.get();
+//=> 1
+
+// set index available
+pool.free(0);
+pool.get();
+//=> 0
+
+pool.get();
+//=> 2
+```
 
 ### RecordArray
 RecordArray extends DataView to use ArrayBuffer as an array of records or C-like structs. 

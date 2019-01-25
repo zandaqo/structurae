@@ -6,7 +6,8 @@
 <dt><a href="#Grid">Grid</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
 <dd></dd>
 <dt><a href="#Pool">Pool</a> ⇐ <code>Uint16Array</code></dt>
-<dd></dd>
+<dd><p>Manages availability of objects in object pools.</p>
+</dd>
 <dt><a href="#RecordArray">RecordArray</a> ⇐ <code>DataView</code></dt>
 <dd><p>Extends DataView to use ArrayBuffer as an array of records or C-like structs.</p>
 </dd>
@@ -587,13 +588,15 @@ a.get(2, 1);
 <a name="Pool"></a>
 
 ## Pool ⇐ <code>Uint16Array</code>
+Manages availability of objects in object pools.
+
 **Kind**: global class  
 **Extends**: <code>Uint16Array</code>  
 
 * [Pool](#Pool) ⇐ <code>Uint16Array</code>
     * [new Pool(size)](#new_Pool_new)
-    * [.acquire()](#Pool+acquire) ⇒ <code>number</code>
-    * [.release(index)](#Pool+release) ⇒ <code>void</code>
+    * [.get()](#Pool+get) ⇒ <code>number</code>
+    * [.free(index)](#Pool+free) ⇒ <code>void</code>
 
 <a name="new_Pool_new"></a>
 
@@ -603,19 +606,23 @@ a.get(2, 1);
 | --- | --- | --- |
 | size | <code>number</code> | the size of the pool |
 
-<a name="Pool+acquire"></a>
+<a name="Pool+get"></a>
 
-### pool.acquire() ⇒ <code>number</code>
+### pool.get() ⇒ <code>number</code>
+Gets the next available index in the pool.
+
 **Kind**: instance method of [<code>Pool</code>](#Pool)  
-**Returns**: <code>number</code> - the first available index  
-<a name="Pool+release"></a>
+**Returns**: <code>number</code> - the next available index  
+<a name="Pool+free"></a>
 
-### pool.release(index) ⇒ <code>void</code>
+### pool.free(index) ⇒ <code>void</code>
+Makes a given index available.
+
 **Kind**: instance method of [<code>Pool</code>](#Pool)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| index | <code>number</code> | index to be released |
+| index | <code>number</code> | index to be freed |
 
 <a name="RecordArray"></a>
 
