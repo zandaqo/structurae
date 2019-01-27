@@ -15,6 +15,9 @@
 <dd></dd>
 <dt><a href="#SortedCollection">SortedCollection</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
 <dd></dd>
+<dt><a href="#StringView">StringView</a> ⇐ <code>Uint8Array</code></dt>
+<dd><p>Extends Uint8Array to handle C-like representation of UTF-8 strings.</p>
+</dd>
 </dl>
 
 ## Functions
@@ -637,8 +640,8 @@ Extends DataView to use ArrayBuffer as an array of records or C-like structs.
     * [.size](#RecordArray+size) : <code>number</code>
     * [.get(index, field)](#RecordArray+get) ⇒ <code>\*</code>
     * [.set(index, field, value)](#RecordArray+set) ⇒ <code>this</code>
-    * [.getString(offset, size)](#RecordArray+getString) ⇒ <code>Uint8Array</code>
-    * [.setString(offset, value, size)](#RecordArray+setString) ⇒ <code>Uint8Array</code>
+    * [.getString(offset, size)](#RecordArray+getString) ⇒ [<code>StringView</code>](#StringView)
+    * [.setString(offset, value, size)](#RecordArray+setString) ⇒ <code>void</code>
     * [.getByteOffset(index, field)](#RecordArray+getByteOffset) ⇒ <code>number</code>
     * [.toObject(index)](#RecordArray+toObject) ⇒ <code>Object</code>
 
@@ -718,7 +721,7 @@ person.get(0, 'age');
 ```
 <a name="RecordArray+getString"></a>
 
-### recordArray.getString(offset, size) ⇒ <code>Uint8Array</code>
+### recordArray.getString(offset, size) ⇒ [<code>StringView</code>](#StringView)
 **Kind**: instance method of [<code>RecordArray</code>](#RecordArray)  
 
 | Param | Type |
@@ -728,13 +731,13 @@ person.get(0, 'age');
 
 <a name="RecordArray+setString"></a>
 
-### recordArray.setString(offset, value, size) ⇒ <code>Uint8Array</code>
+### recordArray.setString(offset, value, size) ⇒ <code>void</code>
 **Kind**: instance method of [<code>RecordArray</code>](#RecordArray)  
 
 | Param | Type |
 | --- | --- |
 | offset | <code>number</code> | 
-| value | <code>Uint8Array</code> | 
+| value | [<code>Collection</code>](#Collection) | 
 | size | <code>number</code> | 
 
 <a name="RecordArray+getByteOffset"></a>
@@ -1252,6 +1255,88 @@ Checks whether an array has any duplicating elements.
 SortedCollection.isUnique([1, 2, 2, 3, 4]);
 //=> false
 ```
+<a name="StringView"></a>
+
+## StringView ⇐ <code>Uint8Array</code>
+Extends Uint8Array to handle C-like representation of UTF-8 strings.
+
+**Kind**: global class  
+**Extends**: <code>Uint8Array</code>  
+
+* [StringView](#StringView) ⇐ <code>Uint8Array</code>
+    * _instance_
+        * [.replace(pattern, replacement)](#StringView+replace) ⇒ [<code>StringView</code>](#StringView)
+        * [.reverse()](#StringView+reverse) ⇒ [<code>StringView</code>](#StringView)
+        * [.search(searchValue, [fromIndex])](#StringView+search) ⇒ <code>number</code>
+        * [.toString()](#StringView+toString) ⇒ <code>string</code>
+        * [.trim()](#StringView+trim) ⇒ [<code>StringView</code>](#StringView)
+    * _static_
+        * [.masks](#StringView.masks) : <code>Int8Array</code>
+        * [.fromString(string, [size])](#StringView.fromString) ⇒ [<code>StringView</code>](#StringView)
+
+<a name="StringView+replace"></a>
+
+### stringView.replace(pattern, replacement) ⇒ [<code>StringView</code>](#StringView)
+Performs an in-place replacement within the StringView
+of all occurrences of a given pattern with a given replacement.
+
+**Kind**: instance method of [<code>StringView</code>](#StringView)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| pattern | [<code>Collection</code>](#Collection) | the pattern to be replaced |
+| replacement | [<code>Collection</code>](#Collection) | the replacement |
+
+<a name="StringView+reverse"></a>
+
+### stringView.reverse() ⇒ [<code>StringView</code>](#StringView)
+Reverses the characters of the StringView in-place.
+
+**Kind**: instance method of [<code>StringView</code>](#StringView)  
+<a name="StringView+search"></a>
+
+### stringView.search(searchValue, [fromIndex]) ⇒ <code>number</code>
+Returns the index within the calling StringView
+of the first occurrence of the specified value, starting the search at start.
+Returns -1 if the value is not found.
+
+**Kind**: instance method of [<code>StringView</code>](#StringView)  
+**Returns**: <code>number</code> - the index of the first occurrence of the specified value  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| searchValue | [<code>Collection</code>](#Collection) |  | the value to search for |
+| [fromIndex] | <code>number</code> | <code>0</code> | the index at which to start the search |
+
+<a name="StringView+toString"></a>
+
+### stringView.toString() ⇒ <code>string</code>
+Returns a string representation of the StringView.
+
+**Kind**: instance method of [<code>StringView</code>](#StringView)  
+<a name="StringView+trim"></a>
+
+### stringView.trim() ⇒ [<code>StringView</code>](#StringView)
+Returns a StringView without trailing zeros.
+
+**Kind**: instance method of [<code>StringView</code>](#StringView)  
+<a name="StringView.masks"></a>
+
+### StringView.masks : <code>Int8Array</code>
+**Kind**: static property of [<code>StringView</code>](#StringView)  
+<a name="StringView.fromString"></a>
+
+### StringView.fromString(string, [size]) ⇒ [<code>StringView</code>](#StringView)
+Creates a StringView from a string.
+
+**Kind**: static method of [<code>StringView</code>](#StringView)  
+**Returns**: [<code>StringView</code>](#StringView) - a new StringView  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| string | <code>string</code> | the string to encode |
+| [size] | <code>number</code> | the size of the StringView in bytes |
+
 <a name="GridMixin"></a>
 
 ## GridMixin(Base) ⇒ [<code>Grid</code>](#Grid)

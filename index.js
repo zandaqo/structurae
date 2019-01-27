@@ -4,6 +4,7 @@ const Pool = require('./lib/pool');
 const RecordArray = require('./lib/record-array');
 const SortedArray = require('./lib/sorted-array');
 const SortedMixin = require('./lib/sorted-collection');
+const StringView = require('./lib/string-view');
 
 /**
  * @external ArrayBuffer
@@ -27,4 +28,5 @@ module.exports = {
   RecordArray,
   SortedArray,
   SortedMixin,
+  StringView,
 };

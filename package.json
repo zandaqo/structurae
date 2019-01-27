@@ -1,6 +1,6 @@
 {
   "name": "structurae",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "Data structures for performance-sensitive modern JavaScript applications.",
   "main": "index.js",
   "keywords": [
@@ -41,7 +41,7 @@
     "eslint": "^5.11.1",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
-    "jest": "^23.6.0",
+    "jest": "^24.0.0",
     "jsdoc-to-markdown": "^4.0.1"
   },
   "jest": {
@@ -55,7 +55,8 @@
     "coverageDirectory": "<rootDir>/coverage",
     "coverageReporters": [
       "lcov"
-    ]
+    ],
+    "setupFilesAfterEnv": ["<rootDir>/test/setup.js"]
   },
   "engines": {
     "node": ">=10.4.0"

@@ -152,3 +152,13 @@ export declare class Pool extends Uint16Array {
     acquire(): number;
     release(index: number): void;
 }
+
+export declare class StringView extends Uint8Array {
+    static masks: Int8Array;
+    replace(pattern: Collection, replacement: Collection): this;
+    reverse(): this;
+    search(searchValue: Collection, fromIndex?: number): number;
+    toString(): string;
+    trim(): StringView;
+    static fromString(string: string, size?: number): StringView;
+}

@@ -1,5 +1,6 @@
 const { TextEncoder, TextDecoder } = require('util');
 const RecordArray = require('../lib/record-array');
+const StringView = require('../lib/string-view');
 
 describe('RecordArray', () => {
   const recordSchema = [
@@ -104,7 +105,7 @@ describe('RecordArray', () => {
 
     it('sets a buffer for a string field', () => {
       const records = new RecordArray(recordSchema, 10);
-      const value = new Uint8Array(22);
+      const value = new StringView(22);
       value[0] = 35;
       value[21] = 33;
       records.set(0, 'k', value);

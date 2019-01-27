@@ -7,6 +7,7 @@ const GridMixin = require('./lib/grid');
 const BitField = require('./lib/bit-field');
 const RecordArray = require('./lib/record-array');
 const Pool = require('./lib/pool');
+const StringView = require('./lib/string-view');
 
 const benchmarkOptions = {
   onStart(event) {
@@ -20,6 +21,17 @@ const benchmarkOptions = {
     console.log('');
   },
 };
+
+const getIndex = size => (Math.random() * size) | 0;
+
+function getString(size) {
+  const text = new Array(size);
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  for (let i = 0; i < size; i++) {
+    text[i] = possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text.join('');
+}
 
 {
   const rows = 1500;
@@ -74,10 +86,9 @@ const benchmarkOptions = {
     { name: 8, size: 3 },
   ];
   Person.initialize();
-  const getRandomInt = size => (Math.random() * size) | 0;
   const createPersonArray = () => [
-    getRandomInt(16), getRandomInt(16), getRandomInt(16), getRandomInt(16),
-    getRandomInt(16), getRandomInt(16), getRandomInt(16), getRandomInt(8),
+    getIndex(16), getIndex(16), getIndex(16), getIndex(16),
+    getIndex(16), getIndex(16), getIndex(16), getIndex(8),
   ];
 
   const matchArrays = (a, matcher) => {
@@ -128,7 +139,6 @@ const benchmarkOptions = {
     8: Math.random(),
   });
 
-  const getIndex = size => (Math.random() * size) | 0;
   const objects = new Array(SIZE).fill(1).map(() => getObject());
   for (let i = 0; i < SIZE; i++) {
     structs.set(i, 0, objects[i][1]);
@@ -177,7 +187,6 @@ const benchmarkOptions = {
       this.nextAvailable = index;
     }
   }
-  const getIndex = size => (Math.random() * size) | 0;
 
   const naivePool = new NaivePool(SIZE);
   const pool = new Pool(SIZE);
@@ -202,6 +211,58 @@ const benchmarkOptions = {
       for (let i = 0; i < SAMPLES; i++) {
         pool.get();
       }
+    })
+    .run();
+}
+
+{
+  const matchLength = 5;
+  const stringLength = 100;
+  const arrayLength = 100;
+
+  const strings = new Array(arrayLength).fill(0).map(() => getString(stringLength));
+  const views = strings.map(s => StringView.fromString(s));
+
+  new Benchmark.Suite('StringView Search:', benchmarkOptions)
+    .add('Native', () => {
+      const string = strings[getIndex(arrayLength)];
+      const match = strings[getIndex(arrayLength)].slice(0, matchLength);
+      const index = string.indexOf(match);
+    })
+    .add('StringView Array', () => {
+      const view = views[getIndex(arrayLength)];
+      const match = views[getIndex(arrayLength)].subarray(0, matchLength);
+      const index = view.search(match);
+    })
+    .run();
+
+  new Benchmark.Suite('StringView Replace:', benchmarkOptions)
+    .add('Native', () => {
+      const string = strings[getIndex(arrayLength)];
+      const match = strings[getIndex(arrayLength)].slice(0, matchLength);
+      const replacement = strings[getIndex(arrayLength)].slice(0, matchLength);
+      string.replace(new RegExp(match), replacement);
+    })
+    .add('StringView', () => {
+      const view = views[getIndex(arrayLength)];
+      const match = views[getIndex(arrayLength)].subarray(0, matchLength);
+      const replacement = views[getIndex(arrayLength)].subarray(0, matchLength);
+      view.replace(match, replacement);
+    })
+    .run();
+
+  new Benchmark.Suite('StringView Reverse:', benchmarkOptions)
+    .add('Native', () => {
+      const string = strings[getIndex(arrayLength)];
+      const reversed = string.split('').reverse().join('');
+    })
+    .add('StringView', () => {
+      const view = views[getIndex(arrayLength)];
+      view.reverse();
+    })
+    .add('StringView String', () => {
+      const string = strings[getIndex(arrayLength)];
+      const reversed = StringView.fromString(string).toString();
     })
     .run();
 }
