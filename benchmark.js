@@ -26,7 +26,7 @@ const getIndex = size => (Math.random() * size) | 0;
 
 function getString(size) {
   const text = new Array(size);
-  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ😀abcdefghijklmnopqrstuvwxyz😀0123456789';
   for (let i = 0; i < size; i++) {
     text[i] = possible.charAt(Math.floor(Math.random() * possible.length));
   }
@@ -216,6 +216,8 @@ function getString(size) {
 }
 
 {
+  const Encoder = new TextEncoder();
+
   const matchLength = 5;
   const stringLength = 100;
   const arrayLength = 100;
@@ -263,6 +265,17 @@ function getString(size) {
     .add('StringView String', () => {
       const string = strings[getIndex(arrayLength)];
       const reversed = StringView.fromString(string).toString();
+    })
+    .run();
+
+  new Benchmark.Suite('StringView Size:', benchmarkOptions)
+    .add('TextEncoder', () => {
+      const string = strings[getIndex(arrayLength)];
+      const size = Encoder.encode(string).length;
+    })
+    .add('StringView', () => {
+      const string = strings[getIndex(arrayLength)];
+      const size = StringView.getStringSize(string);
     })
     .run();
 }

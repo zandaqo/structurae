@@ -1271,8 +1271,8 @@ Extends Uint8Array to handle C-like representation of UTF-8 strings.
         * [.toString()](#StringView+toString) ⇒ <code>string</code>
         * [.trim()](#StringView+trim) ⇒ [<code>StringView</code>](#StringView)
     * _static_
-        * [.masks](#StringView.masks) : <code>Int8Array</code>
         * [.fromString(string, [size])](#StringView.fromString) ⇒ [<code>StringView</code>](#StringView)
+        * [.getStringSize(string)](#StringView.getStringSize) ⇒ <code>number</code>
 
 <a name="StringView+replace"></a>
 
@@ -1320,10 +1320,6 @@ Returns a string representation of the StringView.
 Returns a StringView without trailing zeros.
 
 **Kind**: instance method of [<code>StringView</code>](#StringView)  
-<a name="StringView.masks"></a>
-
-### StringView.masks : <code>Int8Array</code>
-**Kind**: static property of [<code>StringView</code>](#StringView)  
 <a name="StringView.fromString"></a>
 
 ### StringView.fromString(string, [size]) ⇒ [<code>StringView</code>](#StringView)
@@ -1336,6 +1332,18 @@ Creates a StringView from a string.
 | --- | --- | --- |
 | string | <code>string</code> | the string to encode |
 | [size] | <code>number</code> | the size of the StringView in bytes |
+
+<a name="StringView.getStringSize"></a>
+
+### StringView.getStringSize(string) ⇒ <code>number</code>
+Returns the size in bytes of a given string.
+
+**Kind**: static method of [<code>StringView</code>](#StringView)  
+**Returns**: <code>number</code> - the size in bytes  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| string | <code>string</code> | the string to check |
 
 <a name="GridMixin"></a>
 

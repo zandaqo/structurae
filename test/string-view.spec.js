@@ -55,6 +55,14 @@ describe('StringView', () => {
     });
   });
 
+  describe('getStringSize', () => {
+    it('returns the size in bytes of a given string', () => {
+      expect(StringView.getStringSize('asdf')).toBe(4);
+      expect(StringView.getStringSize('фыва')).toBe(8);
+      expect(StringView.getStringSize('😀😀fooа😀←')).toBe(20);
+    });
+  });
+
   describe('fromString', () => {
     it('creates a StringView from a string', () => {
       const stringView = StringView.fromString('foo');
