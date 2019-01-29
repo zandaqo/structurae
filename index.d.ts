@@ -154,11 +154,20 @@ export declare class Pool extends Uint16Array {
 }
 
 export declare class StringView extends Uint8Array {
+    size: number;
     static masks: Int8Array;
+
+    characters(): string;
+    charAt(index?: number): string;
+    private getCharEnd(index: number): number;
+    private getCharStart(index: number, startCharIndex?: number, startIndex?: number): number;
     replace(pattern: Collection, replacement: Collection): this;
     reverse(): this;
     search(searchValue: Collection, fromIndex?: number): number;
+    substring(indexStart: number, indexEnd?: number): string;
+    private toChar(index: number): string;
     toString(): string;
     trim(): StringView;
     static fromString(string: string, size?: number): StringView;
+    static getByteSize(string: string): number;
 }

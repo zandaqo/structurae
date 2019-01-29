@@ -1265,14 +1265,43 @@ Extends Uint8Array to handle C-like representation of UTF-8 strings.
 
 * [StringView](#StringView) ⇐ <code>Uint8Array</code>
     * _instance_
+        * [.size](#StringView+size) : <code>number</code>
+        * [.characters()](#StringView+characters)
+        * [.charAt([index])](#StringView+charAt) ⇒ <code>string</code>
         * [.replace(pattern, replacement)](#StringView+replace) ⇒ [<code>StringView</code>](#StringView)
         * [.reverse()](#StringView+reverse) ⇒ [<code>StringView</code>](#StringView)
         * [.search(searchValue, [fromIndex])](#StringView+search) ⇒ <code>number</code>
+        * [.substring(indexStart, [indexEnd])](#StringView+substring) ⇒ <code>string</code>
         * [.toString()](#StringView+toString) ⇒ <code>string</code>
         * [.trim()](#StringView+trim) ⇒ [<code>StringView</code>](#StringView)
     * _static_
         * [.fromString(string, [size])](#StringView.fromString) ⇒ [<code>StringView</code>](#StringView)
-        * [.getStringSize(string)](#StringView.getStringSize) ⇒ <code>number</code>
+        * [.getByteSize(string)](#StringView.getByteSize) ⇒ <code>number</code>
+
+<a name="StringView+size"></a>
+
+### stringView.size : <code>number</code>
+The amount of UTF characters in the StringView.
+
+**Kind**: instance property of [<code>StringView</code>](#StringView)  
+<a name="StringView+characters"></a>
+
+### stringView.characters()
+Iterates over the characters in the StringView.
+
+**Kind**: instance method of [<code>StringView</code>](#StringView)  
+<a name="StringView+charAt"></a>
+
+### stringView.charAt([index]) ⇒ <code>string</code>
+Returns a new string consisting of the single UTF character
+located at the specified character index.
+
+**Kind**: instance method of [<code>StringView</code>](#StringView)  
+**Returns**: <code>string</code> - a string representing the character  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [index] | <code>number</code> | <code>0</code> | a character index |
 
 <a name="StringView+replace"></a>
 
@@ -1308,6 +1337,20 @@ Returns -1 if the value is not found.
 | searchValue | [<code>Collection</code>](#Collection) |  | the value to search for |
 | [fromIndex] | <code>number</code> | <code>0</code> | the index at which to start the search |
 
+<a name="StringView+substring"></a>
+
+### stringView.substring(indexStart, [indexEnd]) ⇒ <code>string</code>
+Returns a string of characters between the start and end
+character indexes, or to the end of the string.
+
+**Kind**: instance method of [<code>StringView</code>](#StringView)  
+**Returns**: <code>string</code> - a new string containing the specified part of the given string  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| indexStart | <code>number</code> | the character index of the first character to include |
+| [indexEnd] | <code>number</code> | the character index of the first character to exclude |
+
 <a name="StringView+toString"></a>
 
 ### stringView.toString() ⇒ <code>string</code>
@@ -1333,9 +1376,9 @@ Creates a StringView from a string.
 | string | <code>string</code> | the string to encode |
 | [size] | <code>number</code> | the size of the StringView in bytes |
 
-<a name="StringView.getStringSize"></a>
+<a name="StringView.getByteSize"></a>
 
-### StringView.getStringSize(string) ⇒ <code>number</code>
+### StringView.getByteSize(string) ⇒ <code>number</code>
 Returns the size in bytes of a given string.
 
 **Kind**: static method of [<code>StringView</code>](#StringView)  

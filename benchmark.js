@@ -223,12 +223,14 @@ function getString(size) {
   const arrayLength = 100;
 
   const strings = new Array(arrayLength).fill(0).map(() => getString(stringLength));
+  const matches = new Array(arrayLength).fill(0).map(() => getString(matchLength));
   const views = strings.map(s => StringView.fromString(s));
+  const viewMatches = matches.map(s => StringView.fromString(s));
 
   new Benchmark.Suite('StringView Search:', benchmarkOptions)
     .add('Native', () => {
       const string = strings[getIndex(arrayLength)];
-      const match = strings[getIndex(arrayLength)].slice(0, matchLength);
+      const match = getString(matchLength);
       const index = string.indexOf(match);
     })
     .add('StringView Array', () => {
@@ -240,16 +242,20 @@ function getString(size) {
 
   new Benchmark.Suite('StringView Replace:', benchmarkOptions)
     .add('Native', () => {
-      const string = strings[getIndex(arrayLength)];
-      const match = strings[getIndex(arrayLength)].slice(0, matchLength);
+      let string = strings[getIndex(arrayLength)];
       const replacement = strings[getIndex(arrayLength)].slice(0, matchLength);
-      string.replace(new RegExp(match), replacement);
+      for (let i = 0; i < 10; i++) {
+        const match = matches[getIndex(arrayLength)];
+        string = string.replace(new RegExp(match), replacement);
+      }
     })
     .add('StringView', () => {
       const view = views[getIndex(arrayLength)];
-      const match = views[getIndex(arrayLength)].subarray(0, matchLength);
       const replacement = views[getIndex(arrayLength)].subarray(0, matchLength);
-      view.replace(match, replacement);
+      for (let i = 0; i < 10; i++) {
+        const match = viewMatches[getIndex(arrayLength)];
+        view.replace(match, replacement);
+      }
     })
     .run();
 
@@ -275,7 +281,7 @@ function getString(size) {
     })
     .add('StringView', () => {
       const string = strings[getIndex(arrayLength)];
-      const size = StringView.getStringSize(string);
+      const size = StringView.getByteSize(string);
     })
     .run();
 }
