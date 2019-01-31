@@ -26,9 +26,10 @@ const getIndex = size => (Math.random() * size) | 0;
 
 function getString(size) {
   const text = new Array(size);
-  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ😀abcdefghijklmnopqrstuvwxyz😀0123456789';
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789йцукенгшщзхъфывапролджэячсмитьбю.'.split('');
+  possible.push('😀', '←');
   for (let i = 0; i < size; i++) {
-    text[i] = possible.charAt(Math.floor(Math.random() * possible.length));
+    text[i] = possible[getIndex(possible.length)];
   }
   return text.join('');
 }
@@ -46,13 +47,13 @@ function getString(size) {
 
   new Benchmark.Suite('Grid Get/Set:', benchmarkOptions)
     .add('Nested arrays', () => {
-      const x = (Math.random() * rows) | 0;
-      const y = (Math.random() * columns) | 0;
+      const x = getIndex(rows);
+      const y = getIndex(columns);
       nestedArrays[x][y] = nestedArrays[y >> 1][x >> 1];
     })
     .add('Grid', () => {
-      const x = (Math.random() * rows) | 0;
-      const y = (Math.random() * columns) | 0;
+      const x = getIndex(rows);
+      const y = getIndex(columns);
       grid.set(x, y, grid.get(y >> 1, x >> 1));
     })
     .run();
@@ -218,7 +219,7 @@ function getString(size) {
 {
   const Encoder = new TextEncoder();
 
-  const matchLength = 5;
+  const matchLength = 3;
   const stringLength = 100;
   const arrayLength = 100;
 
@@ -230,12 +231,12 @@ function getString(size) {
   new Benchmark.Suite('StringView Search:', benchmarkOptions)
     .add('Native', () => {
       const string = strings[getIndex(arrayLength)];
-      const match = getString(matchLength);
+      const match = matches[getIndex(arrayLength)];
       const index = string.indexOf(match);
     })
     .add('StringView Array', () => {
       const view = views[getIndex(arrayLength)];
-      const match = views[getIndex(arrayLength)].subarray(0, matchLength);
+      const match = viewMatches[getIndex(arrayLength)];
       const index = view.search(match);
     })
     .run();

@@ -66,8 +66,9 @@ export class BitField {
     set(field: FieldName, value: number);
     has(...fields: FieldName[]): boolean;
     match(matcher: Matcher|UnpackedInt): boolean;
-    toValue(): AnyNumber;
     toObject(): UnpackedInt;
+    toString(): string;
+    valueOf(): AnyNumber;
     static initialize(): void;
     static encode(data: (AnyNumber)[]): AnyNumber;
     static decode(data: AnyNumber): UnpackedInt;

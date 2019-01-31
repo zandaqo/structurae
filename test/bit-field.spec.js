@@ -117,24 +117,6 @@ describe('BitField', () => {
     });
   });
 
-  describe('toValue', () => {
-    it('returns value of an instance', () => {
-      expect(new Field([20, 1]).toValue()).toBe(65556);
-      expect(new LargePerson([20, 1, 3500, 5]).toValue()).toBe(BigInt('2748779965588'));
-      expect(new PersonFlags([1, 0, 1]).toValue()).toBe(5);
-    });
-
-    it('returns number for bigint values less than 53 bits', () => {
-      class MediumField extends BitField {}
-      MediumField.fields = [{ name: 'width', size: 26 }, { name: 'height', size: 27 }];
-      MediumField.initialize();
-      expect(MediumField.size).toBe(53);
-      expect(MediumField.isBigInt).toBe(true);
-      expect(MediumField.isSafe).toBe(true);
-      expect(new MediumField([100, 100]).toValue()).toBe(6710886500);
-    });
-  });
-
   describe('toObject', () => {
     it('returns a plain object representation of an instance', () => {
       expect(new Field([20, 1]).toObject()).toEqual({ width: 20, height: 1 });
@@ -145,6 +127,31 @@ describe('BitField', () => {
         height: 5,
       });
       expect(new PersonFlags([1, 0, 1]).toObject()).toEqual({ human: 1, gender: 0, tall: 1 });
+    });
+  });
+
+  describe('toString', () => {
+    it('returns a string representing the value of the instance', () => {
+      expect(`${new Field([20, 1])}`).toBe('65556');
+      expect(`${new LargePerson([20, 1, 3500, 5])}`).toBe('2748779965588');
+    });
+  });
+
+  describe('valueOf', () => {
+    it('returns the value of an instance as a number', () => {
+      expect(+new Field([20, 1])).toBe(65556);
+      expect(BigInt(1) + new LargePerson([20, 1, 3500, 5])).toBe(BigInt('2748779965589'));
+      expect(+new PersonFlags([1, 0, 1])).toBe(5);
+    });
+
+    it('returns number for bigint values less than 53 bits', () => {
+      class MediumField extends BitField {}
+      MediumField.fields = [{ name: 'width', size: 26 }, { name: 'height', size: 27 }];
+      MediumField.initialize();
+      expect(MediumField.size).toBe(53);
+      expect(MediumField.isBigInt).toBe(true);
+      expect(MediumField.isSafe).toBe(true);
+      expect(+new MediumField([100, 100])).toBe(6710886500);
     });
   });
 

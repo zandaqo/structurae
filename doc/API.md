@@ -72,6 +72,8 @@
         * [.has(...fields)](#BitField+has) ⇒ <code>boolean</code>
         * [.match(matcher)](#BitField+match) ⇒ <code>boolean</code>
         * [.toObject()](#BitField+toObject) ⇒ [<code>UnpackedInt</code>](#UnpackedInt)
+        * [.toString()](#BitField+toString) ⇒ <code>string</code>
+        * [.valueOf()](#BitField+valueOf) ⇒ [<code>AnyNumber</code>](#AnyNumber)
     * _static_
         * [.fields](#BitField.fields) : [<code>Array.&lt;FieldName&gt;</code>](#FieldName) \| [<code>Array.&lt;Field&gt;</code>](#Field)
         * [.size](#BitField.size) : <code>number</code>
@@ -246,6 +248,21 @@ const person = new Person([20, 1]);
 person.toObject();
 //=> { age: 20, gender: 1 }
 ```
+<a name="BitField+toString"></a>
+
+### bitField.toString() ⇒ <code>string</code>
+Returns a string representing the value of the instance.
+
+**Kind**: instance method of [<code>BitField</code>](#BitField)  
+**Returns**: <code>string</code> - a string representing the value of the instance  
+<a name="BitField+valueOf"></a>
+
+### bitField.valueOf() ⇒ [<code>AnyNumber</code>](#AnyNumber)
+Returns the numerical value of an instance.
+Returns a BigInt if the total size exceeds 53 bits.
+
+**Kind**: instance method of [<code>BitField</code>](#BitField)  
+**Returns**: [<code>AnyNumber</code>](#AnyNumber) - the numerical value of the instance  
 <a name="BitField.fields"></a>
 
 ### BitField.fields : [<code>Array.&lt;FieldName&gt;</code>](#FieldName) \| [<code>Array.&lt;Field&gt;</code>](#Field)

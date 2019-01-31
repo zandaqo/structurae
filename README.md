@@ -172,7 +172,7 @@ person.match({ gender: 1, age: 20 });
 //=> true
 person.match({ gender: 1, age: 19 });
 //=> false
-Person.match(person.toValue(), { gender: 1, age: 20 });
+Person.match(person.valueOf(), { gender: 1, age: 20 });
 //=> true
 ```
 
@@ -180,9 +180,9 @@ If you have to check multiple BitField instances for the same values, create a s
 and use it in the match method, that way each check will require only one bitwise operation and a comparison:
 ```javascript
 const matcher = Person.getMatcher({ gender: 1, age: 20 });
-Person.match(new Person([20, 1]).toValue(), matcher);
+Person.match(new Person([20, 1]).valueOf(), matcher);
 //=> true
-Person.match(new Person([19, 1]).toValue(), matcher);
+Person.match(new Person([19, 1]).valueOf(), matcher);
 //=> false
 ```
 
