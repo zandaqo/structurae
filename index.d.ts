@@ -137,12 +137,12 @@ export declare class RecordArray extends DataView {
     private schema: RecordSchema;
     private offset: number;
     private offsets: object;
-    private stringView: Uint8Array;
+    private stringView: StringView;
 
     constructor(fields: RecordField[], size: number, buffer?: ArrayBuffer, byteOffset?: number, byteLength?: number);
     get(index: number, field: string): any;
     set(index: number, field: string, value: any, littleEndian?: boolean): this;
-    getString(offset: number, littleEndian: boolean, size: number): Uint8Array;
+    getString(offset: number, littleEndian: boolean, size: number): StringView;
     setString(offset: number, value: Collection): void;
     toObject(index: number): object;
 }
@@ -150,8 +150,8 @@ export declare class RecordArray extends DataView {
 export declare class Pool extends Uint16Array {
     private nextAvailable: number;
     constructor(size: number);
-    acquire(): number;
-    release(index: number): void;
+    get(): number;
+    free(index: number): void;
 }
 
 export declare class StringView extends Uint8Array {

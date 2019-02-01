@@ -31,7 +31,7 @@ describe('RecordArray', () => {
       expect(records.buffer.byteLength).toBe(640);
       expect(records instanceof DataView).toBe(true);
       expect(records.size).toBe(10);
-      expect(records.stringView instanceof Uint8Array).toBe(true);
+      expect(records.stringView instanceof StringView).toBe(true);
     });
 
     it('creates an instance using preexisting ArrayBuffer', () => {
@@ -45,7 +45,7 @@ describe('RecordArray', () => {
     it('creates an instance without string fields', () => {
       const people = new RecordArray(peopleSchema, 10);
       expect(people.buffer.byteLength).toBe(160);
-      expect(people.stringView instanceof Uint8Array).toBe(false);
+      expect(people.stringView instanceof StringView).toBe(false);
     });
   });
 
@@ -64,10 +64,10 @@ describe('RecordArray', () => {
       expect(records.get(0, 'j')).toBe(BigInt(0));
     });
 
-    it('returns a Uint8Array for a string field', () => {
+    it('returns a StringView for a string field', () => {
       const records = new RecordArray(recordSchema, 10);
       const actual = records.get(0, 'k');
-      expect(actual instanceof Uint8Array).toBe(true);
+      expect(actual instanceof StringView).toBe(true);
       expect(actual.buffer === records.buffer).toBe(true);
       expect(actual.length).toBe(22);
     });
