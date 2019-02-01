@@ -234,7 +234,7 @@ function getString(size) {
       const match = matches[getIndex(arrayLength)];
       const index = string.indexOf(match);
     })
-    .add('StringView Array', () => {
+    .add('StringView', () => {
       const view = views[getIndex(arrayLength)];
       const match = viewMatches[getIndex(arrayLength)];
       const index = view.search(match);
@@ -244,7 +244,7 @@ function getString(size) {
   new Benchmark.Suite('StringView Replace:', benchmarkOptions)
     .add('Native', () => {
       let string = strings[getIndex(arrayLength)];
-      const replacement = strings[getIndex(arrayLength)].slice(0, matchLength);
+      const replacement = matches[getIndex(arrayLength)];
       for (let i = 0; i < 10; i++) {
         const match = matches[getIndex(arrayLength)];
         string = string.replace(new RegExp(match), replacement);
@@ -252,7 +252,7 @@ function getString(size) {
     })
     .add('StringView', () => {
       const view = views[getIndex(arrayLength)];
-      const replacement = views[getIndex(arrayLength)].subarray(0, matchLength);
+      const replacement = viewMatches[getIndex(arrayLength)];
       for (let i = 0; i < 10; i++) {
         const match = viewMatches[getIndex(arrayLength)];
         view.replace(match, replacement);

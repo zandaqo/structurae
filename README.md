@@ -6,11 +6,12 @@
 
 A collection of data structures for high-performance modern JavaScript applications that includes:
 
-- [Grid](https://github.com/zandaqo/structurae#grid) - extends built-in indexed collections to handle 2 dimensional data (e.g. nested arrays).
 - [BitField](https://github.com/zandaqo/structurae#BitField) - stores and operates on data in Numbers and BigInts treating them as bitfields.
+- [Grid](https://github.com/zandaqo/structurae#grid) - extends built-in indexed collections to handle 2 dimensional data (e.g. nested arrays).
 - [Pool](https://github.com/zandaqo/structurae#Pool) - manages availability of objects in object pools.
 - [RecordArray](https://github.com/zandaqo/structurae#RecordArray) - extends DataView to use ArrayBuffer as an array of records or C-like structs.
 - [SortedCollection](https://github.com/zandaqo/structurae#SortedCollection) & [SortedArray](https://github.com/zandaqo/structurae#SortedArray) - extends built-in Array or TypedArrays to efficiently handle sorted data.
+- [StringView](https://github.com/zandaqo/structurae#StringView) - extends Uint8Array to handle C-like representation of UTF-8 encoded strings.
 
 ## Installation
 ```
@@ -295,17 +296,18 @@ people.get(0, 'age');
 // set the 'age' and 'score' field values for the first struct
 people.set(0, 'age', 10).set(0, 'score', 5.0);
 people.toObject(0);
-//=> { age: 10, score: 5.0 }
+//=> { age: 10, score: 5.0, name: '' }
 ```
 
-String type is represented with Uint8Arrays. You can use TextEncoder/TextDecoder API to convert them to and from strings.
+The String type is handled with [StringView](https://github.com/zandaqo/structurae#StringView).
+ You can use its methods to convert them to and from strings.
 ```javascript
 people.get(0, 'name');
-//=> Uint8Array(10) [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-const name = new TextEncoder().encode('Smith');
+//=> StringView(10) [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+const name = StringView.fromString('Smith');
 people.set(0, name).get(0, 'name');
-//=> Uint8Array(10) [83, 109, 105, 116, 104, 0, 0, 0, 0, 0]
-new TextDecoder().decode(people.get(0, 'name'));
+//=> StringView(10) [83, 109, 105, 116, 104, 0, 0, 0, 0, 0]
+people.get(0, 'name').toString();
 //=> Smith
 ```
 
@@ -404,6 +406,52 @@ a.push(1);
 //=> 2
 a
 //=> SortedArray [ 1, 2 ]
+```
+
+### StringView
+Encoding API (available both in modern browsers and Node.js) allows us to convert JavaScript strings to 
+(and from) UTF-8 encoded stream of bytes represented by a Uint8Array. StringView extends Uint8Array with string related methods
+ and relies on Encoding API internally for conversions.
+You can use `StringView.fromString` to create an encoded string, and `StringView#toString` to convert it back to a string:
+```javascript
+const stringView = StringView.fromString('abc😀a');
+//=> StringView [ 97, 98, 99, 240, 159, 152, 128, 97 ]
+stringView.toString();
+//=> 'abc😀a'
+stringView == 'abc😀a';
+//=> true
+```
+
+While the array itself holds code points, StringView provides methods to operate on characters of the underlying string:
+```javascript
+const stringView = StringView.fromString('abc😀');
+stringView.length; // length of the view in bytes
+//=> 8
+stringView.size; // the amount of characters in the string
+//=> 4
+stringView.charAt(0); // get the first character in the string
+//=> 'a'
+stringView.charAt(3); // get the fourth character in the string
+//=> '😀'
+[...stringView.characters()] // iterate over characters
+//=> ['a', 'b', 'c', '😀']
+stringView.substring(0, 4);
+//=> 'abc😀'
+```
+
+StringView also offers methods for searching and in-place changing the underlying string without decoding:
+```javascript
+const stringView = StringView.fromString('abc😀a');
+const searchValue = StringView.fromString('😀');
+stringView.search(searchValue); // equivalent of String#indexOf
+//=> 3
+
+const replacement = StringView.fromString('d');
+stringView.replace(searchValue, replacement).toString();
+//=> 'abcda'
+
+stringView.reverse().toString();
+//=> 'adcba'
 ```
 
 ## Documentation

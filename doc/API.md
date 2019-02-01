@@ -16,7 +16,7 @@
 <dt><a href="#SortedCollection">SortedCollection</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
 <dd></dd>
 <dt><a href="#StringView">StringView</a> ⇐ <code>Uint8Array</code></dt>
-<dd><p>Extends Uint8Array to handle C-like representation of UTF-8 strings.</p>
+<dd><p>Extends Uint8Array to handle C-like representation of UTF-8 encoded strings.</p>
 </dd>
 </dl>
 
@@ -1275,7 +1275,7 @@ SortedCollection.isUnique([1, 2, 2, 3, 4]);
 <a name="StringView"></a>
 
 ## StringView ⇐ <code>Uint8Array</code>
-Extends Uint8Array to handle C-like representation of UTF-8 strings.
+Extends Uint8Array to handle C-like representation of UTF-8 encoded strings.
 
 **Kind**: global class  
 **Extends**: <code>Uint8Array</code>  
@@ -1301,12 +1301,26 @@ Extends Uint8Array to handle C-like representation of UTF-8 strings.
 The amount of UTF characters in the StringView.
 
 **Kind**: instance property of [<code>StringView</code>](#StringView)  
+**Example**  
+```js
+const stringView = StringView.fromString('abc😀a');
+stringView.size
+//=> 5
+stringView.length
+//=> 8
+```
 <a name="StringView+characters"></a>
 
 ### stringView.characters()
 Iterates over the characters in the StringView.
 
 **Kind**: instance method of [<code>StringView</code>](#StringView)  
+**Example**  
+```js
+const stringView = StringView.fromString('abc😀');
+[...stringView.characters()]
+//=> ['a', 'b', 'c', '😀']
+```
 <a name="StringView+charAt"></a>
 
 ### stringView.charAt([index]) ⇒ <code>string</code>
@@ -1320,6 +1334,14 @@ located at the specified character index.
 | --- | --- | --- | --- |
 | [index] | <code>number</code> | <code>0</code> | a character index |
 
+**Example**  
+```js
+const stringView = StringView.fromString('abc😀');
+stringView.charAt(0);
+//=> 'a'
+stringView.charAt(3);
+//=> '😀'
+```
 <a name="StringView+replace"></a>
 
 ### stringView.replace(pattern, replacement) ⇒ [<code>StringView</code>](#StringView)
@@ -1333,12 +1355,26 @@ of all occurrences of a given pattern with a given replacement.
 | pattern | [<code>Collection</code>](#Collection) | the pattern to be replaced |
 | replacement | [<code>Collection</code>](#Collection) | the replacement |
 
+**Example**  
+```js
+const stringView = StringView.fromString('abc😀a');
+const pattern = StringView.fromString('a');
+const replacement = StringView.fromString('d');
+stringView.replace(pattern, replacement).toString();
+//=> 'dbc😀d'
+```
 <a name="StringView+reverse"></a>
 
 ### stringView.reverse() ⇒ [<code>StringView</code>](#StringView)
 Reverses the characters of the StringView in-place.
 
 **Kind**: instance method of [<code>StringView</code>](#StringView)  
+**Example**  
+```js
+const stringView = StringView.fromString('abc😀a');
+stringView.reverse().toString();
+//=> 'a😀cba'
+```
 <a name="StringView+search"></a>
 
 ### stringView.search(searchValue, [fromIndex]) ⇒ <code>number</code>
@@ -1354,6 +1390,13 @@ Returns -1 if the value is not found.
 | searchValue | [<code>Collection</code>](#Collection) |  | the value to search for |
 | [fromIndex] | <code>number</code> | <code>0</code> | the index at which to start the search |
 
+**Example**  
+```js
+const stringView = StringView.fromString('abc😀a');
+const searchValue = StringView.fromString('😀');
+stringView.search(searchValue);
+//=> 3
+```
 <a name="StringView+substring"></a>
 
 ### stringView.substring(indexStart, [indexEnd]) ⇒ <code>string</code>
@@ -1368,18 +1411,42 @@ character indexes, or to the end of the string.
 | indexStart | <code>number</code> | the character index of the first character to include |
 | [indexEnd] | <code>number</code> | the character index of the first character to exclude |
 
+**Example**  
+```js
+const stringView = StringView.fromString('abc😀a');
+stringView.substring(0, 4);
+//=> 'abc😀'
+stringView.substring(2);
+//=> 'c😀a'
+```
 <a name="StringView+toString"></a>
 
 ### stringView.toString() ⇒ <code>string</code>
 Returns a string representation of the StringView.
 
 **Kind**: instance method of [<code>StringView</code>](#StringView)  
+**Example**  
+```js
+const stringView = StringView.fromString('abc😀a');
+stringView.toString();
+//=> 'abc😀a'
+stringView == 'abc😀a'
+//=> true
+```
 <a name="StringView+trim"></a>
 
 ### stringView.trim() ⇒ [<code>StringView</code>](#StringView)
 Returns a StringView without trailing zeros.
 
 **Kind**: instance method of [<code>StringView</code>](#StringView)  
+**Example**  
+```js
+const stringView = StringView.fromString('abc😀a', 10);
+stringView
+//=> StringView [ 97, 98, 99, 240, 159, 152, 128, 97, 0, 0 ]
+stringView.trim();
+//=> StringView [ 97, 98, 99, 240, 159, 152, 128, 97 ]
+```
 <a name="StringView.fromString"></a>
 
 ### StringView.fromString(string, [size]) ⇒ [<code>StringView</code>](#StringView)
@@ -1393,10 +1460,20 @@ Creates a StringView from a string.
 | string | <code>string</code> | the string to encode |
 | [size] | <code>number</code> | the size of the StringView in bytes |
 
+**Example**  
+```js
+const stringView = StringView.fromString('abc😀a');
+stringView
+//=> StringView [ 97, 98, 99, 240, 159, 152, 128, 97 ]
+
+const stringView = StringView.fromString('abc😀a', 10);
+stringView
+//=> StringView [ 97, 98, 99, 240, 159, 152, 128, 97, 0, 0 ]
+```
 <a name="StringView.getByteSize"></a>
 
 ### StringView.getByteSize(string) ⇒ <code>number</code>
-Returns the size in bytes of a given string.
+Returns the size in bytes of a given string without encoding it.
 
 **Kind**: static method of [<code>StringView</code>](#StringView)  
 **Returns**: <code>number</code> - the size in bytes  
@@ -1405,6 +1482,11 @@ Returns the size in bytes of a given string.
 | --- | --- | --- |
 | string | <code>string</code> | the string to check |
 
+**Example**  
+```js
+const stringView = StringView.getByteSize('abc😀a');
+//=> 8
+```
 <a name="GridMixin"></a>
 
 ## GridMixin(Base) ⇒ [<code>Grid</code>](#Grid)
