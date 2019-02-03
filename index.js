@@ -1,5 +1,6 @@
 const BitField = require('./lib/bit-field');
 const GridMixin = require('./lib/grid');
+const BinaryHeap = require('./lib/binary-heap.js');
 const Pool = require('./lib/pool');
 const RecordArray = require('./lib/record-array');
 const SortedArray = require('./lib/sorted-array');
@@ -24,6 +25,7 @@ const StringView = require('./lib/string-view');
 module.exports = {
   BitField,
   GridMixin,
+  BinaryHeap,
   Pool,
   RecordArray,
   SortedArray,

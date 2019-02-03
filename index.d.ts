@@ -172,3 +172,19 @@ export declare class StringView extends Uint8Array {
     static fromString(string: string, size?: number): StringView;
     static getByteSize(string: string): number;
 }
+
+export declare class BinaryHeap extends Array {
+    heapify(): this;
+    left(index: number): any;
+    parent(index: number): any;
+    replace(item: any): any;
+    right(index: number): any;
+    update(index: number): void;
+    private has(index: number): boolean;
+    private siftDown(start: number): void;
+    private siftUp(start: number): void;
+    static compare(a: any, b: any): boolean;
+    static getLeftIndex(index: number): number;
+    static getParentIndex(index: number): number;
+    static getRightIndex(index: number): number;
+}
