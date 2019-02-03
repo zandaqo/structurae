@@ -84,4 +84,17 @@ describe('SortedArray', () => {
       expect(sorted).toEqual([0, 1, 2, 3, 4, 5, 8, 9]);
     });
   });
+
+  describe('from', () => {
+    it('creates a sorted array from an array-like object', () => {
+      expect(SortedArray.from([2, 1, 5, 3, 80, 9])).toEqual([1, 2, 3, 5, 9, 80]);
+    });
+  });
+
+  describe('of', () => {
+    it('creates a sorted array from provided arguments', () => {
+      expect(SortedArray.of(2, 1, 5, 3, 80, 9)).toEqual([1, 2, 3, 5, 9, 80]);
+      expect(SortedArray.of(2)).toEqual([2]);
+    });
+  });
 });

@@ -7,17 +7,16 @@ const inversedSecond = [9, 7, 6, 4, 2];
 const customComparator = (a, b) => (a > b ? -1 : a < b ? 1 : 0);
 
 describe('Sorted', () => {
-  const SortedArray = SortedCollection(Array);
+  const SortedArray = SortedCollection(Uint8Array);
   let sorted;
 
   beforeEach(() => {
-    sorted = new SortedArray(...first);
+    sorted = new SortedArray(first);
   });
 
   describe('compare', () => {
     it('compares two values', () => {
       expect(sorted.compare(1, 2)).toBe(-1);
-      expect(sorted.compare('b', 'a')).toBe(1);
       expect(sorted.compare(1, 1)).toBe(0);
     });
 
@@ -62,9 +61,9 @@ describe('Sorted', () => {
 
   describe('range', () => {
     it('returns range', () => {
-      expect(sorted.range(2, 4)).toEqual([2, 3, 4]);
-      expect(sorted.range(2)).toEqual([2, 3, 4, 8]);
-      expect(sorted.range(undefined, 4)).toEqual([1, 2, 3, 4]);
+      expect(sorted.range(2, 4)).toEqual(new SortedArray([2, 3, 4]));
+      expect(sorted.range(2)).toEqual(new SortedArray([2, 3, 4, 8]));
+      expect(sorted.range(undefined, 4)).toEqual(new SortedArray([1, 2, 3, 4]));
     });
   });
 
@@ -76,7 +75,7 @@ describe('Sorted', () => {
 
   describe('from', () => {
     it('creates a sorted array from an array-like object', () => {
-      expect(SortedArray.from([2, 1, 5, 3, 80, 9])).toEqual([1, 2, 3, 5, 9, 80]);
+      expect(SortedArray.from([2, 1, 5, 3, 80, 9])).toEqual(new SortedArray([1, 2, 3, 5, 9, 80]));
     });
   });
 
@@ -231,8 +230,8 @@ describe('Sorted', () => {
 
   describe('of', () => {
     it('creates a sorted array from provided arguments', () => {
-      expect(SortedArray.of(2, 1, 5, 3, 80, 9)).toEqual([1, 2, 3, 5, 9, 80]);
-      expect(SortedArray.of(2)).toEqual([2]);
+      expect(SortedArray.of(2, 1, 5, 3, 80, 9)).toEqual(new SortedArray([1, 2, 3, 5, 9, 80]));
+      expect(SortedArray.of(2)).toEqual(new SortedArray([2]));
     });
   });
 
