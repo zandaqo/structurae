@@ -175,6 +175,7 @@ export declare class StringView extends Uint8Array {
 
 export declare class BinaryHeap extends Array {
     heapify(): this;
+    isHeap(): boolean;
     left(index: number): any;
     parent(index: number): any;
     replace(item: any): any;
@@ -184,7 +185,8 @@ export declare class BinaryHeap extends Array {
     private siftDown(start: number): void;
     private siftUp(start: number): void;
     static compare(a: any, b: any): boolean;
-    static getLeftIndex(index: number): number;
-    static getParentIndex(index: number): number;
-    static getRightIndex(index: number): number;
+    private static getLeftIndex(index: number): number;
+    private static getParentIndex(index: number): number;
+    private static getRightIndex(index: number): number;
+    static isHeap(heap: Collection): boolean;
 }

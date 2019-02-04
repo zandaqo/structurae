@@ -19,6 +19,15 @@ describe('Heap', () => {
     });
   });
 
+  describe('isHeap', () => {
+    it('', () => {
+      const heap = new BinaryHeap(10, 1, 20, 3, 9, 8);
+      expect(heap.isHeap()).toBe(true);
+      heap[0] = 100;
+      expect(heap.isHeap()).toBe(false);
+    });
+  });
+
   describe('left', () => {
     it('', () => {
       const heap = new BinaryHeap(10, 1, 20, 3, 9, 8);
