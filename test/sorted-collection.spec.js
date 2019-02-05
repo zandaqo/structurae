@@ -16,12 +16,12 @@ describe('Sorted', () => {
 
   describe('compare', () => {
     it('compares two values', () => {
-      expect(sorted.compare(1, 2)).toBe(-1);
-      expect(sorted.compare(1, 1)).toBe(0);
+      expect(SortedArray.compare(1, 2)).toBe(-1);
+      expect(SortedArray.compare(1, 1)).toBe(0);
     });
 
     it('throws if comparison fails', () => {
-      expect(() => { sorted.compare('a', 1); }).toThrowError('Unstable comparison.');
+      expect(() => { SortedArray.compare('a', 1); }).toThrowError('Unstable comparison.');
     });
   });
 
@@ -44,7 +44,7 @@ describe('Sorted', () => {
       jest.spyOn(SortedArray, 'isSorted');
       expect(sorted.isSorted()).toBe(true);
       expect(SortedArray.isSorted.mock.calls.length).toBe(1);
-      expect(SortedArray.isSorted.mock.calls[0]).toEqual([sorted, sorted.compare]);
+      expect(SortedArray.isSorted.mock.calls[0]).toEqual([sorted]);
       SortedArray.isSorted.mockRestore();
     });
   });
@@ -54,7 +54,7 @@ describe('Sorted', () => {
       jest.spyOn(SortedArray, 'isUnique');
       expect(sorted.isUnique()).toBe(true);
       expect(SortedArray.isUnique.mock.calls.length).toBe(1);
-      expect(SortedArray.isUnique.mock.calls[0]).toEqual([sorted, sorted.compare]);
+      expect(SortedArray.isUnique.mock.calls[0]).toEqual([sorted]);
       SortedArray.isUnique.mockRestore();
     });
   });

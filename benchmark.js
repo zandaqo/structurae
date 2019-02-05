@@ -8,6 +8,7 @@ const BitField = require('./lib/bit-field');
 const RecordArray = require('./lib/record-array');
 const Pool = require('./lib/pool');
 const StringView = require('./lib/string-view');
+const SortedArray = require('./lib/sorted-array');
 
 const benchmarkOptions = {
   onStart(event) {
@@ -283,6 +284,42 @@ function getString(size) {
     .add('StringView', () => {
       const string = strings[getIndex(arrayLength)];
       const size = StringView.getByteSize(string);
+    })
+    .run();
+}
+
+{
+  new Benchmark.Suite('Sorted Push One:', benchmarkOptions)
+    .add('SortedArray', () => {
+      const array = new SortedArray();
+      for (let i = 0; i < 100; i++) {
+        array.push(getIndex(100));
+      }
+    })
+    .add('Native', () => {
+      const array = [];
+      for (let i = 0; i < 100; i++) {
+        array.push(getIndex(100));
+        array.sort();
+      }
+    })
+    .run();
+
+  new Benchmark.Suite('Sorted Push Many:', benchmarkOptions)
+    .add('SortedArray', () => {
+      const array = new SortedArray();
+      for (let i = 0; i < 100; i++) {
+        const random = getIndex(100);
+        array.push(random, random >> 1, random << 1, random - 3, random + 1);
+      }
+    })
+    .add('Native', () => {
+      const array = [];
+      for (let i = 0; i < 100; i++) {
+        const random = getIndex(100);
+        array.push(random, random >> 1, random << 1, random - 3, random + 1);
+        array.sort();
+      }
     })
     .run();
 }

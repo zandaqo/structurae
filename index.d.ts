@@ -95,11 +95,11 @@ interface Comparator {
 }
 
 declare class SortedCollection {
-    compare(a: any, b: any): CompareResult;
     isSorted(): boolean;
     isUnique(): boolean;
     range(start: number, end: number, subarray?: boolean): SortedCollection;
     rank(element: any): number;
+    static compare(a: any, b: any): CompareResult;
     static getDifference<T extends Collection>(a: Collection, b: Collection, symmetric?: boolean, comparator?: Comparator, container?: T): T;
     static getDifferenceScore(a: Collection, b: Collection, symmetric?: boolean, comparator?: Comparator): number;
     static getIndex(arr: Collection, target: any, comparator?: Comparator, rank?: boolean, start?: number, end?: number): number;
