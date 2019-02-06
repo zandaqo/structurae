@@ -190,3 +190,29 @@ export declare class BinaryHeap extends Array {
     private static getRightIndex(index: number): number;
     static isHeap(heap: Collection): boolean;
 }
+
+interface BitPosition {
+    bucket: number;
+    position: number;
+}
+
+type Bit = 0 | 1;
+
+interface BitGridOptions {
+    rows: number;
+    columns: number;
+}
+
+export declare class BitGrid extends Uint16Array {
+    offset: number;
+    columns: number;
+    rows: number;
+    lastPosition: BitPosition;
+    constructor(options: BitGridOptions, data?: Collection);
+    getBit(row: number, column: number): Bit;
+    setBit(row: number, column: number, value?: Bit): this;
+    getRow(row: number): Bit[];
+    getColumn(column: number): Bit[];
+    private getBitPosition(row: number, column: number): BitPosition;
+    static getOffset(columns: number): number;
+}

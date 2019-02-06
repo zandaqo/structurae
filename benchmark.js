@@ -9,6 +9,7 @@ const RecordArray = require('./lib/record-array');
 const Pool = require('./lib/pool');
 const StringView = require('./lib/string-view');
 const SortedArray = require('./lib/sorted-array');
+const BinaryHeap = require('./lib/binary-heap');
 
 const benchmarkOptions = {
   onStart(event) {
@@ -290,6 +291,12 @@ function getString(size) {
 
 {
   new Benchmark.Suite('Sorted Push One:', benchmarkOptions)
+    .add('Heap', () => {
+      const heap = new BinaryHeap();
+      for (let i = 0; i < 100; i++) {
+        heap.push(getIndex(100));
+      }
+    })
     .add('SortedArray', () => {
       const array = new SortedArray();
       for (let i = 0; i < 100; i++) {
@@ -306,6 +313,13 @@ function getString(size) {
     .run();
 
   new Benchmark.Suite('Sorted Push Many:', benchmarkOptions)
+    .add('Heap', () => {
+      const heap = new BinaryHeap();
+      for (let i = 0; i < 100; i++) {
+        const random = getIndex(100);
+        heap.push(random, random >> 1, random << 1, random - 3, random + 1);
+      }
+    })
     .add('SortedArray', () => {
       const array = new SortedArray();
       for (let i = 0; i < 100; i++) {
