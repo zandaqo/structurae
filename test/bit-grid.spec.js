@@ -10,10 +10,10 @@ describe('BitGrid', () => {
     });
 
     it('creates a BitGrid from existing data', () => {
-      const grid = new BitGrid({ columns: 10 }, [10]);
+      const grid = new BitGrid({ columns: 6 }, [10]);
       expect(grid[0]).toBe(10);
       expect(grid.length).toBe(1);
-      expect(grid.offset).toBe(4);
+      expect(grid.offset).toBe(3);
     });
   });
 
