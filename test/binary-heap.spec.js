@@ -9,7 +9,7 @@ describe('Heap', () => {
   });
 
   describe('heapify', () => {
-    it('', () => {
+    it('restores the binary heap', () => {
       const heap = new BinaryHeap(10, 1, 20, 3, 9, 8);
       heap[0] = 100;
       heap[1] = -2;
@@ -20,7 +20,7 @@ describe('Heap', () => {
   });
 
   describe('isHeap', () => {
-    it('', () => {
+    it('checks whether the array is a valid binary heap', () => {
       const heap = new BinaryHeap(10, 1, 20, 3, 9, 8);
       expect(heap.isHeap()).toBe(true);
       heap[0] = 100;
@@ -29,21 +29,21 @@ describe('Heap', () => {
   });
 
   describe('left', () => {
-    it('', () => {
+    it('returns the left child of a element at the given index', () => {
       const heap = new BinaryHeap(10, 1, 20, 3, 9, 8);
       expect(heap.left(1)).toBe(10);
     });
   });
 
   describe('parent', () => {
-    it('', () => {
+    it('returns the parent of an element at a given index', () => {
       const heap = new BinaryHeap(10, 1, 20, 3, 9, 8);
       expect(heap.parent(1)).toBe(1);
     });
   });
 
   describe('push', () => {
-    it('', () => {
+    it('adds items to the heap', () => {
       const heap = new BinaryHeap();
       heap.push(10, 1, 20, 3, 9, 8);
       expect(heap).toEqual([1, 3, 8, 10, 9, 20]);
@@ -51,7 +51,7 @@ describe('Heap', () => {
   });
 
   describe('replace', () => {
-    it('', () => {
+    it('returns the first (min/max) element of the heap and replaces it with a given element', () => {
       const heap = new BinaryHeap(10, 1, 20, 3, 9, 8);
       const head = heap.replace(0);
       expect(head).toBe(1);
@@ -60,14 +60,14 @@ describe('Heap', () => {
   });
 
   describe('right', () => {
-    it('', () => {
+    it('returns the right child of an element at a given index', () => {
       const heap = new BinaryHeap(10, 1, 20, 3, 9, 8);
       expect(heap.right(1)).toBe(9);
     });
   });
 
   describe('shift', () => {
-    it('', () => {
+    it('extracts the first element of the heap', () => {
       const heap = new BinaryHeap();
       heap.push(10, 1, 20, 3, 9, 8);
       const min = heap.shift();
@@ -77,7 +77,7 @@ describe('Heap', () => {
   });
 
   describe('splice', () => {
-    it('', () => {
+    it('changes elements of the heap', () => {
       const heap = new BinaryHeap();
       heap.push(10, 1, 20, 3, 9, 8);
       heap.splice(0, 1);
@@ -95,7 +95,7 @@ describe('Heap', () => {
   });
 
   describe('unshift', () => {
-    it('', () => {
+    it('adds elements to the heap', () => {
       const heap = new BinaryHeap(10, 1, 20, 3, 9, 8);
       heap.unshift(0, 12);
       expect(heap).toEqual([0, 3, 1, 10, 9, 20, 8, 12]);
@@ -103,7 +103,7 @@ describe('Heap', () => {
   });
 
   describe('update', () => {
-    it('', () => {
+    it('updates the position of an element inside the heap', () => {
       const heap = new BinaryHeap(10, 1, 20, 3, 9, 8);
       heap[1] = 21;
       heap.update(1);

@@ -6,8 +6,10 @@
 
 A collection of data structures for high-performance modern JavaScript applications that includes:
 
+- [BinaryHeap](https://github.com/zandaqo/structurae#BinaryHeap) - extends Array to implement the Binary Heap data structure.
 - [BitField](https://github.com/zandaqo/structurae#BitField) - stores and operates on data in Numbers and BigInts treating them as bitfields.
-- [Grid](https://github.com/zandaqo/structurae#grid) - extends built-in indexed collections to handle 2 dimensional data (e.g. nested arrays).
+- [BitGrid](https://github.com/zandaqo/structurae#BitGrid) - creates a grid or 2D matrix of bits.
+- [Grid](https://github.com/zandaqo/structurae#Grid) - extends built-in indexed collections to handle 2 dimensional data (e.g. nested arrays).
 - [Pool](https://github.com/zandaqo/structurae#Pool) - manages availability of objects in object pools.
 - [RecordArray](https://github.com/zandaqo/structurae#RecordArray) - extends DataView to use ArrayBuffer as an array of records or C-like structs.
 - [SortedCollection](https://github.com/zandaqo/structurae#SortedCollection) & [SortedArray](https://github.com/zandaqo/structurae#SortedArray) - extends built-in Array or TypedArrays to efficiently handle sorted data.
@@ -21,11 +23,40 @@ npm i structurae
 ## Usage
 Import structures as needed:
 ```javascript
-import { GridMixin, BitField, RecordArray, SortedArray, SortedMixin } from 'structurae';
+import { BinaryHeap, BitField, BitGrid, GridMixin, RecordArray, SortedArray, SortedMixin, StringView } from 'structurae';
 
 // or
-const { GridMixin, BitField, RecordArray, SortedArray, SortedMixin } = require('structurae');
+const { BinaryHeap, BitField, BitGrid, GridMixin, RecordArray, SortedArray, SortedMixin, StringView } = require('structurae');
 ```
+### BinaryHeap
+BinaryHeap extends built-in Array to implement the Binary Heap data structure. 
+All the mutating methods (push, shift, splice, etc.) do so while maintaining the valid heap structure.
+By default, BinaryHeap implements min-heap, but it can be changed by providing a different comparator function:
+```javascript
+class MaxHeap extends BinaryHeap {}
+MaxHeap.compare = (a, b) => b - a; 
+```
+In addition to all array methods, BinaryHeap provides a few methods to traverse or change the heap:
+```javascript
+const heap = new BinaryHeap(10, 1, 20, 3, 9, 8);
+heap[0]
+//=> 1
+heap.left(0); // the left child of the first (minimal) element of the heap
+//=> 3
+heap.right(0); // the right child of the first (minimal) element of the heap
+//=> 8
+heap.parent(1); // the parent of the second element of the heap
+//=> 1
+
+heap.replace(4) // returns the first element and adds a new element in one operation
+//=> 1
+heap[0]
+//=> 3
+heap[0] = 6;
+// BinaryHeap [ 6, 4, 8, 10, 9, 20 ]
+heap.update(0); // updates the position of an element in the heap
+// BinaryHeap [ 4, 6, 8, 10, 9, 20 ]
+``` 
 
 ### BitField
 BitField uses JavaScript Numbers and BigInts as bitfields to store and operate on data using bitwise operations.
@@ -186,6 +217,25 @@ Person.match(new Person([20, 1]).valueOf(), matcher);
 Person.match(new Person([19, 1]).valueOf(), matcher);
 //=> false
 ```
+
+### BitGrid
+BitGrid creates a grid or 2D matrix of bits and provides methods to operate on it:
+```javascript
+const bitGrid = new BitGrid({ rows: 2, columns: 8 });
+bitGrid.setBit(0, 0).setBit(0, 2).setBit(0, 5);
+bitGrid.getBit(0, 0);
+//=> 1
+bitGrid.getBit(0, 1);
+//=> 0
+bitGrid.getBit(0, 2);
+//=> 1
+bitGrid.getRow(0);
+//=> [ 1, 0, 1, 0, 0, 1, 0, 0 ]
+bitGrid.getColumn(0);
+//=> [ 1, 0 ]
+```
+BitGrid packs bits into numbers like [BitField](https://github.com/zandaqo/structurae#BitField)
+ and holds them in an ArrayBuffer, thus occupying the smallest possible space.
 
 ### Grid
 Grid extends a provided indexed collection class (Array or TypedArrays) to efficiently handle 2 dimensional data without creating

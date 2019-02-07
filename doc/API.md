@@ -1,8 +1,14 @@
 ## Classes
 
 <dl>
+<dt><a href="#BinaryHeap">BinaryHeap</a> ⇐ <code>Array</code></dt>
+<dd><p>Extends Array to implement the Binary Heap data structure.</p>
+</dd>
 <dt><a href="#BitField">BitField</a></dt>
 <dd></dd>
+<dt><a href="#BitGrid">BitGrid</a> ⇐ <code>Uint16Array</code></dt>
+<dd><p>Implements a grid or 2D matrix of bits.</p>
+</dd>
 <dt><a href="#Grid">Grid</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
 <dd></dd>
 <dt><a href="#Pool">Pool</a> ⇐ <code>Uint16Array</code></dt>
@@ -48,6 +54,8 @@
 <dd></dd>
 <dt><a href="#Masks">Masks</a> : <code>Object.&lt;string, AnyNumber&gt;</code></dt>
 <dd></dd>
+<dt><a href="#BitCoordinates">BitCoordinates</a> : <code>Object</code></dt>
+<dd></dd>
 <dt><a href="#CollectionConstructor">CollectionConstructor</a> : <code>ArrayConstructor</code> | <code>Int8ArrayConstructor</code> | <code>Int8ArrayConstructor</code> | <code>Uint8ArrayConstructor</code> | <code>Uint8ClampedArrayConstructor</code> | <code>Int16ArrayConstructor</code> | <code>Uint16ArrayConstructor</code> | <code>Int32ArrayConstructor</code> | <code>Uint32ArrayConstructor</code> | <code>Float32ArrayConstructor</code> | <code>Float64ArrayConstructor</code></dt>
 <dd></dd>
 <dt><a href="#Collection">Collection</a> : <code>Array</code> | <code>Int8Array</code> | <code>Uint8Array</code> | <code>Uint8ClampedArray</code> | <code>Int16Array</code> | <code>Uint16Array</code> | <code>Int32Array</code> | <code>Uint32Array</code> | <code>Float32Array</code> | <code>Float64Array</code></dt>
@@ -57,6 +65,199 @@
 <dt><a href="#RecordField">RecordField</a></dt>
 <dd></dd>
 </dl>
+
+<a name="BinaryHeap"></a>
+
+## BinaryHeap ⇐ <code>Array</code>
+Extends Array to implement the Binary Heap data structure.
+
+**Kind**: global class  
+**Extends**: <code>Array</code>  
+
+* [BinaryHeap](#BinaryHeap) ⇐ <code>Array</code>
+    * [new BinaryHeap(...args)](#new_BinaryHeap_new)
+    * _instance_
+        * [.heapify()](#BinaryHeap+heapify) ⇒ [<code>BinaryHeap</code>](#BinaryHeap)
+        * [.isHeap()](#BinaryHeap+isHeap) ⇒ <code>boolean</code>
+        * [.left(index)](#BinaryHeap+left) ⇒ <code>\*</code>
+        * [.parent(index)](#BinaryHeap+parent) ⇒ <code>\*</code>
+        * [.push(...elements)](#BinaryHeap+push) ⇒ <code>number</code>
+        * [.replace(element)](#BinaryHeap+replace) ⇒ <code>\*</code>
+        * [.right(index)](#BinaryHeap+right) ⇒ <code>\*</code>
+        * [.shift()](#BinaryHeap+shift) ⇒ <code>\*</code>
+        * [.splice(...args)](#BinaryHeap+splice) ⇒ <code>Array.&lt;\*&gt;</code>
+        * [.unshift(...items)](#BinaryHeap+unshift) ⇒ <code>number</code>
+        * [.update(index)](#BinaryHeap+update) ⇒ <code>void</code>
+    * _static_
+        * [.compare(a, b)](#BinaryHeap.compare) ⇒ <code>boolean</code>
+        * [.from(arrayLike, mapFn, thisArg)](#BinaryHeap.from) ⇒ [<code>SortedCollection</code>](#SortedCollection)
+        * [.isHeap(heap)](#BinaryHeap.isHeap) ⇒ <code>boolean</code>
+        * [.of(...elements)](#BinaryHeap.of) ⇒ [<code>SortedCollection</code>](#SortedCollection)
+
+<a name="new_BinaryHeap_new"></a>
+
+### new BinaryHeap(...args)
+
+| Param | Type |
+| --- | --- |
+| ...args | <code>\*</code> | 
+
+<a name="BinaryHeap+heapify"></a>
+
+### binaryHeap.heapify() ⇒ [<code>BinaryHeap</code>](#BinaryHeap)
+Restores the binary heap.
+
+**Kind**: instance method of [<code>BinaryHeap</code>](#BinaryHeap)  
+<a name="BinaryHeap+isHeap"></a>
+
+### binaryHeap.isHeap() ⇒ <code>boolean</code>
+Checks whether the array is a valid binary heap.
+
+**Kind**: instance method of [<code>BinaryHeap</code>](#BinaryHeap)  
+**Returns**: <code>boolean</code> - whether the array is a valid binary heap  
+<a name="BinaryHeap+left"></a>
+
+### binaryHeap.left(index) ⇒ <code>\*</code>
+Returns the left child of an element at a given index.
+
+**Kind**: instance method of [<code>BinaryHeap</code>](#BinaryHeap)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="BinaryHeap+parent"></a>
+
+### binaryHeap.parent(index) ⇒ <code>\*</code>
+Returns the parent of an element at a given index.
+
+**Kind**: instance method of [<code>BinaryHeap</code>](#BinaryHeap)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="BinaryHeap+push"></a>
+
+### binaryHeap.push(...elements) ⇒ <code>number</code>
+Adds items to the heap.
+
+**Kind**: instance method of [<code>BinaryHeap</code>](#BinaryHeap)  
+
+| Param | Type |
+| --- | --- |
+| ...elements | <code>\*</code> | 
+
+<a name="BinaryHeap+replace"></a>
+
+### binaryHeap.replace(element) ⇒ <code>\*</code>
+Returns the first (min/max) element of the heap and replaces it with a given element.
+
+**Kind**: instance method of [<code>BinaryHeap</code>](#BinaryHeap)  
+
+| Param | Type |
+| --- | --- |
+| element | <code>\*</code> | 
+
+<a name="BinaryHeap+right"></a>
+
+### binaryHeap.right(index) ⇒ <code>\*</code>
+Returns the right child of an element at a given index.
+
+**Kind**: instance method of [<code>BinaryHeap</code>](#BinaryHeap)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="BinaryHeap+shift"></a>
+
+### binaryHeap.shift() ⇒ <code>\*</code>
+Extracts the first element of the heap.
+
+**Kind**: instance method of [<code>BinaryHeap</code>](#BinaryHeap)  
+<a name="BinaryHeap+splice"></a>
+
+### binaryHeap.splice(...args) ⇒ <code>Array.&lt;\*&gt;</code>
+Changes elements of the heap.
+
+**Kind**: instance method of [<code>BinaryHeap</code>](#BinaryHeap)  
+
+| Param | Type |
+| --- | --- |
+| ...args | <code>\*</code> | 
+
+<a name="BinaryHeap+unshift"></a>
+
+### binaryHeap.unshift(...items) ⇒ <code>number</code>
+Adds elements to the heap.
+
+**Kind**: instance method of [<code>BinaryHeap</code>](#BinaryHeap)  
+
+| Param | Type |
+| --- | --- |
+| ...items | <code>\*</code> | 
+
+<a name="BinaryHeap+update"></a>
+
+### binaryHeap.update(index) ⇒ <code>void</code>
+Updates the position of an element inside the heap.
+
+**Kind**: instance method of [<code>BinaryHeap</code>](#BinaryHeap)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="BinaryHeap.compare"></a>
+
+### BinaryHeap.compare(a, b) ⇒ <code>boolean</code>
+The comparator function used by the heap.
+
+**Kind**: static method of [<code>BinaryHeap</code>](#BinaryHeap)  
+
+| Param | Type |
+| --- | --- |
+| a | <code>\*</code> | 
+| b | <code>\*</code> | 
+
+<a name="BinaryHeap.from"></a>
+
+### BinaryHeap.from(arrayLike, mapFn, thisArg) ⇒ [<code>SortedCollection</code>](#SortedCollection)
+Creates a new BinaryHeap from a given array-like object.
+
+**Kind**: static method of [<code>BinaryHeap</code>](#BinaryHeap)  
+**Returns**: [<code>SortedCollection</code>](#SortedCollection) - a new BinaryHeap  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| arrayLike | <code>\*</code> | an array-like object to convert to a heap |
+| mapFn | <code>function</code> | a map function to call on every element of the array |
+| thisArg | <code>Object</code> | the value to use as `this` when invoking the `mapFn` |
+
+<a name="BinaryHeap.isHeap"></a>
+
+### BinaryHeap.isHeap(heap) ⇒ <code>boolean</code>
+Checks if a given collection is a valid binary heap.
+
+**Kind**: static method of [<code>BinaryHeap</code>](#BinaryHeap)  
+
+| Param | Type |
+| --- | --- |
+| heap | [<code>Collection</code>](#Collection) | 
+
+<a name="BinaryHeap.of"></a>
+
+### BinaryHeap.of(...elements) ⇒ [<code>SortedCollection</code>](#SortedCollection)
+Creates a new BinaryHeap with a variable number of arguments,
+regardless of number or type of the arguments.
+
+**Kind**: static method of [<code>BinaryHeap</code>](#BinaryHeap)  
+**Returns**: [<code>SortedCollection</code>](#SortedCollection) - the new BinaryHeap  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| ...elements | <code>\*</code> | the elements of which to create the heap |
 
 <a name="BitField"></a>
 
@@ -435,6 +636,79 @@ The static version of `BitField#match`, matches a given value against a precompu
 | value | [<code>AnyNumber</code>](#AnyNumber) | a value to check |
 | matcher | [<code>Matcher</code>](#Matcher) | a precomputed set of values |
 
+<a name="BitGrid"></a>
+
+## BitGrid ⇐ <code>Uint16Array</code>
+Implements a grid or 2D matrix of bits.
+
+**Kind**: global class  
+**Extends**: <code>Uint16Array</code>  
+
+* [BitGrid](#BitGrid) ⇐ <code>Uint16Array</code>
+    * [new BitGrid([options], [data])](#new_BitGrid_new)
+    * [.getBit(row, column)](#BitGrid+getBit) ⇒ <code>number</code>
+    * [.setBit(row, column, value)](#BitGrid+setBit) ⇒ [<code>BitGrid</code>](#BitGrid)
+    * [.getRow(row)](#BitGrid+getRow) ⇒ <code>Array.&lt;number&gt;</code>
+    * [.getColumn(column)](#BitGrid+getColumn) ⇒ <code>Array.&lt;number&gt;</code>
+
+<a name="new_BitGrid_new"></a>
+
+### new BitGrid([options], [data])
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [options] | <code>Object</code> |  |  |
+| [options.rows] | <code>number</code> | <code>1</code> | the number of rows |
+| [options.columns] | <code>number</code> | <code>16</code> | the number of columns |
+| [data] | [<code>Collection</code>](#Collection) |  |  |
+
+<a name="BitGrid+getBit"></a>
+
+### bitGrid.getBit(row, column) ⇒ <code>number</code>
+Returns the value of a bit at given coordinates.
+
+**Kind**: instance method of [<code>BitGrid</code>](#BitGrid)  
+
+| Param | Type |
+| --- | --- |
+| row | <code>number</code> | 
+| column | <code>number</code> | 
+
+<a name="BitGrid+setBit"></a>
+
+### bitGrid.setBit(row, column, value) ⇒ [<code>BitGrid</code>](#BitGrid)
+Sets the value of a bit at given coordinates.
+
+**Kind**: instance method of [<code>BitGrid</code>](#BitGrid)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| row | <code>number</code> |  | 
+| column | <code>number</code> |  | 
+| value | <code>number</code> | <code>1</code> | 
+
+<a name="BitGrid+getRow"></a>
+
+### bitGrid.getRow(row) ⇒ <code>Array.&lt;number&gt;</code>
+Returns values of bits on a given row as an array of numbers.
+
+**Kind**: instance method of [<code>BitGrid</code>](#BitGrid)  
+
+| Param | Type |
+| --- | --- |
+| row | <code>number</code> | 
+
+<a name="BitGrid+getColumn"></a>
+
+### bitGrid.getColumn(column) ⇒ <code>Array.&lt;number&gt;</code>
+Returns values of bits on a given column as an array of numbers.
+
+**Kind**: instance method of [<code>BitGrid</code>](#BitGrid)  
+
+| Param | Type |
+| --- | --- |
+| column | <code>number</code> | 
+
 <a name="Grid"></a>
 
 ## Grid ⇐ [<code>CollectionConstructor</code>](#CollectionConstructor)
@@ -800,7 +1074,6 @@ person.set(0, 'age', 10).set(0, 'score', 5.0).toObject(0);
 * [SortedArray](#SortedArray) ⇐ [<code>SortedCollection</code>](#SortedCollection)
     * [.set(arr)](#SortedArray+set) ⇒ [<code>SortedArray</code>](#SortedArray)
     * [.uniquify()](#SortedArray+uniquify) ⇒ [<code>SortedArray</code>](#SortedArray)
-    * [.compare(a, b)](#SortedCollection+compare) ⇒ <code>number</code>
     * [.isSorted()](#SortedCollection+isSorted) ⇒ <code>boolean</code>
     * [.isUnique()](#SortedCollection+isUnique) ⇒ <code>boolean</code>
     * [.range(start, end, [subarray])](#SortedCollection+range) ⇒ [<code>SortedCollection</code>](#SortedCollection)
@@ -834,25 +1107,6 @@ Removes duplicating elements from the array.
 //=> SortedArray [ 2, 2, 3, 4, 5, 5, 9 ];
 sortedArray.uniquify();
 // => SortedArray [ 2, 3, 4, 5, 9 ]
-```
-<a name="SortedCollection+compare"></a>
-
-### sortedArray.compare(a, b) ⇒ <code>number</code>
-The default comparator.
-
-**Kind**: instance method of [<code>SortedArray</code>](#SortedArray)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| a | <code>\*</code> | the first value |
-| b | <code>\*</code> | the second value |
-
-**Example**  
-```js
-//=> SortedCollection [ 2, 3, 4, 5, 9 ];
-sortedCollection.compare = (a, b) => (a > b ? -1 : a < b ? 1 : 0);
-sortedCollection.sort();
-//=> [ 9, 5, 4, 3, 2 ]
 ```
 <a name="SortedCollection+isSorted"></a>
 
@@ -936,12 +1190,12 @@ sortedCollection.rank(6);
 
 * [SortedCollection](#SortedCollection) ⇐ [<code>CollectionConstructor</code>](#CollectionConstructor)
     * _instance_
-        * [.compare(a, b)](#SortedCollection+compare) ⇒ <code>number</code>
         * [.isSorted()](#SortedCollection+isSorted) ⇒ <code>boolean</code>
         * [.isUnique()](#SortedCollection+isUnique) ⇒ <code>boolean</code>
         * [.range(start, end, [subarray])](#SortedCollection+range) ⇒ [<code>SortedCollection</code>](#SortedCollection)
         * [.rank(element)](#SortedCollection+rank) ⇒ <code>number</code>
     * _static_
+        * [.compare(a, b)](#SortedCollection.compare) ⇒ <code>number</code>
         * [.getDifference(a, b, [symmetric], [comparator], [container])](#SortedCollection.getDifference) ⇒ <code>Array</code>
         * [.getDifferenceScore(a, b, [symmetric], [comparator])](#SortedCollection.getDifferenceScore) ⇒ <code>number</code>
         * [.getIndex(arr, target, [comparator], [rank], [start], [end])](#SortedCollection.getIndex) ⇒ <code>number</code>
@@ -953,25 +1207,6 @@ sortedCollection.rank(6);
         * [.isSorted(arr, [comparator])](#SortedCollection.isSorted) ⇒ <code>boolean</code>
         * [.isUnique(arr, [comparator])](#SortedCollection.isUnique) ⇒ <code>boolean</code>
 
-<a name="SortedCollection+compare"></a>
-
-### sortedCollection.compare(a, b) ⇒ <code>number</code>
-The default comparator.
-
-**Kind**: instance method of [<code>SortedCollection</code>](#SortedCollection)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| a | <code>\*</code> | the first value |
-| b | <code>\*</code> | the second value |
-
-**Example**  
-```js
-//=> SortedCollection [ 2, 3, 4, 5, 9 ];
-sortedCollection.compare = (a, b) => (a > b ? -1 : a < b ? 1 : 0);
-sortedCollection.sort();
-//=> [ 9, 5, 4, 3, 2 ]
-```
 <a name="SortedCollection+isSorted"></a>
 
 ### sortedCollection.isSorted() ⇒ <code>boolean</code>
@@ -1046,6 +1281,18 @@ sortedCollection.rank(1);
 sortedCollection.rank(6);
 // => 4
 ```
+<a name="SortedCollection.compare"></a>
+
+### SortedCollection.compare(a, b) ⇒ <code>number</code>
+The default comparator.
+
+**Kind**: static method of [<code>SortedCollection</code>](#SortedCollection)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| a | <code>\*</code> | the first value |
+| b | <code>\*</code> | the second value |
+
 <a name="SortedCollection.getDifference"></a>
 
 ### SortedCollection.getDifference(a, b, [symmetric], [comparator], [container]) ⇒ <code>Array</code>
@@ -1565,6 +1812,17 @@ const SortedCollection = Grid(Uint32Array);
 
 ## Masks : <code>Object.&lt;string, AnyNumber&gt;</code>
 **Kind**: global typedef  
+<a name="BitCoordinates"></a>
+
+## BitCoordinates : <code>Object</code>
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| bucket | <code>number</code> | row index |
+| position | <code>number</code> | column index |
+
 <a name="CollectionConstructor"></a>
 
 ## CollectionConstructor : <code>ArrayConstructor</code> \| <code>Int8ArrayConstructor</code> \| <code>Int8ArrayConstructor</code> \| <code>Uint8ArrayConstructor</code> \| <code>Uint8ClampedArrayConstructor</code> \| <code>Int16ArrayConstructor</code> \| <code>Uint16ArrayConstructor</code> \| <code>Int32ArrayConstructor</code> \| <code>Uint32ArrayConstructor</code> \| <code>Float32ArrayConstructor</code> \| <code>Float64ArrayConstructor</code>
