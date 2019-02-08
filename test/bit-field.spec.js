@@ -179,13 +179,12 @@ describe('BitField', () => {
 
   describe('getMinSize', () => {
     it('calculates the minimum amount of bits to hold a given number', () => {
-      expect(BitField.getMinSize(100)).toBe(7);
-      expect(BitField.getMinSize(127)).toBe(7);
-      expect(BitField.getMinSize(2000)).toBe(11);
-      expect(BitField.getMinSize(8000)).toBe(13);
-      expect(BitField.getMinSize(2147483647)).toBe(31);
-      expect(BitField.getMinSize(7147483647)).toBe(33);
-      expect(BitField.getMinSize(Number.MAX_SAFE_INTEGER)).toBe(53);
+      for (let i = 1; i < 53; i++) {
+        const number = 2 ** i;
+        expect(BitField.getMinSize(number)).toEqual(i + 1);
+        expect(BitField.getMinSize(number - 1)).toEqual(i);
+      }
+      expect(BitField.getMinSize(Number.MAX_SAFE_INTEGER)).toEqual(53);
     });
   });
 
