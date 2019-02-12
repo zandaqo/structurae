@@ -231,3 +231,16 @@ declare class SymmetricGrid {
 }
 
 export declare function SymmetricGridMixin<T extends Collection>(Base?: Constructor<T>): Constructor<T & SymmetricGrid>
+
+export declare class UnweightedGraph extends BitGrid {
+    size: number;
+    flags: BitGrid;
+    directed: boolean;
+    addEdge(x: number, y: number): this;
+    removeEdge(x: number, y: number): this;
+    hasEdge(x: number, y: number): boolean;
+    outEdges(x: number): number[];
+    inEdges(x: number): number[];
+    traverse(isDFS?: boolean, start?: number, path?: boolean): number;
+    path(start: number, end: number): number[];
+}

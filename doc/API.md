@@ -26,6 +26,8 @@
 </dd>
 <dt><a href="#SymmetricGrid">SymmetricGrid</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
 <dd></dd>
+<dt><a href="#UnweightedGraph">UnweightedGraph</a> ⇐ <code><a href="#BitGrid">BitGrid</a></code></dt>
+<dd></dd>
 </dl>
 
 ## Functions
@@ -1879,6 +1881,154 @@ a.get(2, 1);
 | --- | --- | --- | --- |
 | arrays | <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> |  |  |
 | [pad] | <code>\*</code> | <code>0</code> | the value to pad the arrays to create equal sized rows |
+
+<a name="UnweightedGraph"></a>
+
+## UnweightedGraph ⇐ [<code>BitGrid</code>](#BitGrid)
+**Kind**: global class  
+**Extends**: [<code>BitGrid</code>](#BitGrid)  
+
+* [UnweightedGraph](#UnweightedGraph) ⇐ [<code>BitGrid</code>](#BitGrid)
+    * [new UnweightedGraph([options], [data])](#new_UnweightedGraph_new)
+    * [.addEdge(x, y)](#UnweightedGraph+addEdge) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+    * [.removeEdge(x, y)](#UnweightedGraph+removeEdge) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+    * [.hasEdge(x, y)](#UnweightedGraph+hasEdge) ⇒ <code>boolean</code>
+    * [.outEdges(x)](#UnweightedGraph+outEdges) ⇒ <code>Array.&lt;number&gt;</code>
+    * [.inEdges(x)](#UnweightedGraph+inEdges) ⇒ <code>Array.&lt;number&gt;</code>
+    * [.traverse([isDFS], [start], [path])](#UnweightedGraph+traverse)
+    * [.path(start, end)](#UnweightedGraph+path) ⇒ <code>Array.&lt;number&gt;</code>
+    * [.getBit(row, column)](#BitGrid+getBit) ⇒ <code>number</code>
+    * [.setBit(row, column, value)](#BitGrid+setBit) ⇒ [<code>BitGrid</code>](#BitGrid)
+    * [.getRow(row)](#BitGrid+getRow) ⇒ <code>Array.&lt;number&gt;</code>
+    * [.getColumn(column)](#BitGrid+getColumn) ⇒ <code>Array.&lt;number&gt;</code>
+
+<a name="new_UnweightedGraph_new"></a>
+
+### new UnweightedGraph([options], [data])
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [options] | <code>Object</code> |  |  |
+| [options.size] | <code>number</code> | <code>2</code> | the maximum number of vertices |
+| [options.directed] | <code>boolean</code> |  |  |
+| [options.pad] | <code>\*</code> | <code>0</code> | the initial value of cells |
+| [data] | [<code>Collection</code>](#Collection) |  |  |
+
+<a name="UnweightedGraph+addEdge"></a>
+
+### unweightedGraph.addEdge(x, y) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+**Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| x | <code>number</code> | 
+| y | <code>number</code> | 
+
+<a name="UnweightedGraph+removeEdge"></a>
+
+### unweightedGraph.removeEdge(x, y) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+**Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| x | <code>number</code> | 
+| y | <code>number</code> | 
+
+<a name="UnweightedGraph+hasEdge"></a>
+
+### unweightedGraph.hasEdge(x, y) ⇒ <code>boolean</code>
+**Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| x | <code>number</code> | 
+| y | <code>number</code> | 
+
+<a name="UnweightedGraph+outEdges"></a>
+
+### unweightedGraph.outEdges(x) ⇒ <code>Array.&lt;number&gt;</code>
+**Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| x | <code>number</code> | 
+
+<a name="UnweightedGraph+inEdges"></a>
+
+### unweightedGraph.inEdges(x) ⇒ <code>Array.&lt;number&gt;</code>
+**Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| x | <code>number</code> | 
+
+<a name="UnweightedGraph+traverse"></a>
+
+### unweightedGraph.traverse([isDFS], [start], [path])
+**Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [isDFS] | <code>boolean</code> |  | 
+| [start] | <code>number</code> | <code>0</code> | 
+| [path] | <code>boolean</code> |  | 
+
+<a name="UnweightedGraph+path"></a>
+
+### unweightedGraph.path(start, end) ⇒ <code>Array.&lt;number&gt;</code>
+**Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| start | <code>number</code> | 
+| end | <code>number</code> | 
+
+<a name="BitGrid+getBit"></a>
+
+### unweightedGraph.getBit(row, column) ⇒ <code>number</code>
+Returns the value of a bit at given coordinates.
+
+**Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| row | <code>number</code> | 
+| column | <code>number</code> | 
+
+<a name="BitGrid+setBit"></a>
+
+### unweightedGraph.setBit(row, column, value) ⇒ [<code>BitGrid</code>](#BitGrid)
+Sets the value of a bit at given coordinates.
+
+**Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| row | <code>number</code> |  | 
+| column | <code>number</code> |  | 
+| value | <code>number</code> | <code>1</code> | 
+
+<a name="BitGrid+getRow"></a>
+
+### unweightedGraph.getRow(row) ⇒ <code>Array.&lt;number&gt;</code>
+Returns values of bits on a given row as an array of numbers.
+
+**Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| row | <code>number</code> | 
+
+<a name="BitGrid+getColumn"></a>
+
+### unweightedGraph.getColumn(column) ⇒ <code>Array.&lt;number&gt;</code>
+Returns values of bits on a given column as an array of numbers.
+
+**Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| column | <code>number</code> | 
 
 <a name="GridMixin"></a>
 

@@ -6,6 +6,8 @@ const RecordArray = require('./lib/record-array');
 const SortedArray = require('./lib/sorted-array');
 const SortedMixin = require('./lib/sorted-collection');
 const StringView = require('./lib/string-view');
+const SymmetricGridMixin = require('./lib/symmetric-grid');
+const UnweightedGraph = require('./lib/unweighted-graph');
 
 /**
  * @external ArrayBuffer
@@ -31,4 +33,6 @@ module.exports = {
   SortedArray,
   SortedMixin,
   StringView,
+  SymmetricGridMixin,
+  UnweightedGraph,
 };
