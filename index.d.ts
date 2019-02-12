@@ -216,3 +216,18 @@ export declare class BitGrid extends Uint16Array {
     private getBitPosition(row: number, column: number): BitPosition;
     static getOffset(columns: number): number;
 }
+
+declare class SymmetricGrid {
+    rows: number;
+    pad: any;
+    lastCoordinates: Coordinates;
+
+    constructor(options?: GridOptions, data?: Collection);
+    get(row: number, column: number): any;
+    set(row: number, column: number, value: any): this;
+    getCoordinates(index: number): Coordinates;
+    toArrays(withPadding?: boolean): any[][];
+    static fromArrays(arrays: any[][], pad: any): SymmetricGrid;
+}
+
+export declare function SymmetricGridMixin<T extends Collection>(Base?: Constructor<T>): Constructor<T & SymmetricGrid>

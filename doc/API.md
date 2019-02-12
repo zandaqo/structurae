@@ -24,6 +24,8 @@
 <dt><a href="#StringView">StringView</a> ⇐ <code>Uint8Array</code></dt>
 <dd><p>Extends Uint8Array to handle C-like representation of UTF-8 encoded strings.</p>
 </dd>
+<dt><a href="#SymmetricGrid">SymmetricGrid</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
+<dd></dd>
 </dl>
 
 ## Functions
@@ -36,6 +38,9 @@
 <dd></dd>
 <dt><a href="#SortedMixin">SortedMixin(Base)</a> ⇒ <code><a href="#SortedCollection">SortedCollection</a></code></dt>
 <dd><p>Creates a SortedCollection class extending a given Array-like class.</p>
+</dd>
+<dt><a href="#SymmetricGridMixin">SymmetricGridMixin(Base)</a> ⇒ <code><a href="#SymmetricGrid">SymmetricGrid</a></code></dt>
+<dd><p>Creates a SymmetricGrid class extending a given Array-like class.</p>
 </dd>
 </dl>
 
@@ -733,7 +738,7 @@ Returns values of bits on a given column as an array of numbers.
 
 ### new Grid([options], [data])
 Passes all arguments to the Base class except if called with a special set of grid options,
-in that case creates and empty grid of specified parameter.
+in that case creates and empty grid of specified parameters.
 
 
 | Param | Type | Default | Description |
@@ -867,7 +872,7 @@ a.toArrays();
 Creates a grid from an array of arrays.
 
 **Kind**: static method of [<code>Grid</code>](#Grid)  
-**Returns**: [<code>Grid</code>](#Grid) - const a = ArrayGrid([[1, 2], [3], [4, 5, 6]])
+**Returns**: [<code>Grid</code>](#Grid) - const a = ArrayGrid.from([[1, 2], [3], [4, 5, 6]])
 //=> ArrayGrid [1, 2, 0, 0, 3, 0, 0, 0, 4, 5, 6, 0]
 a.get(1, 0);
 //=> 3
@@ -1734,6 +1739,147 @@ Returns the size in bytes of a given string without encoding it.
 const stringView = StringView.getByteSize('abc😀a');
 //=> 8
 ```
+<a name="SymmetricGrid"></a>
+
+## SymmetricGrid ⇐ [<code>CollectionConstructor</code>](#CollectionConstructor)
+**Kind**: global class  
+**Extends**: [<code>CollectionConstructor</code>](#CollectionConstructor)  
+
+* [SymmetricGrid](#SymmetricGrid) ⇐ [<code>CollectionConstructor</code>](#CollectionConstructor)
+    * [new SymmetricGrid([options], [data])](#new_SymmetricGrid_new)
+    * _instance_
+        * [.get(row, column)](#SymmetricGrid+get) ⇒ <code>\*</code>
+        * [.set(row, column, value)](#SymmetricGrid+set) ⇒ [<code>SymmetricGrid</code>](#SymmetricGrid)
+        * [.getCoordinates(index)](#SymmetricGrid+getCoordinates) ⇒ [<code>Coordinates</code>](#Coordinates)
+        * [.toArrays()](#SymmetricGrid+toArrays) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
+    * _static_
+        * [.getIndex(row, column)](#SymmetricGrid.getIndex) ⇒ <code>\*</code>
+        * [.fromArrays(arrays, [pad])](#SymmetricGrid.fromArrays) ⇒ [<code>SymmetricGrid</code>](#SymmetricGrid)
+
+<a name="new_SymmetricGrid_new"></a>
+
+### new SymmetricGrid([options], [data])
+Passes all arguments to the Base class except if called with a special set of grid options,
+in that case creates and empty grid of specified parameters.
+
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [options] | <code>Object</code> |  |  |
+| [options.rows] | <code>number</code> | <code>2</code> | the number of rows |
+| [options.pad] | <code>\*</code> | <code>0</code> | the initial value of cells |
+| [data] | [<code>Collection</code>](#Collection) |  |  |
+
+<a name="SymmetricGrid+get"></a>
+
+### symmetricGrid.get(row, column) ⇒ <code>\*</code>
+Returns an element from given coordinates.
+
+**Kind**: instance method of [<code>SymmetricGrid</code>](#SymmetricGrid)  
+
+| Param | Type |
+| --- | --- |
+| row | <code>number</code> | 
+| column | <code>number</code> | 
+
+**Example**  
+```js
+const a = SymmetricGrid({ rows: 3, pad: 3});
+a.get(0, 1);
+//=> 3
+```
+<a name="SymmetricGrid+set"></a>
+
+### symmetricGrid.set(row, column, value) ⇒ [<code>SymmetricGrid</code>](#SymmetricGrid)
+Sets the element at given coordinates.
+
+**Kind**: instance method of [<code>SymmetricGrid</code>](#SymmetricGrid)  
+**Returns**: [<code>SymmetricGrid</code>](#SymmetricGrid) - the instance  
+
+| Param | Type |
+| --- | --- |
+| row | <code>number</code> | 
+| column | <code>number</code> | 
+| value | <code>\*</code> | 
+
+**Example**  
+```js
+const a = SymmetricGrid({ rows: 3, pad: 3});
+a.set(0, 1, 5);
+a.get(0, 1);
+//=> 5
+```
+<a name="SymmetricGrid+getCoordinates"></a>
+
+### symmetricGrid.getCoordinates(index) ⇒ [<code>Coordinates</code>](#Coordinates)
+Gets coordinates of an element at specified index.
+
+**Kind**: instance method of [<code>SymmetricGrid</code>](#SymmetricGrid)  
+**Returns**: [<code>Coordinates</code>](#Coordinates) - coordinates  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+**Example**  
+```js
+const a = SymmetricGrid({ rows: 3, pad: 3});
+a.getCoordinates(1);
+//=> [0, 1]
+a.getCoordinates(2);
+//=> [1, 1]
+```
+<a name="SymmetricGrid+toArrays"></a>
+
+### symmetricGrid.toArrays() ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
+Returns an array of arrays where each nested array correspond to a row in the grid.
+
+**Kind**: instance method of [<code>SymmetricGrid</code>](#SymmetricGrid)  
+**Example**  
+```js
+const a = SymmetricGrid.from([[1, 2, 4], [2, 3, 5], [4, 5, 6]])
+//=> SymmetricGrid [1, 2, 3, 4, 5, 6]
+a.toArrays();
+//=> Array [[1, 2, 4], [2, 3, 5], [4, 5, 6]]
+```
+<a name="SymmetricGrid.getIndex"></a>
+
+### SymmetricGrid.getIndex(row, column) ⇒ <code>\*</code>
+Returns an array index of an element at given coordinates.
+
+**Kind**: static method of [<code>SymmetricGrid</code>](#SymmetricGrid)  
+
+| Param | Type |
+| --- | --- |
+| row | <code>number</code> | 
+| column | <code>number</code> | 
+
+**Example**  
+```js
+const a = SymmetricGrid({ rows: 3 });
+a.get(1, 0);
+//=> 1
+a.get(0, 1);
+//=> 1
+```
+<a name="SymmetricGrid.fromArrays"></a>
+
+### SymmetricGrid.fromArrays(arrays, [pad]) ⇒ [<code>SymmetricGrid</code>](#SymmetricGrid)
+Creates a grid from an array of arrays.
+
+**Kind**: static method of [<code>SymmetricGrid</code>](#SymmetricGrid)  
+**Returns**: [<code>SymmetricGrid</code>](#SymmetricGrid) - const a = SymmetricGrid.from([[1, 2, 4], [2, 3, 5], [4, 5, 6]])
+//=> SymmetricGrid [1, 2, 3, 4, 5, 6]
+a.get(1, 0);
+//=> 2
+a.get(2, 1);
+//=> 4  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| arrays | <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> |  |  |
+| [pad] | <code>\*</code> | <code>0</code> | the value to pad the arrays to create equal sized rows |
+
 <a name="GridMixin"></a>
 
 ## GridMixin(Base) ⇒ [<code>Grid</code>](#Grid)
@@ -1773,6 +1919,21 @@ Creates a SortedCollection class extending a given Array-like class.
 **Example**  
 ```js
 const SortedCollection = Grid(Uint32Array);
+```
+<a name="SymmetricGridMixin"></a>
+
+## SymmetricGridMixin(Base) ⇒ [<code>SymmetricGrid</code>](#SymmetricGrid)
+Creates a SymmetricGrid class extending a given Array-like class.
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| Base | [<code>CollectionConstructor</code>](#CollectionConstructor) | 
+
+**Example**  
+```js
+const SymmetricGrid = SymmetricGridMixin(Array);
 ```
 <a name="AnyNumber"></a>
 
