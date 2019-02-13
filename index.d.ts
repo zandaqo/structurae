@@ -244,3 +244,22 @@ export declare class UnweightedGraph extends BitGrid {
     traverse(isDFS?: boolean, start?: number, path?: boolean): number;
     path(start: number, end: number): number[];
 }
+
+declare class WeightedGraph {
+    size: number;
+    flags: BitGrid;
+
+    constructor(options?: GridOptions, data?: Collection);
+    addEdge(x: number, y: number): this;
+    removeEdge(x: number, y: number): this;
+    hasEdge(x: number, y: number): boolean;
+    outEdges(x: number): number[];
+    inEdges(x: number): number[];
+    traverse(isDFS?: boolean, start?: number, path?: boolean): number;
+    path(start: number, end: number, isAcyclic?: boolean, isPositive?: boolean): number[];
+    private searchTopological(start: number, end: number, distances: number[], predecessor: number[]): boolean;
+    private searchDijkstra(start: number, end: number, distances: number[], predecessor: number[]): boolean;
+    private searchBellmanFord(start: number, end: number, distances: number[], predecessor: number[]): boolean;
+}
+
+export declare function WeightedGraphMixin<T extends Collection>(Base: Constructor<T>, directed?: boolean): Constructor<T & WeightedGraph>

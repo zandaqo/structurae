@@ -28,6 +28,8 @@
 <dd></dd>
 <dt><a href="#UnweightedGraph">UnweightedGraph</a> ⇐ <code><a href="#BitGrid">BitGrid</a></code></dt>
 <dd></dd>
+<dt><a href="#WeightedGraph">WeightedGraph</a> ⇐ <code><a href="#Grid">Grid</a></code></dt>
+<dd></dd>
 </dl>
 
 ## Functions
@@ -43,6 +45,9 @@
 </dd>
 <dt><a href="#SymmetricGridMixin">SymmetricGridMixin(Base)</a> ⇒ <code><a href="#SymmetricGrid">SymmetricGrid</a></code></dt>
 <dd><p>Creates a SymmetricGrid class extending a given Array-like class.</p>
+</dd>
+<dt><a href="#WeightedGraphMixin">WeightedGraphMixin(Base, directed)</a> ⇒ <code><a href="#WeightedGraph">WeightedGraph</a></code></dt>
+<dd><p>Creates a WeightedGraph class extending a given Array-like class.</p>
 </dd>
 </dl>
 
@@ -2030,6 +2035,224 @@ Returns values of bits on a given column as an array of numbers.
 | --- | --- |
 | column | <code>number</code> | 
 
+<a name="WeightedGraph"></a>
+
+## WeightedGraph ⇐ [<code>Grid</code>](#Grid)
+**Kind**: global class  
+**Extends**: [<code>Grid</code>](#Grid)  
+
+* [WeightedGraph](#WeightedGraph) ⇐ [<code>Grid</code>](#Grid)
+    * [new WeightedGraph([options], [data])](#new_WeightedGraph_new)
+    * [.columns](#Grid+columns) ⇒ <code>void</code>
+    * [.rows](#Grid+rows) : <code>number</code>
+    * [.addEdge(x, y, weight)](#WeightedGraph+addEdge) ⇒ [<code>WeightedGraph</code>](#WeightedGraph)
+    * [.removeEdge(x, y)](#WeightedGraph+removeEdge) ⇒ [<code>WeightedGraph</code>](#WeightedGraph)
+    * [.hasEdge(x, y)](#WeightedGraph+hasEdge) ⇒ <code>boolean</code>
+    * [.outEdges(x)](#WeightedGraph+outEdges) ⇒ <code>Array.&lt;number&gt;</code>
+    * [.inEdges(x)](#WeightedGraph+inEdges) ⇒ <code>Array.&lt;number&gt;</code>
+    * [.traverse([isDFS], [start], [path])](#WeightedGraph+traverse)
+    * [.path(start, end, isAcyclic, isPositive)](#WeightedGraph+path) ⇒ <code>Array.&lt;number&gt;</code>
+    * [.getIndex(row, column)](#Grid+getIndex) ⇒ <code>\*</code>
+    * [.get(row, column)](#Grid+get) ⇒ <code>\*</code>
+    * [.set(row, column, value)](#Grid+set) ⇒ [<code>Grid</code>](#Grid)
+    * [.getCoordinates(index)](#Grid+getCoordinates) ⇒ [<code>Coordinates</code>](#Coordinates)
+    * [.toArrays([withPadding])](#Grid+toArrays) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
+
+<a name="new_WeightedGraph_new"></a>
+
+### new WeightedGraph([options], [data])
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [options] | <code>Object</code> |  |  |
+| [options.size] | <code>number</code> | <code>2</code> | the maximum number of vertices |
+| [options.pad] | <code>\*</code> | <code>0</code> | the initial value of cells |
+| [data] | [<code>Collection</code>](#Collection) |  |  |
+
+<a name="Grid+columns"></a>
+
+### weightedGraph.columns ⇒ <code>void</code>
+Specifies the number of columns of the grid.
+
+**Kind**: instance property of [<code>WeightedGraph</code>](#WeightedGraph)  
+**Overrides**: [<code>columns</code>](#Grid+columns)  
+
+| Param | Type |
+| --- | --- |
+| columns | <code>number</code> | 
+
+<a name="Grid+rows"></a>
+
+### weightedGraph.rows : <code>number</code>
+Number of rows in the grid.
+
+**Kind**: instance property of [<code>WeightedGraph</code>](#WeightedGraph)  
+<a name="WeightedGraph+addEdge"></a>
+
+### weightedGraph.addEdge(x, y, weight) ⇒ [<code>WeightedGraph</code>](#WeightedGraph)
+**Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| x | <code>number</code> | 
+| y | <code>number</code> | 
+| weight | <code>number</code> | 
+
+<a name="WeightedGraph+removeEdge"></a>
+
+### weightedGraph.removeEdge(x, y) ⇒ [<code>WeightedGraph</code>](#WeightedGraph)
+**Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| x | <code>number</code> | 
+| y | <code>number</code> | 
+
+<a name="WeightedGraph+hasEdge"></a>
+
+### weightedGraph.hasEdge(x, y) ⇒ <code>boolean</code>
+**Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| x | <code>number</code> | 
+| y | <code>number</code> | 
+
+<a name="WeightedGraph+outEdges"></a>
+
+### weightedGraph.outEdges(x) ⇒ <code>Array.&lt;number&gt;</code>
+**Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| x | <code>number</code> | 
+
+<a name="WeightedGraph+inEdges"></a>
+
+### weightedGraph.inEdges(x) ⇒ <code>Array.&lt;number&gt;</code>
+**Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| x | <code>number</code> | 
+
+<a name="WeightedGraph+traverse"></a>
+
+### weightedGraph.traverse([isDFS], [start], [path])
+**Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [isDFS] | <code>boolean</code> |  | 
+| [start] | <code>number</code> | <code>0</code> | 
+| [path] | <code>boolean</code> |  | 
+
+<a name="WeightedGraph+path"></a>
+
+### weightedGraph.path(start, end, isAcyclic, isPositive) ⇒ <code>Array.&lt;number&gt;</code>
+**Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| start | <code>number</code> | 
+| end | <code>number</code> | 
+| isAcyclic | <code>boolean</code> | 
+| isPositive | <code>boolean</code> | 
+
+<a name="Grid+getIndex"></a>
+
+### weightedGraph.getIndex(row, column) ⇒ <code>\*</code>
+Returns an array index of an element at given coordinates.
+
+**Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| row | <code>number</code> | 
+| column | <code>number</code> | 
+
+**Example**  
+```js
+const a = ArrayGrid({ rows: 3, columns: 2, pad: 3});
+a.get(1, 0);
+//=> 2
+```
+<a name="Grid+get"></a>
+
+### weightedGraph.get(row, column) ⇒ <code>\*</code>
+Returns an element from given coordinates.
+
+**Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| row | <code>number</code> | 
+| column | <code>number</code> | 
+
+**Example**  
+```js
+const a = ArrayGrid({ rows: 3, columns: 2, pad: 3});
+a.get(0, 1);
+//=> 3
+```
+<a name="Grid+set"></a>
+
+### weightedGraph.set(row, column, value) ⇒ [<code>Grid</code>](#Grid)
+Sets the element at given coordinates.
+
+**Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
+**Returns**: [<code>Grid</code>](#Grid) - the instance  
+
+| Param | Type |
+| --- | --- |
+| row | <code>number</code> | 
+| column | <code>number</code> | 
+| value | <code>\*</code> | 
+
+**Example**  
+```js
+const a = ArrayGrid({ rows: 3, columns: 2, pad: 3});
+a.set(0, 1, 5);
+a.get(0, 1);
+//=> 5
+```
+<a name="Grid+getCoordinates"></a>
+
+### weightedGraph.getCoordinates(index) ⇒ [<code>Coordinates</code>](#Coordinates)
+Gets coordinates of an element at specified index.
+
+**Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
+**Returns**: [<code>Coordinates</code>](#Coordinates) - coordinates  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+**Example**  
+```js
+const a = ArrayGrid({ rows: 3, columns: 2, pad: 3});
+a.getCoordinates(1);
+//=> [0, 1]
+a.getCoordinates(2);
+//=> [1, 0]
+```
+<a name="Grid+toArrays"></a>
+
+### weightedGraph.toArrays([withPadding]) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
+Returns an array of arrays where each nested array correspond to a row in the grid.
+
+**Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [withPadding] | <code>boolean</code> | whether to remove padding from the end of the rows |
+
+**Example**  
+```js
+const a = ArrayGrid({ rows: 3, columns: 2, pad: 3});
+a.toArrays();
+//=> [[3, 3], [3, 3], [3, 3]]
+```
 <a name="GridMixin"></a>
 
 ## GridMixin(Base) ⇒ [<code>Grid</code>](#Grid)
@@ -2085,6 +2308,18 @@ Creates a SymmetricGrid class extending a given Array-like class.
 ```js
 const SymmetricGrid = SymmetricGridMixin(Array);
 ```
+<a name="WeightedGraphMixin"></a>
+
+## WeightedGraphMixin(Base, directed) ⇒ [<code>WeightedGraph</code>](#WeightedGraph)
+Creates a WeightedGraph class extending a given Array-like class.
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| Base | [<code>CollectionConstructor</code>](#CollectionConstructor) | 
+| directed | <code>boolean</code> | 
+
 <a name="AnyNumber"></a>
 
 ## AnyNumber : <code>number</code> \| <code>BigInt</code>

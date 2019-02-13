@@ -8,6 +8,7 @@ const SortedMixin = require('./lib/sorted-collection');
 const StringView = require('./lib/string-view');
 const SymmetricGridMixin = require('./lib/symmetric-grid');
 const UnweightedGraph = require('./lib/unweighted-graph');
+const WeightedGraphMixin = require('./lib/weighted-graph');
 
 /**
  * @external ArrayBuffer
@@ -35,4 +36,5 @@ module.exports = {
   StringView,
   SymmetricGridMixin,
   UnweightedGraph,
+  WeightedGraphMixin,
 };
