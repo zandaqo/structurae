@@ -8,7 +8,7 @@ A collection of data structures for high-performance modern JavaScript applicati
 
 - [BinaryHeap](https://github.com/zandaqo/structurae#BinaryHeap) - extends Array to implement the Binary Heap data structure.
 - [BitField](https://github.com/zandaqo/structurae#BitField) - stores and operates on data in Numbers and BigInts treating them as bitfields.
-- [BitGrid](https://github.com/zandaqo/structurae#BitGrid) - creates a grid or 2D matrix of bits.
+- [BinaryGrid](https://github.com/zandaqo/structurae#BinaryGrid) - creates a grid or 2D matrix of bits.
 - [Grid](https://github.com/zandaqo/structurae#Grid) - extends built-in indexed collections to handle 2 dimensional data (e.g. nested arrays).
 - [Pool](https://github.com/zandaqo/structurae#Pool) - manages availability of objects in object pools.
 - [RecordArray](https://github.com/zandaqo/structurae#RecordArray) - extends DataView to use ArrayBuffer as an array of records or C-like structs.
@@ -23,10 +23,10 @@ npm i structurae
 ## Usage
 Import structures as needed:
 ```javascript
-import { BinaryHeap, BitField, BitGrid, GridMixin, RecordArray, SortedArray, SortedMixin, StringView } from 'structurae';
+import { BinaryHeap, BitField, BinaryGrid, GridMixin, RecordArray, SortedArray, SortedMixin, StringView } from 'structurae';
 
 // or
-const { BinaryHeap, BitField, BitGrid, GridMixin, RecordArray, SortedArray, SortedMixin, StringView } = require('structurae');
+const { BinaryHeap, BitField, BinaryGrid, GridMixin, RecordArray, SortedArray, SortedMixin, StringView } = require('structurae');
 ```
 ### BinaryHeap
 BinaryHeap extends built-in Array to implement the Binary Heap data structure. 
@@ -218,10 +218,10 @@ Person.match(new Person([19, 1]).valueOf(), matcher);
 //=> false
 ```
 
-### BitGrid
-BitGrid creates a grid or 2D matrix of bits and provides methods to operate on it:
+### BinaryGrid
+BinaryGrid creates a grid or 2D matrix of bits and provides methods to operate on it:
 ```javascript
-const bitGrid = new BitGrid({ rows: 2, columns: 8 });
+const bitGrid = new BinaryGrid({ rows: 2, columns: 8 });
 bitGrid.setBit(0, 0).setBit(0, 2).setBit(0, 5);
 bitGrid.getBit(0, 0);
 //=> 1
@@ -234,7 +234,7 @@ bitGrid.getRow(0);
 bitGrid.getColumn(0);
 //=> [ 1, 0 ]
 ```
-BitGrid packs bits into numbers like [BitField](https://github.com/zandaqo/structurae#BitField)
+BinaryGrid packs bits into numbers like [BitField](https://github.com/zandaqo/structurae#BitField)
  and holds them in an ArrayBuffer, thus occupying the smallest possible space.
 
 ### Grid

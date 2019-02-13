@@ -1,14 +1,14 @@
 ## Classes
 
 <dl>
+<dt><a href="#BinaryGrid">BinaryGrid</a> ⇐ <code>Uint16Array</code></dt>
+<dd><p>Implements a grid or 2D matrix of bits.</p>
+</dd>
 <dt><a href="#BinaryHeap">BinaryHeap</a> ⇐ <code>Array</code></dt>
 <dd><p>Extends Array to implement the Binary Heap data structure.</p>
 </dd>
 <dt><a href="#BitField">BitField</a></dt>
 <dd></dd>
-<dt><a href="#BitGrid">BitGrid</a> ⇐ <code>Uint16Array</code></dt>
-<dd><p>Implements a grid or 2D matrix of bits.</p>
-</dd>
 <dt><a href="#Grid">Grid</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
 <dd></dd>
 <dt><a href="#Pool">Pool</a> ⇐ <code>Uint16Array</code></dt>
@@ -26,7 +26,7 @@
 </dd>
 <dt><a href="#SymmetricGrid">SymmetricGrid</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
 <dd></dd>
-<dt><a href="#UnweightedGraph">UnweightedGraph</a> ⇐ <code><a href="#BitGrid">BitGrid</a></code></dt>
+<dt><a href="#UnweightedGraph">UnweightedGraph</a> ⇐ <code><a href="#BinaryGrid">BinaryGrid</a></code></dt>
 <dd></dd>
 <dt><a href="#WeightedGraph">WeightedGraph</a> ⇐ <code><a href="#Grid">Grid</a></code></dt>
 <dd></dd>
@@ -54,6 +54,8 @@
 ## Typedefs
 
 <dl>
+<dt><a href="#BitCoordinates">BitCoordinates</a> : <code>Object</code></dt>
+<dd></dd>
 <dt><a href="#AnyNumber">AnyNumber</a> : <code>number</code> | <code>BigInt</code></dt>
 <dd></dd>
 <dt><a href="#FieldName">FieldName</a> : <code>number</code> | <code>string</code></dt>
@@ -66,8 +68,6 @@
 <dd></dd>
 <dt><a href="#Masks">Masks</a> : <code>Object.&lt;string, AnyNumber&gt;</code></dt>
 <dd></dd>
-<dt><a href="#BitCoordinates">BitCoordinates</a> : <code>Object</code></dt>
-<dd></dd>
 <dt><a href="#CollectionConstructor">CollectionConstructor</a> : <code>ArrayConstructor</code> | <code>Int8ArrayConstructor</code> | <code>Int8ArrayConstructor</code> | <code>Uint8ArrayConstructor</code> | <code>Uint8ClampedArrayConstructor</code> | <code>Int16ArrayConstructor</code> | <code>Uint16ArrayConstructor</code> | <code>Int32ArrayConstructor</code> | <code>Uint32ArrayConstructor</code> | <code>Float32ArrayConstructor</code> | <code>Float64ArrayConstructor</code></dt>
 <dd></dd>
 <dt><a href="#Collection">Collection</a> : <code>Array</code> | <code>Int8Array</code> | <code>Uint8Array</code> | <code>Uint8ClampedArray</code> | <code>Int16Array</code> | <code>Uint16Array</code> | <code>Int32Array</code> | <code>Uint32Array</code> | <code>Float32Array</code> | <code>Float64Array</code></dt>
@@ -77,6 +77,79 @@
 <dt><a href="#RecordField">RecordField</a></dt>
 <dd></dd>
 </dl>
+
+<a name="BinaryGrid"></a>
+
+## BinaryGrid ⇐ <code>Uint16Array</code>
+Implements a grid or 2D matrix of bits.
+
+**Kind**: global class  
+**Extends**: <code>Uint16Array</code>  
+
+* [BinaryGrid](#BinaryGrid) ⇐ <code>Uint16Array</code>
+    * [new BinaryGrid([options], [data])](#new_BinaryGrid_new)
+    * [.getBit(row, column)](#BinaryGrid+getBit) ⇒ <code>number</code>
+    * [.setBit(row, column, value)](#BinaryGrid+setBit) ⇒ [<code>BinaryGrid</code>](#BinaryGrid)
+    * [.getRow(row)](#BinaryGrid+getRow) ⇒ <code>Array.&lt;number&gt;</code>
+    * [.getColumn(column)](#BinaryGrid+getColumn) ⇒ <code>Array.&lt;number&gt;</code>
+
+<a name="new_BinaryGrid_new"></a>
+
+### new BinaryGrid([options], [data])
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [options] | <code>Object</code> |  |  |
+| [options.rows] | <code>number</code> | <code>1</code> | the number of rows |
+| [options.columns] | <code>number</code> | <code>16</code> | the number of columns |
+| [data] | [<code>Collection</code>](#Collection) |  |  |
+
+<a name="BinaryGrid+getBit"></a>
+
+### binaryGrid.getBit(row, column) ⇒ <code>number</code>
+Returns the value of a bit at given coordinates.
+
+**Kind**: instance method of [<code>BinaryGrid</code>](#BinaryGrid)  
+
+| Param | Type |
+| --- | --- |
+| row | <code>number</code> | 
+| column | <code>number</code> | 
+
+<a name="BinaryGrid+setBit"></a>
+
+### binaryGrid.setBit(row, column, value) ⇒ [<code>BinaryGrid</code>](#BinaryGrid)
+Sets the value of a bit at given coordinates.
+
+**Kind**: instance method of [<code>BinaryGrid</code>](#BinaryGrid)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| row | <code>number</code> |  | 
+| column | <code>number</code> |  | 
+| value | <code>number</code> | <code>1</code> | 
+
+<a name="BinaryGrid+getRow"></a>
+
+### binaryGrid.getRow(row) ⇒ <code>Array.&lt;number&gt;</code>
+Returns values of bits on a given row as an array of numbers.
+
+**Kind**: instance method of [<code>BinaryGrid</code>](#BinaryGrid)  
+
+| Param | Type |
+| --- | --- |
+| row | <code>number</code> | 
+
+<a name="BinaryGrid+getColumn"></a>
+
+### binaryGrid.getColumn(column) ⇒ <code>Array.&lt;number&gt;</code>
+Returns values of bits on a given column as an array of numbers.
+
+**Kind**: instance method of [<code>BinaryGrid</code>](#BinaryGrid)  
+
+| Param | Type |
+| --- | --- |
+| column | <code>number</code> | 
 
 <a name="BinaryHeap"></a>
 
@@ -647,79 +720,6 @@ The static version of `BitField#match`, matches a given value against a precompu
 | --- | --- | --- |
 | value | [<code>AnyNumber</code>](#AnyNumber) | a value to check |
 | matcher | [<code>Matcher</code>](#Matcher) | a precomputed set of values |
-
-<a name="BitGrid"></a>
-
-## BitGrid ⇐ <code>Uint16Array</code>
-Implements a grid or 2D matrix of bits.
-
-**Kind**: global class  
-**Extends**: <code>Uint16Array</code>  
-
-* [BitGrid](#BitGrid) ⇐ <code>Uint16Array</code>
-    * [new BitGrid([options], [data])](#new_BitGrid_new)
-    * [.getBit(row, column)](#BitGrid+getBit) ⇒ <code>number</code>
-    * [.setBit(row, column, value)](#BitGrid+setBit) ⇒ [<code>BitGrid</code>](#BitGrid)
-    * [.getRow(row)](#BitGrid+getRow) ⇒ <code>Array.&lt;number&gt;</code>
-    * [.getColumn(column)](#BitGrid+getColumn) ⇒ <code>Array.&lt;number&gt;</code>
-
-<a name="new_BitGrid_new"></a>
-
-### new BitGrid([options], [data])
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| [options] | <code>Object</code> |  |  |
-| [options.rows] | <code>number</code> | <code>1</code> | the number of rows |
-| [options.columns] | <code>number</code> | <code>16</code> | the number of columns |
-| [data] | [<code>Collection</code>](#Collection) |  |  |
-
-<a name="BitGrid+getBit"></a>
-
-### bitGrid.getBit(row, column) ⇒ <code>number</code>
-Returns the value of a bit at given coordinates.
-
-**Kind**: instance method of [<code>BitGrid</code>](#BitGrid)  
-
-| Param | Type |
-| --- | --- |
-| row | <code>number</code> | 
-| column | <code>number</code> | 
-
-<a name="BitGrid+setBit"></a>
-
-### bitGrid.setBit(row, column, value) ⇒ [<code>BitGrid</code>](#BitGrid)
-Sets the value of a bit at given coordinates.
-
-**Kind**: instance method of [<code>BitGrid</code>](#BitGrid)  
-
-| Param | Type | Default |
-| --- | --- | --- |
-| row | <code>number</code> |  | 
-| column | <code>number</code> |  | 
-| value | <code>number</code> | <code>1</code> | 
-
-<a name="BitGrid+getRow"></a>
-
-### bitGrid.getRow(row) ⇒ <code>Array.&lt;number&gt;</code>
-Returns values of bits on a given row as an array of numbers.
-
-**Kind**: instance method of [<code>BitGrid</code>](#BitGrid)  
-
-| Param | Type |
-| --- | --- |
-| row | <code>number</code> | 
-
-<a name="BitGrid+getColumn"></a>
-
-### bitGrid.getColumn(column) ⇒ <code>Array.&lt;number&gt;</code>
-Returns values of bits on a given column as an array of numbers.
-
-**Kind**: instance method of [<code>BitGrid</code>](#BitGrid)  
-
-| Param | Type |
-| --- | --- |
-| column | <code>number</code> | 
 
 <a name="Grid"></a>
 
@@ -1889,11 +1889,11 @@ a.get(2, 1);
 
 <a name="UnweightedGraph"></a>
 
-## UnweightedGraph ⇐ [<code>BitGrid</code>](#BitGrid)
+## UnweightedGraph ⇐ [<code>BinaryGrid</code>](#BinaryGrid)
 **Kind**: global class  
-**Extends**: [<code>BitGrid</code>](#BitGrid)  
+**Extends**: [<code>BinaryGrid</code>](#BinaryGrid)  
 
-* [UnweightedGraph](#UnweightedGraph) ⇐ [<code>BitGrid</code>](#BitGrid)
+* [UnweightedGraph](#UnweightedGraph) ⇐ [<code>BinaryGrid</code>](#BinaryGrid)
     * [new UnweightedGraph([options], [data])](#new_UnweightedGraph_new)
     * [.addEdge(x, y)](#UnweightedGraph+addEdge) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
     * [.removeEdge(x, y)](#UnweightedGraph+removeEdge) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
@@ -1902,10 +1902,10 @@ a.get(2, 1);
     * [.inEdges(x)](#UnweightedGraph+inEdges) ⇒ <code>Array.&lt;number&gt;</code>
     * [.traverse([isDFS], [start], [path])](#UnweightedGraph+traverse)
     * [.path(start, end)](#UnweightedGraph+path) ⇒ <code>Array.&lt;number&gt;</code>
-    * [.getBit(row, column)](#BitGrid+getBit) ⇒ <code>number</code>
-    * [.setBit(row, column, value)](#BitGrid+setBit) ⇒ [<code>BitGrid</code>](#BitGrid)
-    * [.getRow(row)](#BitGrid+getRow) ⇒ <code>Array.&lt;number&gt;</code>
-    * [.getColumn(column)](#BitGrid+getColumn) ⇒ <code>Array.&lt;number&gt;</code>
+    * [.getBit(row, column)](#BinaryGrid+getBit) ⇒ <code>number</code>
+    * [.setBit(row, column, value)](#BinaryGrid+setBit) ⇒ [<code>BinaryGrid</code>](#BinaryGrid)
+    * [.getRow(row)](#BinaryGrid+getRow) ⇒ <code>Array.&lt;number&gt;</code>
+    * [.getColumn(column)](#BinaryGrid+getColumn) ⇒ <code>Array.&lt;number&gt;</code>
 
 <a name="new_UnweightedGraph_new"></a>
 
@@ -1988,7 +1988,7 @@ a.get(2, 1);
 | start | <code>number</code> | 
 | end | <code>number</code> | 
 
-<a name="BitGrid+getBit"></a>
+<a name="BinaryGrid+getBit"></a>
 
 ### unweightedGraph.getBit(row, column) ⇒ <code>number</code>
 Returns the value of a bit at given coordinates.
@@ -2000,9 +2000,9 @@ Returns the value of a bit at given coordinates.
 | row | <code>number</code> | 
 | column | <code>number</code> | 
 
-<a name="BitGrid+setBit"></a>
+<a name="BinaryGrid+setBit"></a>
 
-### unweightedGraph.setBit(row, column, value) ⇒ [<code>BitGrid</code>](#BitGrid)
+### unweightedGraph.setBit(row, column, value) ⇒ [<code>BinaryGrid</code>](#BinaryGrid)
 Sets the value of a bit at given coordinates.
 
 **Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
@@ -2013,7 +2013,7 @@ Sets the value of a bit at given coordinates.
 | column | <code>number</code> |  | 
 | value | <code>number</code> | <code>1</code> | 
 
-<a name="BitGrid+getRow"></a>
+<a name="BinaryGrid+getRow"></a>
 
 ### unweightedGraph.getRow(row) ⇒ <code>Array.&lt;number&gt;</code>
 Returns values of bits on a given row as an array of numbers.
@@ -2024,7 +2024,7 @@ Returns values of bits on a given row as an array of numbers.
 | --- | --- |
 | row | <code>number</code> | 
 
-<a name="BitGrid+getColumn"></a>
+<a name="BinaryGrid+getColumn"></a>
 
 ### unweightedGraph.getColumn(column) ⇒ <code>Array.&lt;number&gt;</code>
 Returns values of bits on a given column as an array of numbers.
@@ -2320,6 +2320,17 @@ Creates a WeightedGraph class extending a given Array-like class.
 | Base | [<code>CollectionConstructor</code>](#CollectionConstructor) | 
 | directed | <code>boolean</code> | 
 
+<a name="BitCoordinates"></a>
+
+## BitCoordinates : <code>Object</code>
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| bucket | <code>number</code> | row index |
+| position | <code>number</code> | column index |
+
 <a name="AnyNumber"></a>
 
 ## AnyNumber : <code>number</code> \| <code>BigInt</code>
@@ -2358,17 +2369,6 @@ Creates a WeightedGraph class extending a given Array-like class.
 
 ## Masks : <code>Object.&lt;string, AnyNumber&gt;</code>
 **Kind**: global typedef  
-<a name="BitCoordinates"></a>
-
-## BitCoordinates : <code>Object</code>
-**Kind**: global typedef  
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| bucket | <code>number</code> | row index |
-| position | <code>number</code> | column index |
-
 <a name="CollectionConstructor"></a>
 
 ## CollectionConstructor : <code>ArrayConstructor</code> \| <code>Int8ArrayConstructor</code> \| <code>Int8ArrayConstructor</code> \| <code>Uint8ArrayConstructor</code> \| <code>Uint8ClampedArrayConstructor</code> \| <code>Int16ArrayConstructor</code> \| <code>Uint16ArrayConstructor</code> \| <code>Int32ArrayConstructor</code> \| <code>Uint32ArrayConstructor</code> \| <code>Float32ArrayConstructor</code> \| <code>Float64ArrayConstructor</code>
