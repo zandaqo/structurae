@@ -234,15 +234,19 @@ export declare function SymmetricGridMixin<T extends Collection>(Base?: Construc
 
 export declare class UnweightedGraph extends BitGrid {
     size: number;
-    flags: BitGrid;
     directed: boolean;
     addEdge(x: number, y: number): this;
     removeEdge(x: number, y: number): this;
     hasEdge(x: number, y: number): boolean;
     outEdges(x: number): number[];
     inEdges(x: number): number[];
-    traverse(isDFS?: boolean, start?: number, path?: boolean): number;
+    isGray(x: number): boolean;
+    setGray(x: number): this;
+    isBlack(x: number): boolean;
+    setBlack(x: number): this;
+    traverse(isDFS?: boolean, start?: number, gray?: boolean, white?: boolean, black?: boolean): number;
     path(start: number, end: number): number[];
+    isAcyclic(): boolean;
 }
 
 declare class WeightedGraph {
@@ -255,8 +259,13 @@ declare class WeightedGraph {
     hasEdge(x: number, y: number): boolean;
     outEdges(x: number): number[];
     inEdges(x: number): number[];
-    traverse(isDFS?: boolean, start?: number, path?: boolean): number;
+    isGray(x: number): boolean;
+    setGray(x: number): this;
+    isBlack(x: number): boolean;
+    setBlack(x: number): this;
+    traverse(isDFS?: boolean, start?: number, gray?: boolean, white?: boolean, black?: boolean): number;
     path(start: number, end: number, isAcyclic?: boolean, isPositive?: boolean): number[];
+    isAcyclic(): boolean;
     private searchTopological(start: number, end: number, distances: number[], predecessor: number[]): boolean;
     private searchDijkstra(start: number, end: number, distances: number[], predecessor: number[]): boolean;
     private searchBellmanFord(start: number, end: number, distances: number[], predecessor: number[]): boolean;

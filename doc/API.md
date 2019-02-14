@@ -1900,8 +1900,14 @@ a.get(2, 1);
     * [.hasEdge(x, y)](#UnweightedGraph+hasEdge) ⇒ <code>boolean</code>
     * [.outEdges(x)](#UnweightedGraph+outEdges) ⇒ <code>Array.&lt;number&gt;</code>
     * [.inEdges(x)](#UnweightedGraph+inEdges) ⇒ <code>Array.&lt;number&gt;</code>
-    * [.traverse([isDFS], [start], [path])](#UnweightedGraph+traverse)
+    * [.isGray(x)](#UnweightedGraph+isGray) ⇒ <code>boolean</code>
+    * [.setGray(x)](#UnweightedGraph+setGray) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+    * [.isBlack(x)](#UnweightedGraph+isBlack) ⇒ <code>boolean</code>
+    * [.setBlack(x)](#UnweightedGraph+setBlack) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+    * [.resetColors()](#UnweightedGraph+resetColors) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+    * [.traverse([isDFS], [start], [gray], [white], [black])](#UnweightedGraph+traverse)
     * [.path(start, end)](#UnweightedGraph+path) ⇒ <code>Array.&lt;number&gt;</code>
+    * [.isAcyclic()](#UnweightedGraph+isAcyclic) ⇒ <code>boolean</code>
     * [.getBit(row, column)](#BinaryGrid+getBit) ⇒ <code>number</code>
     * [.setBit(row, column, value)](#BinaryGrid+setBit) ⇒ [<code>BinaryGrid</code>](#BinaryGrid)
     * [.getRow(row)](#BinaryGrid+getRow) ⇒ <code>Array.&lt;number&gt;</code>
@@ -1967,16 +1973,58 @@ a.get(2, 1);
 | --- | --- |
 | x | <code>number</code> | 
 
+<a name="UnweightedGraph+isGray"></a>
+
+### unweightedGraph.isGray(x) ⇒ <code>boolean</code>
+**Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| x | <code>number</code> | 
+
+<a name="UnweightedGraph+setGray"></a>
+
+### unweightedGraph.setGray(x) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+**Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| x | <code>number</code> | 
+
+<a name="UnweightedGraph+isBlack"></a>
+
+### unweightedGraph.isBlack(x) ⇒ <code>boolean</code>
+**Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| x | <code>number</code> | 
+
+<a name="UnweightedGraph+setBlack"></a>
+
+### unweightedGraph.setBlack(x) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+**Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| x | <code>number</code> | 
+
+<a name="UnweightedGraph+resetColors"></a>
+
+### unweightedGraph.resetColors() ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+**Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
 <a name="UnweightedGraph+traverse"></a>
 
-### unweightedGraph.traverse([isDFS], [start], [path])
+### unweightedGraph.traverse([isDFS], [start], [gray], [white], [black])
 **Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
 
 | Param | Type | Default |
 | --- | --- | --- |
 | [isDFS] | <code>boolean</code> |  | 
 | [start] | <code>number</code> | <code>0</code> | 
-| [path] | <code>boolean</code> |  | 
+| [gray] | <code>boolean</code> | <code>true</code> | 
+| [white] | <code>boolean</code> |  | 
+| [black] | <code>boolean</code> |  | 
 
 <a name="UnweightedGraph+path"></a>
 
@@ -1988,6 +2036,10 @@ a.get(2, 1);
 | start | <code>number</code> | 
 | end | <code>number</code> | 
 
+<a name="UnweightedGraph+isAcyclic"></a>
+
+### unweightedGraph.isAcyclic() ⇒ <code>boolean</code>
+**Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
 <a name="BinaryGrid+getBit"></a>
 
 ### unweightedGraph.getBit(row, column) ⇒ <code>number</code>
@@ -2050,8 +2102,14 @@ Returns values of bits on a given column as an array of numbers.
     * [.hasEdge(x, y)](#WeightedGraph+hasEdge) ⇒ <code>boolean</code>
     * [.outEdges(x)](#WeightedGraph+outEdges) ⇒ <code>Array.&lt;number&gt;</code>
     * [.inEdges(x)](#WeightedGraph+inEdges) ⇒ <code>Array.&lt;number&gt;</code>
-    * [.traverse([isDFS], [start], [path])](#WeightedGraph+traverse)
+    * [.isGray(x)](#WeightedGraph+isGray) ⇒ <code>boolean</code>
+    * [.setGray(x)](#WeightedGraph+setGray) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+    * [.isBlack(x)](#WeightedGraph+isBlack) ⇒ <code>boolean</code>
+    * [.setBlack(x)](#WeightedGraph+setBlack) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+    * [.resetColors()](#WeightedGraph+resetColors) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+    * [.traverse([isDFS], [start], [gray], [white], [black])](#WeightedGraph+traverse)
     * [.path(start, end, isAcyclic, isPositive)](#WeightedGraph+path) ⇒ <code>Array.&lt;number&gt;</code>
+    * [.isAcyclic()](#WeightedGraph+isAcyclic) ⇒ <code>boolean</code>
     * [.getIndex(row, column)](#Grid+getIndex) ⇒ <code>\*</code>
     * [.get(row, column)](#Grid+get) ⇒ <code>\*</code>
     * [.set(row, column, value)](#Grid+set) ⇒ [<code>Grid</code>](#Grid)
@@ -2136,16 +2194,58 @@ Number of rows in the grid.
 | --- | --- |
 | x | <code>number</code> | 
 
+<a name="WeightedGraph+isGray"></a>
+
+### weightedGraph.isGray(x) ⇒ <code>boolean</code>
+**Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| x | <code>number</code> | 
+
+<a name="WeightedGraph+setGray"></a>
+
+### weightedGraph.setGray(x) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+**Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| x | <code>number</code> | 
+
+<a name="WeightedGraph+isBlack"></a>
+
+### weightedGraph.isBlack(x) ⇒ <code>boolean</code>
+**Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| x | <code>number</code> | 
+
+<a name="WeightedGraph+setBlack"></a>
+
+### weightedGraph.setBlack(x) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+**Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| x | <code>number</code> | 
+
+<a name="WeightedGraph+resetColors"></a>
+
+### weightedGraph.resetColors() ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+**Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
 <a name="WeightedGraph+traverse"></a>
 
-### weightedGraph.traverse([isDFS], [start], [path])
+### weightedGraph.traverse([isDFS], [start], [gray], [white], [black])
 **Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
 
 | Param | Type | Default |
 | --- | --- | --- |
 | [isDFS] | <code>boolean</code> |  | 
 | [start] | <code>number</code> | <code>0</code> | 
-| [path] | <code>boolean</code> |  | 
+| [gray] | <code>boolean</code> | <code>true</code> | 
+| [white] | <code>boolean</code> |  | 
+| [black] | <code>boolean</code> |  | 
 
 <a name="WeightedGraph+path"></a>
 
@@ -2159,6 +2259,10 @@ Number of rows in the grid.
 | isAcyclic | <code>boolean</code> | 
 | isPositive | <code>boolean</code> | 
 
+<a name="WeightedGraph+isAcyclic"></a>
+
+### weightedGraph.isAcyclic() ⇒ <code>boolean</code>
+**Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
 <a name="Grid+getIndex"></a>
 
 ### weightedGraph.getIndex(row, column) ⇒ <code>\*</code>

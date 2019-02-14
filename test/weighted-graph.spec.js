@@ -70,11 +70,18 @@ describe('WeightedGraph', () => {
       expect([...undirected.traverse(true)]).toEqual([0, 3, 2, 5, 4, 1]);
     });
 
-    it('yields vertexes along traversing path if `path=true`', () => {
-      expect([...graph.traverse(false, 0, true)])
-        .toEqual([0, 1, 2, 3, 1, 2, 4, 5, 3, 4, 5]);
-      expect([...undirected.traverse(false, 0, true)])
-        .toEqual([0, 1, 2, 3, 1, 2, 4, 5, 3, 4, 5]);
+    it('yields edging vertexes if `white=true`', () => {
+      expect([...graph.traverse(false, 0, false, true)])
+        .toEqual([1, 2, 3, 4, 5]);
+      expect([...undirected.traverse(false, 0, false, true)])
+        .toEqual([1, 2, 3, 0, 0, 4, 5, 0, 2, 2]);
+    });
+
+    it('yields fully processed vertexes if `black=true`', () => {
+      expect([...graph.traverse(false, 0, false, false, true)])
+        .toEqual([0, 1, 2, 3, 4, 5]);
+      expect([...undirected.traverse(false, 0, false, false, true)])
+        .toEqual([0, 1, 2, 3, 4, 5]);
     });
   });
 
@@ -102,6 +109,22 @@ describe('WeightedGraph', () => {
       expect(graph.path(2, 5)).toEqual([2, 5]);
       expect(graph.path(1, 5)).toEqual([]);
       expect(undirected.path(0, 5)).toEqual([0, 2, 5]);
+    });
+  });
+
+  describe('isAcyclic', () => {
+    it('checks whether the graph is acyclic', () => {
+      expect(graph.isAcyclic()).toBe(true);
+      graph.addEdge(1, 0, 1);
+      expect(graph.isAcyclic()).toBe(false);
+      graph.removeEdge(1, 0);
+      expect(graph.isAcyclic()).toBe(true);
+      graph.addEdge(5, 0, 1);
+      expect(graph.isAcyclic()).toBe(false);
+      graph.removeEdge(5, 0);
+      expect(graph.isAcyclic()).toBe(true);
+      graph.addEdge(5, 3, 1).addEdge(3, 2, 1);
+      expect(graph.isAcyclic()).toBe(false);
     });
   });
 });

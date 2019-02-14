@@ -3,7 +3,7 @@ const UnweightedGraph = require('../lib/unweighted-graph');
 describe('UnweightedGraph', () => {
   let graph;
   beforeEach(() => {
-    graph = new UnweightedGraph({ size: 6, directed: true });
+    graph = new UnweightedGraph({ size: 106, directed: true });
     graph.addEdge(0, 1);
     graph.addEdge(0, 2);
     graph.addEdge(0, 3);
@@ -77,9 +77,14 @@ describe('UnweightedGraph', () => {
       expect(dfs).toEqual([0, 3, 2, 5, 4, 1]);
     });
 
-    it('yields vertexes along traversing path if `path=true`', () => {
-      const bfs = [...graph.traverse(false, 0, true)];
-      expect(bfs).toEqual([0, 1, 2, 3, 1, 2, 4, 5, 3, 4, 5]);
+    it('yields edging vertexes if `white=true`', () => {
+      const bfs = [...graph.traverse(false, 0, false, true)];
+      expect(bfs).toEqual([1, 2, 3, 4, 5]);
+    });
+
+    it('yields fully processed vertexes if `black=true`', () => {
+      const bfs = [...graph.traverse(false, 0, false, false, true)];
+      expect(bfs).toEqual([0, 1, 2, 3, 4, 5]);
     });
   });
 
@@ -89,9 +94,38 @@ describe('UnweightedGraph', () => {
       expect(path).toEqual([0, 2, 5]);
     });
 
-    it('', () => {
+    it('returns an empty array if no path is found', () => {
       const path = graph.path(3, 5);
       expect(path).toEqual([]);
+    });
+  });
+
+  describe('resetColors', () => {
+    it('sets color of all vertexes to white', () => {
+      expect(graph.isBlack(0)).toBe(false);
+      expect(graph.isBlack(5)).toBe(false);
+      const bfs = [...graph.traverse()];
+      expect(graph.isBlack(0)).toBe(true);
+      expect(graph.isBlack(5)).toBe(true);
+      graph.resetColors();
+      expect(graph.isBlack(0)).toBe(false);
+      expect(graph.isBlack(5)).toBe(false);
+    });
+  });
+
+  describe('isAcyclic', () => {
+    it('checks whether the graph is acyclic', () => {
+      expect(graph.isAcyclic()).toBe(true);
+      graph.addEdge(1, 0);
+      expect(graph.isAcyclic()).toBe(false);
+      graph.removeEdge(1, 0);
+      expect(graph.isAcyclic()).toBe(true);
+      graph.addEdge(5, 0);
+      expect(graph.isAcyclic()).toBe(false);
+      graph.removeEdge(5, 0);
+      expect(graph.isAcyclic()).toBe(true);
+      graph.addEdge(5, 3).addEdge(3, 2);
+      expect(graph.isAcyclic()).toBe(false);
     });
   });
 });
