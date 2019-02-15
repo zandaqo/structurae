@@ -234,7 +234,9 @@ export declare function SymmetricGridMixin<T extends Collection>(Base?: Construc
 
 export declare class UnweightedGraph extends BitGrid {
     size: number;
+    colors: BitGrid;
     directed: boolean;
+
     addEdge(x: number, y: number): this;
     removeEdge(x: number, y: number): this;
     hasEdge(x: number, y: number): boolean;
@@ -247,11 +249,13 @@ export declare class UnweightedGraph extends BitGrid {
     traverse(isDFS?: boolean, start?: number, gray?: boolean, white?: boolean, black?: boolean): number;
     path(start: number, end: number): number[];
     isAcyclic(): boolean;
+    topologicalSort(): number[];
 }
 
 declare class WeightedGraph {
     size: number;
-    flags: BitGrid;
+    colors: BitGrid;
+    directed: boolean;
 
     constructor(options?: GridOptions, data?: Collection);
     addEdge(x: number, y: number): this;
@@ -266,6 +270,7 @@ declare class WeightedGraph {
     traverse(isDFS?: boolean, start?: number, gray?: boolean, white?: boolean, black?: boolean): number;
     path(start: number, end: number, isAcyclic?: boolean, isPositive?: boolean): number[];
     isAcyclic(): boolean;
+    topologicalSort(): number[];
     private searchTopological(start: number, end: number, distances: number[], predecessor: number[]): boolean;
     private searchDijkstra(start: number, end: number, distances: number[], predecessor: number[]): boolean;
     private searchBellmanFord(start: number, end: number, distances: number[], predecessor: number[]): boolean;

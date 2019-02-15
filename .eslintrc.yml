@@ -7,6 +7,8 @@ globals:
 rules:
   no-bitwise: 0
   no-plusplus: 0
+  no-continue: 0
+  no-restricted-syntax: 1
   valid-typeof: 1
   no-param-reassign:
   - 2

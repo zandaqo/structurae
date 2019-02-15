@@ -128,4 +128,10 @@ describe('UnweightedGraph', () => {
       expect(graph.isAcyclic()).toBe(false);
     });
   });
+
+  describe('topologicalSort', () => {
+    it('returns a list of vertexes sorted topologically', () => {
+      expect(graph.topologicalSort()).toEqual([0, 3, 2, 5, 4, 1]);
+    });
+  });
 });
