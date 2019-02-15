@@ -10,6 +10,8 @@ const Pool = require('./lib/pool');
 const StringView = require('./lib/string-view');
 const SortedArray = require('./lib/sorted-array');
 const BinaryHeap = require('./lib/binary-heap');
+const UnweightedGraph = require('./lib/unweighted-graph');
+const WeightedGraphMixin = require('./lib/weighted-graph');
 
 const benchmarkOptions = {
   onStart(event) {
@@ -334,6 +336,58 @@ function getString(size) {
         array.push(random, random >> 1, random << 1, random - 3, random + 1);
         array.sort();
       }
+    })
+    .run();
+}
+
+{
+  const SIZE = 100;
+  const unweighted = new UnweightedGraph({ size: SIZE });
+  const unweightedDirected = new UnweightedGraph({ size: SIZE, directed: true });
+  const WeightedGraph = WeightedGraphMixin(Uint16Array, false);
+  const WeightedDirectedGraph = WeightedGraphMixin(Uint16Array, true);
+  const weighted = new WeightedGraph({ size: SIZE });
+  const weightedDirected = new WeightedDirectedGraph({ size: SIZE });
+
+  new Benchmark.Suite('Add/Remove Edges:', benchmarkOptions)
+    .add('Unweighted', () => {
+      for (let i = 0; i < SIZE; i++) {
+        unweighted.addEdge(getIndex(SIZE), getIndex(SIZE));
+        unweighted.removeEdge(getIndex(SIZE), getIndex(SIZE));
+      }
+    })
+    .add('Unweighted Directed', () => {
+      for (let i = 0; i < SIZE; i++) {
+        unweightedDirected.addEdge(getIndex(SIZE), getIndex(SIZE));
+        unweightedDirected.removeEdge(getIndex(SIZE), getIndex(SIZE));
+      }
+    })
+    .add('Weighted', () => {
+      for (let i = 0; i < SIZE; i++) {
+        weighted.addEdge(getIndex(SIZE), getIndex(SIZE), getIndex(SIZE));
+        weighted.removeEdge(getIndex(SIZE), getIndex(SIZE));
+      }
+    })
+    .add('Weighted Directed', () => {
+      for (let i = 0; i < SIZE; i++) {
+        weightedDirected.addEdge(getIndex(SIZE), getIndex(SIZE), getIndex(SIZE));
+        weightedDirected.removeEdge(getIndex(SIZE), getIndex(SIZE));
+      }
+    })
+    .run();
+
+  new Benchmark.Suite('Traverse BFS:', benchmarkOptions)
+    .add('Unweighted', () => {
+      const bfs = [...unweighted.traverse(false, getIndex(SIZE))];
+    })
+    .add('Unweighted Directed', () => {
+      const bfs = [...unweightedDirected.traverse(false, getIndex(SIZE))];
+    })
+    .add('Weighted', () => {
+      const bfs = [...weighted.traverse(false, getIndex(SIZE))];
+    })
+    .add('Weighted Directed', () => {
+      const bfs = [...weightedDirected.traverse(false, getIndex(SIZE))];
     })
     .run();
 }
