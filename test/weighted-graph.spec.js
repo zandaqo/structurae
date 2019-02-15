@@ -23,7 +23,7 @@ describe('WeightedGraph', () => {
   });
 
   describe('addEdge', () => {
-    it('', () => {
+    it('adds an edge to a graph', () => {
       expect(graph.hasEdge(0, 5)).toBe(false);
       graph.addEdge(0, 5, 10);
       expect(graph.hasEdge(0, 5)).toBe(true);
@@ -32,7 +32,7 @@ describe('WeightedGraph', () => {
   });
 
   describe('removeEdge', () => {
-    it('', () => {
+    it('removes an edge from a graph', () => {
       expect(graph.hasEdge(0, 1)).toBe(true);
       graph.removeEdge(0, 1);
       expect(graph.hasEdge(0, 1)).toBe(false);
@@ -40,19 +40,19 @@ describe('WeightedGraph', () => {
   });
 
   describe('outEdges', () => {
-    it('', () => {
+    it('returns a list of all outgoing edges of a given vertex', () => {
       expect(graph.outEdges(0)).toEqual([1, 2, 3]);
     });
   });
 
   describe('inEdges', () => {
-    it('', () => {
+    it('returns a list of all incoming edges of a given vertex', () => {
       expect(graph.inEdges(1)).toEqual([0]);
     });
   });
 
   describe('hasEdges', () => {
-    it('', () => {
+    it('checks whether there is an edge between two given vertices', () => {
       expect(graph.hasEdge(0, 1)).toBe(true);
       expect(graph.hasEdge(0, 5)).toBe(false);
       expect(graph.hasEdge(2, 5)).toBe(true);
@@ -70,14 +70,14 @@ describe('WeightedGraph', () => {
       expect([...undirected.traverse(true)]).toEqual([0, 3, 2, 5, 4, 1]);
     });
 
-    it('yields edging vertexes if `white=true`', () => {
+    it('yields edging vertices if `white=true`', () => {
       expect([...graph.traverse(false, 0, false, true)])
         .toEqual([1, 2, 3, 4, 5]);
       expect([...undirected.traverse(false, 0, false, true)])
         .toEqual([1, 2, 3, 0, 0, 4, 5, 0, 2, 2]);
     });
 
-    it('yields fully processed vertexes if `black=true`', () => {
+    it('yields fully processed vertices if `black=true`', () => {
       expect([...graph.traverse(false, 0, false, false, true)])
         .toEqual([0, 1, 2, 3, 4, 5]);
       expect([...undirected.traverse(false, 0, false, false, true)])
@@ -86,7 +86,7 @@ describe('WeightedGraph', () => {
   });
 
   describe('path', () => {
-    it('finds the shortest path between two vertexes for DAGs', () => {
+    it('finds the shortest path between two vertices for DAGs', () => {
       graph.addEdge(3, 5, -1);
       expect(graph.path(0, 5, true)).toEqual([0, 3, 5]);
       expect(graph.path(0, 4, true)).toEqual([0, 2, 4]);
@@ -94,7 +94,7 @@ describe('WeightedGraph', () => {
       expect(undirected.path(0, 4, true)).toEqual([0, 2, 4]);
       expect(undirected.path(1, 4, true)).toEqual([1, 0, 2, 4]);
     });
-    it('finds the shortest path between two vertexes with non-negative edges', () => {
+    it('finds the shortest path between two vertices with non-negative edges', () => {
       graph.addEdge(4, 0, 8);
       expect(graph.path(0, 5, false, true)).toEqual([0, 2, 5]);
       graph.addEdge(1, 5, 1);
@@ -102,7 +102,7 @@ describe('WeightedGraph', () => {
       expect(graph.path(3, 5, false, true)).toEqual([]);
       expect(undirected.path(0, 5, false, true)).toEqual([0, 2, 5]);
     });
-    it('finds the shortest path between two vertexes for any graph', () => {
+    it('finds the shortest path between two vertices for any graph', () => {
       graph.addEdge(4, 0, 8);
       graph.addEdge(3, 5, -1);
       expect(graph.path(0, 5)).toEqual([0, 3, 5]);
@@ -129,7 +129,7 @@ describe('WeightedGraph', () => {
   });
 
   describe('topologicalSort', () => {
-    it('returns a list of vertexes sorted topologically', () => {
+    it('returns a list of vertices sorted topologically', () => {
       expect(graph.topologicalSort()).toEqual([0, 3, 2, 5, 4, 1]);
       expect(undirected.topologicalSort()).toEqual([0, 3, 2, 5, 4, 1]);
     });

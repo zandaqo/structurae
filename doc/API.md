@@ -1908,6 +1908,7 @@ a.get(2, 1);
     * [.traverse([isDFS], [start], [gray], [white], [black])](#UnweightedGraph+traverse)
     * [.path(start, end)](#UnweightedGraph+path) ⇒ <code>Array.&lt;number&gt;</code>
     * [.isAcyclic()](#UnweightedGraph+isAcyclic) ⇒ <code>boolean</code>
+    * [.topologicalSort()](#UnweightedGraph+topologicalSort) ⇒ <code>Array.&lt;number&gt;</code>
     * [.getBit(row, column)](#BinaryGrid+getBit) ⇒ <code>number</code>
     * [.setBit(row, column, value)](#BinaryGrid+setBit) ⇒ [<code>BinaryGrid</code>](#BinaryGrid)
     * [.getRow(row)](#BinaryGrid+getRow) ⇒ <code>Array.&lt;number&gt;</code>
@@ -1921,124 +1922,155 @@ a.get(2, 1);
 | --- | --- | --- | --- |
 | [options] | <code>Object</code> |  |  |
 | [options.size] | <code>number</code> | <code>2</code> | the maximum number of vertices |
-| [options.directed] | <code>boolean</code> |  |  |
-| [options.pad] | <code>\*</code> | <code>0</code> | the initial value of cells |
+| [options.directed] | <code>boolean</code> |  | whether the graph is directed |
 | [data] | [<code>Collection</code>](#Collection) |  |  |
 
 <a name="UnweightedGraph+addEdge"></a>
 
 ### unweightedGraph.addEdge(x, y) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+Adds an edge between two vertices.
+
 **Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
 
-| Param | Type |
-| --- | --- |
-| x | <code>number</code> | 
-| y | <code>number</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the starting vertex |
+| y | <code>number</code> | the ending vertex |
 
 <a name="UnweightedGraph+removeEdge"></a>
 
 ### unweightedGraph.removeEdge(x, y) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+Removes an edge between two vertices.
+
 **Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
 
-| Param | Type |
-| --- | --- |
-| x | <code>number</code> | 
-| y | <code>number</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the starting vertex |
+| y | <code>number</code> | the ending vertex |
 
 <a name="UnweightedGraph+hasEdge"></a>
 
 ### unweightedGraph.hasEdge(x, y) ⇒ <code>boolean</code>
+Checks if there is an edge between two vertices.
+
 **Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
 
-| Param | Type |
-| --- | --- |
-| x | <code>number</code> | 
-| y | <code>number</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the starting vertex |
+| y | <code>number</code> | the ending vertex |
 
 <a name="UnweightedGraph+outEdges"></a>
 
 ### unweightedGraph.outEdges(x) ⇒ <code>Array.&lt;number&gt;</code>
+Returns a list of all outgoing edges of a vertex.
+
 **Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
 
-| Param | Type |
-| --- | --- |
-| x | <code>number</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the vertex |
 
 <a name="UnweightedGraph+inEdges"></a>
 
 ### unweightedGraph.inEdges(x) ⇒ <code>Array.&lt;number&gt;</code>
+Returns a list of all incoming edges of a vertex.
+
 **Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
 
-| Param | Type |
-| --- | --- |
-| x | <code>number</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the vertex |
 
 <a name="UnweightedGraph+isGray"></a>
 
 ### unweightedGraph.isGray(x) ⇒ <code>boolean</code>
+Checks if a vertex is entered during a traversal.
+
 **Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
 
-| Param | Type |
-| --- | --- |
-| x | <code>number</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the vertex |
 
 <a name="UnweightedGraph+setGray"></a>
 
 ### unweightedGraph.setGray(x) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+Marks a vertex as entered during a traversal.
+
 **Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
 
-| Param | Type |
-| --- | --- |
-| x | <code>number</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the vertex |
 
 <a name="UnweightedGraph+isBlack"></a>
 
 ### unweightedGraph.isBlack(x) ⇒ <code>boolean</code>
+Checks if a vertex has been fully processed during a traversal.
+
 **Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
 
-| Param | Type |
-| --- | --- |
-| x | <code>number</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the vertex |
 
 <a name="UnweightedGraph+setBlack"></a>
 
 ### unweightedGraph.setBlack(x) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+Marks a vertex as fully processed during a traversal.
+
 **Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
 
-| Param | Type |
-| --- | --- |
-| x | <code>number</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the vertex |
 
 <a name="UnweightedGraph+resetColors"></a>
 
 ### unweightedGraph.resetColors() ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+Resets all coloring of vertices done during traversals.
+
 **Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
 <a name="UnweightedGraph+traverse"></a>
 
 ### unweightedGraph.traverse([isDFS], [start], [gray], [white], [black])
+Does a Breadth-First or Depth-First traversal of the graph.
+
 **Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
 
-| Param | Type | Default |
-| --- | --- | --- |
-| [isDFS] | <code>boolean</code> |  | 
-| [start] | <code>number</code> | <code>0</code> | 
-| [gray] | <code>boolean</code> | <code>true</code> | 
-| [white] | <code>boolean</code> |  | 
-| [black] | <code>boolean</code> |  | 
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [isDFS] | <code>boolean</code> |  | whether to do DFS traversal, does BFS otherwise |
+| [start] | <code>number</code> | <code>0</code> | the vertex to start at |
+| [gray] | <code>boolean</code> | <code>true</code> | whether to return vertices upon entering |
+| [white] | <code>boolean</code> |  | whether to return edges upon first encountering |
+| [black] | <code>boolean</code> |  | whether to return vertices after processing |
 
 <a name="UnweightedGraph+path"></a>
 
 ### unweightedGraph.path(start, end) ⇒ <code>Array.&lt;number&gt;</code>
+Returns a list of vertices along the shortest path between two given vertices.
+
 **Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
 
-| Param | Type |
-| --- | --- |
-| start | <code>number</code> | 
-| end | <code>number</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| start | <code>number</code> | the starting vertex |
+| end | <code>number</code> | the ending vertex |
 
 <a name="UnweightedGraph+isAcyclic"></a>
 
 ### unweightedGraph.isAcyclic() ⇒ <code>boolean</code>
+Checks whether the graph is acyclic.
+
+**Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
+<a name="UnweightedGraph+topologicalSort"></a>
+
+### unweightedGraph.topologicalSort() ⇒ <code>Array.&lt;number&gt;</code>
+Returns a list of vertexes sorted topologically.
+
 **Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
 <a name="BinaryGrid+getBit"></a>
 
@@ -2103,13 +2135,14 @@ Returns values of bits on a given column as an array of numbers.
     * [.outEdges(x)](#WeightedGraph+outEdges) ⇒ <code>Array.&lt;number&gt;</code>
     * [.inEdges(x)](#WeightedGraph+inEdges) ⇒ <code>Array.&lt;number&gt;</code>
     * [.isGray(x)](#WeightedGraph+isGray) ⇒ <code>boolean</code>
-    * [.setGray(x)](#WeightedGraph+setGray) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+    * [.setGray(x)](#WeightedGraph+setGray) ⇒ [<code>WeightedGraph</code>](#WeightedGraph)
     * [.isBlack(x)](#WeightedGraph+isBlack) ⇒ <code>boolean</code>
-    * [.setBlack(x)](#WeightedGraph+setBlack) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
-    * [.resetColors()](#WeightedGraph+resetColors) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+    * [.setBlack(x)](#WeightedGraph+setBlack) ⇒ [<code>WeightedGraph</code>](#WeightedGraph)
+    * [.resetColors()](#WeightedGraph+resetColors) ⇒ [<code>WeightedGraph</code>](#WeightedGraph)
     * [.traverse([isDFS], [start], [gray], [white], [black])](#WeightedGraph+traverse)
-    * [.path(start, end, isAcyclic, isPositive)](#WeightedGraph+path) ⇒ <code>Array.&lt;number&gt;</code>
+    * [.path(start, end, isAcyclic, isNonNegative)](#WeightedGraph+path) ⇒ <code>Array.&lt;number&gt;</code>
     * [.isAcyclic()](#WeightedGraph+isAcyclic) ⇒ <code>boolean</code>
+    * [.topologicalSort()](#WeightedGraph+topologicalSort) ⇒ <code>Array.&lt;number&gt;</code>
     * [.getIndex(row, column)](#Grid+getIndex) ⇒ <code>\*</code>
     * [.get(row, column)](#Grid+get) ⇒ <code>\*</code>
     * [.set(row, column, value)](#Grid+set) ⇒ [<code>Grid</code>](#Grid)
@@ -2124,7 +2157,8 @@ Returns values of bits on a given column as an array of numbers.
 | --- | --- | --- | --- |
 | [options] | <code>Object</code> |  |  |
 | [options.size] | <code>number</code> | <code>2</code> | the maximum number of vertices |
-| [options.pad] | <code>\*</code> | <code>0</code> | the initial value of cells |
+| [options.directed] | <code>boolean</code> |  | whether the graph is directed |
+| [options.pad] | <code>\*</code> | <code>0</code> | the initial value of all edges |
 | [data] | [<code>Collection</code>](#Collection) |  |  |
 
 <a name="Grid+columns"></a>
@@ -2148,120 +2182,152 @@ Number of rows in the grid.
 <a name="WeightedGraph+addEdge"></a>
 
 ### weightedGraph.addEdge(x, y, weight) ⇒ [<code>WeightedGraph</code>](#WeightedGraph)
+Adds an edge between two vertices.
+
 **Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
 
-| Param | Type |
-| --- | --- |
-| x | <code>number</code> | 
-| y | <code>number</code> | 
-| weight | <code>number</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the starting vertex |
+| y | <code>number</code> | the ending vertex |
+| weight | <code>number</code> |  |
 
 <a name="WeightedGraph+removeEdge"></a>
 
 ### weightedGraph.removeEdge(x, y) ⇒ [<code>WeightedGraph</code>](#WeightedGraph)
+Removes an edge between two vertices.
+
 **Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
 
-| Param | Type |
-| --- | --- |
-| x | <code>number</code> | 
-| y | <code>number</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the starting vertex |
+| y | <code>number</code> | the ending vertex |
 
 <a name="WeightedGraph+hasEdge"></a>
 
 ### weightedGraph.hasEdge(x, y) ⇒ <code>boolean</code>
+Checks if there is an edge between two vertices.
+
 **Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
 
-| Param | Type |
-| --- | --- |
-| x | <code>number</code> | 
-| y | <code>number</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the starting vertex |
+| y | <code>number</code> | the ending vertex |
 
 <a name="WeightedGraph+outEdges"></a>
 
 ### weightedGraph.outEdges(x) ⇒ <code>Array.&lt;number&gt;</code>
+Returns a list of all outgoing edges of a vertex.
+
 **Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
 
-| Param | Type |
-| --- | --- |
-| x | <code>number</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the vertex |
 
 <a name="WeightedGraph+inEdges"></a>
 
 ### weightedGraph.inEdges(x) ⇒ <code>Array.&lt;number&gt;</code>
+Returns a list of all incoming edges of a vertex.
+
 **Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
 
-| Param | Type |
-| --- | --- |
-| x | <code>number</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the vertex |
 
 <a name="WeightedGraph+isGray"></a>
 
 ### weightedGraph.isGray(x) ⇒ <code>boolean</code>
+Checks if a vertex is entered during a traversal.
+
 **Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
 
-| Param | Type |
-| --- | --- |
-| x | <code>number</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the vertex |
 
 <a name="WeightedGraph+setGray"></a>
 
-### weightedGraph.setGray(x) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+### weightedGraph.setGray(x) ⇒ [<code>WeightedGraph</code>](#WeightedGraph)
+Marks a vertex as entered during a traversal.
+
 **Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
 
-| Param | Type |
-| --- | --- |
-| x | <code>number</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the vertex |
 
 <a name="WeightedGraph+isBlack"></a>
 
 ### weightedGraph.isBlack(x) ⇒ <code>boolean</code>
+Checks if a vertex has been fully processed during a traversal.
+
 **Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
 
-| Param | Type |
-| --- | --- |
-| x | <code>number</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the vertex |
 
 <a name="WeightedGraph+setBlack"></a>
 
-### weightedGraph.setBlack(x) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+### weightedGraph.setBlack(x) ⇒ [<code>WeightedGraph</code>](#WeightedGraph)
+Marks a vertex as fully processed during a traversal.
+
 **Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
 
-| Param | Type |
-| --- | --- |
-| x | <code>number</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the vertex |
 
 <a name="WeightedGraph+resetColors"></a>
 
-### weightedGraph.resetColors() ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+### weightedGraph.resetColors() ⇒ [<code>WeightedGraph</code>](#WeightedGraph)
+Resets all coloring of vertices done during traversals.
+
 **Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
 <a name="WeightedGraph+traverse"></a>
 
 ### weightedGraph.traverse([isDFS], [start], [gray], [white], [black])
+Does a Breadth-First or Depth-First traversal of the graph.
+
 **Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
 
-| Param | Type | Default |
-| --- | --- | --- |
-| [isDFS] | <code>boolean</code> |  | 
-| [start] | <code>number</code> | <code>0</code> | 
-| [gray] | <code>boolean</code> | <code>true</code> | 
-| [white] | <code>boolean</code> |  | 
-| [black] | <code>boolean</code> |  | 
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [isDFS] | <code>boolean</code> |  | whether to do DFS traversal, does BFS otherwise |
+| [start] | <code>number</code> | <code>0</code> | the vertex to start at |
+| [gray] | <code>boolean</code> | <code>true</code> | whether to return vertices upon entering |
+| [white] | <code>boolean</code> |  | whether to return edges upon first encountering |
+| [black] | <code>boolean</code> |  | whether to return vertices after processing |
 
 <a name="WeightedGraph+path"></a>
 
-### weightedGraph.path(start, end, isAcyclic, isPositive) ⇒ <code>Array.&lt;number&gt;</code>
+### weightedGraph.path(start, end, isAcyclic, isNonNegative) ⇒ <code>Array.&lt;number&gt;</code>
+Returns a list of vertices along the shortest path between two given vertices.
+
 **Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
 
-| Param | Type |
-| --- | --- |
-| start | <code>number</code> | 
-| end | <code>number</code> | 
-| isAcyclic | <code>boolean</code> | 
-| isPositive | <code>boolean</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| start | <code>number</code> | the starting vertex |
+| end | <code>number</code> | the ending vertex |
+| isAcyclic | <code>boolean</code> | whether the graph is acyclic |
+| isNonNegative | <code>boolean</code> | whether all edges are non-negative |
 
 <a name="WeightedGraph+isAcyclic"></a>
 
 ### weightedGraph.isAcyclic() ⇒ <code>boolean</code>
+Checks whether the graph is acyclic.
+
+**Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
+<a name="WeightedGraph+topologicalSort"></a>
+
+### weightedGraph.topologicalSort() ⇒ <code>Array.&lt;number&gt;</code>
+Returns a list of vertexes sorted topologically.
+
 **Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
 <a name="Grid+getIndex"></a>
 

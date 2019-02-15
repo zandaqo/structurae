@@ -10,7 +10,10 @@
     "sorted",
     "array",
     "bitfield",
-    "bigint"
+    "bigint",
+    "graph",
+    "matrix",
+    "heap"
   ],
   "scripts": {
     "test": "jest",
