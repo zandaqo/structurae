@@ -6,13 +6,20 @@
 
 A collection of data structures for high-performance modern JavaScript applications that includes:
 
-- [BinaryHeap](https://github.com/zandaqo/structurae#BinaryHeap) - extends Array to implement the Binary Heap data structure.
 - [BitField](https://github.com/zandaqo/structurae#BitField) - stores and operates on data in Numbers and BigInts treating them as bitfields.
-- [BinaryGrid](https://github.com/zandaqo/structurae#BinaryGrid) - creates a grid or 2D matrix of bits.
-- [Grid](https://github.com/zandaqo/structurae#Grid) - extends built-in indexed collections to handle 2 dimensional data (e.g. nested arrays).
+- [Graphs](https://github.com/zandaqo/structurae#Graphs):
+    - [UnweightedGraph](https://github.com/zandaqo/structurae#UnweightedGraph) -  implements Adjacency Matrix using [BinaryGrid](https://github.com/zandaqo/structurae#BinaryGrid) to handle unweighted graphs.
+    - [WeightedGraph](https://github.com/zandaqo/structurae#WeightedGraph) - implements Adjacency Matrix using [Grid](https://github.com/zandaqo/structurae#Grid) or [SymmetricGrid](https://github.com/zandaqo/structurae#SymmetricGrid) to handle weighted graphs.
+- [Grids](https://github.com/zandaqo/structurae#Grids):
+    - [BinaryGrid](https://github.com/zandaqo/structurae#BinaryGrid) - creates a grid or 2D matrix of bits.
+    - [Grid](https://github.com/zandaqo/structurae#Grid) - extends built-in indexed collections to handle 2 dimensional data (e.g. nested arrays).
+    - [SymmetricGrid](https://github.com/zandaqo/structurae#SymmetricGrid) - a grid to handle symmetric or triangular matrices using half the space required for a normal grid.
 - [Pool](https://github.com/zandaqo/structurae#Pool) - manages availability of objects in object pools.
 - [RecordArray](https://github.com/zandaqo/structurae#RecordArray) - extends DataView to use ArrayBuffer as an array of records or C-like structs.
-- [SortedCollection](https://github.com/zandaqo/structurae#SortedCollection) & [SortedArray](https://github.com/zandaqo/structurae#SortedArray) - extends built-in Array or TypedArrays to efficiently handle sorted data.
+- [Sorted Structures](https://github.com/zandaqo/structurae#Sorted_Structures):
+    - [BinaryHeap](https://github.com/zandaqo/structurae#BinaryHeap) - extends Array to implement the Binary Heap data structure.
+    - [SortedCollection](https://github.com/zandaqo/structurae#SortedCollection) - extends TypedArrays  to handle sorted data.
+    - [SortedArray](https://github.com/zandaqo/structurae#SortedArray) -  extends Array to handle sorted data.
 - [StringView](https://github.com/zandaqo/structurae#StringView) - extends Uint8Array to handle C-like representation of UTF-8 encoded strings.
 
 ## Installation
@@ -28,35 +35,6 @@ import { BinaryHeap, BitField, BinaryGrid, GridMixin, RecordArray, SortedArray, 
 // or
 const { BinaryHeap, BitField, BinaryGrid, GridMixin, RecordArray, SortedArray, SortedMixin, StringView } = require('structurae');
 ```
-### BinaryHeap
-BinaryHeap extends built-in Array to implement the Binary Heap data structure. 
-All the mutating methods (push, shift, splice, etc.) do so while maintaining the valid heap structure.
-By default, BinaryHeap implements min-heap, but it can be changed by providing a different comparator function:
-```javascript
-class MaxHeap extends BinaryHeap {}
-MaxHeap.compare = (a, b) => b - a; 
-```
-In addition to all array methods, BinaryHeap provides a few methods to traverse or change the heap:
-```javascript
-const heap = new BinaryHeap(10, 1, 20, 3, 9, 8);
-heap[0]
-//=> 1
-heap.left(0); // the left child of the first (minimal) element of the heap
-//=> 3
-heap.right(0); // the right child of the first (minimal) element of the heap
-//=> 8
-heap.parent(1); // the parent of the second element of the heap
-//=> 1
-
-heap.replace(4) // returns the first element and adds a new element in one operation
-//=> 1
-heap[0]
-//=> 3
-heap[0] = 6;
-// BinaryHeap [ 6, 4, 8, 10, 9, 20 ]
-heap.update(0); // updates the position of an element in the heap
-// BinaryHeap [ 4, 6, 8, 10, 9, 20 ]
-``` 
 
 ### BitField
 BitField uses JavaScript Numbers and BigInts as bitfields to store and operate on data using bitwise operations.
@@ -218,7 +196,88 @@ Person.match(new Person([19, 1]).valueOf(), matcher);
 //=> false
 ```
 
-### BinaryGrid
+### Graphs
+UnweightedGraph and WeightedGraph classes implement Adjacency Matrix data structure to handle unweighted and weighted graphs respectively, 
+both directed and undirected. Graph classes extend Grids which in turn rely on TypedArrays, thus, allowing us to store a whole graph in a single ArrayBuffer.
+The classes provide methods to operate on edges (`addEdge`, `removeEdge`, `hasEdge`, `inEdges`, `outEdges`) as well as to traverse the graphs using BFS or DFS (`traverse`)
+and find shortest path between edges (`path`).
+
+#### UnweightedGraph
+UnweightedGraph extends [BinaryGrid](https://github.com/zandaqo/structurae#BinaryGrid) to represent
+ an unweighted graph in the densest possible way: each edge of a graph is represented as a single bit in an underlying ArrayBuffer.
+ For example, to represent a graph with 80 nodes as an Adjacency Matrix we need 80 * 80 bits or 800 bytes. UnweightedGraph will
+ will create an ArrayBuffer of that size, "view" it as Uint16Array (of length 400) and operate on edges using bitwise operations. 
+
+```javascript
+graph = new UnweightedGraph({ size: 6, directed: true });
+graph.addEdge(0, 1)
+  .addEdge(0, 2)
+  .addEdge(0, 3)
+  .addEdge(2, 4)
+  .addEdge(2, 5);
+
+graph.hasEdge(0, 1);
+//=> true
+graph.hasEdge(0, 4);
+//=> false
+graph.outEdges(2);
+//=> [4, 5]
+graph.inEdges(2);
+//=> [0]
+[...graph.traverse(false, 0)]; // BFS starting from vertex 0
+//=> [0, 1, 2, 3, 4, 5]
+[...graph.traverse(true, 0)]; // DFS starting from vertext 0
+//=> [0, 3, 2, 5, 4, 1]
+graph.path(0, 5);
+//=> [0, 2, 5]
+graph.isAcyclic();
+//=> true
+graph.topologicalSort();
+//=> [0, 3, 2, 5, 4, 1]
+``` 
+
+#### WeightedGraph
+WeightedGraph extends [Grid](https://github.com/zandaqo/structurae#Grid) (for directed graphs)
+ or [SymmetricGrid](https://github.com/zandaqo/structurae#SymmetricGrid) (for undirected) to handle weighted graphs. 
+ As UnweightedGraph it stores all edges in a single ArrayBuffer and offers the same API:
+
+```javascript
+const WeightedGraph = WeightedGraphMixin(Int32Array, true);
+// creates a class for directed graphs that use Int32Array for edge weights
+graph = new WeightedGraph({ size: 6, pad: -1 });
+graph.addEdge(0, 1, 3)
+  .addEdge(0, 2, 2)
+  .addEdge(0, 3, 1)
+  .addEdge(2, 4, 8)
+  .addEdge(2, 5, 6);
+graph.hasEdge(0, 1);
+//=> true
+graph.get(0, 1);
+//=> 3
+graph.hasEdge(0, 5);
+//=> false
+graph.get(0, 5);
+//=> -1
+graph.set(0, 1, 4).get(0, 1);
+//=> 4
+graph.path(0, 5); // get shortest path from 0 to 5
+//=> [0, 2, 5]
+graph.addEdge(3, 5, 1); // add edge to create a shorter path through 3
+graph.path(0, 5);
+//=> [0, 3, 5]
+```
+
+For path finding WeightedGraph uses DFS based search for acyclic graphs, Dijkstra for graph with no negative edges, and 
+Bellman-Ford for all other cases. You can choose the algorithm for a particular search by supplying extra arguments to the `path` method:
+
+```javascript
+graph.path(0, 5); // uses Bellman-Ford by default, complexity O(V * E)
+graph.path(0, 5, true); // the graph is acyclic, uses DFS, O (V + E)
+graph.path(0, 5, false, true); // the graph might have cycles, but has no negative edges, uses Dijkstra, O (E + V * Log V)
+```
+
+### Grid
+#### BinaryGrid
 BinaryGrid creates a grid or 2D matrix of bits and provides methods to operate on it:
 ```javascript
 const bitGrid = new BinaryGrid({ rows: 2, columns: 8 });
@@ -237,7 +296,7 @@ bitGrid.getColumn(0);
 BinaryGrid packs bits into numbers like [BitField](https://github.com/zandaqo/structurae#BitField)
  and holds them in an ArrayBuffer, thus occupying the smallest possible space.
 
-### Grid
+#### Grid
 Grid extends a provided indexed collection class (Array or TypedArrays) to efficiently handle 2 dimensional data without creating
 nested arrays. Grid "unrolls" nested arrays into a single array and pads its "columns" to the nearest power of 2 in order to employ
 quick lookups with bitwise operations.
@@ -307,6 +366,25 @@ grid.toArrays(true);
 //=> [ [1, 2, 0, 0], [3, 4, 5, 0] ]
 ```
 
+#### SymmetricGrid
+SymmetricGrid is a Grid that offers a more compact way of encoding symmetric or triangular square matrices using half as much space.
+```javascript
+const grid = new ArrayGrid({rows: 100, columns: 100 });
+grid.length;
+//=> 12800
+const symmetricGrid = new SymmetricGrid({ rows: 100 }); 
+symmetricGrid.length;
+//=> 5050
+```
+Since the grid is symmetric, it returns the same value for a given pair of coordinates regardless of their position:
+```javascript
+symmetricGrid.set(0, 5, 10);
+symmetricGrid.get(0, 5);
+//=> 10
+symmetricGrid.get(5, 0);
+//=> 10
+```
+
 ### Pool
 Implements a fast algorithm to manage availability of objects in an object pool.
 ```javascript
@@ -361,7 +439,38 @@ people.get(0, 'name').toString();
 //=> Smith
 ```
 
-### SortedCollection
+### Sorted Structures
+#### BinaryHeap
+BinaryHeap extends built-in Array to implement the Binary Heap data structure. 
+All the mutating methods (push, shift, splice, etc.) do so while maintaining the valid heap structure.
+By default, BinaryHeap implements min-heap, but it can be changed by providing a different comparator function:
+```javascript
+class MaxHeap extends BinaryHeap {}
+MaxHeap.compare = (a, b) => b - a; 
+```
+In addition to all array methods, BinaryHeap provides a few methods to traverse or change the heap:
+```javascript
+const heap = new BinaryHeap(10, 1, 20, 3, 9, 8);
+heap[0]
+//=> 1
+heap.left(0); // the left child of the first (minimal) element of the heap
+//=> 3
+heap.right(0); // the right child of the first (minimal) element of the heap
+//=> 8
+heap.parent(1); // the parent of the second element of the heap
+//=> 1
+
+heap.replace(4) // returns the first element and adds a new element in one operation
+//=> 1
+heap[0]
+//=> 3
+heap[0] = 6;
+// BinaryHeap [ 6, 4, 8, 10, 9, 20 ]
+heap.update(0); // updates the position of an element in the heap
+// BinaryHeap [ 4, 6, 8, 10, 9, 20 ]
+``` 
+
+#### SortedCollection
 SortedCollection extends a given built-in indexed collection with methods to efficiently handle sorted data.
 
 ```javascript
@@ -422,8 +531,8 @@ sortedInt32Array.range(3, 5, true).buffer === sortedInt32Array.buffer;
 SortedCollection also provides a set of functions to perform common set operations 
 and find statistics of any sorted array-like objects without converting them to sorted collection.
  Check [API documentation](https://github.com/zandaqo/structurae/blob/master/doc/API.md) for more information.
-
-### SortedArray
+ 
+#### SortedArray
 SortedArray extends SortedCollection using built-in Array.
 
 SortedArray supports all the methods of Array as well as those provided by SortedCollection.
