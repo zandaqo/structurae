@@ -112,6 +112,18 @@ describe('WeightedGraph', () => {
     });
   });
 
+  describe('tree', () => {
+    it('returns a minimal spanning tree of the graph', () => {
+      expect(graph.tree()).toEqual([-1, 0, 0, 0, 2, 2]);
+      graph.addEdge(0, 5, 1);
+      expect(graph.tree()).toEqual([-1, 0, 0, 0, 2, 0]);
+      graph.addEdge(3, 4, 2);
+      expect(graph.tree()).toEqual([-1, 0, 0, 0, 3, 0]);
+      graph.addEdge(5, 2, 2);
+      expect(graph.tree()).toEqual([-1, 0, 5, 0, 3, 0]);
+    });
+  });
+
   describe('isAcyclic', () => {
     it('checks whether the graph is acyclic', () => {
       expect(graph.isAcyclic()).toBe(true);

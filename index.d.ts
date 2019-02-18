@@ -253,7 +253,8 @@ export declare class UnweightedGraph extends BinaryGrid {
     isBlack(x: number): boolean;
     setBlack(x: number): this;
     traverse(isDFS?: boolean, start?: number, gray?: boolean, white?: boolean, black?: boolean): number;
-    path(start: number, end: number): number[];
+    path(start: number, end?: number): number[];
+    tree(start?: number): number[];
     isAcyclic(): boolean;
     topologicalSort(): number[];
     static getLength(size: number): number;
@@ -276,6 +277,7 @@ declare class WeightedGraph {
     setBlack(x: number): this;
     traverse(isDFS?: boolean, start?: number, gray?: boolean, white?: boolean, black?: boolean): number;
     path(start: number, end: number, isAcyclic?: boolean, isPositive?: boolean): number[];
+    tree(start?: number): number[];
     isAcyclic(): boolean;
     topologicalSort(): number[];
     static getLength(size: number): number;

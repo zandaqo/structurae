@@ -74,6 +74,14 @@ describe('Heap', () => {
       expect(min).toBe(1);
       expect(heap).toEqual([3, 9, 8, 10, 20]);
     });
+
+    it('extracts the only element of the heap', () => {
+      const heap = new BinaryHeap();
+      heap.push(1);
+      const min = heap.shift();
+      expect(min).toBe(1);
+      expect(heap.length).toBe(0);
+    });
   });
 
   describe('splice', () => {

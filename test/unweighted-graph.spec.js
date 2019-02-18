@@ -3,7 +3,7 @@ const UnweightedGraph = require('../lib/unweighted-graph');
 describe('UnweightedGraph', () => {
   let graph;
   beforeEach(() => {
-    graph = new UnweightedGraph({ size: 106, directed: true });
+    graph = new UnweightedGraph({ size: 6, directed: true });
     graph.addEdge(0, 1);
     graph.addEdge(0, 2);
     graph.addEdge(0, 3);
@@ -97,6 +97,16 @@ describe('UnweightedGraph', () => {
     it('returns an empty array if no path is found', () => {
       const path = graph.path(3, 5);
       expect(path).toEqual([]);
+    });
+  });
+
+  describe('tree', () => {
+    it('returns a spanning tree of the graph', () => {
+      expect(graph.tree()).toEqual([-1, 0, 0, 0, 2, 2]);
+      graph.addEdge(0, 5);
+      expect(graph.tree()).toEqual([-1, 0, 0, 0, 2, 2]);
+      graph.addEdge(3, 4);
+      expect(graph.tree()).toEqual([-1, 0, 0, 0, 3, 2]);
     });
   });
 

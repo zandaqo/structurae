@@ -8,7 +8,8 @@
 <dd><p>Extends Array to implement the Binary Heap data structure.</p>
 </dd>
 <dt><a href="#BitField">BitField</a></dt>
-<dd></dd>
+<dd><p>Stores and operates on data in Numbers and BigInts treating them as bitfields.</p>
+</dd>
 <dt><a href="#Grid">Grid</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
 <dd><p>Extends built-in indexed collections to handle 2 dimensional data.</p>
 </dd>
@@ -73,8 +74,7 @@
 <dt><a href="#Matcher">Matcher</a> : <code>Array</code></dt>
 <dd></dd>
 <dt><a href="#Masks">Masks</a> : <code>Object.&lt;string, AnyNumber&gt;</code></dt>
-<dd><p>Stores and operates on data in Numbers and BigInts treating them as bitfields.</p>
-</dd>
+<dd></dd>
 <dt><a href="#CollectionConstructor">CollectionConstructor</a> : <code>ArrayConstructor</code> | <code>Int8ArrayConstructor</code> | <code>Int8ArrayConstructor</code> | <code>Uint8ArrayConstructor</code> | <code>Uint8ClampedArrayConstructor</code> | <code>Int16ArrayConstructor</code> | <code>Uint16ArrayConstructor</code> | <code>Int32ArrayConstructor</code> | <code>Uint32ArrayConstructor</code> | <code>Float32ArrayConstructor</code> | <code>Float64ArrayConstructor</code></dt>
 <dd></dd>
 <dt><a href="#Collection">Collection</a> : <code>Array</code> | <code>Int8Array</code> | <code>Uint8Array</code> | <code>Uint8ClampedArray</code> | <code>Int16Array</code> | <code>Uint16Array</code> | <code>Int32Array</code> | <code>Uint32Array</code> | <code>Float32Array</code> | <code>Float64Array</code></dt>
@@ -369,6 +369,8 @@ regardless of number or type of the arguments.
 <a name="BitField"></a>
 
 ## BitField
+Stores and operates on data in Numbers and BigInts treating them as bitfields.
+
 **Kind**: global class  
 
 * [BitField](#BitField)
@@ -410,18 +412,6 @@ regardless of number or type of the arguments.
 | --- | --- | --- |
 | [data] | [<code>AnyNumber</code>](#AnyNumber) \| <code>Array.&lt;number&gt;</code> | <code>0</code> | 
 
-**Example**  
-```js
-class Person extends BitField {}
-Person.fields = [
- { name: 'age', size: 7 },
- { name: 'gender', size: 1 },
-];
-new Person([20, 1]).value
-//=> 41
-new Person(41).value
-//=> 41
-```
 <a name="BitField+value"></a>
 
 ### bitField.value : <code>number</code> \| <code>BigInt</code>
@@ -1979,7 +1969,8 @@ Implements Adjacency Matrix using BinaryGrid to handle unweighted graphs.
         * [.setBlack(x)](#UnweightedGraph+setBlack) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
         * [.resetColors()](#UnweightedGraph+resetColors) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
         * [.traverse([isDFS], [start], [gray], [white], [black])](#UnweightedGraph+traverse)
-        * [.path(start, end)](#UnweightedGraph+path) ⇒ <code>Array.&lt;number&gt;</code>
+        * [.path(start, [end])](#UnweightedGraph+path) ⇒ <code>Array.&lt;number&gt;</code>
+        * [.tree([start])](#UnweightedGraph+tree) ⇒ <code>Array.&lt;number&gt;</code>
         * [.isAcyclic()](#UnweightedGraph+isAcyclic) ⇒ <code>boolean</code>
         * [.topologicalSort()](#UnweightedGraph+topologicalSort) ⇒ <code>Array.&lt;number&gt;</code>
         * [.getBit(row, column)](#BinaryGrid+getBit) ⇒ <code>number</code>
@@ -2125,7 +2116,7 @@ Does a Breadth-First or Depth-First traversal of the graph.
 
 <a name="UnweightedGraph+path"></a>
 
-### unweightedGraph.path(start, end) ⇒ <code>Array.&lt;number&gt;</code>
+### unweightedGraph.path(start, [end]) ⇒ <code>Array.&lt;number&gt;</code>
 Returns a list of vertices along the shortest path between two given vertices.
 
 **Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
@@ -2133,7 +2124,19 @@ Returns a list of vertices along the shortest path between two given vertices.
 | Param | Type | Description |
 | --- | --- | --- |
 | start | <code>number</code> | the starting vertex |
-| end | <code>number</code> | the ending vertex |
+| [end] | <code>number</code> | the ending vertex |
+
+<a name="UnweightedGraph+tree"></a>
+
+### unweightedGraph.tree([start]) ⇒ <code>Array.&lt;number&gt;</code>
+Returns a spanning tree of the graph.
+Uses BFS to construct the tree.
+
+**Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [start] | <code>number</code> | <code>0</code> | 
 
 <a name="UnweightedGraph+isAcyclic"></a>
 
@@ -2230,6 +2233,7 @@ Implements Adjacency Matrix using Grid or SymmetricGrid to handle weighted graph
         * [.resetColors()](#WeightedGraph+resetColors) ⇒ [<code>WeightedGraph</code>](#WeightedGraph)
         * [.traverse([isDFS], [start], [gray], [white], [black])](#WeightedGraph+traverse)
         * [.path(start, end, isAcyclic, isNonNegative)](#WeightedGraph+path) ⇒ <code>Array.&lt;number&gt;</code>
+        * [.tree([start])](#WeightedGraph+tree) ⇒ <code>Array.&lt;number&gt;</code>
         * [.isAcyclic()](#WeightedGraph+isAcyclic) ⇒ <code>boolean</code>
         * [.topologicalSort()](#WeightedGraph+topologicalSort) ⇒ <code>Array.&lt;number&gt;</code>
         * [.getIndex(row, column)](#Grid+getIndex) ⇒ <code>\*</code>
@@ -2407,6 +2411,18 @@ Returns a list of vertices along the shortest path between two given vertices.
 | end | <code>number</code> | the ending vertex |
 | isAcyclic | <code>boolean</code> | whether the graph is acyclic |
 | isNonNegative | <code>boolean</code> | whether all edges are non-negative |
+
+<a name="WeightedGraph+tree"></a>
+
+### weightedGraph.tree([start]) ⇒ <code>Array.&lt;number&gt;</code>
+Returns a minimal spanning tree of the graph.
+Uses the Prim's algorithm.
+
+**Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [start] | <code>number</code> | <code>0</code> | 
 
 <a name="WeightedGraph+isAcyclic"></a>
 
@@ -2640,8 +2656,6 @@ Creates a WeightedGraph class extending a given Array-like class.
 <a name="Masks"></a>
 
 ## Masks : <code>Object.&lt;string, AnyNumber&gt;</code>
-Stores and operates on data in Numbers and BigInts treating them as bitfields.
-
 **Kind**: global typedef  
 <a name="CollectionConstructor"></a>
 
