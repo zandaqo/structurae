@@ -10,7 +10,8 @@
 <dt><a href="#BitField">BitField</a></dt>
 <dd></dd>
 <dt><a href="#Grid">Grid</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
-<dd></dd>
+<dd><p>Extends built-in indexed collections to handle 2 dimensional data.</p>
+</dd>
 <dt><a href="#Pool">Pool</a> ⇐ <code>Uint16Array</code></dt>
 <dd><p>Manages availability of objects in object pools.</p>
 </dd>
@@ -18,14 +19,17 @@
 <dd><p>Extends DataView to use ArrayBuffer as an array of records or C-like structs.</p>
 </dd>
 <dt><a href="#SortedArray">SortedArray</a> ⇐ <code><a href="#SortedCollection">SortedCollection</a></code></dt>
-<dd></dd>
+<dd><p>Extends Array to handle sorted data.</p>
+</dd>
 <dt><a href="#SortedCollection">SortedCollection</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
-<dd></dd>
+<dd><p>Extends TypedArrays  to handle sorted data.</p>
+</dd>
 <dt><a href="#StringView">StringView</a> ⇐ <code>Uint8Array</code></dt>
 <dd><p>Extends Uint8Array to handle C-like representation of UTF-8 encoded strings.</p>
 </dd>
 <dt><a href="#SymmetricGrid">SymmetricGrid</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
-<dd></dd>
+<dd><p>A grid to handle symmetric or triangular matrices using half the space required for a normal grid.</p>
+</dd>
 <dt><a href="#UnweightedGraph">UnweightedGraph</a> ⇐ <code><a href="#BinaryGrid">BinaryGrid</a></code></dt>
 <dd><p>Implements Adjacency Matrix using BinaryGrid to handle unweighted graphs.</p>
 </dd>
@@ -69,14 +73,15 @@
 <dt><a href="#Matcher">Matcher</a> : <code>Array</code></dt>
 <dd></dd>
 <dt><a href="#Masks">Masks</a> : <code>Object.&lt;string, AnyNumber&gt;</code></dt>
-<dd></dd>
+<dd><p>Stores and operates on data in Numbers and BigInts treating them as bitfields.</p>
+</dd>
 <dt><a href="#CollectionConstructor">CollectionConstructor</a> : <code>ArrayConstructor</code> | <code>Int8ArrayConstructor</code> | <code>Int8ArrayConstructor</code> | <code>Uint8ArrayConstructor</code> | <code>Uint8ClampedArrayConstructor</code> | <code>Int16ArrayConstructor</code> | <code>Uint16ArrayConstructor</code> | <code>Int32ArrayConstructor</code> | <code>Uint32ArrayConstructor</code> | <code>Float32ArrayConstructor</code> | <code>Float64ArrayConstructor</code></dt>
 <dd></dd>
 <dt><a href="#Collection">Collection</a> : <code>Array</code> | <code>Int8Array</code> | <code>Uint8Array</code> | <code>Uint8ClampedArray</code> | <code>Int16Array</code> | <code>Uint16Array</code> | <code>Int32Array</code> | <code>Uint32Array</code> | <code>Float32Array</code> | <code>Float64Array</code></dt>
 <dd></dd>
 <dt><a href="#Coordinates">Coordinates</a> : <code>Object</code></dt>
 <dd></dd>
-<dt><a href="#RecordField">RecordField</a></dt>
+<dt><a href="#RecordField">RecordField</a> : <code>Object</code></dt>
 <dd></dd>
 </dl>
 
@@ -741,6 +746,8 @@ The static version of `BitField#match`, matches a given value against a precompu
 <a name="Grid"></a>
 
 ## Grid ⇐ [<code>CollectionConstructor</code>](#CollectionConstructor)
+Extends built-in indexed collections to handle 2 dimensional data.
+
 **Kind**: global class  
 **Extends**: [<code>CollectionConstructor</code>](#CollectionConstructor)  
 
@@ -1113,6 +1120,8 @@ person.set(0, 'age', 10).set(0, 'score', 5.0).toObject(0);
 <a name="RecordArray.getLength"></a>
 
 ### RecordArray.getLength(fields, [size]) ⇒ <code>number</code>
+Returns the length of underlying ArrayBuffer required to hold the given amount of records.
+
 **Kind**: static method of [<code>RecordArray</code>](#RecordArray)  
 
 | Param | Type | Description |
@@ -1123,6 +1132,8 @@ person.set(0, 'age', 10).set(0, 'score', 5.0).toObject(0);
 <a name="SortedArray"></a>
 
 ## SortedArray ⇐ [<code>SortedCollection</code>](#SortedCollection)
+Extends Array to handle sorted data.
+
 **Kind**: global class  
 **Extends**: [<code>SortedCollection</code>](#SortedCollection)  
 
@@ -1240,6 +1251,8 @@ sortedCollection.rank(6);
 <a name="SortedCollection"></a>
 
 ## SortedCollection ⇐ [<code>CollectionConstructor</code>](#CollectionConstructor)
+Extends TypedArrays  to handle sorted data.
+
 **Kind**: global class  
 **Extends**: [<code>CollectionConstructor</code>](#CollectionConstructor)  
 
@@ -1792,6 +1805,8 @@ const stringView = StringView.getByteSize('abc😀a');
 <a name="SymmetricGrid"></a>
 
 ## SymmetricGrid ⇐ [<code>CollectionConstructor</code>](#CollectionConstructor)
+A grid to handle symmetric or triangular matrices using half the space required for a normal grid.
+
 **Kind**: global class  
 **Extends**: [<code>CollectionConstructor</code>](#CollectionConstructor)  
 
@@ -2625,6 +2640,8 @@ Creates a WeightedGraph class extending a given Array-like class.
 <a name="Masks"></a>
 
 ## Masks : <code>Object.&lt;string, AnyNumber&gt;</code>
+Stores and operates on data in Numbers and BigInts treating them as bitfields.
+
 **Kind**: global typedef  
 <a name="CollectionConstructor"></a>
 
@@ -2647,7 +2664,7 @@ Creates a WeightedGraph class extending a given Array-like class.
 
 <a name="RecordField"></a>
 
-## RecordField
+## RecordField : <code>Object</code>
 **Kind**: global typedef  
 **Properties**
 

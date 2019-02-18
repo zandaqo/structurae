@@ -4,7 +4,7 @@
 [![Travis branch](https://img.shields.io/travis/zandaqo/structurae.svg?style=flat-square)](https://travis-ci.org/zandaqo/structurae)
 [![Codecov](https://img.shields.io/codecov/c/github/zandaqo/structurae.svg?style=flat-square)](https://codecov.io/github/zandaqo/structurae)
 
-A collection of data structures for high-performance modern JavaScript applications that includes:
+A collection of data structures for high-performance JavaScript applications that includes:
 
 - [BitField](https://github.com/zandaqo/structurae#BitField) - stores and operates on data in Numbers and BigInts treating them as bitfields.
 - [Graphs](https://github.com/zandaqo/structurae#Graphs):
@@ -615,6 +615,8 @@ stringView.reverse().toString();
 
 ## Documentation
 - [API documentation](https://github.com/zandaqo/structurae/blob/master/doc/API.md)
+- Articles:
+    - [Structurae: Data Structures for Heigh-Performance JavaScript](https://blog.usejournal.com/structurae-data-structures-for-high-performance-javascript-9b7da4c73f8)
 
 ## License
 MIT © [Maga D. Zandaqo](http://maga.name)
