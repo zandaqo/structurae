@@ -134,4 +134,11 @@ describe('WeightedGraph', () => {
       expect(undirected.topologicalSort()).toEqual([0, 3, 2, 5, 4, 1]);
     });
   });
+
+  describe('getLength', () => {
+    it('returns the length of underlying TypedArray required to hold the graph', () => {
+      expect(WeightedGraph.getLength(60)).toBe(3840);
+      expect(UndirectedGraph.getLength(60)).toBe(1830);
+    });
+  });
 });

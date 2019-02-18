@@ -27,9 +27,11 @@
 <dt><a href="#SymmetricGrid">SymmetricGrid</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
 <dd></dd>
 <dt><a href="#UnweightedGraph">UnweightedGraph</a> ⇐ <code><a href="#BinaryGrid">BinaryGrid</a></code></dt>
-<dd></dd>
+<dd><p>Implements Adjacency Matrix using BinaryGrid to handle unweighted graphs.</p>
+</dd>
 <dt><a href="#WeightedGraph">WeightedGraph</a> ⇐ <code><a href="#Grid">Grid</a></code></dt>
-<dd></dd>
+<dd><p>Implements Adjacency Matrix using Grid or SymmetricGrid to handle weighted graphs.</p>
+</dd>
 </dl>
 
 ## Functions
@@ -87,22 +89,25 @@ Implements a grid or 2D matrix of bits.
 **Extends**: <code>Uint16Array</code>  
 
 * [BinaryGrid](#BinaryGrid) ⇐ <code>Uint16Array</code>
-    * [new BinaryGrid([options], [data])](#new_BinaryGrid_new)
-    * [.getBit(row, column)](#BinaryGrid+getBit) ⇒ <code>number</code>
-    * [.setBit(row, column, value)](#BinaryGrid+setBit) ⇒ [<code>BinaryGrid</code>](#BinaryGrid)
-    * [.getRow(row)](#BinaryGrid+getRow) ⇒ <code>Array.&lt;number&gt;</code>
-    * [.getColumn(column)](#BinaryGrid+getColumn) ⇒ <code>Array.&lt;number&gt;</code>
+    * [new BinaryGrid([options], [...args])](#new_BinaryGrid_new)
+    * _instance_
+        * [.getBit(row, column)](#BinaryGrid+getBit) ⇒ <code>number</code>
+        * [.setBit(row, column, value)](#BinaryGrid+setBit) ⇒ [<code>BinaryGrid</code>](#BinaryGrid)
+        * [.getRow(row)](#BinaryGrid+getRow) ⇒ <code>Array.&lt;number&gt;</code>
+        * [.getColumn(column)](#BinaryGrid+getColumn) ⇒ <code>Array.&lt;number&gt;</code>
+    * _static_
+        * [.getLength(rows, columns)](#BinaryGrid.getLength) ⇒ <code>number</code>
 
 <a name="new_BinaryGrid_new"></a>
 
-### new BinaryGrid([options], [data])
+### new BinaryGrid([options], [...args])
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | [options] | <code>Object</code> |  |  |
 | [options.rows] | <code>number</code> | <code>1</code> | the number of rows |
 | [options.columns] | <code>number</code> | <code>16</code> | the number of columns |
-| [data] | [<code>Collection</code>](#Collection) |  |  |
+| [...args] | <code>\*</code> |  |  |
 
 <a name="BinaryGrid+getBit"></a>
 
@@ -150,6 +155,18 @@ Returns values of bits on a given column as an array of numbers.
 | Param | Type |
 | --- | --- |
 | column | <code>number</code> | 
+
+<a name="BinaryGrid.getLength"></a>
+
+### BinaryGrid.getLength(rows, columns) ⇒ <code>number</code>
+Returns the length of underlying Array required to hold the grid.
+
+**Kind**: static method of [<code>BinaryGrid</code>](#BinaryGrid)  
+
+| Param | Type |
+| --- | --- |
+| rows | <code>number</code> | 
+| columns | <code>number</code> | 
 
 <a name="BinaryHeap"></a>
 
@@ -728,7 +745,7 @@ The static version of `BitField#match`, matches a given value against a precompu
 **Extends**: [<code>CollectionConstructor</code>](#CollectionConstructor)  
 
 * [Grid](#Grid) ⇐ [<code>CollectionConstructor</code>](#CollectionConstructor)
-    * [new Grid([options], [data])](#new_Grid_new)
+    * [new Grid([options], [...args])](#new_Grid_new)
     * _instance_
         * [.columns](#Grid+columns) ⇒ <code>void</code>
         * [.columns](#Grid+columns) : <code>number</code>
@@ -739,11 +756,12 @@ The static version of `BitField#match`, matches a given value against a precompu
         * [.getCoordinates(index)](#Grid+getCoordinates) ⇒ [<code>Coordinates</code>](#Coordinates)
         * [.toArrays([withPadding])](#Grid+toArrays) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
     * _static_
+        * [.getLength(rows, columns)](#Grid.getLength) ⇒ <code>number</code>
         * [.fromArrays(arrays, [pad])](#Grid.fromArrays) ⇒ [<code>Grid</code>](#Grid)
 
 <a name="new_Grid_new"></a>
 
-### new Grid([options], [data])
+### new Grid([options], [...args])
 Passes all arguments to the Base class except if called with a special set of grid options,
 in that case creates and empty grid of specified parameters.
 
@@ -754,7 +772,7 @@ in that case creates and empty grid of specified parameters.
 | [options.rows] | <code>number</code> | <code>1</code> | the number of rows |
 | [options.columns] | <code>number</code> | <code>2</code> | the number of columns |
 | [options.pad] | <code>\*</code> | <code>0</code> | the initial value of cells |
-| [data] | [<code>Collection</code>](#Collection) |  |  |
+| [...args] | <code>\*</code> |  |  |
 
 <a name="Grid+columns"></a>
 
@@ -873,6 +891,18 @@ const a = ArrayGrid({ rows: 3, columns: 2, pad: 3});
 a.toArrays();
 //=> [[3, 3], [3, 3], [3, 3]]
 ```
+<a name="Grid.getLength"></a>
+
+### Grid.getLength(rows, columns) ⇒ <code>number</code>
+Returns the length of underlying Array required to hold the grid.
+
+**Kind**: static method of [<code>Grid</code>](#Grid)  
+
+| Param | Type |
+| --- | --- |
+| rows | <code>number</code> | 
+| columns | <code>number</code> | 
+
 <a name="Grid.fromArrays"></a>
 
 ### Grid.fromArrays(arrays, [pad]) ⇒ [<code>Grid</code>](#Grid)
@@ -940,13 +970,16 @@ Extends DataView to use ArrayBuffer as an array of records or C-like structs.
 
 * [RecordArray](#RecordArray) ⇐ <code>DataView</code>
     * [new RecordArray(fields, [size], [buffer], [byteOffset], [byteLength])](#new_RecordArray_new)
-    * [.size](#RecordArray+size) : <code>number</code>
-    * [.get(index, field)](#RecordArray+get) ⇒ <code>\*</code>
-    * [.set(index, field, value)](#RecordArray+set) ⇒ <code>this</code>
-    * [.getString(offset, size)](#RecordArray+getString) ⇒ [<code>StringView</code>](#StringView)
-    * [.setString(offset, value, size)](#RecordArray+setString) ⇒ <code>void</code>
-    * [.getByteOffset(index, field)](#RecordArray+getByteOffset) ⇒ <code>number</code>
-    * [.toObject(index)](#RecordArray+toObject) ⇒ <code>Object</code>
+    * _instance_
+        * [.size](#RecordArray+size) : <code>number</code>
+        * [.get(index, field)](#RecordArray+get) ⇒ <code>\*</code>
+        * [.set(index, field, value)](#RecordArray+set) ⇒ <code>this</code>
+        * [.getString(offset, size)](#RecordArray+getString) ⇒ [<code>StringView</code>](#StringView)
+        * [.setString(offset, value, size)](#RecordArray+setString) ⇒ <code>void</code>
+        * [.getByteOffset(index, field)](#RecordArray+getByteOffset) ⇒ <code>number</code>
+        * [.toObject(index)](#RecordArray+toObject) ⇒ <code>Object</code>
+    * _static_
+        * [.getLength(fields, [size])](#RecordArray.getLength) ⇒ <code>number</code>
 
 <a name="new_RecordArray_new"></a>
 
@@ -1077,6 +1110,16 @@ const people = new RecordArray([
 person.set(0, 'age', 10).set(0, 'score', 5.0).toObject(0);
 //=> { age: 10, score: 5.0 }
 ```
+<a name="RecordArray.getLength"></a>
+
+### RecordArray.getLength(fields, [size]) ⇒ <code>number</code>
+**Kind**: static method of [<code>RecordArray</code>](#RecordArray)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| fields | [<code>Array.&lt;RecordField&gt;</code>](#RecordField) | an array field descriptions |
+| [size] | <code>number</code> | the amount of structs in the array |
+
 <a name="SortedArray"></a>
 
 ## SortedArray ⇐ [<code>SortedCollection</code>](#SortedCollection)
@@ -1753,7 +1796,7 @@ const stringView = StringView.getByteSize('abc😀a');
 **Extends**: [<code>CollectionConstructor</code>](#CollectionConstructor)  
 
 * [SymmetricGrid](#SymmetricGrid) ⇐ [<code>CollectionConstructor</code>](#CollectionConstructor)
-    * [new SymmetricGrid([options], [data])](#new_SymmetricGrid_new)
+    * [new SymmetricGrid([options], [...args])](#new_SymmetricGrid_new)
     * _instance_
         * [.get(row, column)](#SymmetricGrid+get) ⇒ <code>\*</code>
         * [.set(row, column, value)](#SymmetricGrid+set) ⇒ [<code>SymmetricGrid</code>](#SymmetricGrid)
@@ -1762,10 +1805,11 @@ const stringView = StringView.getByteSize('abc😀a');
     * _static_
         * [.getIndex(row, column)](#SymmetricGrid.getIndex) ⇒ <code>\*</code>
         * [.fromArrays(arrays, [pad])](#SymmetricGrid.fromArrays) ⇒ [<code>SymmetricGrid</code>](#SymmetricGrid)
+        * [.getLength(rows)](#SymmetricGrid.getLength) ⇒ <code>number</code>
 
 <a name="new_SymmetricGrid_new"></a>
 
-### new SymmetricGrid([options], [data])
+### new SymmetricGrid([options], [...args])
 Passes all arguments to the Base class except if called with a special set of grid options,
 in that case creates and empty grid of specified parameters.
 
@@ -1775,7 +1819,7 @@ in that case creates and empty grid of specified parameters.
 | [options] | <code>Object</code> |  |  |
 | [options.rows] | <code>number</code> | <code>2</code> | the number of rows |
 | [options.pad] | <code>\*</code> | <code>0</code> | the initial value of cells |
-| [data] | [<code>Collection</code>](#Collection) |  |  |
+| [...args] | <code>\*</code> |  |  |
 
 <a name="SymmetricGrid+get"></a>
 
@@ -1887,43 +1931,59 @@ a.get(2, 1);
 | arrays | <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> |  |  |
 | [pad] | <code>\*</code> | <code>0</code> | the value to pad the arrays to create equal sized rows |
 
+<a name="SymmetricGrid.getLength"></a>
+
+### SymmetricGrid.getLength(rows) ⇒ <code>number</code>
+Returns the length of underlying Array required to hold the grid.
+
+**Kind**: static method of [<code>SymmetricGrid</code>](#SymmetricGrid)  
+
+| Param | Type |
+| --- | --- |
+| rows | <code>number</code> | 
+
 <a name="UnweightedGraph"></a>
 
 ## UnweightedGraph ⇐ [<code>BinaryGrid</code>](#BinaryGrid)
+Implements Adjacency Matrix using BinaryGrid to handle unweighted graphs.
+
 **Kind**: global class  
 **Extends**: [<code>BinaryGrid</code>](#BinaryGrid)  
 
 * [UnweightedGraph](#UnweightedGraph) ⇐ [<code>BinaryGrid</code>](#BinaryGrid)
-    * [new UnweightedGraph([options], [data])](#new_UnweightedGraph_new)
-    * [.addEdge(x, y)](#UnweightedGraph+addEdge) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
-    * [.removeEdge(x, y)](#UnweightedGraph+removeEdge) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
-    * [.hasEdge(x, y)](#UnweightedGraph+hasEdge) ⇒ <code>boolean</code>
-    * [.outEdges(x)](#UnweightedGraph+outEdges) ⇒ <code>Array.&lt;number&gt;</code>
-    * [.inEdges(x)](#UnweightedGraph+inEdges) ⇒ <code>Array.&lt;number&gt;</code>
-    * [.isGray(x)](#UnweightedGraph+isGray) ⇒ <code>boolean</code>
-    * [.setGray(x)](#UnweightedGraph+setGray) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
-    * [.isBlack(x)](#UnweightedGraph+isBlack) ⇒ <code>boolean</code>
-    * [.setBlack(x)](#UnweightedGraph+setBlack) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
-    * [.resetColors()](#UnweightedGraph+resetColors) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
-    * [.traverse([isDFS], [start], [gray], [white], [black])](#UnweightedGraph+traverse)
-    * [.path(start, end)](#UnweightedGraph+path) ⇒ <code>Array.&lt;number&gt;</code>
-    * [.isAcyclic()](#UnweightedGraph+isAcyclic) ⇒ <code>boolean</code>
-    * [.topologicalSort()](#UnweightedGraph+topologicalSort) ⇒ <code>Array.&lt;number&gt;</code>
-    * [.getBit(row, column)](#BinaryGrid+getBit) ⇒ <code>number</code>
-    * [.setBit(row, column, value)](#BinaryGrid+setBit) ⇒ [<code>BinaryGrid</code>](#BinaryGrid)
-    * [.getRow(row)](#BinaryGrid+getRow) ⇒ <code>Array.&lt;number&gt;</code>
-    * [.getColumn(column)](#BinaryGrid+getColumn) ⇒ <code>Array.&lt;number&gt;</code>
+    * [new UnweightedGraph([options], [...args])](#new_UnweightedGraph_new)
+    * _instance_
+        * [.addEdge(x, y)](#UnweightedGraph+addEdge) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+        * [.removeEdge(x, y)](#UnweightedGraph+removeEdge) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+        * [.hasEdge(x, y)](#UnweightedGraph+hasEdge) ⇒ <code>boolean</code>
+        * [.outEdges(x)](#UnweightedGraph+outEdges) ⇒ <code>Array.&lt;number&gt;</code>
+        * [.inEdges(x)](#UnweightedGraph+inEdges) ⇒ <code>Array.&lt;number&gt;</code>
+        * [.isGray(x)](#UnweightedGraph+isGray) ⇒ <code>boolean</code>
+        * [.setGray(x)](#UnweightedGraph+setGray) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+        * [.isBlack(x)](#UnweightedGraph+isBlack) ⇒ <code>boolean</code>
+        * [.setBlack(x)](#UnweightedGraph+setBlack) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+        * [.resetColors()](#UnweightedGraph+resetColors) ⇒ [<code>UnweightedGraph</code>](#UnweightedGraph)
+        * [.traverse([isDFS], [start], [gray], [white], [black])](#UnweightedGraph+traverse)
+        * [.path(start, end)](#UnweightedGraph+path) ⇒ <code>Array.&lt;number&gt;</code>
+        * [.isAcyclic()](#UnweightedGraph+isAcyclic) ⇒ <code>boolean</code>
+        * [.topologicalSort()](#UnweightedGraph+topologicalSort) ⇒ <code>Array.&lt;number&gt;</code>
+        * [.getBit(row, column)](#BinaryGrid+getBit) ⇒ <code>number</code>
+        * [.setBit(row, column, value)](#BinaryGrid+setBit) ⇒ [<code>BinaryGrid</code>](#BinaryGrid)
+        * [.getRow(row)](#BinaryGrid+getRow) ⇒ <code>Array.&lt;number&gt;</code>
+        * [.getColumn(column)](#BinaryGrid+getColumn) ⇒ <code>Array.&lt;number&gt;</code>
+    * _static_
+        * [.getLength(size)](#UnweightedGraph.getLength) ⇒ <code>number</code>
 
 <a name="new_UnweightedGraph_new"></a>
 
-### new UnweightedGraph([options], [data])
+### new UnweightedGraph([options], [...args])
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | [options] | <code>Object</code> |  |  |
 | [options.size] | <code>number</code> | <code>2</code> | the maximum number of vertices |
 | [options.directed] | <code>boolean</code> |  | whether the graph is directed |
-| [data] | [<code>Collection</code>](#Collection) |  |  |
+| [...args] | <code>\*</code> |  |  |
 
 <a name="UnweightedGraph+addEdge"></a>
 
@@ -2119,39 +2179,55 @@ Returns values of bits on a given column as an array of numbers.
 | --- | --- |
 | column | <code>number</code> | 
 
+<a name="UnweightedGraph.getLength"></a>
+
+### UnweightedGraph.getLength(size) ⇒ <code>number</code>
+Returns the length of underlying TypedArray required to hold the graph.
+
+**Kind**: static method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| size | <code>number</code> | 
+
 <a name="WeightedGraph"></a>
 
 ## WeightedGraph ⇐ [<code>Grid</code>](#Grid)
+Implements Adjacency Matrix using Grid or SymmetricGrid to handle weighted graphs.
+
 **Kind**: global class  
 **Extends**: [<code>Grid</code>](#Grid)  
 
 * [WeightedGraph](#WeightedGraph) ⇐ [<code>Grid</code>](#Grid)
-    * [new WeightedGraph([options], [data])](#new_WeightedGraph_new)
-    * [.columns](#Grid+columns) ⇒ <code>void</code>
-    * [.rows](#Grid+rows) : <code>number</code>
-    * [.addEdge(x, y, weight)](#WeightedGraph+addEdge) ⇒ [<code>WeightedGraph</code>](#WeightedGraph)
-    * [.removeEdge(x, y)](#WeightedGraph+removeEdge) ⇒ [<code>WeightedGraph</code>](#WeightedGraph)
-    * [.hasEdge(x, y)](#WeightedGraph+hasEdge) ⇒ <code>boolean</code>
-    * [.outEdges(x)](#WeightedGraph+outEdges) ⇒ <code>Array.&lt;number&gt;</code>
-    * [.inEdges(x)](#WeightedGraph+inEdges) ⇒ <code>Array.&lt;number&gt;</code>
-    * [.isGray(x)](#WeightedGraph+isGray) ⇒ <code>boolean</code>
-    * [.setGray(x)](#WeightedGraph+setGray) ⇒ [<code>WeightedGraph</code>](#WeightedGraph)
-    * [.isBlack(x)](#WeightedGraph+isBlack) ⇒ <code>boolean</code>
-    * [.setBlack(x)](#WeightedGraph+setBlack) ⇒ [<code>WeightedGraph</code>](#WeightedGraph)
-    * [.resetColors()](#WeightedGraph+resetColors) ⇒ [<code>WeightedGraph</code>](#WeightedGraph)
-    * [.traverse([isDFS], [start], [gray], [white], [black])](#WeightedGraph+traverse)
-    * [.path(start, end, isAcyclic, isNonNegative)](#WeightedGraph+path) ⇒ <code>Array.&lt;number&gt;</code>
-    * [.isAcyclic()](#WeightedGraph+isAcyclic) ⇒ <code>boolean</code>
-    * [.topologicalSort()](#WeightedGraph+topologicalSort) ⇒ <code>Array.&lt;number&gt;</code>
-    * [.getIndex(row, column)](#Grid+getIndex) ⇒ <code>\*</code>
-    * [.get(row, column)](#Grid+get) ⇒ <code>\*</code>
-    * [.set(row, column, value)](#Grid+set) ⇒ [<code>Grid</code>](#Grid)
-    * [.getCoordinates(index)](#Grid+getCoordinates) ⇒ [<code>Coordinates</code>](#Coordinates)
-    * [.toArrays([withPadding])](#Grid+toArrays) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
+    * [new WeightedGraph([options], [...args])](#new_WeightedGraph_new)
+    * _instance_
+        * [.columns](#Grid+columns) ⇒ <code>void</code>
+        * [.rows](#Grid+rows) : <code>number</code>
+        * [.addEdge(x, y, weight)](#WeightedGraph+addEdge) ⇒ [<code>WeightedGraph</code>](#WeightedGraph)
+        * [.removeEdge(x, y)](#WeightedGraph+removeEdge) ⇒ [<code>WeightedGraph</code>](#WeightedGraph)
+        * [.hasEdge(x, y)](#WeightedGraph+hasEdge) ⇒ <code>boolean</code>
+        * [.outEdges(x)](#WeightedGraph+outEdges) ⇒ <code>Array.&lt;number&gt;</code>
+        * [.inEdges(x)](#WeightedGraph+inEdges) ⇒ <code>Array.&lt;number&gt;</code>
+        * [.isGray(x)](#WeightedGraph+isGray) ⇒ <code>boolean</code>
+        * [.setGray(x)](#WeightedGraph+setGray) ⇒ [<code>WeightedGraph</code>](#WeightedGraph)
+        * [.isBlack(x)](#WeightedGraph+isBlack) ⇒ <code>boolean</code>
+        * [.setBlack(x)](#WeightedGraph+setBlack) ⇒ [<code>WeightedGraph</code>](#WeightedGraph)
+        * [.resetColors()](#WeightedGraph+resetColors) ⇒ [<code>WeightedGraph</code>](#WeightedGraph)
+        * [.traverse([isDFS], [start], [gray], [white], [black])](#WeightedGraph+traverse)
+        * [.path(start, end, isAcyclic, isNonNegative)](#WeightedGraph+path) ⇒ <code>Array.&lt;number&gt;</code>
+        * [.isAcyclic()](#WeightedGraph+isAcyclic) ⇒ <code>boolean</code>
+        * [.topologicalSort()](#WeightedGraph+topologicalSort) ⇒ <code>Array.&lt;number&gt;</code>
+        * [.getIndex(row, column)](#Grid+getIndex) ⇒ <code>\*</code>
+        * [.get(row, column)](#Grid+get) ⇒ <code>\*</code>
+        * [.set(row, column, value)](#Grid+set) ⇒ [<code>Grid</code>](#Grid)
+        * [.getCoordinates(index)](#Grid+getCoordinates) ⇒ [<code>Coordinates</code>](#Coordinates)
+        * [.toArrays([withPadding])](#Grid+toArrays) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
+    * _static_
+        * [.getLength(size)](#WeightedGraph.getLength) ⇒ <code>number</code>
 
 <a name="new_WeightedGraph_new"></a>
 
-### new WeightedGraph([options], [data])
+### new WeightedGraph([options], [...args])
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -2159,7 +2235,7 @@ Returns values of bits on a given column as an array of numbers.
 | [options.size] | <code>number</code> | <code>2</code> | the maximum number of vertices |
 | [options.directed] | <code>boolean</code> |  | whether the graph is directed |
 | [options.pad] | <code>\*</code> | <code>0</code> | the initial value of all edges |
-| [data] | [<code>Collection</code>](#Collection) |  |  |
+| [...args] | <code>\*</code> |  |  |
 
 <a name="Grid+columns"></a>
 
@@ -2423,6 +2499,17 @@ const a = ArrayGrid({ rows: 3, columns: 2, pad: 3});
 a.toArrays();
 //=> [[3, 3], [3, 3], [3, 3]]
 ```
+<a name="WeightedGraph.getLength"></a>
+
+### WeightedGraph.getLength(size) ⇒ <code>number</code>
+Returns the length of underlying Array required to hold the graph.
+
+**Kind**: static method of [<code>WeightedGraph</code>](#WeightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| size | <code>number</code> | 
+
 <a name="GridMixin"></a>
 
 ## GridMixin(Base) ⇒ [<code>Grid</code>](#Grid)

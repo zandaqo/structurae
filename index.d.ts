@@ -27,12 +27,13 @@ declare class Grid {
     pad: any;
     lastCoordinates: Coordinates;
 
-    constructor(options?: GridOptions, data?: Collection);
+    constructor(options?: GridOptions, ...args: any);
     get(row: number, column: number): any;
     set(row: number, column: number, value: any): this;
     getCoordinates(index: number): Coordinates;
     toArrays(withPadding?: boolean): any[][];
     static getOffset(columns: number): number;
+    static getLength(rows: number, columns: number): number;
     static fromArrays(arrays: any[][], pad: any): Grid;
 }
 
@@ -165,6 +166,8 @@ export declare class StringView extends Uint8Array {
     replace(pattern: Collection, replacement: Collection): this;
     reverse(): this;
     search(searchValue: Collection, fromIndex?: number): number;
+    private searchNaive(searchValue: Collection, fromIndex?: number): number;
+    private searchShiftOr(searchValue: Collection, fromIndex?: number): number;
     substring(indexStart: number, indexEnd?: number): string;
     private toChar(index: number): string;
     toString(): string;
@@ -198,22 +201,23 @@ interface BitPosition {
 
 type Bit = 0 | 1;
 
-interface BitGridOptions {
+interface BinaryGridOptions {
     rows: number;
     columns: number;
 }
 
-export declare class BitGrid extends Uint16Array {
+export declare class BinaryGrid extends Uint16Array {
     offset: number;
     columns: number;
     rows: number;
     lastPosition: BitPosition;
-    constructor(options: BitGridOptions, data?: Collection);
+    constructor(options: BinaryGridOptions, ...args: any);
     getBit(row: number, column: number): Bit;
     setBit(row: number, column: number, value?: Bit): this;
     getRow(row: number): Bit[];
     getColumn(column: number): Bit[];
     private getBitPosition(row: number, column: number): BitPosition;
+    static getLength(rows: number, columns: number): number;
     static getOffset(columns: number): number;
 }
 
@@ -222,21 +226,23 @@ declare class SymmetricGrid {
     pad: any;
     lastCoordinates: Coordinates;
 
-    constructor(options?: GridOptions, data?: Collection);
+    constructor(options?: GridOptions, ...args: any);
     get(row: number, column: number): any;
     set(row: number, column: number, value: any): this;
     getCoordinates(index: number): Coordinates;
     toArrays(withPadding?: boolean): any[][];
+    static getLength(rows: number, columns: number): number;
     static fromArrays(arrays: any[][], pad: any): SymmetricGrid;
 }
 
 export declare function SymmetricGridMixin<T extends Collection>(Base?: Constructor<T>): Constructor<T & SymmetricGrid>
 
-export declare class UnweightedGraph extends BitGrid {
+export declare class UnweightedGraph extends BinaryGrid {
     size: number;
-    colors: BitGrid;
+    colors: BinaryGrid;
     directed: boolean;
 
+    constructor(options?: GridOptions, ...args: any);
     addEdge(x: number, y: number): this;
     removeEdge(x: number, y: number): this;
     hasEdge(x: number, y: number): boolean;
@@ -250,14 +256,15 @@ export declare class UnweightedGraph extends BitGrid {
     path(start: number, end: number): number[];
     isAcyclic(): boolean;
     topologicalSort(): number[];
+    static getLength(size: number): number;
 }
 
 declare class WeightedGraph {
     size: number;
-    colors: BitGrid;
+    colors: BinaryGrid;
     directed: boolean;
 
-    constructor(options?: GridOptions, data?: Collection);
+    constructor(options?: GridOptions, ...args: any);
     addEdge(x: number, y: number): this;
     removeEdge(x: number, y: number): this;
     hasEdge(x: number, y: number): boolean;
@@ -271,6 +278,7 @@ declare class WeightedGraph {
     path(start: number, end: number, isAcyclic?: boolean, isPositive?: boolean): number[];
     isAcyclic(): boolean;
     topologicalSort(): number[];
+    static getLength(size: number): number;
     private searchTopological(start: number, end: number, distances: number[], predecessor: number[]): boolean;
     private searchDijkstra(start: number, end: number, distances: number[], predecessor: number[]): boolean;
     private searchBellmanFord(start: number, end: number, distances: number[], predecessor: number[]): boolean;

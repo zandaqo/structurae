@@ -107,4 +107,10 @@ describe('SymmetricGrid', () => {
       expect(indexes).toEqual([0, 1, 3, 6, 1, 2, 4, 7, 3, 4, 5, 8, 6, 7, 8, 9]);
     });
   });
+
+  describe('getLength', () => {
+    it('returns the length of underlying Array required to hold the grid', () => {
+      expect(SymmetricGrid.getLength(10, 10)).toBe(55);
+    });
+  });
 });

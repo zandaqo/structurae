@@ -57,6 +57,13 @@ describe('BinaryGrid', () => {
     });
   });
 
+  describe('getLength', () => {
+    it('returns the length of underlying TypedArray required to hold the grid', () => {
+      expect(BinaryGrid.getLength(10, 10)).toBe(10);
+    });
+  });
+
+
   describe('species', () => {
     it('returns Uint16Array when sliced', () => {
       const grid = new BinaryGrid();

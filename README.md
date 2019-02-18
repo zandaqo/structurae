@@ -16,7 +16,7 @@ A collection of data structures for high-performance modern JavaScript applicati
     - [SymmetricGrid](https://github.com/zandaqo/structurae#SymmetricGrid) - a grid to handle symmetric or triangular matrices using half the space required for a normal grid.
 - [Pool](https://github.com/zandaqo/structurae#Pool) - manages availability of objects in object pools.
 - [RecordArray](https://github.com/zandaqo/structurae#RecordArray) - extends DataView to use ArrayBuffer as an array of records or C-like structs.
-- [Sorted Structures](https://github.com/zandaqo/structurae#Sorted_Structures):
+- [Sorted Structures](https://github.com/zandaqo/structurae#sorted-structures):
     - [BinaryHeap](https://github.com/zandaqo/structurae#BinaryHeap) - extends Array to implement the Binary Heap data structure.
     - [SortedCollection](https://github.com/zandaqo/structurae#SortedCollection) - extends TypedArrays  to handle sorted data.
     - [SortedArray](https://github.com/zandaqo/structurae#SortedArray) -  extends Array to handle sorted data.
@@ -276,7 +276,7 @@ graph.path(0, 5, true); // the graph is acyclic, uses DFS, O (V + E)
 graph.path(0, 5, false, true); // the graph might have cycles, but has no negative edges, uses Dijkstra, O (E + V * Log V)
 ```
 
-### Grid
+### Grids
 #### BinaryGrid
 BinaryGrid creates a grid or 2D matrix of bits and provides methods to operate on it:
 ```javascript

@@ -134,4 +134,10 @@ describe('UnweightedGraph', () => {
       expect(graph.topologicalSort()).toEqual([0, 3, 2, 5, 4, 1]);
     });
   });
+
+  describe('getLength', () => {
+    it('returns the length of underlying TypedArray required to hold the graph', () => {
+      expect(UnweightedGraph.getLength(50)).toBe(200);
+    });
+  });
 });

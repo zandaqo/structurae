@@ -139,4 +139,11 @@ describe('RecordArray', () => {
       });
     });
   });
+
+  describe('getLength', () => {
+    it('returns the length of underlying ArrayBuffer required to hold the given amount of records', () => {
+      expect(RecordArray.getLength(peopleSchema, 10)).toBe(160);
+      expect(RecordArray.getLength(recordSchema, 10)).toBe(640);
+    });
+  });
 });

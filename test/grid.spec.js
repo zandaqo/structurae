@@ -125,6 +125,13 @@ describe('Grid', () => {
     });
   });
 
+  describe('getLength', () => {
+    it('returns the length of underlying Array required to hold the grid', () => {
+      expect(Int8Grid.getLength(10, 10)).toBe(160);
+      expect(Uint32Grid.getLength(10, 10)).toBe(160);
+    });
+  });
+
   describe('fromArrays', () => {
     const arrays = [[1, 2, 3], [4, 5], [6, 7, 8, 9]];
     it('creates a grid from an array of arrays', () => {
