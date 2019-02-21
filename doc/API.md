@@ -96,8 +96,9 @@ Implements a grid or 2D matrix of bits.
 * [BinaryGrid](#BinaryGrid) ⇐ <code>Uint16Array</code>
     * [new BinaryGrid([options], [...args])](#new_BinaryGrid_new)
     * _instance_
-        * [.getBit(row, column)](#BinaryGrid+getBit) ⇒ <code>number</code>
-        * [.setBit(row, column, value)](#BinaryGrid+setBit) ⇒ [<code>BinaryGrid</code>](#BinaryGrid)
+        * [.get(row, column)](#BinaryGrid+get) ⇒ <code>number</code>
+        * [.set(row, column, value)](#BinaryGrid+set) ⇒ [<code>BinaryGrid</code>](#BinaryGrid)
+        * [.setArray(array, [offset])](#BinaryGrid+setArray) ⇒ <code>void</code>
         * [.getRow(row)](#BinaryGrid+getRow) ⇒ <code>Array.&lt;number&gt;</code>
         * [.getColumn(column)](#BinaryGrid+getColumn) ⇒ <code>Array.&lt;number&gt;</code>
     * _static_
@@ -114,9 +115,9 @@ Implements a grid or 2D matrix of bits.
 | [options.columns] | <code>number</code> | <code>16</code> | the number of columns |
 | [...args] | <code>\*</code> |  |  |
 
-<a name="BinaryGrid+getBit"></a>
+<a name="BinaryGrid+get"></a>
 
-### binaryGrid.getBit(row, column) ⇒ <code>number</code>
+### binaryGrid.get(row, column) ⇒ <code>number</code>
 Returns the value of a bit at given coordinates.
 
 **Kind**: instance method of [<code>BinaryGrid</code>](#BinaryGrid)  
@@ -126,9 +127,9 @@ Returns the value of a bit at given coordinates.
 | row | <code>number</code> | 
 | column | <code>number</code> | 
 
-<a name="BinaryGrid+setBit"></a>
+<a name="BinaryGrid+set"></a>
 
-### binaryGrid.setBit(row, column, value) ⇒ [<code>BinaryGrid</code>](#BinaryGrid)
+### binaryGrid.set(row, column, value) ⇒ [<code>BinaryGrid</code>](#BinaryGrid)
 Sets the value of a bit at given coordinates.
 
 **Kind**: instance method of [<code>BinaryGrid</code>](#BinaryGrid)  
@@ -138,6 +139,18 @@ Sets the value of a bit at given coordinates.
 | row | <code>number</code> |  | 
 | column | <code>number</code> |  | 
 | value | <code>number</code> | <code>1</code> | 
+
+<a name="BinaryGrid+setArray"></a>
+
+### binaryGrid.setArray(array, [offset]) ⇒ <code>void</code>
+A proxy to Uint16Array#set method.
+
+**Kind**: instance method of [<code>BinaryGrid</code>](#BinaryGrid)  
+
+| Param | Type |
+| --- | --- |
+| array | [<code>Collection</code>](#Collection) | 
+| [offset] | <code>number</code> | 
 
 <a name="BinaryGrid+getRow"></a>
 
@@ -750,6 +763,7 @@ Extends built-in indexed collections to handle 2 dimensional data.
         * [.getIndex(row, column)](#Grid+getIndex) ⇒ <code>\*</code>
         * [.get(row, column)](#Grid+get) ⇒ <code>\*</code>
         * [.set(row, column, value)](#Grid+set) ⇒ [<code>Grid</code>](#Grid)
+        * [.setArray(array, [offset])](#Grid+setArray) ⇒ <code>void</code>
         * [.getCoordinates(index)](#Grid+getCoordinates) ⇒ [<code>Coordinates</code>](#Coordinates)
         * [.toArrays([withPadding])](#Grid+toArrays) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
     * _static_
@@ -851,6 +865,19 @@ a.set(0, 1, 5);
 a.get(0, 1);
 //=> 5
 ```
+<a name="Grid+setArray"></a>
+
+### grid.setArray(array, [offset]) ⇒ <code>void</code>
+Implements in-place replacement of the grid elements if it's based on Array.
+Proxies to TypedArray#set if the grid is based on a TypedArray.
+
+**Kind**: instance method of [<code>Grid</code>](#Grid)  
+
+| Param | Type |
+| --- | --- |
+| array | [<code>Collection</code>](#Collection) | 
+| [offset] | <code>number</code> | 
+
 <a name="Grid+getCoordinates"></a>
 
 ### grid.getCoordinates(index) ⇒ [<code>Coordinates</code>](#Coordinates)
@@ -1805,12 +1832,13 @@ A grid to handle symmetric or triangular matrices using half the space required 
     * _instance_
         * [.get(row, column)](#SymmetricGrid+get) ⇒ <code>\*</code>
         * [.set(row, column, value)](#SymmetricGrid+set) ⇒ [<code>SymmetricGrid</code>](#SymmetricGrid)
+        * [.setArray(array, [offset])](#SymmetricGrid+setArray) ⇒ <code>void</code>
         * [.getCoordinates(index)](#SymmetricGrid+getCoordinates) ⇒ [<code>Coordinates</code>](#Coordinates)
         * [.toArrays()](#SymmetricGrid+toArrays) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
     * _static_
         * [.getIndex(row, column)](#SymmetricGrid.getIndex) ⇒ <code>\*</code>
-        * [.fromArrays(arrays, [pad])](#SymmetricGrid.fromArrays) ⇒ [<code>SymmetricGrid</code>](#SymmetricGrid)
         * [.getLength(rows)](#SymmetricGrid.getLength) ⇒ <code>number</code>
+        * [.fromArrays(arrays, [pad])](#SymmetricGrid.fromArrays) ⇒ [<code>SymmetricGrid</code>](#SymmetricGrid)
 
 <a name="new_SymmetricGrid_new"></a>
 
@@ -1865,6 +1893,19 @@ a.set(0, 1, 5);
 a.get(0, 1);
 //=> 5
 ```
+<a name="SymmetricGrid+setArray"></a>
+
+### symmetricGrid.setArray(array, [offset]) ⇒ <code>void</code>
+Implements in-place replacement of the grid elements if it's based on Array.
+Proxies to TypedArray#set if the grid is based on a TypedArray.
+
+**Kind**: instance method of [<code>SymmetricGrid</code>](#SymmetricGrid)  
+
+| Param | Type |
+| --- | --- |
+| array | [<code>Collection</code>](#Collection) | 
+| [offset] | <code>number</code> | 
+
 <a name="SymmetricGrid+getCoordinates"></a>
 
 ### symmetricGrid.getCoordinates(index) ⇒ [<code>Coordinates</code>](#Coordinates)
@@ -1918,6 +1959,17 @@ a.get(1, 0);
 a.get(0, 1);
 //=> 1
 ```
+<a name="SymmetricGrid.getLength"></a>
+
+### SymmetricGrid.getLength(rows) ⇒ <code>number</code>
+Returns the length of underlying Array required to hold the grid.
+
+**Kind**: static method of [<code>SymmetricGrid</code>](#SymmetricGrid)  
+
+| Param | Type |
+| --- | --- |
+| rows | <code>number</code> | 
+
 <a name="SymmetricGrid.fromArrays"></a>
 
 ### SymmetricGrid.fromArrays(arrays, [pad]) ⇒ [<code>SymmetricGrid</code>](#SymmetricGrid)
@@ -1935,17 +1987,6 @@ a.get(2, 1);
 | --- | --- | --- | --- |
 | arrays | <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> |  |  |
 | [pad] | <code>\*</code> | <code>0</code> | the value to pad the arrays to create equal sized rows |
-
-<a name="SymmetricGrid.getLength"></a>
-
-### SymmetricGrid.getLength(rows) ⇒ <code>number</code>
-Returns the length of underlying Array required to hold the grid.
-
-**Kind**: static method of [<code>SymmetricGrid</code>](#SymmetricGrid)  
-
-| Param | Type |
-| --- | --- |
-| rows | <code>number</code> | 
 
 <a name="UnweightedGraph"></a>
 
@@ -1973,8 +2014,9 @@ Implements Adjacency Matrix using BinaryGrid to handle unweighted graphs.
         * [.tree([start])](#UnweightedGraph+tree) ⇒ <code>Array.&lt;number&gt;</code>
         * [.isAcyclic()](#UnweightedGraph+isAcyclic) ⇒ <code>boolean</code>
         * [.topologicalSort()](#UnweightedGraph+topologicalSort) ⇒ <code>Array.&lt;number&gt;</code>
-        * [.getBit(row, column)](#BinaryGrid+getBit) ⇒ <code>number</code>
-        * [.setBit(row, column, value)](#BinaryGrid+setBit) ⇒ [<code>BinaryGrid</code>](#BinaryGrid)
+        * [.get(row, column)](#BinaryGrid+get) ⇒ <code>number</code>
+        * [.set(row, column, value)](#BinaryGrid+set) ⇒ [<code>BinaryGrid</code>](#BinaryGrid)
+        * [.setArray(array, [offset])](#BinaryGrid+setArray) ⇒ <code>void</code>
         * [.getRow(row)](#BinaryGrid+getRow) ⇒ <code>Array.&lt;number&gt;</code>
         * [.getColumn(column)](#BinaryGrid+getColumn) ⇒ <code>Array.&lt;number&gt;</code>
     * _static_
@@ -2150,9 +2192,9 @@ Checks whether the graph is acyclic.
 Returns a list of vertexes sorted topologically.
 
 **Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
-<a name="BinaryGrid+getBit"></a>
+<a name="BinaryGrid+get"></a>
 
-### unweightedGraph.getBit(row, column) ⇒ <code>number</code>
+### unweightedGraph.get(row, column) ⇒ <code>number</code>
 Returns the value of a bit at given coordinates.
 
 **Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
@@ -2162,9 +2204,9 @@ Returns the value of a bit at given coordinates.
 | row | <code>number</code> | 
 | column | <code>number</code> | 
 
-<a name="BinaryGrid+setBit"></a>
+<a name="BinaryGrid+set"></a>
 
-### unweightedGraph.setBit(row, column, value) ⇒ [<code>BinaryGrid</code>](#BinaryGrid)
+### unweightedGraph.set(row, column, value) ⇒ [<code>BinaryGrid</code>](#BinaryGrid)
 Sets the value of a bit at given coordinates.
 
 **Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
@@ -2174,6 +2216,18 @@ Sets the value of a bit at given coordinates.
 | row | <code>number</code> |  | 
 | column | <code>number</code> |  | 
 | value | <code>number</code> | <code>1</code> | 
+
+<a name="BinaryGrid+setArray"></a>
+
+### unweightedGraph.setArray(array, [offset]) ⇒ <code>void</code>
+A proxy to Uint16Array#set method.
+
+**Kind**: instance method of [<code>UnweightedGraph</code>](#UnweightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| array | [<code>Collection</code>](#Collection) | 
+| [offset] | <code>number</code> | 
 
 <a name="BinaryGrid+getRow"></a>
 
@@ -2239,6 +2293,7 @@ Implements Adjacency Matrix using Grid or SymmetricGrid to handle weighted graph
         * [.getIndex(row, column)](#Grid+getIndex) ⇒ <code>\*</code>
         * [.get(row, column)](#Grid+get) ⇒ <code>\*</code>
         * [.set(row, column, value)](#Grid+set) ⇒ [<code>Grid</code>](#Grid)
+        * [.setArray(array, [offset])](#Grid+setArray) ⇒ <code>void</code>
         * [.getCoordinates(index)](#Grid+getCoordinates) ⇒ [<code>Coordinates</code>](#Coordinates)
         * [.toArrays([withPadding])](#Grid+toArrays) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
     * _static_
@@ -2493,6 +2548,19 @@ a.set(0, 1, 5);
 a.get(0, 1);
 //=> 5
 ```
+<a name="Grid+setArray"></a>
+
+### weightedGraph.setArray(array, [offset]) ⇒ <code>void</code>
+Implements in-place replacement of the grid elements if it's based on Array.
+Proxies to TypedArray#set if the grid is based on a TypedArray.
+
+**Kind**: instance method of [<code>WeightedGraph</code>](#WeightedGraph)  
+
+| Param | Type |
+| --- | --- |
+| array | [<code>Collection</code>](#Collection) | 
+| [offset] | <code>number</code> | 
+
 <a name="Grid+getCoordinates"></a>
 
 ### weightedGraph.getCoordinates(index) ⇒ [<code>Coordinates</code>](#Coordinates)

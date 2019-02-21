@@ -17,34 +17,42 @@ describe('BinaryGrid', () => {
     });
   });
 
-  describe('getBit', () => {
+  describe('get', () => {
     it('returns individual bits', () => {
       const grid = new BinaryGrid({}, [1]);
-      expect(grid.getBit(0, 0)).toBe(1);
-      expect(grid.getBit(0, 1)).toBe(0);
+      expect(grid.get(0, 0)).toBe(1);
+      expect(grid.get(0, 1)).toBe(0);
     });
   });
 
-  describe('setBit', () => {
+  describe('set', () => {
     it('sets individual bets', () => {
       const grid = new BinaryGrid({ columns: 10, rows: 10 });
-      expect(grid.getBit(0, 0)).toBe(0);
-      expect(grid.getBit(0, 1)).toBe(0);
-      expect(grid.getBit(1, 0)).toBe(0);
-      expect(grid.getBit(1, 1)).toBe(0);
-      grid.setBit(0, 0);
-      grid.setBit(1, 1);
-      expect(grid.getBit(0, 0)).toBe(1);
-      expect(grid.getBit(0, 1)).toBe(0);
-      expect(grid.getBit(1, 0)).toBe(0);
-      expect(grid.getBit(1, 1)).toBe(1);
+      expect(grid.get(0, 0)).toBe(0);
+      expect(grid.get(0, 1)).toBe(0);
+      expect(grid.get(1, 0)).toBe(0);
+      expect(grid.get(1, 1)).toBe(0);
+      grid.set(0, 0);
+      grid.set(1, 1);
+      expect(grid.get(0, 0)).toBe(1);
+      expect(grid.get(0, 1)).toBe(0);
+      expect(grid.get(1, 0)).toBe(0);
+      expect(grid.get(1, 1)).toBe(1);
+    });
+  });
+
+  describe('setArray', () => {
+    it('stores multiple values in the underlying typed array, reading input values from a specified array', () => {
+      const grid = new BinaryGrid({ columns: 16, rows: 3 });
+      grid.setArray([0, 1, 3]);
+      expect(Array.from(grid)).toEqual([0, 1, 3]);
     });
   });
 
   describe('getRow', () => {
     it('gets all bits from a given row', () => {
       const grid = new BinaryGrid({ columns: 10, rows: 10 });
-      grid.setBit(0, 1).setBit(0, 5).setBit(0, 9);
+      grid.set(0, 1).set(0, 5).set(0, 9);
       expect(grid.getRow(0)).toEqual([0, 1, 0, 0, 0, 1, 0, 0, 0, 1]);
     });
   });
@@ -52,7 +60,7 @@ describe('BinaryGrid', () => {
   describe('getColumn', () => {
     it('gets all bits from a given column', () => {
       const grid = new BinaryGrid({ columns: 10, rows: 10 });
-      grid.setBit(1, 0).setBit(5, 0).setBit(9, 0);
+      grid.set(1, 0).set(5, 0).set(9, 0);
       expect(grid.getColumn(0)).toEqual([0, 1, 0, 0, 0, 1, 0, 0, 0, 1]);
     });
   });

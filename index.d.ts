@@ -30,6 +30,7 @@ declare class Grid {
     constructor(options?: GridOptions, ...args: any);
     get(row: number, column: number): any;
     set(row: number, column: number, value: any): this;
+    setArray(array: Collection, offset: number): void;
     getCoordinates(index: number): Coordinates;
     toArrays(withPadding?: boolean): any[][];
     static getOffset(columns: number): number;
@@ -212,8 +213,9 @@ export declare class BinaryGrid extends Uint16Array {
     rows: number;
     lastPosition: BitPosition;
     constructor(options: BinaryGridOptions, ...args: any);
-    getBit(row: number, column: number): Bit;
-    setBit(row: number, column: number, value?: Bit): this;
+    get(row: number, column: number): Bit;
+    set(row: number, column: number, value?: Bit): this;
+    setArray(array: Collection, offset: number): void;
     getRow(row: number): Bit[];
     getColumn(column: number): Bit[];
     private getBitPosition(row: number, column: number): BitPosition;
@@ -223,12 +225,14 @@ export declare class BinaryGrid extends Uint16Array {
 
 declare class SymmetricGrid {
     rows: number;
+    columns: number;
     pad: any;
     lastCoordinates: Coordinates;
 
     constructor(options?: GridOptions, ...args: any);
     get(row: number, column: number): any;
     set(row: number, column: number, value: any): this;
+    setArray(array: Collection, offset: number): void;
     getCoordinates(index: number): Coordinates;
     toArrays(withPadding?: boolean): any[][];
     static getLength(rows: number, columns: number): number;

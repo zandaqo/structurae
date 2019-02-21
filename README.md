@@ -281,12 +281,12 @@ graph.path(0, 5, false, true); // the graph might have cycles, but has no negati
 BinaryGrid creates a grid or 2D matrix of bits and provides methods to operate on it:
 ```javascript
 const bitGrid = new BinaryGrid({ rows: 2, columns: 8 });
-bitGrid.setBit(0, 0).setBit(0, 2).setBit(0, 5);
-bitGrid.getBit(0, 0);
+bitGrid.set(0, 0).set(0, 2).set(0, 5);
+bitGrid.get(0, 0);
 //=> 1
-bitGrid.getBit(0, 1);
+bitGrid.get(0, 1);
 //=> 0
-bitGrid.getBit(0, 2);
+bitGrid.get(0, 2);
 //=> 1
 bitGrid.getRow(0);
 //=> [ 1, 0, 1, 0, 0, 1, 0, 0 ]

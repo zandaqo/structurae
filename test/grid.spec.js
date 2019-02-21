@@ -84,6 +84,21 @@ describe('Grid', () => {
     });
   });
 
+  describe('setArray', () => {
+    it('implements in-place replacement of the grid elements if it is based on Array', () => {
+      const ArrayGrid = Grid(Array);
+      const grid = new ArrayGrid({ columns: 4, rows: 1 });
+      grid.setArray([0, 1, 2, 3]);
+      expect(Array.from(grid)).toEqual([0, 1, 2, 3]);
+    });
+
+    it('stores multiple values in the underlying typed array, reading input values from a specified array', () => {
+      const grid = new Uint32Grid({ columns: 4, rows: 1 });
+      grid.setArray([0, 1, 3, 4]);
+      expect(Array.from(grid)).toEqual([0, 1, 3, 4]);
+    });
+  });
+
   describe('getCoordinates', () => {
     it('returns coordinates of a given index', () => {
       const grid = new Uint32Grid({ rows: 4, columns: 4 });

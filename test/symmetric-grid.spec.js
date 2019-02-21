@@ -53,6 +53,21 @@ describe('SymmetricGrid', () => {
     });
   });
 
+  describe('setArray', () => {
+    it('implements in-place replacement of the grid elements if it is based on Array', () => {
+      const ArrayGrid = SymmetricGridMixin(Array);
+      const grid = new ArrayGrid({ rows: 4 });
+      grid.setArray([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+      expect(Array.from(grid)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    });
+
+    it('stores multiple values in the underlying typed array, reading input values from a specified array', () => {
+      const grid = new SymmetricGrid({ rows: 4 });
+      grid.setArray([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+      expect(Array.from(grid)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    });
+  });
+
   describe('getCoordinates', () => {
     it('returns coordinates of a given index', () => {
       const grid = new SymmetricGrid({ rows: 4 });
