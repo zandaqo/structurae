@@ -1,9 +1,9 @@
-const UnweightedGraph = require('../lib/unweighted-graph');
+const UnweightedAdjacencyMatrix = require('../lib/unweighted-adjacency-matrix');
 
-describe('UnweightedGraph', () => {
+describe('UnweightedAdjacencyMatrix', () => {
   let graph;
   beforeEach(() => {
-    graph = new UnweightedGraph({ size: 6, directed: true });
+    graph = new UnweightedAdjacencyMatrix({ size: 6 });
     graph.addEdge(0, 1);
     graph.addEdge(0, 2);
     graph.addEdge(0, 3);
@@ -19,7 +19,7 @@ describe('UnweightedGraph', () => {
     });
 
     it('adds an edge to a directed graph', () => {
-      const directedGraph = new UnweightedGraph({ size: 8 });
+      const directedGraph = new UnweightedAdjacencyMatrix({ size: 8, directed: false });
       expect(directedGraph.hasEdge(0, 5)).toBe(false);
       expect(directedGraph.hasEdge(5, 0)).toBe(false);
       directedGraph.addEdge(0, 5);
@@ -36,7 +36,7 @@ describe('UnweightedGraph', () => {
     });
 
     it('removes an edge from a directed graph', () => {
-      const directedGraph = new UnweightedGraph({ size: 8 });
+      const directedGraph = new UnweightedAdjacencyMatrix({ size: 8, directed: false });
       directedGraph.addEdge(0, 5);
       expect(directedGraph.hasEdge(0, 5)).toBe(true);
       expect(directedGraph.hasEdge(5, 0)).toBe(true);
@@ -147,7 +147,7 @@ describe('UnweightedGraph', () => {
 
   describe('getLength', () => {
     it('returns the length of underlying TypedArray required to hold the graph', () => {
-      expect(UnweightedGraph.getLength(50)).toBe(200);
+      expect(UnweightedAdjacencyMatrix.getLength(50)).toBe(200);
     });
   });
 });

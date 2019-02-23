@@ -10,8 +10,9 @@ const Pool = require('./lib/pool');
 const StringView = require('./lib/string-view');
 const SortedArray = require('./lib/sorted-array');
 const BinaryHeap = require('./lib/binary-heap');
-const UnweightedGraph = require('./lib/unweighted-graph');
-const WeightedGraphMixin = require('./lib/weighted-graph');
+const UnweightedAdjacencyMatrix = require('./lib/unweighted-adjacency-matrix');
+const WeightedAdjacencyMatrixMixin = require('./lib/weighted-adjacency-matrix');
+const UnweightedAdjacencyList = require('./lib/unweighted-adjacency-list');
 
 const benchmarkOptions = {
   onStart(event) {
@@ -342,14 +343,28 @@ function getString(size) {
 
 {
   const SIZE = 100;
-  const unweighted = new UnweightedGraph({ size: SIZE });
-  const unweightedDirected = new UnweightedGraph({ size: SIZE, directed: true });
-  const WeightedGraph = WeightedGraphMixin(Uint16Array, false);
-  const WeightedDirectedGraph = WeightedGraphMixin(Uint16Array, true);
+  const adjacency = new UnweightedAdjacencyList({ vertices: SIZE, edges: SIZE, directed: false });
+  const adjacencyDirected = new UnweightedAdjacencyList({ vertices: SIZE, edges: SIZE });
+  const unweighted = new UnweightedAdjacencyMatrix({ size: SIZE, directed: false });
+  const unweightedDirected = new UnweightedAdjacencyMatrix({ size: SIZE });
+  const WeightedGraph = WeightedAdjacencyMatrixMixin(Uint16Array, false);
+  const WeightedDirectedGraph = WeightedAdjacencyMatrixMixin(Uint16Array, true);
   const weighted = new WeightedGraph({ size: SIZE });
   const weightedDirected = new WeightedDirectedGraph({ size: SIZE });
 
   new Benchmark.Suite('Add/Remove Edges:', benchmarkOptions)
+    .add('Unweighted Adjacency List', () => {
+      for (let i = 0; i < SIZE; i++) {
+        adjacency.addEdge(getIndex(SIZE), getIndex(SIZE));
+        adjacency.removeEdge(getIndex(SIZE), getIndex(SIZE));
+      }
+    })
+    .add('Unweighted Adjacency List Directed', () => {
+      for (let i = 0; i < SIZE; i++) {
+        adjacencyDirected.addEdge(getIndex(SIZE), getIndex(SIZE));
+        adjacencyDirected.removeEdge(getIndex(SIZE), getIndex(SIZE));
+      }
+    })
     .add('Unweighted', () => {
       for (let i = 0; i < SIZE; i++) {
         unweighted.addEdge(getIndex(SIZE), getIndex(SIZE));
@@ -377,6 +392,12 @@ function getString(size) {
     .run();
 
   new Benchmark.Suite('Traverse BFS:', benchmarkOptions)
+    .add('Unweighted Adjacency List', () => {
+      const bfs = [...adjacency.traverse(false, getIndex(SIZE))];
+    })
+    .add('Unweighted Adjacency List Directed', () => {
+      const bfs = [...adjacencyDirected.traverse(false, getIndex(SIZE))];
+    })
     .add('Unweighted', () => {
       const bfs = [...unweighted.traverse(false, getIndex(SIZE))];
     })

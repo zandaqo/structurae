@@ -7,8 +7,9 @@ const SortedArray = require('./lib/sorted-array');
 const SortedMixin = require('./lib/sorted-collection');
 const StringView = require('./lib/string-view');
 const SymmetricGridMixin = require('./lib/symmetric-grid');
-const UnweightedGraph = require('./lib/unweighted-graph');
-const WeightedGraphMixin = require('./lib/weighted-graph');
+const UnweightedAdjacencyList = require('./lib/unweighted-adjacency-list');
+const UnweightedAdjacencyMatrix = require('./lib/unweighted-adjacency-matrix');
+const WeightedAdjacencyMatrixMixin = require('./lib/weighted-adjacency-matrix');
 
 /**
  * @external ArrayBuffer
@@ -35,6 +36,7 @@ module.exports = {
   SortedMixin,
   StringView,
   SymmetricGridMixin,
-  UnweightedGraph,
-  WeightedGraphMixin,
+  UnweightedAdjacencyList,
+  UnweightedAdjacencyMatrix,
+  WeightedAdjacencyMatrixMixin,
 };

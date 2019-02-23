@@ -241,12 +241,17 @@ declare class SymmetricGrid {
 
 export declare function SymmetricGridMixin<T extends Collection>(Base?: Constructor<T>): Constructor<T & SymmetricGrid>
 
-export declare class UnweightedGraph extends BinaryGrid {
+interface UnweightedMatrixOptions {
+    size: number;
+    directed?: boolean;
+}
+
+export declare class UnweightedAdjacencyMatrix extends BinaryGrid {
     size: number;
     colors: BinaryGrid;
     directed: boolean;
 
-    constructor(options?: GridOptions, ...args: any);
+    constructor(options?: UnweightedMatrixOptions, ...args: any);
     addEdge(x: number, y: number): this;
     removeEdge(x: number, y: number): this;
     hasEdge(x: number, y: number): boolean;
@@ -264,12 +269,50 @@ export declare class UnweightedGraph extends BinaryGrid {
     static getLength(size: number): number;
 }
 
-declare class WeightedGraph {
+interface UnweightedListOptions {
+    vertices: number;
+    edges: number;
+    directed?: boolean;
+}
+
+export declare class UnweightedAdjacencyList extends Uint32Array {
+    vertices: number;
+    edges: number;
+    colors: BinaryGrid;
+    directed: boolean;
+
+    constructor(options?: UnweightedListOptions, ...args: any);
+    addEdge(x: number, y: number): this;
+    removeEdge(x: number, y: number): this;
+    hasEdge(x: number, y: number): boolean;
+    private setEdge(x: number, y: number): this;
+    private unsetEdge(x: number, y: number): this;
+    outEdges(x: number): number[];
+    inEdges(x: number): number[];
+    private setOffsets(): void;
+    isGray(x: number): boolean;
+    setGray(x: number): this;
+    isBlack(x: number): boolean;
+    setBlack(x: number): this;
+    traverse(isDFS?: boolean, start?: number, gray?: boolean, white?: boolean, black?: boolean): number;
+    path(start: number, end?: number): number[];
+    tree(start?: number): number[];
+    isAcyclic(): boolean;
+    topologicalSort(): number[];
+    static getLength(vertices: number, edges: number): number;
+}
+
+interface WeightedMatrixOptions {
+    size: number;
+    pad?: any;
+}
+
+declare class WeightedAdjacencyMatrix {
     size: number;
     colors: BinaryGrid;
     directed: boolean;
 
-    constructor(options?: GridOptions, ...args: any);
+    constructor(options?: WeightedMatrixOptions, ...args: any);
     addEdge(x: number, y: number): this;
     removeEdge(x: number, y: number): this;
     hasEdge(x: number, y: number): boolean;
@@ -290,4 +333,4 @@ declare class WeightedGraph {
     private searchBellmanFord(start: number, end: number, distances: number[], predecessor: number[]): boolean;
 }
 
-export declare function WeightedGraphMixin<T extends Collection>(Base: Constructor<T>, directed?: boolean): Constructor<T & WeightedGraph>
+export declare function WeightedAdjacencyMatrixMixin<T extends Collection>(Base: Constructor<T>, directed?: boolean): Constructor<T & WeightedAdjacencyMatrix>

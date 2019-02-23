@@ -1,13 +1,13 @@
-const WeightedGraphMixin = require('../lib/weighted-graph');
+const WeightedAdjacencyMatrixMixin = require('../lib/weighted-adjacency-matrix');
 
-describe('WeightedGraph', () => {
-  const WeightedGraph = WeightedGraphMixin(Int32Array, true);
-  const UndirectedGraph = WeightedGraphMixin(Int32Array, false);
+describe('WeightedAdjacencyMatrix', () => {
+  const WeightedAdjacencyMatrix = WeightedAdjacencyMatrixMixin(Int32Array, true);
+  const UndirectedGraph = WeightedAdjacencyMatrixMixin(Int32Array, false);
 
   let graph;
   let undirected;
   beforeEach(() => {
-    graph = new WeightedGraph({ size: 6 });
+    graph = new WeightedAdjacencyMatrix({ size: 6 });
     graph.addEdge(0, 1, 3);
     graph.addEdge(0, 2, 2);
     graph.addEdge(0, 3, 1);
@@ -149,7 +149,7 @@ describe('WeightedGraph', () => {
 
   describe('getLength', () => {
     it('returns the length of underlying TypedArray required to hold the graph', () => {
-      expect(WeightedGraph.getLength(60)).toBe(3840);
+      expect(WeightedAdjacencyMatrix.getLength(60)).toBe(3840);
       expect(UndirectedGraph.getLength(60)).toBe(1830);
     });
   });
