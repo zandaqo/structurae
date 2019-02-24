@@ -343,8 +343,8 @@ function getString(size) {
 
 {
   const SIZE = 100;
-  const adjacency = new UnweightedAdjacencyList({ vertices: SIZE, edges: SIZE, directed: false });
-  const adjacencyDirected = new UnweightedAdjacencyList({ vertices: SIZE, edges: SIZE });
+  const adjacency = new UnweightedAdjacencyList({ vertices: SIZE, edges: SIZE * 10, directed: false });
+  const adjacencyDirected = new UnweightedAdjacencyList({ vertices: SIZE, edges: SIZE * 10 });
   const unweighted = new UnweightedAdjacencyMatrix({ size: SIZE, directed: false });
   const unweightedDirected = new UnweightedAdjacencyMatrix({ size: SIZE });
   const WeightedGraph = WeightedAdjacencyMatrixMixin(Uint16Array, false);

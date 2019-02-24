@@ -44,6 +44,20 @@ describe('UnweightedAdjacencyList', () => {
       expect(directedGraph.hasEdge(0, 5)).toBe(true);
       expect(directedGraph.hasEdge(5, 0)).toBe(true);
     });
+
+    it('does not add an existing edge', () => {
+      graph.setEdge = jest.fn();
+      graph.addEdge(0, 1);
+      expect(graph.setEdge).not.toHaveBeenCalled();
+    });
+
+    it('does not add an edge when the list is full', () => {
+      const fullGraph = new UnweightedAdjacencyList({ vertices: 2, edges: 2, directed: false });
+      fullGraph.addEdge(0, 1);
+      fullGraph.setEdge = jest.fn();
+      fullGraph.addEdge(1, 2);
+      expect(fullGraph.setEdge).not.toHaveBeenCalled();
+    });
   });
 
   describe('removeEdge', () => {
@@ -86,6 +100,31 @@ describe('UnweightedAdjacencyList', () => {
       expect(graph.hasEdge(0, 1)).toBe(true);
       expect(graph.hasEdge(0, 5)).toBe(false);
       expect(graph.hasEdge(2, 5)).toBe(true);
+    });
+  });
+
+  describe('isFull', () => {
+    it('checks if the list is full, i.e. all the edges are set', () => {
+      expect(graph.isFull()).toBe(false);
+      const fullGraph = new UnweightedAdjacencyList({ vertices: 2, edges: 2, directed: false });
+      fullGraph.addEdge(0, 1);
+      expect(fullGraph.isFull()).toBe(true);
+    });
+  });
+
+  describe('grow', () => {
+    it('creates a large copy for additional edges', () => {
+      const bigger = graph.grow(0, 10);
+      expect(bigger.length).toBe(29);
+      expect(bigger.hasEdge(0, 1)).toBe(true);
+      expect(bigger.hasEdge(2, 5)).toBe(true);
+    });
+
+    it('creates a large copy for additional vertices and edges', () => {
+      const bigger = graph.grow(5, 10);
+      expect(bigger.length).toBe(34);
+      expect(bigger.hasEdge(0, 1)).toBe(true);
+      expect(bigger.hasEdge(2, 5)).toBe(true);
     });
   });
 

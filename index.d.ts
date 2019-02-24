@@ -290,6 +290,8 @@ export declare class UnweightedAdjacencyList extends Uint32Array {
     outEdges(x: number): number[];
     inEdges(x: number): number[];
     private setOffsets(): void;
+    isFull(): boolean;
+    grow(vertices?: number, edges?: number): UnweightedAdjacencyList;
     isGray(x: number): boolean;
     setGray(x: number): this;
     isBlack(x: number): boolean;

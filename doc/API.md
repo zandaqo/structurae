@@ -31,6 +31,9 @@
 <dt><a href="#SymmetricGrid">SymmetricGrid</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
 <dd><p>A grid to handle symmetric or triangular matrices using half the space required for a normal grid.</p>
 </dd>
+<dt><a href="#UnweightedAdjacencyList">UnweightedAdjacencyList</a> ⇐ <code>Uint32Array</code></dt>
+<dd><p>Implements Adjacency List data structure for unweighted graphs.</p>
+</dd>
 <dt><a href="#UnweightedAdjacencyMatrix">UnweightedAdjacencyMatrix</a> ⇐ <code><a href="#BinaryGrid">BinaryGrid</a></code></dt>
 <dd><p>Implements Adjacency Matrix using BinaryGrid to handle unweighted graphs.</p>
 </dd>
@@ -1987,6 +1990,239 @@ a.get(2, 1);
 | --- | --- | --- | --- |
 | arrays | <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> |  |  |
 | [pad] | <code>\*</code> | <code>0</code> | the value to pad the arrays to create equal sized rows |
+
+<a name="UnweightedAdjacencyList"></a>
+
+## UnweightedAdjacencyList ⇐ <code>Uint32Array</code>
+Implements Adjacency List data structure for unweighted graphs.
+
+**Kind**: global class  
+**Extends**: <code>Uint32Array</code>  
+
+* [UnweightedAdjacencyList](#UnweightedAdjacencyList) ⇐ <code>Uint32Array</code>
+    * [new UnweightedAdjacencyList([options], ...args)](#new_UnweightedAdjacencyList_new)
+    * _instance_
+        * [.addEdge(x, y)](#UnweightedAdjacencyList+addEdge) ⇒ [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)
+        * [.removeEdge(x, y)](#UnweightedAdjacencyList+removeEdge) ⇒ [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)
+        * [.hasEdge(x, y)](#UnweightedAdjacencyList+hasEdge) ⇒ <code>boolean</code>
+        * [.outEdges(x)](#UnweightedAdjacencyList+outEdges) ⇒ <code>Array.&lt;number&gt;</code>
+        * [.inEdges(x)](#UnweightedAdjacencyList+inEdges) ⇒ <code>Array.&lt;number&gt;</code>
+        * [.isFull()](#UnweightedAdjacencyList+isFull) ⇒ <code>boolean</code>
+        * [.grow([vertices], [edges])](#UnweightedAdjacencyList+grow) ⇒ [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)
+        * [.isGray(x)](#UnweightedAdjacencyList+isGray) ⇒ <code>boolean</code>
+        * [.setGray(x)](#UnweightedAdjacencyList+setGray) ⇒ [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)
+        * [.isBlack(x)](#UnweightedAdjacencyList+isBlack) ⇒ <code>boolean</code>
+        * [.setBlack(x)](#UnweightedAdjacencyList+setBlack) ⇒ [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)
+        * [.resetColors()](#UnweightedAdjacencyList+resetColors) ⇒ [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)
+        * [.traverse([isDFS], [start], [gray], [white], [black])](#UnweightedAdjacencyList+traverse)
+        * [.path(start, [end])](#UnweightedAdjacencyList+path) ⇒ <code>Array.&lt;number&gt;</code>
+        * [.tree([start])](#UnweightedAdjacencyList+tree) ⇒ <code>Array.&lt;number&gt;</code>
+        * [.isAcyclic()](#UnweightedAdjacencyList+isAcyclic) ⇒ <code>boolean</code>
+        * [.topologicalSort()](#UnweightedAdjacencyList+topologicalSort) ⇒ <code>Array.&lt;number&gt;</code>
+    * _static_
+        * [.getLength(vertices, edges)](#UnweightedAdjacencyList.getLength) ⇒ <code>number</code>
+
+<a name="new_UnweightedAdjacencyList_new"></a>
+
+### new UnweightedAdjacencyList([options], ...args)
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [options] | <code>Object</code> |  |  |
+| [options.vertices] | <code>number</code> | <code>2</code> | the maximum amount of vertices in the graph |
+| [options.edges] | <code>number</code> | <code>2</code> | the maximum amount of edges in the graph |
+| [options.directed] | <code>boolean</code> | <code>true</code> | whether the graph is directed |
+| ...args | <code>\*</code> |  |  |
+
+<a name="UnweightedAdjacencyList+addEdge"></a>
+
+### unweightedAdjacencyList.addEdge(x, y) ⇒ [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)
+Adds an edge between two vertices.
+
+**Kind**: instance method of [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the starting vertex |
+| y | <code>number</code> | the ending vertex |
+
+<a name="UnweightedAdjacencyList+removeEdge"></a>
+
+### unweightedAdjacencyList.removeEdge(x, y) ⇒ [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)
+Removes an edge between two vertices.
+
+**Kind**: instance method of [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the starting vertex |
+| y | <code>number</code> | the ending vertex |
+
+<a name="UnweightedAdjacencyList+hasEdge"></a>
+
+### unweightedAdjacencyList.hasEdge(x, y) ⇒ <code>boolean</code>
+Checks if there is an edge between two vertices.
+
+**Kind**: instance method of [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the starting vertex |
+| y | <code>number</code> | the ending vertex |
+
+<a name="UnweightedAdjacencyList+outEdges"></a>
+
+### unweightedAdjacencyList.outEdges(x) ⇒ <code>Array.&lt;number&gt;</code>
+Returns a list of all outgoing edges of a vertex.
+
+**Kind**: instance method of [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the vertex |
+
+<a name="UnweightedAdjacencyList+inEdges"></a>
+
+### unweightedAdjacencyList.inEdges(x) ⇒ <code>Array.&lt;number&gt;</code>
+Returns a list of all incoming edges of a vertex.
+
+**Kind**: instance method of [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the vertex |
+
+<a name="UnweightedAdjacencyList+isFull"></a>
+
+### unweightedAdjacencyList.isFull() ⇒ <code>boolean</code>
+Checks whether the list is full--all available edges are set.
+
+**Kind**: instance method of [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)  
+<a name="UnweightedAdjacencyList+grow"></a>
+
+### unweightedAdjacencyList.grow([vertices], [edges]) ⇒ [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)
+Creates a larger copy of the graph with a space
+for a specified amount of additional vertices and edges.
+
+**Kind**: instance method of [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [vertices] | <code>number</code> | <code>0</code> | the amount of additional vertices |
+| [edges] | <code>number</code> | <code>1</code> | the amount of additional edges |
+
+<a name="UnweightedAdjacencyList+isGray"></a>
+
+### unweightedAdjacencyList.isGray(x) ⇒ <code>boolean</code>
+Checks if a vertex is entered during a traversal.
+
+**Kind**: instance method of [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the vertex |
+
+<a name="UnweightedAdjacencyList+setGray"></a>
+
+### unweightedAdjacencyList.setGray(x) ⇒ [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)
+Marks a vertex as entered during a traversal.
+
+**Kind**: instance method of [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the vertex |
+
+<a name="UnweightedAdjacencyList+isBlack"></a>
+
+### unweightedAdjacencyList.isBlack(x) ⇒ <code>boolean</code>
+Checks if a vertex has been fully processed during a traversal.
+
+**Kind**: instance method of [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the vertex |
+
+<a name="UnweightedAdjacencyList+setBlack"></a>
+
+### unweightedAdjacencyList.setBlack(x) ⇒ [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)
+Marks a vertex as fully processed during a traversal.
+
+**Kind**: instance method of [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the vertex |
+
+<a name="UnweightedAdjacencyList+resetColors"></a>
+
+### unweightedAdjacencyList.resetColors() ⇒ [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)
+Resets all coloring of vertices done during traversals.
+
+**Kind**: instance method of [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)  
+<a name="UnweightedAdjacencyList+traverse"></a>
+
+### unweightedAdjacencyList.traverse([isDFS], [start], [gray], [white], [black])
+Does a Breadth-First or Depth-First traversal of the graph.
+
+**Kind**: instance method of [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [isDFS] | <code>boolean</code> |  | whether to do DFS traversal, does BFS otherwise |
+| [start] | <code>number</code> | <code>0</code> | the vertex to start at |
+| [gray] | <code>boolean</code> | <code>true</code> | whether to return vertices upon entering |
+| [white] | <code>boolean</code> |  | whether to return edges upon first encountering |
+| [black] | <code>boolean</code> |  | whether to return vertices after processing |
+
+<a name="UnweightedAdjacencyList+path"></a>
+
+### unweightedAdjacencyList.path(start, [end]) ⇒ <code>Array.&lt;number&gt;</code>
+Returns a list of vertices along the shortest path between two given vertices.
+
+**Kind**: instance method of [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| start | <code>number</code> | the starting vertex |
+| [end] | <code>number</code> | the ending vertex |
+
+<a name="UnweightedAdjacencyList+tree"></a>
+
+### unweightedAdjacencyList.tree([start]) ⇒ <code>Array.&lt;number&gt;</code>
+Returns a spanning tree of the graph.
+Uses BFS to construct the tree.
+
+**Kind**: instance method of [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [start] | <code>number</code> | <code>0</code> | 
+
+<a name="UnweightedAdjacencyList+isAcyclic"></a>
+
+### unweightedAdjacencyList.isAcyclic() ⇒ <code>boolean</code>
+Checks whether the graph is acyclic.
+
+**Kind**: instance method of [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)  
+<a name="UnweightedAdjacencyList+topologicalSort"></a>
+
+### unweightedAdjacencyList.topologicalSort() ⇒ <code>Array.&lt;number&gt;</code>
+Returns a list of vertexes sorted topologically.
+
+**Kind**: instance method of [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)  
+<a name="UnweightedAdjacencyList.getLength"></a>
+
+### UnweightedAdjacencyList.getLength(vertices, edges) ⇒ <code>number</code>
+Returns the length of underlying TypedArray required to hold the graph.
+
+**Kind**: static method of [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)  
+
+| Param | Type |
+| --- | --- |
+| vertices | <code>number</code> | 
+| edges | <code>number</code> | 
 
 <a name="UnweightedAdjacencyMatrix"></a>
 
