@@ -267,6 +267,7 @@ export declare class UnweightedAdjacencyMatrix extends BinaryGrid {
     isAcyclic(): boolean;
     topologicalSort(): number[];
     static getLength(size: number): number;
+    static fromList(list: UnweightedAdjacencyList): UnweightedAdjacencyMatrix;
 }
 
 interface UnweightedListOptions {
@@ -302,6 +303,7 @@ export declare class UnweightedAdjacencyList extends Uint32Array {
     isAcyclic(): boolean;
     topologicalSort(): number[];
     static getLength(vertices: number, edges: number): number;
+    static fromGrid(grid: Grid): UnweightedAdjacencyList;
 }
 
 interface WeightedMatrixOptions {

@@ -1,4 +1,5 @@
 const UnweightedAdjacencyMatrix = require('../lib/unweighted-adjacency-matrix');
+const UnweightedAdjacencyList = require('../lib/unweighted-adjacency-list');
 
 describe('UnweightedAdjacencyMatrix', () => {
   let graph;
@@ -148,6 +149,24 @@ describe('UnweightedAdjacencyMatrix', () => {
   describe('getLength', () => {
     it('returns the length of underlying TypedArray required to hold the graph', () => {
       expect(UnweightedAdjacencyMatrix.getLength(50)).toBe(200);
+    });
+  });
+
+  describe('fromList', () => {
+    it('creates an adjacency matrix from a given adjacency list', () => {
+      const list = new UnweightedAdjacencyList({ vertices: 6, edges: 12 });
+      list.addEdge(0, 1);
+      list.addEdge(0, 2);
+      list.addEdge(0, 3);
+      list.addEdge(2, 4);
+      list.addEdge(2, 5);
+      const graphFromList = UnweightedAdjacencyMatrix.fromList(list);
+      expect(graphFromList.hasEdge(0, 1)).toBe(true);
+      expect(graphFromList.hasEdge(0, 2)).toBe(true);
+      expect(graphFromList.hasEdge(0, 3)).toBe(true);
+      expect(graphFromList.hasEdge(2, 4)).toBe(true);
+      expect(graphFromList.hasEdge(2, 5)).toBe(true);
+      expect(graphFromList.hasEdge(1, 0)).toBe(false);
     });
   });
 });

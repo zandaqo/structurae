@@ -2021,6 +2021,7 @@ Implements Adjacency List data structure for unweighted graphs.
         * [.topologicalSort()](#UnweightedAdjacencyList+topologicalSort) ⇒ <code>Array.&lt;number&gt;</code>
     * _static_
         * [.getLength(vertices, edges)](#UnweightedAdjacencyList.getLength) ⇒ <code>number</code>
+        * [.fromGrid(grid)](#UnweightedAdjacencyList.fromGrid) ⇒ [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)
 
 <a name="new_UnweightedAdjacencyList_new"></a>
 
@@ -2224,6 +2225,17 @@ Returns the length of underlying TypedArray required to hold the graph.
 | vertices | <code>number</code> | 
 | edges | <code>number</code> | 
 
+<a name="UnweightedAdjacencyList.fromGrid"></a>
+
+### UnweightedAdjacencyList.fromGrid(grid) ⇒ [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)
+Creates an adjacency list from a given grid or adjacency matrix.
+
+**Kind**: static method of [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)  
+
+| Param | Type |
+| --- | --- |
+| grid | [<code>Grid</code>](#Grid) | 
+
 <a name="UnweightedAdjacencyMatrix"></a>
 
 ## UnweightedAdjacencyMatrix ⇐ [<code>BinaryGrid</code>](#BinaryGrid)
@@ -2257,6 +2269,7 @@ Implements Adjacency Matrix using BinaryGrid to handle unweighted graphs.
         * [.getColumn(column)](#BinaryGrid+getColumn) ⇒ <code>Array.&lt;number&gt;</code>
     * _static_
         * [.getLength(size)](#UnweightedAdjacencyMatrix.getLength) ⇒ <code>number</code>
+        * [.fromList(list)](#UnweightedAdjacencyMatrix.fromList) ⇒ [<code>UnweightedAdjacencyMatrix</code>](#UnweightedAdjacencyMatrix)
 
 <a name="new_UnweightedAdjacencyMatrix_new"></a>
 
@@ -2497,6 +2510,17 @@ Returns the length of underlying TypedArray required to hold the graph.
 | Param | Type |
 | --- | --- |
 | size | <code>number</code> | 
+
+<a name="UnweightedAdjacencyMatrix.fromList"></a>
+
+### UnweightedAdjacencyMatrix.fromList(list) ⇒ [<code>UnweightedAdjacencyMatrix</code>](#UnweightedAdjacencyMatrix)
+Creates an adjacency matrix from a given adjacency list.
+
+**Kind**: static method of [<code>UnweightedAdjacencyMatrix</code>](#UnweightedAdjacencyMatrix)  
+
+| Param | Type |
+| --- | --- |
+| list | [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList) | 
 
 <a name="WeightedAdjacencyMatrix"></a>
 

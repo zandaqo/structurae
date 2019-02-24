@@ -1,4 +1,5 @@
 const UnweightedAdjacencyList = require('../lib/unweighted-adjacency-list');
+const GridMixin = require('../lib/grid');
 
 describe('UnweightedAdjacencyList', () => {
   let graph;
@@ -210,6 +211,19 @@ describe('UnweightedAdjacencyList', () => {
   describe('getLength', () => {
     it('returns the length of underlying TypedArray required to hold the graph', () => {
       expect(UnweightedAdjacencyList.getLength(50, 50)).toBe(101);
+    });
+  });
+
+  describe('fromGrid', () => {
+    it('creates an adjacency list from a given grid or adjacency matrix', () => {
+      const ArrayGrid = GridMixin(Array);
+      const grid = new ArrayGrid({ rows: 4, columns: 4 });
+      grid.set(0, 1, 1);
+      grid.set(0, 2, 1);
+      grid.set(2, 0, 1);
+      grid.set(3, 0, 1);
+      const graphFromGrid = UnweightedAdjacencyList.fromGrid(grid);
+      expect(Array.from(graphFromGrid)).toEqual([5, 7, 7, 8, 9, 1, 2, 0, 0]);
     });
   });
 });
