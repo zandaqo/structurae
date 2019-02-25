@@ -19,12 +19,19 @@ describe('UnweightedAdjacencyList', () => {
       expect(emptyGraph.length).toBe(13);
     });
 
-    it('creates a graph of specified dimensions', () => {
+    it('creates a graph of specified dimensions from an existing graph', () => {
       const fromExistingGraph = new UnweightedAdjacencyList({ vertices: 6, edges: 12 }, graph);
       expect(fromExistingGraph.vertices).toBe(6);
       expect(fromExistingGraph.length).toBe(19);
       expect(Array.from(fromExistingGraph)).toEqual(Array.from(graph));
       expect(fromExistingGraph.buffer !== graph.buffer).toBe(true);
+    });
+
+    it('creates a graph inferring dimensions from an existing array-like object', () => {
+      const noDimensions = new UnweightedAdjacencyList({}, Array.from(graph));
+      expect(noDimensions.vertices).toBe(6);
+      expect(noDimensions.length).toBe(19);
+      expect(Array.from(noDimensions)).toEqual(Array.from(graph));
     });
   });
 
@@ -211,6 +218,14 @@ describe('UnweightedAdjacencyList', () => {
   describe('getLength', () => {
     it('returns the length of underlying TypedArray required to hold the graph', () => {
       expect(UnweightedAdjacencyList.getLength(50, 50)).toBe(101);
+    });
+  });
+
+  describe('getVertexCount', () => {
+    it('derives the vertex count of an adjacency list stored as an array-like object', () => {
+      expect(UnweightedAdjacencyList.getVertexCount(graph)).toBe(6);
+      expect(UnweightedAdjacencyList.getVertexCount(new UnweightedAdjacencyList({ vertices: 4 }))).toBe(4);
+      expect(UnweightedAdjacencyList.getVertexCount(new UnweightedAdjacencyList())).toBe(2);
     });
   });
 

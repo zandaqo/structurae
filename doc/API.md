@@ -2021,6 +2021,7 @@ Implements Adjacency List data structure for unweighted graphs.
         * [.topologicalSort()](#UnweightedAdjacencyList+topologicalSort) ⇒ <code>Array.&lt;number&gt;</code>
     * _static_
         * [.getLength(vertices, edges)](#UnweightedAdjacencyList.getLength) ⇒ <code>number</code>
+        * [.getVertexCount(array)](#UnweightedAdjacencyList.getVertexCount) ⇒ <code>number</code>
         * [.fromGrid(grid)](#UnweightedAdjacencyList.fromGrid) ⇒ [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)
 
 <a name="new_UnweightedAdjacencyList_new"></a>
@@ -2224,6 +2225,17 @@ Returns the length of underlying TypedArray required to hold the graph.
 | --- | --- |
 | vertices | <code>number</code> | 
 | edges | <code>number</code> | 
+
+<a name="UnweightedAdjacencyList.getVertexCount"></a>
+
+### UnweightedAdjacencyList.getVertexCount(array) ⇒ <code>number</code>
+Derives the vertex count of an adjacency list stored as an array-like object.
+
+**Kind**: static method of [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)  
+
+| Param | Type |
+| --- | --- |
+| array | [<code>Collection</code>](#Collection) | 
 
 <a name="UnweightedAdjacencyList.fromGrid"></a>
 

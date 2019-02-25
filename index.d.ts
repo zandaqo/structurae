@@ -303,6 +303,7 @@ export declare class UnweightedAdjacencyList extends Uint32Array {
     isAcyclic(): boolean;
     topologicalSort(): number[];
     static getLength(vertices: number, edges: number): number;
+    static getVertexCount(array: Collection): number;
     static fromGrid(grid: Grid): UnweightedAdjacencyList;
 }
 
