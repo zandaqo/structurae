@@ -59,12 +59,10 @@ describe('UnweightedAdjacencyList', () => {
       expect(graph.setEdge).not.toHaveBeenCalled();
     });
 
-    it('does not add an edge when the list is full', () => {
+    it('throws RangeError if the list is full', () => {
       const fullGraph = new UnweightedAdjacencyList({ vertices: 2, edges: 2, directed: false });
       fullGraph.addEdge(0, 1);
-      fullGraph.setEdge = jest.fn();
-      fullGraph.addEdge(1, 2);
-      expect(fullGraph.setEdge).not.toHaveBeenCalled();
+      expect(() => fullGraph.addEdge(1, 2)).toThrowError(RangeError);
     });
   });
 

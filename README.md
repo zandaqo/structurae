@@ -8,8 +8,9 @@ A collection of data structures for high-performance JavaScript applications tha
 
 - [BitField](https://github.com/zandaqo/structurae#BitField) - stores and operates on data in Numbers and BigInts treating them as bitfields.
 - [Graphs](https://github.com/zandaqo/structurae#Graphs):
-    - [UnweightedAdjacencyMatrix](https://github.com/zandaqo/structurae#UnweightedAdjacencyMatrix) -  implements Adjacency Matrix using [BinaryGrid](https://github.com/zandaqo/structurae#BinaryGrid) to handle unweighted graphs.
-    - [WeightedAdjacencyMatrix](https://github.com/zandaqo/structurae#WeightedAdjacencyMatrix) - implements Adjacency Matrix using [Grid](https://github.com/zandaqo/structurae#Grid) or [SymmetricGrid](https://github.com/zandaqo/structurae#SymmetricGrid) to handle weighted graphs.
+    - [UnweightedAdjacencyList](https://github.com/zandaqo/structurae#UnweightedAdjacencyList) -  implements Adjacency List for unweighted graphs.
+    - [UnweightedAdjacencyMatrix](https://github.com/zandaqo/structurae#UnweightedAdjacencyMatrix) -  implements Adjacency Matrix using [BinaryGrid](https://github.com/zandaqo/structurae#BinaryGrid) for unweighted graphs.
+    - [WeightedAdjacencyMatrix](https://github.com/zandaqo/structurae#WeightedAdjacencyMatrix) - implements Adjacency Matrix using [Grid](https://github.com/zandaqo/structurae#Grid) or [SymmetricGrid](https://github.com/zandaqo/structurae#SymmetricGrid) for weighted graphs.
 - [Grids](https://github.com/zandaqo/structurae#Grids):
     - [BinaryGrid](https://github.com/zandaqo/structurae#BinaryGrid) - creates a grid or 2D matrix of bits.
     - [Grid](https://github.com/zandaqo/structurae#Grid) - extends built-in indexed collections to handle 2 dimensional data (e.g. nested arrays).
@@ -30,10 +31,10 @@ npm i structurae
 ## Usage
 Import structures as needed:
 ```javascript
-import { BinaryHeap, BitField, BinaryGrid, GridMixin, RecordArray, SortedArray, SortedMixin, StringView } from 'structurae';
+import { BitField, GridMixin, RecordArray, SortedArray, StringView, UnweightedAdjacencyList } from 'structurae';
 
 // or
-const { BinaryHeap, BitField, BinaryGrid, GridMixin, RecordArray, SortedArray, SortedMixin, StringView } = require('structurae');
+const { BitField, GridMixin, RecordArray, SortedArray, StringView, UnweightedAdjacencyList } = require('structurae');
 ```
 
 ### BitField
@@ -197,10 +198,60 @@ Person.match(new Person([19, 1]).valueOf(), matcher);
 ```
 
 ### Graphs
-UnweightedAdjacencyMatrix and WeightedAdjacencyMatrix classes implement Adjacency Matrix data structure to handle unweighted and weighted graphs respectively, 
-both directed and undirected. Graph classes extend Grids which in turn rely on TypedArrays, thus, allowing us to store a whole graph in a single ArrayBuffer.
+Structurae offers three classes to implement graphs. UnweightedAdjacencyList implements Adjacency List data structure for sparse unweighted graphs. 
+UnweightedAdjacencyMatrix and WeightedAdjacencyMatrix classes implement Adjacency Matrix data structure to handle dense unweighted and weighted graphs respectively, 
+both directed and undirected. Graph classes rely on TypedArrays which allow us to store a whole graph in a single ArrayBuffer.
 The classes provide methods to operate on edges (`addEdge`, `removeEdge`, `hasEdge`, `inEdges`, `outEdges`) as well as to traverse the graphs using BFS or DFS (`traverse`)
 and find shortest path between edges (`path`).
+
+#### UnweightedAdjacencyList
+UnweightedAdjacencyList extends Uint32Array and implements Adjacency List data structure storing all edges in a single TypedArray.
+The adjacency list requires less space to store (number of vertices + number of edges) and is somewhat faster for traversal than the matrices
+however adding/removing edges is slower since it involves shifting/unshifting values in the array.
+
+```javascript
+const graph = new UnweightedAdjacencyList({ vertices: 6, edges: 6 });
+// the length of the graph is vertices + edges + 1
+graph.length;
+//=> 13
+graph.addEdge(0, 1)
+  .addEdge(0, 2)
+  .addEdge(0, 3)
+  .addEdge(2, 4)
+  .addEdge(2, 5);
+
+graph.hasEdge(0, 1);
+//=> true
+graph.hasEdge(0, 4);
+//=> false
+graph.outEdges(2);
+//=> [4, 5]
+graph.inEdges(2);
+//=> [0]
+[...graph.traverse(false, 0)]; // BFS starting from vertex 0
+//=> [0, 1, 2, 3, 4, 5]
+[...graph.traverse(true, 0)]; // DFS starting from vertex 0
+//=> [0, 3, 2, 5, 4, 1]
+graph.path(0, 5);
+//=> [0, 2, 5]
+graph.isAcyclic();
+//=> true
+graph.topologicalSort();
+//=> [0, 3, 2, 5, 4, 1]
+```
+
+Since the maximum amount of egdes is limited to the number specified at creation, adding edges can overflow throwing a RangeError.
+If that's a possibility, use `isFull` to check if the limit is reached before adding. If additional edges are required, one can use
+`grow` method specifying the amount of additional vertices and edges required. `grow` creates a copy of the graph with increased limits:
+```javascript
+graph.length
+//=> 13
+const biggerGraph = graph.grow(4, 10); // add 4 vertices and 10 edges
+biggerGraph.length
+//=> 27
+```
+
+UnweightedAdjacencyList can be created from an existing adjacency matrices or grids using `UnweightedAdjacencyList.fromGrid`.
 
 #### UnweightedAdjacencyMatrix
 UnweightedAdjacencyMatrix extends [BinaryGrid](https://github.com/zandaqo/structurae#BinaryGrid) to represent
@@ -226,7 +277,7 @@ graph.inEdges(2);
 //=> [0]
 [...graph.traverse(false, 0)]; // BFS starting from vertex 0
 //=> [0, 1, 2, 3, 4, 5]
-[...graph.traverse(true, 0)]; // DFS starting from vertext 0
+[...graph.traverse(true, 0)]; // DFS starting from vertex 0
 //=> [0, 3, 2, 5, 4, 1]
 graph.path(0, 5);
 //=> [0, 2, 5]
@@ -243,7 +294,7 @@ WeightedAdjacencyMatrix extends [Grid](https://github.com/zandaqo/structurae#Gri
 
 ```javascript
 const WeightedAdjacencyMatrix = WeightedAdjacencyMatrixMixin(Int32Array, true);
-// creates a class for directed graphs that use Int32Array for edge weights
+// creates a class for directed graphs that uses Int32Array for edge weights
 graph = new WeightedAdjacencyMatrix({ size: 6, pad: -1 });
 graph.addEdge(0, 1, 3)
   .addEdge(0, 2, 2)

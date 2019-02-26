@@ -1375,6 +1375,10 @@ sortedCollection.rank(6);
 The default comparator.
 
 **Kind**: static method of [<code>SortedCollection</code>](#SortedCollection)  
+**Throws**:
+
+- <code>RangeError</code> if the comparison is unstable
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -2042,6 +2046,10 @@ Implements Adjacency List data structure for unweighted graphs.
 Adds an edge between two vertices.
 
 **Kind**: instance method of [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)  
+**Throws**:
+
+- <code>RangeError</code> if the list is full
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -2246,7 +2254,7 @@ Creates an adjacency list from a given grid or adjacency matrix.
 
 | Param | Type |
 | --- | --- |
-| grid | [<code>Grid</code>](#Grid) | 
+| grid | [<code>Grid</code>](#Grid) \| [<code>BinaryGrid</code>](#BinaryGrid) \| [<code>SymmetricGrid</code>](#SymmetricGrid) | 
 
 <a name="UnweightedAdjacencyMatrix"></a>
 

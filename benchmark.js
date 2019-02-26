@@ -355,13 +355,13 @@ function getString(size) {
   new Benchmark.Suite('Add/Remove Edges:', benchmarkOptions)
     .add('Unweighted Adjacency List', () => {
       for (let i = 0; i < SIZE; i++) {
-        adjacency.addEdge(getIndex(SIZE), getIndex(SIZE));
+        if (!adjacency.isFull()) adjacency.addEdge(getIndex(SIZE), getIndex(SIZE));
         adjacency.removeEdge(getIndex(SIZE), getIndex(SIZE));
       }
     })
     .add('Unweighted Adjacency List Directed', () => {
       for (let i = 0; i < SIZE; i++) {
-        adjacencyDirected.addEdge(getIndex(SIZE), getIndex(SIZE));
+        if (!adjacencyDirected.isFull()) adjacencyDirected.addEdge(getIndex(SIZE), getIndex(SIZE));
         adjacencyDirected.removeEdge(getIndex(SIZE), getIndex(SIZE));
       }
     })
