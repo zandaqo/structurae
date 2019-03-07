@@ -28,19 +28,18 @@ A collection of data structures for high-performance JavaScript applications tha
 npm i structurae 
 ```
 
-## Usage
-Import structures as needed:
-```javascript
-import { BitField, GridMixin, RecordArray, SortedArray, StringView, UnweightedAdjacencyList } from 'structurae';
+## Documentation
+- [API documentation](https://github.com/zandaqo/structurae/blob/master/doc/API.md)
+- Articles:
+    - [Structurae: Data Structures for Heigh-Performance JavaScript](https://blog.usejournal.com/structurae-data-structures-for-high-performance-javascript-9b7da4c73f8)
 
-// or
-const { BitField, GridMixin, RecordArray, SortedArray, StringView, UnweightedAdjacencyList } = require('structurae');
-```
-
+## Overview
 ### BitField
 BitField uses JavaScript Numbers and BigInts as bitfields to store and operate on data using bitwise operations.
 By default, BitField operates on 31 bit long bitfield where bits are indexed from least significant to most:
 ```javascript
+const { BitField } = require('structurae');
+
 const bitfield = new BitField(29); // 29 === 0b11101
 bitfield.get(0);
 //=> 1
@@ -210,6 +209,8 @@ The adjacency list requires less space to store (number of vertices + number of 
 however adding/removing edges is slower since it involves shifting/unshifting values in the array.
 
 ```javascript
+const { UnweightedAdjacencyList } = require('structurae');
+
 const graph = new UnweightedAdjacencyList({ vertices: 6, edges: 6 });
 // the length of the graph is vertices + edges + 1
 graph.length;
@@ -260,6 +261,8 @@ UnweightedAdjacencyMatrix extends [BinaryGrid](https://github.com/zandaqo/struct
  will create an ArrayBuffer of that size, "view" it as Uint16Array (of length 400) and operate on edges using bitwise operations. 
 
 ```javascript
+const { UnweightedAdjacencyMatrix } = require('structurae');
+
 graph = new UnweightedAdjacencyMatrix({ size: 6, directed: true });
 graph.addEdge(0, 1)
   .addEdge(0, 2)
@@ -293,6 +296,8 @@ WeightedAdjacencyMatrix extends [Grid](https://github.com/zandaqo/structurae#Gri
  As UnweightedAdjacencyMatrix it stores all edges in a single ArrayBuffer and offers the same API:
 
 ```javascript
+const { WeightedAdjacencyMatrixMixin } = require('structurae');
+
 const WeightedAdjacencyMatrix = WeightedAdjacencyMatrixMixin(Int32Array, true);
 // creates a class for directed graphs that uses Int32Array for edge weights
 graph = new WeightedAdjacencyMatrix({ size: 6, pad: -1 });
@@ -331,6 +336,8 @@ graph.path(0, 5, false, true); // the graph might have cycles, but has no negati
 #### BinaryGrid
 BinaryGrid creates a grid or 2D matrix of bits and provides methods to operate on it:
 ```javascript
+const { BinaryGrid } = require('structurae');
+
 const bitGrid = new BinaryGrid({ rows: 2, columns: 8 });
 bitGrid.set(0, 0).set(0, 2).set(0, 5);
 bitGrid.get(0, 0);
@@ -353,6 +360,8 @@ nested arrays. Grid "unrolls" nested arrays into a single array and pads its "co
 quick lookups with bitwise operations.
 
 ```javascript
+const { GridMixin } = require('structurae');
+
 const ArrayGrid = GridMixin(Array);
 
 // create a grid of 5 rows and 4 columns filled with 0
@@ -420,6 +429,8 @@ grid.toArrays(true);
 #### SymmetricGrid
 SymmetricGrid is a Grid that offers a more compact way of encoding symmetric or triangular square matrices using half as much space.
 ```javascript
+const { SymmetricGrid } = require('structurae');
+
 const grid = new ArrayGrid({rows: 100, columns: 100 });
 grid.length;
 //=> 12800
@@ -439,6 +450,8 @@ symmetricGrid.get(5, 0);
 ### Pool
 Implements a fast algorithm to manage availability of objects in an object pool.
 ```javascript
+const { Pool } = require('structurae');
+
 // create a pool of 1600 indexes
 const pool = new Pool(100 * 16);
 
@@ -463,6 +476,8 @@ Records can contain fields of any type supported by DataView plus strings.
 For a string, the maximum size in bytes should be defined. 
 
 ```javascript
+const { RecordArray } = require('structurae');
+
 // create an array of 20 records where each has 'age', 'score', and 'name' fields
 const people = new RecordArray([
  { name: 'age', type: 'Uint8' },
@@ -496,6 +511,8 @@ BinaryHeap extends built-in Array to implement the Binary Heap data structure.
 All the mutating methods (push, shift, splice, etc.) do so while maintaining the valid heap structure.
 By default, BinaryHeap implements min-heap, but it can be changed by providing a different comparator function:
 ```javascript
+const { BinaryHeap } = require('structurae');
+
 class MaxHeap extends BinaryHeap {}
 MaxHeap.compare = (a, b) => b - a; 
 ```
@@ -525,6 +542,8 @@ heap.update(0); // updates the position of an element in the heap
 SortedCollection extends a given built-in indexed collection with methods to efficiently handle sorted data.
 
 ```javascript
+const { SortedMixin } = require('structurae');
+
 const SortedInt32Array = SortedMixin(Int32Array);
 ```
 
@@ -583,12 +602,16 @@ SortedCollection also provides a set of functions to perform common set operatio
 and find statistics of any sorted array-like objects without converting them to sorted collection.
  Check [API documentation](https://github.com/zandaqo/structurae/blob/master/doc/API.md) for more information.
  
+
 #### SortedArray
 SortedArray extends SortedCollection using built-in Array.
 
 SortedArray supports all the methods of Array as well as those provided by SortedCollection.
  The methods that change the contents of an array do so while preserving the sorted order:
 ```js
+const { SortedArray } = require('structurae');
+
+const sortedArray = new SortedArray();
 sortedArray.push(1);
 //=> SortedArray [ 1, 2, 3, 4, 5, 9 ]
 sortedArray.unshift(8);
@@ -624,6 +647,8 @@ Encoding API (available both in modern browsers and Node.js) allows us to conver
  and relies on Encoding API internally for conversions.
 You can use `StringView.fromString` to create an encoded string, and `StringView#toString` to convert it back to a string:
 ```javascript
+const { StringView } = require('structurae');
+
 const stringView = StringView.fromString('abc😀a');
 //=> StringView [ 97, 98, 99, 240, 159, 152, 128, 97 ]
 stringView.toString();
@@ -663,11 +688,6 @@ stringView.replace(searchValue, replacement).toString();
 stringView.reverse().toString();
 //=> 'adcba'
 ```
-
-## Documentation
-- [API documentation](https://github.com/zandaqo/structurae/blob/master/doc/API.md)
-- Articles:
-    - [Structurae: Data Structures for Heigh-Performance JavaScript](https://blog.usejournal.com/structurae-data-structures-for-high-performance-javascript-9b7da4c73f8)
 
 ## License
 MIT © [Maga D. Zandaqo](http://maga.name)
