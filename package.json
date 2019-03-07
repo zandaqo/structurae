@@ -3,6 +3,7 @@
   "version": "0.0.26",
   "description": "Data structures for performance-sensitive modern JavaScript applications.",
   "main": "index.js",
+  "types": "index.d.ts",
   "keywords": [
     "optimization",
     "binary",
@@ -29,6 +30,10 @@
     "doc": "doc",
     "test": "test"
   },
+  "files": [
+    "/lib/",
+    "index.d.ts"
+  ],
   "author": "Maga D. Zandaqo <denelxan@gmail.com> (http://maga.name)",
   "license": "MIT",
   "repository": {
@@ -40,13 +45,13 @@
     "url": "https://github.com/zandaqo/structurae/issues"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.0",
+    "@types/jest": "^24.0.9",
     "benchmark": "^2.1.4",
-    "codecov": "^3.1.0",
-    "eslint": "^5.13.0",
+    "codecov": "^3.2.0",
+    "eslint": "^5.15.1",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.16.0",
-    "jest": "^24.1.0",
+    "jest": "^24.3.0",
     "jsdoc-to-markdown": "^4.0.1"
   },
   "jest": {
@@ -60,9 +65,6 @@
     "coverageDirectory": "<rootDir>/coverage",
     "coverageReporters": [
       "lcov"
-    ],
-    "setupFilesAfterEnv": [
-      "<rootDir>/test/setup.js"
     ]
   },
   "engines": {
