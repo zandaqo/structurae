@@ -4,7 +4,7 @@ const UnweightedAdjacencyList = require('../lib/unweighted-adjacency-list');
 describe('UnweightedAdjacencyMatrix', () => {
   let graph;
   beforeEach(() => {
-    graph = new UnweightedAdjacencyMatrix({ size: 6 });
+    graph = new UnweightedAdjacencyMatrix({ vertices: 6 });
     graph.addEdge(0, 1);
     graph.addEdge(0, 2);
     graph.addEdge(0, 3);
@@ -20,7 +20,7 @@ describe('UnweightedAdjacencyMatrix', () => {
     });
 
     it('adds an edge to a directed graph', () => {
-      const directedGraph = new UnweightedAdjacencyMatrix({ size: 8, directed: false });
+      const directedGraph = new UnweightedAdjacencyMatrix({ vertices: 8, directed: false });
       expect(directedGraph.hasEdge(0, 5)).toBe(false);
       expect(directedGraph.hasEdge(5, 0)).toBe(false);
       directedGraph.addEdge(0, 5);
@@ -37,7 +37,7 @@ describe('UnweightedAdjacencyMatrix', () => {
     });
 
     it('removes an edge from a directed graph', () => {
-      const directedGraph = new UnweightedAdjacencyMatrix({ size: 8, directed: false });
+      const directedGraph = new UnweightedAdjacencyMatrix({ vertices: 8, directed: false });
       directedGraph.addEdge(0, 5);
       expect(directedGraph.hasEdge(0, 5)).toBe(true);
       expect(directedGraph.hasEdge(5, 0)).toBe(true);

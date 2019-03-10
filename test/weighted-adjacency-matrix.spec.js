@@ -7,14 +7,14 @@ describe('WeightedAdjacencyMatrix', () => {
   let graph;
   let undirected;
   beforeEach(() => {
-    graph = new WeightedAdjacencyMatrix({ size: 6 });
+    graph = new WeightedAdjacencyMatrix({ vertices: 6 });
     graph.addEdge(0, 1, 3);
     graph.addEdge(0, 2, 2);
     graph.addEdge(0, 3, 1);
     graph.addEdge(2, 4, 8);
     graph.addEdge(2, 5, 6);
 
-    undirected = new UndirectedGraph({ size: 6 });
+    undirected = new UndirectedGraph({ vertices: 6 });
     undirected.addEdge(0, 1, 3);
     undirected.addEdge(0, 2, 2);
     undirected.addEdge(0, 3, 1);

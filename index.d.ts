@@ -242,12 +242,12 @@ declare class SymmetricGrid {
 export declare function SymmetricGridMixin<T extends Collection>(Base?: Constructor<T>): Constructor<T & SymmetricGrid>
 
 interface UnweightedMatrixOptions {
-    size: number;
+    vertices: number;
     directed?: boolean;
 }
 
 export declare class UnweightedAdjacencyMatrix extends BinaryGrid {
-    size: number;
+    vertices: number;
     colors: BinaryGrid;
     directed: boolean;
 
@@ -308,12 +308,12 @@ export declare class UnweightedAdjacencyList extends Uint32Array {
 }
 
 interface WeightedMatrixOptions {
-    size: number;
+    vertices: number;
     pad?: any;
 }
 
 declare class WeightedAdjacencyMatrix {
-    size: number;
+    vertices: number;
     colors: BinaryGrid;
     directed: boolean;
 
