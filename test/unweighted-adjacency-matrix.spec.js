@@ -1,6 +1,9 @@
 const UnweightedAdjacencyMatrix = require('../lib/unweighted-adjacency-matrix');
 const UnweightedAdjacencyList = require('../lib/unweighted-adjacency-list');
 
+class UndirectedMatrix extends UnweightedAdjacencyMatrix {}
+UndirectedMatrix.undirected = true;
+
 describe('UnweightedAdjacencyMatrix', () => {
   let graph;
   beforeEach(() => {
@@ -20,12 +23,12 @@ describe('UnweightedAdjacencyMatrix', () => {
     });
 
     it('adds an edge to a directed graph', () => {
-      const directedGraph = new UnweightedAdjacencyMatrix({ vertices: 8, directed: false });
-      expect(directedGraph.hasEdge(0, 5)).toBe(false);
-      expect(directedGraph.hasEdge(5, 0)).toBe(false);
-      directedGraph.addEdge(0, 5);
-      expect(directedGraph.hasEdge(0, 5)).toBe(true);
-      expect(directedGraph.hasEdge(5, 0)).toBe(true);
+      const undirected = new UndirectedMatrix({ vertices: 8 });
+      expect(undirected.hasEdge(0, 5)).toBe(false);
+      expect(undirected.hasEdge(5, 0)).toBe(false);
+      undirected.addEdge(0, 5);
+      expect(undirected.hasEdge(0, 5)).toBe(true);
+      expect(undirected.hasEdge(5, 0)).toBe(true);
     });
   });
 
@@ -37,25 +40,27 @@ describe('UnweightedAdjacencyMatrix', () => {
     });
 
     it('removes an edge from a directed graph', () => {
-      const directedGraph = new UnweightedAdjacencyMatrix({ vertices: 8, directed: false });
-      directedGraph.addEdge(0, 5);
-      expect(directedGraph.hasEdge(0, 5)).toBe(true);
-      expect(directedGraph.hasEdge(5, 0)).toBe(true);
-      directedGraph.removeEdge(0, 5);
-      expect(directedGraph.hasEdge(0, 5)).toBe(false);
-      expect(directedGraph.hasEdge(5, 0)).toBe(false);
+      const undirected = new UndirectedMatrix({ vertices: 8 });
+      undirected.addEdge(0, 5);
+      expect(undirected.hasEdge(0, 5)).toBe(true);
+      expect(undirected.hasEdge(5, 0)).toBe(true);
+      undirected.removeEdge(0, 5);
+      expect(undirected.hasEdge(0, 5)).toBe(false);
+      expect(undirected.hasEdge(5, 0)).toBe(false);
     });
   });
 
   describe('outEdges', () => {
-    it('returns a list of all outgoing edges of a given vertex', () => {
-      expect(graph.outEdges(0)).toEqual([1, 2, 3]);
+    it('iterates over outgoing edges of a vertex', () => {
+      expect([...graph.outEdges(0)]).toEqual([1, 2, 3]);
     });
   });
 
   describe('inEdges', () => {
-    it('returns a list of all incoming edges of a given vertex', () => {
-      expect(graph.inEdges(1)).toEqual([0]);
+    it('iterates over incoming edges of a vertex', () => {
+      expect([...graph.inEdges(1)]).toEqual([0]);
+      expect([...graph.inEdges(4)]).toEqual([2]);
+      expect([...graph.inEdges(0)]).toEqual([]);
     });
   });
 
@@ -64,85 +69,6 @@ describe('UnweightedAdjacencyMatrix', () => {
       expect(graph.hasEdge(0, 1)).toBe(true);
       expect(graph.hasEdge(0, 5)).toBe(false);
       expect(graph.hasEdge(2, 5)).toBe(true);
-    });
-  });
-
-  describe('traverse', () => {
-    it('does a Breadth First Search on the graph', () => {
-      const bfs = [...graph.traverse()];
-      expect(bfs).toEqual([0, 1, 2, 3, 4, 5]);
-    });
-
-    it('does a Depth First Search on the graph if `isDFS=true`', () => {
-      const dfs = [...graph.traverse(true)];
-      expect(dfs).toEqual([0, 3, 2, 5, 4, 1]);
-    });
-
-    it('yields edging vertices if `white=true`', () => {
-      const bfs = [...graph.traverse(false, 0, false, true)];
-      expect(bfs).toEqual([1, 2, 3, 4, 5]);
-    });
-
-    it('yields fully processed vertices if `black=true`', () => {
-      const bfs = [...graph.traverse(false, 0, false, false, true)];
-      expect(bfs).toEqual([0, 1, 2, 3, 4, 5]);
-    });
-  });
-
-  describe('path', () => {
-    it('finds the shortest path between two vertices', () => {
-      const path = graph.path(0, 5);
-      expect(path).toEqual([0, 2, 5]);
-    });
-
-    it('returns an empty array if no path is found', () => {
-      const path = graph.path(3, 5);
-      expect(path).toEqual([]);
-    });
-  });
-
-  describe('tree', () => {
-    it('returns a spanning tree of the graph', () => {
-      expect(graph.tree()).toEqual([-1, 0, 0, 0, 2, 2]);
-      graph.addEdge(0, 5);
-      expect(graph.tree()).toEqual([-1, 0, 0, 0, 2, 2]);
-      graph.addEdge(3, 4);
-      expect(graph.tree()).toEqual([-1, 0, 0, 0, 3, 2]);
-    });
-  });
-
-  describe('resetColors', () => {
-    it('resets all coloring of vertices done during traversals', () => {
-      expect(graph.isBlack(0)).toBe(false);
-      expect(graph.isBlack(5)).toBe(false);
-      const bfs = [...graph.traverse()];
-      expect(graph.isBlack(0)).toBe(true);
-      expect(graph.isBlack(5)).toBe(true);
-      graph.resetColors();
-      expect(graph.isBlack(0)).toBe(false);
-      expect(graph.isBlack(5)).toBe(false);
-    });
-  });
-
-  describe('isAcyclic', () => {
-    it('checks whether the graph is acyclic', () => {
-      expect(graph.isAcyclic()).toBe(true);
-      graph.addEdge(1, 0);
-      expect(graph.isAcyclic()).toBe(false);
-      graph.removeEdge(1, 0);
-      expect(graph.isAcyclic()).toBe(true);
-      graph.addEdge(5, 0);
-      expect(graph.isAcyclic()).toBe(false);
-      graph.removeEdge(5, 0);
-      expect(graph.isAcyclic()).toBe(true);
-      graph.addEdge(5, 3).addEdge(3, 2);
-      expect(graph.isAcyclic()).toBe(false);
-    });
-  });
-
-  describe('topologicalSort', () => {
-    it('returns a list of vertices sorted topologically', () => {
-      expect(graph.topologicalSort()).toEqual([0, 3, 2, 5, 4, 1]);
     });
   });
 
