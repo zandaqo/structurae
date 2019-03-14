@@ -8,8 +8,11 @@ A collection of data structures for high-performance JavaScript applications tha
 
 - [BitField](https://github.com/zandaqo/structurae#BitField) - stores and operates on data in Numbers and BigInts treating them as bitfields.
 - [Graphs](https://github.com/zandaqo/structurae#Graphs):
+    - [Graph](https://github.com/zandaqo/structurae#Graph) -  the general data structure for graphs, extends an adjacency list/matrix structure
+     and provides methods for traversal (BFS, DFS), pathfinding (Dijkstra, Bellman-Ford), spanning tree construction (BFS, Prim), etc.
     - [UnweightedAdjacencyList](https://github.com/zandaqo/structurae#UnweightedAdjacencyList) -  implements Adjacency List for unweighted graphs.
     - [UnweightedAdjacencyMatrix](https://github.com/zandaqo/structurae#UnweightedAdjacencyMatrix) -  implements Adjacency Matrix using [BinaryGrid](https://github.com/zandaqo/structurae#BinaryGrid) for unweighted graphs.
+    - [WeightedAdjacencyList](https://github.com/zandaqo/structurae#WeightedAdjacencyList) - implements Adjacency List for weighted graphs.
     - [WeightedAdjacencyMatrix](https://github.com/zandaqo/structurae#WeightedAdjacencyMatrix) - implements Adjacency Matrix using [Grid](https://github.com/zandaqo/structurae#Grid) or [SymmetricGrid](https://github.com/zandaqo/structurae#SymmetricGrid) for weighted graphs.
 - [Grids](https://github.com/zandaqo/structurae#Grids):
     - [BinaryGrid](https://github.com/zandaqo/structurae#BinaryGrid) - creates a grid or 2D matrix of bits.
@@ -197,52 +200,51 @@ Person.match(new Person([19, 1]).valueOf(), matcher);
 ```
 
 ### Graphs
-Structurae offers three classes to implement graphs. UnweightedAdjacencyList implements Adjacency List data structure for sparse unweighted graphs. 
-UnweightedAdjacencyMatrix and WeightedAdjacencyMatrix classes implement Adjacency Matrix data structure to handle dense unweighted and weighted graphs respectively, 
-both directed and undirected. Graph classes rely on TypedArrays which allow us to store a whole graph in a single ArrayBuffer.
-The classes provide methods to operate on edges (`addEdge`, `removeEdge`, `hasEdge`, `inEdges`, `outEdges`) as well as to traverse the graphs using BFS or DFS (`traverse`)
-and find shortest path between edges (`path`).
-
-#### UnweightedAdjacencyList
-UnweightedAdjacencyList extends Uint32Array and implements Adjacency List data structure storing all edges in a single TypedArray.
-The adjacency list requires less space to store (number of vertices + number of edges) and is somewhat faster for traversal than the matrices
-however adding/removing edges is slower since it involves shifting/unshifting values in the array.
+Structurae offers classes that implement Adjacency List (`UnweightedAdjacencyList`, `WeightedAdjacencyList`) and Adjacency Matrix (`UnweightedAdjacencyMatrix`, 
+ `WeightedAdjacencyMatrix`) as basic primitives to represent graphs using a TypedArray, and the `Graph` class that extends the adjacency structures to offer methods for traversing
+ graphs (BFS, DFS), pathfinding (Dijkstra, Bellman-Ford), and spanning tree construction (BFS, Prim).
+  
+#### Adjacency Lists
+`UnweightedAdjacencyList` and `WeightedAdjacencyList` implement Adjacency List data structure extending a TypedArray class.
+The adjacency list requires less storage space: number of vertices + number of edges (for an unweighted list) or number of edges * 2 (for a weighted list).
+However, adding and removing edges is much slower since it involves shifting/unshifting values in the underlying typed array.
 
 ```javascript
-const { UnweightedAdjacencyList } = require('structurae');
+const { UnweightedAdjacencyList, WeightedAdjacencyListMixin } = require('structurae');
 
-const graph = new UnweightedAdjacencyList({ vertices: 6, edges: 6 });
-// the length of the graph is vertices + edges + 1
-graph.length;
+const WeightedAdjacencyList = WeightedAdjacencyListMixin(Int32Array);
+
+const unweightedGraph = new UnweightedAdjacencyList({ vertices: 6, edges: 6 });
+const weightedGraph = new WeightedAdjacencyList({ vertices: 6, edges: 6 });
+
+// the length of an unweighted graph is vertices + edges + 1
+unweightedGraph.length;
 //=> 13
-graph.addEdge(0, 1)
-  .addEdge(0, 2)
-  .addEdge(0, 3)
-  .addEdge(2, 4)
-  .addEdge(2, 5);
 
-graph.hasEdge(0, 1);
+// the length of a weighted graph is vertices + edges * 2 + 1
+weightedGraph.length;
+//=> 19
+
+unweightedGraph.addEdge(0, 1).addEdge(0, 2).addEdge(2, 4).addEdge(2, 5);
+
+unweightedGraph.hasEdge(0, 1);
 //=> true
-graph.hasEdge(0, 4);
+unweightedGraph.hasEdge(0, 4);
 //=> false
-graph.outEdges(2);
+unweightedGraph.outEdges(2);
 //=> [4, 5]
-graph.inEdges(2);
+unweightedGraph.inEdges(2);
 //=> [0]
-[...graph.traverse(false, 0)]; // BFS starting from vertex 0
-//=> [0, 1, 2, 3, 4, 5]
-[...graph.traverse(true, 0)]; // DFS starting from vertex 0
-//=> [0, 3, 2, 5, 4, 1]
-graph.path(0, 5);
-//=> [0, 2, 5]
-graph.isAcyclic();
+
+weightedGraph.addEdge(0, 1, 5);
+weightedGraph.hasEdge(0, 1);
 //=> true
-graph.topologicalSort();
-//=> [0, 3, 2, 5, 4, 1]
+weightedGraph.get(0, 1);
+//=> 5
 ```
 
 Since the maximum amount of egdes is limited to the number specified at creation, adding edges can overflow throwing a RangeError.
-If that's a possibility, use `isFull` to check if the limit is reached before adding. If additional edges are required, one can use
+If that's a possibility, use `isFull` to check if the limit is reached before adding. If additional edges are required, one can use the
 `grow` method specifying the amount of additional vertices and edges required. `grow` creates a copy of the graph with increased limits:
 ```javascript
 graph.length
@@ -252,84 +254,88 @@ biggerGraph.length
 //=> 27
 ```
 
-UnweightedAdjacencyList can be created from an existing adjacency matrices or grids using `UnweightedAdjacencyList.fromGrid`.
+Adjacency lists can be created from an existing adjacency matrices or grids using the `fromGrid` method.
 
-#### UnweightedAdjacencyMatrix
-UnweightedAdjacencyMatrix extends [BinaryGrid](https://github.com/zandaqo/structurae#BinaryGrid) to represent
- an unweighted graph in the densest possible way: each edge of a graph is represented as a single bit in an underlying ArrayBuffer.
- For example, to represent a graph with 80 nodes as an Adjacency Matrix we need 80 * 80 bits or 800 bytes. UnweightedAdjacencyMatrix will
+#### Adjacency Matrices
+`UnweightedAdjacencyMatrix` and `WeightedAdjacencyMatrix` build on Grid classes extending them to implement Adjacency Matrix data structure
+using TypedArrays. They offer the same methods to operate on edges as the adjacency list structures described above.
+
+`UnweightedAdjacencyMatrix` extends [BinaryGrid](https://github.com/zandaqo/structurae#BinaryGrid) to represent
+ an unweighted graph in the densest possible way: each edge is represented by a single bit in an underlying ArrayBuffer.
+ For example, to represent a graph with 80 vertices as an Adjacency Matrix we need 80 * 80 bits or 800 bytes. UnweightedAdjacencyMatrix will
  will create an ArrayBuffer of that size, "view" it as Uint16Array (of length 400) and operate on edges using bitwise operations. 
 
+`WeightedAdjacencyMatrix` extends [Grid](https://github.com/zandaqo/structurae#Grid) (for directed graphs)
+ or [SymmetricGrid](https://github.com/zandaqo/structurae#SymmetricGrid) (for undirected) to handle weighted graphs. 
+ 
 ```javascript
-const { UnweightedAdjacencyMatrix } = require('structurae');
+const { UnweightedAdjacencyMatrix, WeightedAdjacencyMatrixMixin } = require('structurae');
+// creates a class for directed graphs that uses Int32Array for edge weights
+const WeightedAdjacencyMatrix = WeightedAdjacencyMatrixMixin(Int32Array, true);
 
-graph = new UnweightedAdjacencyMatrix({ size: 6, directed: true });
-graph.addEdge(0, 1)
-  .addEdge(0, 2)
-  .addEdge(0, 3)
-  .addEdge(2, 4)
-  .addEdge(2, 5);
-
-graph.hasEdge(0, 1);
+const unweightedGraph = new UnweightedAdjacencyMatrix({ vertices: 6 });
+unweightedGraph.addEdge(0, 1).addEdge(0, 2).addEdge(0, 3).addEdge(2, 4).addEdge(2, 5);
+unweightedGraph.hasEdge(0, 1);
 //=> true
-graph.hasEdge(0, 4);
+unweightedGraph.hasEdge(0, 4);
 //=> false
-graph.outEdges(2);
+unweightedGraph.outEdges(2);
 //=> [4, 5]
-graph.inEdges(2);
+unweightedGraph.inEdges(2);
 //=> [0]
-[...graph.traverse(false, 0)]; // BFS starting from vertex 0
-//=> [0, 1, 2, 3, 4, 5]
-[...graph.traverse(true, 0)]; // DFS starting from vertex 0
-//=> [0, 3, 2, 5, 4, 1]
-graph.path(0, 5);
-//=> [0, 2, 5]
-graph.isAcyclic();
+
+const weightedGraph = new WeightedAdjacencyMatrix({ vertices: 6, pad: -1 });
+weightedGraph.addEdge(0, 1, 3);
+weightedGraph.hasEdge(0, 1);
 //=> true
-graph.topologicalSort();
-//=> [0, 3, 2, 5, 4, 1]
+weightedGraph.hasEdge(1, 0);
+//=> false
+weightedGraph.get(1, 0);
+//=> 3
 ``` 
 
-#### WeightedAdjacencyMatrix
-WeightedAdjacencyMatrix extends [Grid](https://github.com/zandaqo/structurae#Grid) (for directed graphs)
- or [SymmetricGrid](https://github.com/zandaqo/structurae#SymmetricGrid) (for undirected) to handle weighted graphs. 
- As UnweightedAdjacencyMatrix it stores all edges in a single ArrayBuffer and offers the same API:
+#### Graph
+`Graph` extends a provided adjacency structure with methods for traversing, pathfinding, and spanning tree construction that use various 
+graph algorithms.
 
 ```javascript
-const { WeightedAdjacencyMatrixMixin } = require('structurae');
+const { GraphMixin, UnweightedAdjacencyList, WeightedAdjacencyMatrixMixin }  = require('structurae');
 
-const WeightedAdjacencyMatrix = WeightedAdjacencyMatrixMixin(Int32Array, true);
-// creates a class for directed graphs that uses Int32Array for edge weights
-graph = new WeightedAdjacencyMatrix({ size: 6, pad: -1 });
-graph.addEdge(0, 1, 3)
-  .addEdge(0, 2, 2)
-  .addEdge(0, 3, 1)
-  .addEdge(2, 4, 8)
-  .addEdge(2, 5, 6);
-graph.hasEdge(0, 1);
-//=> true
-graph.get(0, 1);
-//=> 3
-graph.hasEdge(0, 5);
-//=> false
-graph.get(0, 5);
-//=> -1
-graph.set(0, 1, 4).get(0, 1);
-//=> 4
-graph.path(0, 5); // get shortest path from 0 to 5
-//=> [0, 2, 5]
-graph.addEdge(3, 5, 1); // add edge to create a shorter path through 3
-graph.path(0, 5);
-//=> [0, 3, 5]
+// create a graph for directed unweighted graphs that use adjacency list structure
+const UnweightedGraph = GraphMixin(UnweightedAdjacencyList);
+
+// for directed weighted graphs that use adjacency matrix structure
+const WeightedGraph = GraphMixin(WeightedAdjacencyMatrixMixin(Int32Array));
 ```
 
-For path finding WeightedAdjacencyMatrix uses DFS based search for acyclic graphs, Dijkstra for graph with no negative edges, and 
-Bellman-Ford for all other cases. You can choose the algorithm for a particular search by supplying extra arguments to the `path` method:
+The traversal is done by a generator function `Graph#traverse` that can be configured to use Breadth-First or Depth-First traversal,
+as well as returning vertices on various stages of processing, i.e. only return vertices that are fully processed (`black`), or being
+processed (`gray`), or just encountered (`white`):
 
 ```javascript
-graph.path(0, 5); // uses Bellman-Ford by default, complexity O(V * E)
-graph.path(0, 5, true); // the graph is acyclic, uses DFS, O (V + E)
-graph.path(0, 5, false, true); // the graph might have cycles, but has no negative edges, uses Dijkstra, O (E + V * Log V)
+const graph = new WeightedGraph({ vertices: 6, edges: 12 });
+graph.addEdge(0, 1, 3).addEdge(0, 2, 2).addEdge(0, 3, 1).addEdge(2, 4, 8).addEdge(2, 5, 6);
+
+// a BFS traversal results
+[...graph.traverse()];
+//=> [0, 1, 2, 3, 4, 5]
+
+// DFS
+[...graph.traverse(true)];
+//=> [0, 3, 2, 5, 4, 1]
+
+// BFS yeilding only non-encountered ('white') vertices starting from 0
+[...graph.traverse(false, 0, false, true)];
+//=> [1, 2, 3, 4, 5]
+```
+
+`Graph#path` returns the list of vertices constituting the shortest path between two given vertices. By default, the class uses
+BFS based search for unweighted graphs, and Bellman-Ford algorithm for weighted graphs. However, the method can be configured to use
+other algorithms by specifying arguments of the function:
+```javascript
+graph.path(0, 5); // uses Bellman-Ford by default
+graph.path(0, 5, true); // the graph is acyclic, uses DFS
+graph.path(0, 5, false, true); // the graph might have cycles, but has no negative edges, uses Dijkstra
 ```
 
 ### Grids

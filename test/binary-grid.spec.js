@@ -49,22 +49,6 @@ describe('BinaryGrid', () => {
     });
   });
 
-  describe('getRow', () => {
-    it('gets all bits from a given row', () => {
-      const grid = new BinaryGrid({ columns: 10, rows: 10 });
-      grid.set(0, 1).set(0, 5).set(0, 9);
-      expect(grid.getRow(0)).toEqual([0, 1, 0, 0, 0, 1, 0, 0, 0, 1]);
-    });
-  });
-
-  describe('getColumn', () => {
-    it('gets all bits from a given column', () => {
-      const grid = new BinaryGrid({ columns: 10, rows: 10 });
-      grid.set(1, 0).set(5, 0).set(9, 0);
-      expect(grid.getColumn(0)).toEqual([0, 1, 0, 0, 0, 1, 0, 0, 0, 1]);
-    });
-  });
-
   describe('getLength', () => {
     it('returns the length of underlying TypedArray required to hold the grid', () => {
       expect(BinaryGrid.getLength(10, 10)).toBe(10);

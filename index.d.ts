@@ -251,6 +251,7 @@ export declare class UnweightedAdjacencyList extends Uint32Array {
     vertices: number;
     edges: number;
     static undirected: boolean;
+    static weighted: false;
 
     constructor(options?: AdjacencyListOptions, ...args: any);
     addEdge(x: number, y: number): this;
@@ -274,6 +275,7 @@ declare class WeightedAdjacencyList {
     vertices: number;
     edges: number;
     static undirected: boolean;
+    static weighted: true;
 
     constructor(options?: AdjacencyListOptions, ...args: any);
     addEdge(x: number, y: number, weight: number): this;
@@ -293,7 +295,7 @@ declare class WeightedAdjacencyList {
     static fromGrid(grid: Grid): WeightedAdjacencyList;
 }
 
-export declare function WeightedAdjacencyListMixin<T extends GridStructure>(Base: CollectionConstructor): Constructor<T & WeightedAdjacencyList>
+export declare function WeightedAdjacencyListMixin<T extends Collection>(Base?: Constructor<T>): Constructor<T & WeightedAdjacencyList>
 
 interface UnweightedMatrixOptions {
     vertices: number;
@@ -302,6 +304,7 @@ interface UnweightedMatrixOptions {
 export declare class UnweightedAdjacencyMatrix extends BinaryGrid {
     vertices: number;
     static undirected: boolean;
+    static weighted: false;
 
     constructor(options?: UnweightedMatrixOptions, ...args: any);
     addEdge(x: number, y: number): this;
@@ -323,6 +326,7 @@ interface WeightedMatrixOptions {
 declare class WeightedAdjacencyMatrix {
     vertices: number;
     static undirected: boolean;
+    static weighted: true;
 
     constructor(options?: WeightedMatrixOptions, ...args: any);
     addEdge(x: number, y: number): this;
@@ -338,13 +342,6 @@ export declare function WeightedAdjacencyMatrixMixin<T extends GridStructure>(Ba
 
 type AdjacencyStructure = UnweightedAdjacencyList | UnweightedAdjacencyMatrix
     | WeightedAdjacencyList | WeightedAdjacencyMatrix;
-
-interface GraphOptions {
-    Collection?: CollectionConstructor;
-    weighted?: boolean;
-    undirected?: boolean;
-    list?: boolean;
-}
 
 declare class Graph {
     colors: BinaryGrid;
@@ -365,4 +362,4 @@ declare class Graph {
     private searchBellmanFord(start: number, end: number, distances: number[], predecessors: number[]): boolean;
 }
 
-export declare function GraphMixin<T extends AdjacencyStructure>(classOptions?: GraphOptions): Constructor<T & Graph>
+export declare function GraphMixin<T extends AdjacencyStructure>(Base: Constructor<T>, undirected?: boolean): Constructor<T & Graph>

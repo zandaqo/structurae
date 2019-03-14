@@ -50,7 +50,7 @@
 ## Functions
 
 <dl>
-<dt><a href="#GraphMixin">GraphMixin([classOptions])</a> ⇒ <code><a href="#Graph">Graph</a></code></dt>
+<dt><a href="#GraphMixin">GraphMixin(Base, [undirected])</a> ⇒ <code><a href="#Graph">Graph</a></code></dt>
 <dd><p>Creates a Graph class.</p>
 </dd>
 <dt><a href="#GridMixin">GridMixin(Base)</a> ⇒ <code><a href="#Grid">Grid</a></code></dt>
@@ -67,7 +67,7 @@
 <dt><a href="#WeightedAdjacencyListMixin">WeightedAdjacencyListMixin(Base)</a> ⇒ <code><a href="#WeightedAdjacencyList">WeightedAdjacencyList</a></code></dt>
 <dd><p>Creates a WeightedAdjacencyList class extending a given TypedArray class.</p>
 </dd>
-<dt><a href="#WeightedAdjacencyMatrixMixin">WeightedAdjacencyMatrixMixin(Base, undirected)</a> ⇒ <code><a href="#WeightedAdjacencyMatrix">WeightedAdjacencyMatrix</a></code></dt>
+<dt><a href="#WeightedAdjacencyMatrixMixin">WeightedAdjacencyMatrixMixin(Base, [undirected])</a> ⇒ <code><a href="#WeightedAdjacencyMatrix">WeightedAdjacencyMatrix</a></code></dt>
 <dd><p>Creates a WeightedAdjacencyMatrix class extending a given Array-like class.</p>
 </dd>
 </dl>
@@ -2119,6 +2119,7 @@ Implements Adjacency List data structure for unweighted graphs.
         * [.grow([vertices], [edges])](#UnweightedAdjacencyList+grow) ⇒ [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)
     * _static_
         * [.undirected](#UnweightedAdjacencyList.undirected) : <code>boolean</code>
+        * [.weighted](#UnweightedAdjacencyList.weighted) : <code>boolean</code>
         * [.getLength(vertices, edges)](#UnweightedAdjacencyList.getLength) ⇒ <code>number</code>
         * [.getVertexCount(array)](#UnweightedAdjacencyList.getVertexCount) ⇒ <code>number</code>
         * [.fromGrid(grid)](#UnweightedAdjacencyList.fromGrid) ⇒ [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)
@@ -2233,6 +2234,12 @@ for a specified amount of additional vertices and edges.
 Whether the graph is undirected.
 
 **Kind**: static property of [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)  
+<a name="UnweightedAdjacencyList.weighted"></a>
+
+### UnweightedAdjacencyList.weighted : <code>boolean</code>
+Whether the graph is weighted.
+
+**Kind**: static property of [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)  
 <a name="UnweightedAdjacencyList.getLength"></a>
 
 ### UnweightedAdjacencyList.getLength(vertices, edges) ⇒ <code>number</code>
@@ -2288,6 +2295,7 @@ Implements Adjacency Matrix using BinaryGrid to handle unweighted graphs.
         * [.setArray(array, [offset])](#BinaryGrid+setArray) ⇒ <code>void</code>
     * _static_
         * [.undirected](#UnweightedAdjacencyMatrix.undirected) : <code>boolean</code>
+        * [.weighted](#UnweightedAdjacencyMatrix.weighted) : <code>boolean</code>
         * [.getLength(vertices)](#UnweightedAdjacencyMatrix.getLength) ⇒ <code>number</code>
         * [.fromList(list)](#UnweightedAdjacencyMatrix.fromList) ⇒ [<code>UnweightedAdjacencyMatrix</code>](#UnweightedAdjacencyMatrix)
 
@@ -2400,6 +2408,12 @@ A proxy to Uint16Array#set method.
 
 ### UnweightedAdjacencyMatrix.undirected : <code>boolean</code>
 Whether the graph is undirected.
+
+**Kind**: static property of [<code>UnweightedAdjacencyMatrix</code>](#UnweightedAdjacencyMatrix)  
+<a name="UnweightedAdjacencyMatrix.weighted"></a>
+
+### UnweightedAdjacencyMatrix.weighted : <code>boolean</code>
+Whether the graph is weighted.
 
 **Kind**: static property of [<code>UnweightedAdjacencyMatrix</code>](#UnweightedAdjacencyMatrix)  
 <a name="UnweightedAdjacencyMatrix.getLength"></a>
@@ -2835,18 +2849,15 @@ Creates an adjacency matrix from a given adjacency list.
 
 <a name="GraphMixin"></a>
 
-## GraphMixin([classOptions]) ⇒ [<code>Graph</code>](#Graph)
+## GraphMixin(Base, [undirected]) ⇒ [<code>Graph</code>](#Graph)
 Creates a Graph class.
 
 **Kind**: global function  
 
-| Param | Type |
-| --- | --- |
-| [classOptions] | <code>object</code> | 
-| [classOptions.Collection] | [<code>CollectionConstructor</code>](#CollectionConstructor) | 
-| [classOptions.weighted] | <code>boolean</code> | 
-| [classOptions.undirected] | <code>boolean</code> | 
-| [classOptions.list] | <code>boolean</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| Base | [<code>AdjacencyStructure</code>](#AdjacencyStructure) |  | 
+| [undirected] | <code>boolean</code> | <code>false</code> | 
 
 <a name="GridMixin"></a>
 
@@ -2916,15 +2927,15 @@ Creates a WeightedAdjacencyList class extending a given TypedArray class.
 
 <a name="WeightedAdjacencyMatrixMixin"></a>
 
-## WeightedAdjacencyMatrixMixin(Base, undirected) ⇒ [<code>WeightedAdjacencyMatrix</code>](#WeightedAdjacencyMatrix)
+## WeightedAdjacencyMatrixMixin(Base, [undirected]) ⇒ [<code>WeightedAdjacencyMatrix</code>](#WeightedAdjacencyMatrix)
 Creates a WeightedAdjacencyMatrix class extending a given Array-like class.
 
 **Kind**: global function  
 
-| Param | Type |
-| --- | --- |
-| Base | [<code>CollectionConstructor</code>](#CollectionConstructor) | 
-| undirected | <code>boolean</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| Base | [<code>CollectionConstructor</code>](#CollectionConstructor) |  | 
+| [undirected] | <code>boolean</code> | <code>false</code> | 
 
 <a name="BitCoordinates"></a>
 

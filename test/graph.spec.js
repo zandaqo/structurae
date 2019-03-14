@@ -1,10 +1,15 @@
 const GraphMixin = require('../lib/graph.js');
 
+const UnweightedAdjacencyList = require('../lib/unweighted-adjacency-list');
+const UnweightedAdjacencyMatrix = require('../lib/unweighted-adjacency-matrix');
+const WeightedAdjacencyListMixin = require('../lib/weighted-adjacency-list');
+const WeightedAdjacencyMatrixMixin = require('../lib/weighted-adjacency-matrix');
+
 const Graphs = [
-  ['WeightedList', GraphMixin({ Collection: Int32Array, weighted: true, list: true })],
-  ['WeightedMatrix', GraphMixin({ Collection: Int32Array, weighted: true })],
-  ['UnweightedList', GraphMixin({ list: true })],
-  ['UnweightedMatrix', GraphMixin()],
+  ['WeightedList', GraphMixin(WeightedAdjacencyListMixin(Int32Array))],
+  ['WeightedMatrix', GraphMixin(WeightedAdjacencyMatrixMixin(Int32Array))],
+  ['UnweightedList', GraphMixin(UnweightedAdjacencyList)],
+  ['UnweightedMatrix', GraphMixin(UnweightedAdjacencyMatrix)],
 ];
 
 describe('Graph', () => {
