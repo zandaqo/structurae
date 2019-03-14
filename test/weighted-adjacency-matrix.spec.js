@@ -1,7 +1,9 @@
 const WeightedAdjacencyMatrixMixin = require('../lib/weighted-adjacency-matrix');
+const WeightedAdjacencyListMixin = require('../lib/weighted-adjacency-list');
 
 const DirectedMatrix = WeightedAdjacencyMatrixMixin(Int32Array, false);
 const UndirectedMatrix = WeightedAdjacencyMatrixMixin(Int32Array, true);
+const DirectedList = WeightedAdjacencyListMixin(Int32Array);
 
 describe('WeightedAdjacencyMatrix', () => {
   let graph;
@@ -77,6 +79,24 @@ describe('WeightedAdjacencyMatrix', () => {
     it('returns the length of underlying TypedArray required to hold the graph', () => {
       expect(DirectedMatrix.getLength(60)).toBe(3840);
       expect(UndirectedMatrix.getLength(60)).toBe(1830);
+    });
+  });
+
+  describe('fromList', () => {
+    it('creates an adjacency matrix from a given adjacency list', () => {
+      const list = new DirectedList({ vertices: 6, edges: 12 });
+      list.addEdge(0, 1, 3);
+      list.addEdge(0, 2, 2);
+      list.addEdge(0, 3, 1);
+      list.addEdge(2, 4, 8);
+      list.addEdge(2, 5, 6);
+      const graphFromList = DirectedMatrix.fromList(list);
+      expect(graphFromList.hasEdge(0, 1)).toBe(true);
+      expect(graphFromList.hasEdge(0, 2)).toBe(true);
+      expect(graphFromList.hasEdge(0, 3)).toBe(true);
+      expect(graphFromList.hasEdge(2, 4)).toBe(true);
+      expect(graphFromList.hasEdge(2, 5)).toBe(true);
+      expect(graphFromList.hasEdge(1, 0)).toBe(false);
     });
   });
 });

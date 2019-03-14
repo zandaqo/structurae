@@ -212,12 +212,11 @@ export declare class BinaryGrid extends Uint16Array {
     columns: number;
     rows: number;
     lastPosition: BitPosition;
+
     constructor(options: BinaryGridOptions, ...args: any);
     get(row: number, column: number): Bit;
     set(row: number, column: number, value?: Bit): this;
     setArray(array: Collection, offset: number): void;
-    getRow(row: number): Bit[];
-    getColumn(column: number): Bit[];
     private getBitPosition(row: number, column: number): BitPosition;
     static getLength(rows: number, columns: number): number;
     static getOffset(columns: number): number;
@@ -241,71 +240,80 @@ declare class SymmetricGrid {
 
 export declare function SymmetricGridMixin<T extends Collection>(Base?: Constructor<T>): Constructor<T & SymmetricGrid>
 
-interface UnweightedMatrixOptions {
-    vertices: number;
-    directed?: boolean;
-}
+type GridStructure = Grid | BinaryGrid | SymmetricGrid;
 
-export declare class UnweightedAdjacencyMatrix extends BinaryGrid {
-    vertices: number;
-    colors: BinaryGrid;
-    directed: boolean;
-
-    constructor(options?: UnweightedMatrixOptions, ...args: any);
-    addEdge(x: number, y: number): this;
-    removeEdge(x: number, y: number): this;
-    hasEdge(x: number, y: number): boolean;
-    outEdges(x: number): number[];
-    inEdges(x: number): number[];
-    isGray(x: number): boolean;
-    setGray(x: number): this;
-    isBlack(x: number): boolean;
-    setBlack(x: number): this;
-    traverse(isDFS?: boolean, start?: number, gray?: boolean, white?: boolean, black?: boolean): number;
-    path(start: number, end?: number): number[];
-    tree(start?: number): number[];
-    isAcyclic(): boolean;
-    topologicalSort(): number[];
-    static getLength(size: number): number;
-    static fromList(list: UnweightedAdjacencyList): UnweightedAdjacencyMatrix;
-}
-
-interface UnweightedListOptions {
+interface AdjacencyListOptions {
     vertices: number;
     edges: number;
-    directed?: boolean;
 }
 
 export declare class UnweightedAdjacencyList extends Uint32Array {
     vertices: number;
     edges: number;
-    colors: BinaryGrid;
-    directed: boolean;
+    static undirected: boolean;
 
-    constructor(options?: UnweightedListOptions, ...args: any);
+    constructor(options?: AdjacencyListOptions, ...args: any);
     addEdge(x: number, y: number): this;
     removeEdge(x: number, y: number): this;
     hasEdge(x: number, y: number): boolean;
-    private setEdge(x: number, y: number): this;
-    private unsetEdge(x: number, y: number): this;
-    outEdges(x: number): number[];
-    inEdges(x: number): number[];
+    private get(x: number, y: number): Bit;
+    private set(x: number, y: number): this;
+    private unset(x: number, y: number): this;
+    setArray(array: Collection, offset: number): void;
+    outEdges(x: number): number;
+    inEdges(x: number): number;
     private setOffsets(): void;
     isFull(): boolean;
     grow(vertices?: number, edges?: number): UnweightedAdjacencyList;
-    isGray(x: number): boolean;
-    setGray(x: number): this;
-    isBlack(x: number): boolean;
-    setBlack(x: number): this;
-    traverse(isDFS?: boolean, start?: number, gray?: boolean, white?: boolean, black?: boolean): number;
-    path(start: number, end?: number): number[];
-    tree(start?: number): number[];
-    isAcyclic(): boolean;
-    topologicalSort(): number[];
     static getLength(vertices: number, edges: number): number;
     static getVertexCount(array: Collection): number;
     static fromGrid(grid: Grid): UnweightedAdjacencyList;
 }
+
+declare class WeightedAdjacencyList {
+    vertices: number;
+    edges: number;
+    static undirected: boolean;
+
+    constructor(options?: AdjacencyListOptions, ...args: any);
+    addEdge(x: number, y: number, weight: number): this;
+    removeEdge(x: number, y: number): this;
+    hasEdge(x: number, y: number): boolean;
+    private get(x: number, y: number): Bit;
+    private set(x: number, y: number, weight: number): this;
+    private unset(x: number, y: number): this;
+    setArray(array: Collection, offset: number): void;
+    outEdges(x: number): number;
+    inEdges(x: number): number;
+    private setOffsets(): void;
+    isFull(): boolean;
+    grow(vertices?: number, edges?: number): UnweightedAdjacencyList;
+    static getLength(vertices: number, edges: number): number;
+    static getVertexCount(array: Collection): number;
+    static fromGrid(grid: Grid): WeightedAdjacencyList;
+}
+
+export declare function WeightedAdjacencyListMixin<T extends GridStructure>(Base: CollectionConstructor): Constructor<T & WeightedAdjacencyList>
+
+interface UnweightedMatrixOptions {
+    vertices: number;
+}
+
+export declare class UnweightedAdjacencyMatrix extends BinaryGrid {
+    vertices: number;
+    static undirected: boolean;
+
+    constructor(options?: UnweightedMatrixOptions, ...args: any);
+    addEdge(x: number, y: number): this;
+    removeEdge(x: number, y: number): this;
+    hasEdge(x: number, y: number): boolean;
+    outEdges(x: number): number;
+    inEdges(x: number): number;
+    static getLength(size: number): number;
+    static fromList(list: UnweightedAdjacencyList): UnweightedAdjacencyMatrix;
+}
+
+
 
 interface WeightedMatrixOptions {
     vertices: number;
@@ -314,15 +322,34 @@ interface WeightedMatrixOptions {
 
 declare class WeightedAdjacencyMatrix {
     vertices: number;
-    colors: BinaryGrid;
-    directed: boolean;
+    static undirected: boolean;
 
     constructor(options?: WeightedMatrixOptions, ...args: any);
     addEdge(x: number, y: number): this;
     removeEdge(x: number, y: number): this;
     hasEdge(x: number, y: number): boolean;
-    outEdges(x: number): number[];
-    inEdges(x: number): number[];
+    outEdges(x: number): number;
+    inEdges(x: number): number;
+    static getLength(size: number): number;
+    static fromList(list: WeightedAdjacencyList, pad: number): WeightedAdjacencyMatrix;
+}
+
+export declare function WeightedAdjacencyMatrixMixin<T extends GridStructure>(Base: CollectionConstructor, undirected?: boolean): Constructor<T & WeightedAdjacencyMatrix>
+
+type AdjacencyStructure = UnweightedAdjacencyList | UnweightedAdjacencyMatrix
+    | WeightedAdjacencyList | WeightedAdjacencyMatrix;
+
+interface GraphOptions {
+    Collection?: CollectionConstructor;
+    weighted?: boolean;
+    undirected?: boolean;
+    list?: boolean;
+}
+
+declare class Graph {
+    colors: BinaryGrid;
+
+    constructor();
     isGray(x: number): boolean;
     setGray(x: number): this;
     isBlack(x: number): boolean;
@@ -332,10 +359,10 @@ declare class WeightedAdjacencyMatrix {
     tree(start?: number): number[];
     isAcyclic(): boolean;
     topologicalSort(): number[];
-    static getLength(size: number): number;
-    private searchTopological(start: number, end: number, distances: number[], predecessor: number[]): boolean;
-    private searchDijkstra(start: number, end: number, distances: number[], predecessor: number[]): boolean;
-    private searchBellmanFord(start: number, end: number, distances: number[], predecessor: number[]): boolean;
+    private searchUnweighted(start: number, end: number, predecessors: number[]): boolean;
+    private searchTopological(start: number, end: number, distances: number[], predecessors: number[]): boolean;
+    private searchDijkstra(start: number, end: number, distances: number[], predecessors: number[]): boolean;
+    private searchBellmanFord(start: number, end: number, distances: number[], predecessors: number[]): boolean;
 }
 
-export declare function WeightedAdjacencyMatrixMixin<T extends Collection>(Base: Constructor<T>, directed?: boolean): Constructor<T & WeightedAdjacencyMatrix>
+export declare function GraphMixin<T extends AdjacencyStructure>(classOptions?: GraphOptions): Constructor<T & Graph>

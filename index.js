@@ -1,4 +1,5 @@
 const BitField = require('./lib/bit-field');
+const GraphMixin = require('./lib/graph');
 const GridMixin = require('./lib/grid');
 const BinaryHeap = require('./lib/binary-heap.js');
 const Pool = require('./lib/pool');
@@ -9,6 +10,7 @@ const StringView = require('./lib/string-view');
 const SymmetricGridMixin = require('./lib/symmetric-grid');
 const UnweightedAdjacencyList = require('./lib/unweighted-adjacency-list');
 const UnweightedAdjacencyMatrix = require('./lib/unweighted-adjacency-matrix');
+const WeightedAdjacencyListMixin = require('./lib/weighted-adjacency-list');
 const WeightedAdjacencyMatrixMixin = require('./lib/weighted-adjacency-matrix');
 
 /**
@@ -28,6 +30,7 @@ const WeightedAdjacencyMatrixMixin = require('./lib/weighted-adjacency-matrix');
 
 module.exports = {
   BitField,
+  GraphMixin,
   GridMixin,
   BinaryHeap,
   Pool,
@@ -38,5 +41,6 @@ module.exports = {
   SymmetricGridMixin,
   UnweightedAdjacencyList,
   UnweightedAdjacencyMatrix,
+  WeightedAdjacencyListMixin,
   WeightedAdjacencyMatrixMixin,
 };
