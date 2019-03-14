@@ -8,12 +8,10 @@ A collection of data structures for high-performance JavaScript applications tha
 
 - [BitField](https://github.com/zandaqo/structurae#BitField) - stores and operates on data in Numbers and BigInts treating them as bitfields.
 - [Graphs](https://github.com/zandaqo/structurae#Graphs):
-    - [Graph](https://github.com/zandaqo/structurae#Graph) -  the general data structure for graphs, extends an adjacency list/matrix structure
-     and provides methods for traversal (BFS, DFS), pathfinding (Dijkstra, Bellman-Ford), spanning tree construction (BFS, Prim), etc.
-    - [UnweightedAdjacencyList](https://github.com/zandaqo/structurae#UnweightedAdjacencyList) -  implements Adjacency List for unweighted graphs.
-    - [UnweightedAdjacencyMatrix](https://github.com/zandaqo/structurae#UnweightedAdjacencyMatrix) -  implements Adjacency Matrix using [BinaryGrid](https://github.com/zandaqo/structurae#BinaryGrid) for unweighted graphs.
-    - [WeightedAdjacencyList](https://github.com/zandaqo/structurae#WeightedAdjacencyList) - implements Adjacency List for weighted graphs.
-    - [WeightedAdjacencyMatrix](https://github.com/zandaqo/structurae#WeightedAdjacencyMatrix) - implements Adjacency Matrix using [Grid](https://github.com/zandaqo/structurae#Grid) or [SymmetricGrid](https://github.com/zandaqo/structurae#SymmetricGrid) for weighted graphs.
+    - [Graph](https://github.com/zandaqo/structurae#Graph) -  extends an adjacency list/matrix structure and provides methods for traversal (BFS, DFS),
+     pathfinding (Dijkstra, Bellman-Ford), spanning tree construction (BFS, Prim), etc.
+    - [UnweightedAdjacencyList & WeightedAdjacencyList](https://github.com/zandaqo/structurae#Adjacency-Lists) -  implements Adjacency List data structure.
+    - [UnweightedAdjacencyMatrix & WeightedAdjacencyMatrix](https://github.com/zandaqo/structurae#Adjacency-Matrices) -  implements Adjacency Matrix data structure.
 - [Grids](https://github.com/zandaqo/structurae#Grids):
     - [BinaryGrid](https://github.com/zandaqo/structurae#BinaryGrid) - creates a grid or 2D matrix of bits.
     - [Grid](https://github.com/zandaqo/structurae#Grid) - extends built-in indexed collections to handle 2 dimensional data (e.g. nested arrays).
@@ -352,10 +350,6 @@ bitGrid.get(0, 1);
 //=> 0
 bitGrid.get(0, 2);
 //=> 1
-bitGrid.getRow(0);
-//=> [ 1, 0, 1, 0, 0, 1, 0, 0 ]
-bitGrid.getColumn(0);
-//=> [ 1, 0 ]
 ```
 BinaryGrid packs bits into numbers like [BitField](https://github.com/zandaqo/structurae#BitField)
  and holds them in an ArrayBuffer, thus occupying the smallest possible space.
