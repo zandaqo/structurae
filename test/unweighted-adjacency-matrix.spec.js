@@ -72,6 +72,13 @@ describe('UnweightedAdjacencyMatrix', () => {
     });
   });
 
+  describe('getEdge', () => {
+    it('returns 1 if edge is set, 0 otherwise', () => {
+      expect(graph.getEdge(0, 1)).toBe(1);
+      expect(graph.getEdge(0, 5)).toBe(0);
+    });
+  });
+
   describe('getLength', () => {
     it('returns the length of underlying TypedArray required to hold the graph', () => {
       expect(UnweightedAdjacencyMatrix.getLength(50)).toBe(200);

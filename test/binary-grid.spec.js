@@ -39,13 +39,11 @@ describe('BinaryGrid', () => {
       expect(grid.get(1, 0)).toBe(0);
       expect(grid.get(1, 1)).toBe(1);
     });
-  });
 
-  describe('setArray', () => {
-    it('stores multiple values in the underlying typed array, reading input values from a specified array', () => {
-      const grid = new BinaryGrid({ columns: 16, rows: 3 });
-      grid.setArray([0, 1, 3]);
-      expect(Array.from(grid)).toEqual([0, 1, 3]);
+    it('proxies to TypedArray#set if array like parameter is supplied', () => {
+      const grid = new BinaryGrid({ columns: 48, rows: 1 });
+      grid.set([1, 2, 3]);
+      expect(Array.from(grid)).toEqual([1, 2, 3, 0]);
     });
   });
 

@@ -115,8 +115,7 @@ Implements a grid or 2D matrix of bits.
     * [new BinaryGrid([options], [...args])](#new_BinaryGrid_new)
     * _instance_
         * [.get(row, column)](#BinaryGrid+get) ⇒ <code>number</code>
-        * [.set(row, column, value)](#BinaryGrid+set) ⇒ [<code>BinaryGrid</code>](#BinaryGrid)
-        * [.setArray(array, [offset])](#BinaryGrid+setArray) ⇒ <code>void</code>
+        * [.set(row, [column], [value])](#BinaryGrid+set) ⇒ [<code>BinaryGrid</code>](#BinaryGrid)
     * _static_
         * [.getLength(rows, columns)](#BinaryGrid.getLength) ⇒ <code>number</code>
 
@@ -145,28 +144,17 @@ Returns the value of a bit at given coordinates.
 
 <a name="BinaryGrid+set"></a>
 
-### binaryGrid.set(row, column, value) ⇒ [<code>BinaryGrid</code>](#BinaryGrid)
+### binaryGrid.set(row, [column], [value]) ⇒ [<code>BinaryGrid</code>](#BinaryGrid)
 Sets the value of a bit at given coordinates.
+Proxies to TypedArray#set if the first parameter is Array-like.
 
 **Kind**: instance method of [<code>BinaryGrid</code>](#BinaryGrid)  
 
 | Param | Type | Default |
 | --- | --- | --- |
-| row | <code>number</code> |  | 
-| column | <code>number</code> |  | 
-| value | <code>number</code> | <code>1</code> | 
-
-<a name="BinaryGrid+setArray"></a>
-
-### binaryGrid.setArray(array, [offset]) ⇒ <code>void</code>
-A proxy to Uint16Array#set method.
-
-**Kind**: instance method of [<code>BinaryGrid</code>](#BinaryGrid)  
-
-| Param | Type |
-| --- | --- |
-| array | [<code>Collection</code>](#Collection) | 
-| [offset] | <code>number</code> | 
+| row | <code>number</code> \| [<code>Collection</code>](#Collection) |  | 
+| [column] | <code>number</code> |  | 
+| [value] | <code>number</code> | <code>1</code> | 
 
 <a name="BinaryGrid.getLength"></a>
 
@@ -886,7 +874,7 @@ Extends built-in indexed collections to handle 2 dimensional data.
         * [.rows](#Grid+rows) : <code>number</code>
         * [.getIndex(row, column)](#Grid+getIndex) ⇒ <code>\*</code>
         * [.get(row, column)](#Grid+get) ⇒ <code>\*</code>
-        * [.set(row, column, value)](#Grid+set) ⇒ [<code>Grid</code>](#Grid)
+        * [.set(row, [column], [value])](#Grid+set) ⇒ [<code>Grid</code>](#Grid)
         * [.setArray(array, [offset])](#Grid+setArray) ⇒ <code>void</code>
         * [.getCoordinates(index)](#Grid+getCoordinates) ⇒ [<code>Coordinates</code>](#Coordinates)
         * [.toArrays([withPadding])](#Grid+toArrays) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
@@ -970,17 +958,19 @@ a.get(0, 1);
 ```
 <a name="Grid+set"></a>
 
-### grid.set(row, column, value) ⇒ [<code>Grid</code>](#Grid)
+### grid.set(row, [column], [value]) ⇒ [<code>Grid</code>](#Grid)
 Sets the element at given coordinates.
+Proxies to TypedArray#set if the first parameter is Array-like
+and the grid is based on a TypedArray.
 
 **Kind**: instance method of [<code>Grid</code>](#Grid)  
 **Returns**: [<code>Grid</code>](#Grid) - the instance  
 
 | Param | Type |
 | --- | --- |
-| row | <code>number</code> | 
-| column | <code>number</code> | 
-| value | <code>\*</code> | 
+| row | <code>number</code> \| [<code>Collection</code>](#Collection) | 
+| [column] | <code>number</code> | 
+| [value] | <code>\*</code> | 
 
 **Example**  
 ```js
@@ -1959,7 +1949,7 @@ A grid to handle symmetric or triangular matrices using half the space required 
     * [new SymmetricGrid([options], [...args])](#new_SymmetricGrid_new)
     * _instance_
         * [.get(row, column)](#SymmetricGrid+get) ⇒ <code>\*</code>
-        * [.set(row, column, value)](#SymmetricGrid+set) ⇒ [<code>SymmetricGrid</code>](#SymmetricGrid)
+        * [.set(row, [column], [value])](#SymmetricGrid+set) ⇒ [<code>SymmetricGrid</code>](#SymmetricGrid)
         * [.setArray(array, [offset])](#SymmetricGrid+setArray) ⇒ <code>void</code>
         * [.getCoordinates(index)](#SymmetricGrid+getCoordinates) ⇒ [<code>Coordinates</code>](#Coordinates)
         * [.toArrays()](#SymmetricGrid+toArrays) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
@@ -2002,17 +1992,19 @@ a.get(0, 1);
 ```
 <a name="SymmetricGrid+set"></a>
 
-### symmetricGrid.set(row, column, value) ⇒ [<code>SymmetricGrid</code>](#SymmetricGrid)
+### symmetricGrid.set(row, [column], [value]) ⇒ [<code>SymmetricGrid</code>](#SymmetricGrid)
 Sets the element at given coordinates.
+Proxies to TypedArray#set if the first parameter is Array-like
+and the grid is based on a TypedArray.
 
 **Kind**: instance method of [<code>SymmetricGrid</code>](#SymmetricGrid)  
 **Returns**: [<code>SymmetricGrid</code>](#SymmetricGrid) - the instance  
 
 | Param | Type |
 | --- | --- |
-| row | <code>number</code> | 
-| column | <code>number</code> | 
-| value | <code>\*</code> | 
+| row | <code>number</code> \| [<code>Collection</code>](#Collection) | 
+| [column] | <code>number</code> | 
+| [value] | <code>\*</code> | 
 
 **Example**  
 ```js
@@ -2130,7 +2122,7 @@ Implements Adjacency List data structure for unweighted graphs.
         * [.addEdge(x, y)](#UnweightedAdjacencyList+addEdge) ⇒ [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)
         * [.removeEdge(x, y)](#UnweightedAdjacencyList+removeEdge) ⇒ [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)
         * [.hasEdge(x, y)](#UnweightedAdjacencyList+hasEdge) ⇒ <code>boolean</code>
-        * [.setArray(array, [offset])](#UnweightedAdjacencyList+setArray) ⇒ <code>void</code>
+        * [.getEdge(x, y)](#UnweightedAdjacencyList+getEdge) ⇒ <code>number</code>
         * [.outEdges(vertex)](#UnweightedAdjacencyList+outEdges)
         * [.inEdges(vertex)](#UnweightedAdjacencyList+inEdges)
         * [.isFull()](#UnweightedAdjacencyList+isFull) ⇒ <code>boolean</code>
@@ -2193,17 +2185,17 @@ Checks if there is an edge between two vertices.
 | x | <code>number</code> | the starting vertex |
 | y | <code>number</code> | the ending vertex |
 
-<a name="UnweightedAdjacencyList+setArray"></a>
+<a name="UnweightedAdjacencyList+getEdge"></a>
 
-### unweightedAdjacencyList.setArray(array, [offset]) ⇒ <code>void</code>
-Proxies to TypedArray#set.
+### unweightedAdjacencyList.getEdge(x, y) ⇒ <code>number</code>
+Returns 1 if the edge between the given vertices exists, 0 otherwise.
 
 **Kind**: instance method of [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)  
 
-| Param | Type |
-| --- | --- |
-| array | [<code>Collection</code>](#Collection) | 
-| [offset] | <code>number</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the starting vertex |
+| y | <code>number</code> | the ending vertex |
 
 <a name="UnweightedAdjacencyList+outEdges"></a>
 
@@ -2306,11 +2298,11 @@ Implements Adjacency Matrix for unweighted graphs.
         * [.addEdge(x, y)](#UnweightedAdjacencyMatrix+addEdge) ⇒ [<code>UnweightedAdjacencyMatrix</code>](#UnweightedAdjacencyMatrix)
         * [.removeEdge(x, y)](#UnweightedAdjacencyMatrix+removeEdge) ⇒ [<code>UnweightedAdjacencyMatrix</code>](#UnweightedAdjacencyMatrix)
         * [.hasEdge(x, y)](#UnweightedAdjacencyMatrix+hasEdge) ⇒ <code>boolean</code>
+        * [.getEdge(x, y)](#UnweightedAdjacencyMatrix+getEdge) ⇒ <code>number</code>
         * [.outEdges(vertex)](#UnweightedAdjacencyMatrix+outEdges)
         * [.inEdges(vertex)](#UnweightedAdjacencyMatrix+inEdges)
         * [.get(row, column)](#BinaryGrid+get) ⇒ <code>number</code>
-        * [.set(row, column, value)](#BinaryGrid+set) ⇒ [<code>BinaryGrid</code>](#BinaryGrid)
-        * [.setArray(array, [offset])](#BinaryGrid+setArray) ⇒ <code>void</code>
+        * [.set(row, [column], [value])](#BinaryGrid+set) ⇒ [<code>BinaryGrid</code>](#BinaryGrid)
     * _static_
         * [.undirected](#UnweightedAdjacencyMatrix.undirected) : <code>boolean</code>
         * [.weighted](#UnweightedAdjacencyMatrix.weighted) : <code>boolean</code>
@@ -2363,6 +2355,18 @@ Checks if there is an edge between two vertices.
 | x | <code>number</code> | the starting vertex |
 | y | <code>number</code> | the ending vertex |
 
+<a name="UnweightedAdjacencyMatrix+getEdge"></a>
+
+### unweightedAdjacencyMatrix.getEdge(x, y) ⇒ <code>number</code>
+Returns 1 if the edge between the given vertices exists, 0 otherwise.
+
+**Kind**: instance method of [<code>UnweightedAdjacencyMatrix</code>](#UnweightedAdjacencyMatrix)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the starting vertex |
+| y | <code>number</code> | the ending vertex |
+
 <a name="UnweightedAdjacencyMatrix+outEdges"></a>
 
 ### unweightedAdjacencyMatrix.outEdges(vertex)
@@ -2399,28 +2403,17 @@ Returns the value of a bit at given coordinates.
 
 <a name="BinaryGrid+set"></a>
 
-### unweightedAdjacencyMatrix.set(row, column, value) ⇒ [<code>BinaryGrid</code>](#BinaryGrid)
+### unweightedAdjacencyMatrix.set(row, [column], [value]) ⇒ [<code>BinaryGrid</code>](#BinaryGrid)
 Sets the value of a bit at given coordinates.
+Proxies to TypedArray#set if the first parameter is Array-like.
 
 **Kind**: instance method of [<code>UnweightedAdjacencyMatrix</code>](#UnweightedAdjacencyMatrix)  
 
 | Param | Type | Default |
 | --- | --- | --- |
-| row | <code>number</code> |  | 
-| column | <code>number</code> |  | 
-| value | <code>number</code> | <code>1</code> | 
-
-<a name="BinaryGrid+setArray"></a>
-
-### unweightedAdjacencyMatrix.setArray(array, [offset]) ⇒ <code>void</code>
-A proxy to Uint16Array#set method.
-
-**Kind**: instance method of [<code>UnweightedAdjacencyMatrix</code>](#UnweightedAdjacencyMatrix)  
-
-| Param | Type |
-| --- | --- |
-| array | [<code>Collection</code>](#Collection) | 
-| [offset] | <code>number</code> | 
+| row | <code>number</code> \| [<code>Collection</code>](#Collection) |  | 
+| [column] | <code>number</code> |  | 
+| [value] | <code>number</code> | <code>1</code> | 
 
 <a name="UnweightedAdjacencyMatrix.undirected"></a>
 
@@ -2470,7 +2463,7 @@ Implements Adjacency List data structure for weighted graphs.
         * [.addEdge(x, y, weight)](#WeightedAdjacencyList+addEdge) ⇒ [<code>WeightedAdjacencyList</code>](#WeightedAdjacencyList)
         * [.removeEdge(x, y)](#WeightedAdjacencyList+removeEdge) ⇒ [<code>WeightedAdjacencyList</code>](#WeightedAdjacencyList)
         * [.hasEdge(x, y)](#WeightedAdjacencyList+hasEdge) ⇒ <code>boolean</code>
-        * [.setArray(array, [offset])](#WeightedAdjacencyList+setArray) ⇒ <code>void</code>
+        * [.getEdge(x, y)](#WeightedAdjacencyList+getEdge) ⇒ <code>number</code>
         * [.outEdges(vertex)](#WeightedAdjacencyList+outEdges)
         * [.inEdges(vertex)](#WeightedAdjacencyList+inEdges)
         * [.isFull()](#WeightedAdjacencyList+isFull) ⇒ <code>boolean</code>
@@ -2532,17 +2525,18 @@ Checks if there is an edge between two vertices.
 | x | <code>number</code> | the starting vertex |
 | y | <code>number</code> | the ending vertex |
 
-<a name="WeightedAdjacencyList+setArray"></a>
+<a name="WeightedAdjacencyList+getEdge"></a>
 
-### weightedAdjacencyList.setArray(array, [offset]) ⇒ <code>void</code>
-Proxies to TypedArray#set.
+### weightedAdjacencyList.getEdge(x, y) ⇒ <code>number</code>
+Returns the weight of the edge between given vertices
+or NaN if the edge doesn't exist.
 
 **Kind**: instance method of [<code>WeightedAdjacencyList</code>](#WeightedAdjacencyList)  
 
-| Param | Type |
-| --- | --- |
-| array | [<code>Collection</code>](#Collection) | 
-| [offset] | <code>number</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the starting vertex |
+| y | <code>number</code> | the ending vertex |
 
 <a name="WeightedAdjacencyList+outEdges"></a>
 
@@ -2635,11 +2629,12 @@ Implements Adjacency Matrix for weighted graphs.
         * [.addEdge(x, y, weight)](#WeightedAdjacencyMatrix+addEdge) ⇒ [<code>WeightedAdjacencyMatrix</code>](#WeightedAdjacencyMatrix)
         * [.removeEdge(x, y)](#WeightedAdjacencyMatrix+removeEdge) ⇒ [<code>WeightedAdjacencyMatrix</code>](#WeightedAdjacencyMatrix)
         * [.hasEdge(x, y)](#WeightedAdjacencyMatrix+hasEdge) ⇒ <code>boolean</code>
+        * [.getEdge(x, y)](#WeightedAdjacencyMatrix+getEdge) ⇒ <code>number</code>
         * [.outEdges(vertex)](#WeightedAdjacencyMatrix+outEdges)
         * [.inEdges(vertex)](#WeightedAdjacencyMatrix+inEdges)
         * [.getIndex(row, column)](#Grid+getIndex) ⇒ <code>\*</code>
         * [.get(row, column)](#Grid+get) ⇒ <code>\*</code>
-        * [.set(row, column, value)](#Grid+set) ⇒ [<code>Grid</code>](#Grid)
+        * [.set(row, [column], [value])](#Grid+set) ⇒ [<code>Grid</code>](#Grid)
         * [.setArray(array, [offset])](#Grid+setArray) ⇒ <code>void</code>
         * [.getCoordinates(index)](#Grid+getCoordinates) ⇒ [<code>Coordinates</code>](#Coordinates)
         * [.toArrays([withPadding])](#Grid+toArrays) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
@@ -2713,6 +2708,18 @@ Checks if there is an edge between two vertices.
 | x | <code>number</code> | the starting vertex |
 | y | <code>number</code> | the ending vertex |
 
+<a name="WeightedAdjacencyMatrix+getEdge"></a>
+
+### weightedAdjacencyMatrix.getEdge(x, y) ⇒ <code>number</code>
+Returns the weight of the edge between given vertices if it exists.
+
+**Kind**: instance method of [<code>WeightedAdjacencyMatrix</code>](#WeightedAdjacencyMatrix)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | the starting vertex |
+| y | <code>number</code> | the ending vertex |
+
 <a name="WeightedAdjacencyMatrix+outEdges"></a>
 
 ### weightedAdjacencyMatrix.outEdges(vertex)
@@ -2773,17 +2780,19 @@ a.get(0, 1);
 ```
 <a name="Grid+set"></a>
 
-### weightedAdjacencyMatrix.set(row, column, value) ⇒ [<code>Grid</code>](#Grid)
+### weightedAdjacencyMatrix.set(row, [column], [value]) ⇒ [<code>Grid</code>](#Grid)
 Sets the element at given coordinates.
+Proxies to TypedArray#set if the first parameter is Array-like
+and the grid is based on a TypedArray.
 
 **Kind**: instance method of [<code>WeightedAdjacencyMatrix</code>](#WeightedAdjacencyMatrix)  
 **Returns**: [<code>Grid</code>](#Grid) - the instance  
 
 | Param | Type |
 | --- | --- |
-| row | <code>number</code> | 
-| column | <code>number</code> | 
-| value | <code>\*</code> | 
+| row | <code>number</code> \| [<code>Collection</code>](#Collection) | 
+| [column] | <code>number</code> | 
+| [value] | <code>\*</code> | 
 
 **Example**  
 ```js

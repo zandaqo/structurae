@@ -9,6 +9,10 @@ type CollectionConstructor = ArrayConstructor | Int8ArrayConstructor | Uint8Arra
     | Uint8ClampedArrayConstructor | Int16Array | Uint16ArrayConstructor | Int32ArrayConstructor
     | Uint32ArrayConstructor | Float32ArrayConstructor | Float64ArrayConstructor;
 
+interface Constructor<T> {
+    new (...args): T;
+}
+
 interface GridOptions {
     rows: number;
     columns: number;
@@ -29,7 +33,7 @@ declare class Grid {
 
     constructor(options?: GridOptions, ...args: any);
     get(row: number, column: number): any;
-    set(row: number, column: number, value: any): this;
+    set(row: number|ArrayLike<number>, column?: number, value?: any): this;
     setArray(array: Collection, offset: number): void;
     getCoordinates(index: number): Coordinates;
     toArrays(withPadding?: boolean): any[][];
@@ -38,11 +42,54 @@ declare class Grid {
     static fromArrays(arrays: any[][], pad: any): Grid;
 }
 
-interface Constructor<T> {
-    new (...args): T;
+export declare function GridMixin<T extends Collection>(Base?: Constructor<T>): Constructor<T & Grid>
+
+interface BitPosition {
+    bucket: number;
+    position: number;
 }
 
-export declare function GridMixin<T extends Collection>(Base?: Constructor<T>): Constructor<T & Grid>
+type Bit = 0 | 1;
+
+interface BinaryGridOptions {
+    rows: number;
+    columns: number;
+}
+
+export declare class BinaryGrid extends Uint16Array {
+    offset: number;
+    columns: number;
+    rows: number;
+    lastPosition: BitPosition;
+
+    constructor(options: BinaryGridOptions, ...args: any);
+    get(row: number, column: number): Bit;
+    set(row: number|ArrayLike<number>, column?: number, value?: Bit): this;
+    private getBitPosition(row: number, column: number): BitPosition;
+    static getLength(rows: number, columns: number): number;
+    static getOffset(columns: number): number;
+}
+
+declare class SymmetricGrid {
+    rows: number;
+    columns: number;
+    pad: any;
+    lastCoordinates: Coordinates;
+
+    constructor(options?: GridOptions, ...args: any);
+    get(row: number, column: number): any;
+    set(row: number|ArrayLike<number>, column?: number, value?: any): this;
+    setArray(array: Collection, offset: number): void;
+    getCoordinates(index: number): Coordinates;
+    toArrays(withPadding?: boolean): any[][];
+    static getLength(rows: number, columns: number): number;
+    static fromArrays(arrays: any[][], pad: any): SymmetricGrid;
+}
+
+export declare function SymmetricGridMixin<T extends Collection>(Base?: Constructor<T>): Constructor<T & SymmetricGrid>
+
+type GridStructure = Grid | BinaryGrid | SymmetricGrid;
+
 
 type AnyNumber = number | bigint;
 type FieldName = number | string;
@@ -196,53 +243,6 @@ export declare class BinaryHeap extends Array {
     static isHeap(heap: Collection): boolean;
 }
 
-interface BitPosition {
-    bucket: number;
-    position: number;
-}
-
-type Bit = 0 | 1;
-
-interface BinaryGridOptions {
-    rows: number;
-    columns: number;
-}
-
-export declare class BinaryGrid extends Uint16Array {
-    offset: number;
-    columns: number;
-    rows: number;
-    lastPosition: BitPosition;
-
-    constructor(options: BinaryGridOptions, ...args: any);
-    get(row: number, column: number): Bit;
-    set(row: number, column: number, value?: Bit): this;
-    setArray(array: Collection, offset: number): void;
-    private getBitPosition(row: number, column: number): BitPosition;
-    static getLength(rows: number, columns: number): number;
-    static getOffset(columns: number): number;
-}
-
-declare class SymmetricGrid {
-    rows: number;
-    columns: number;
-    pad: any;
-    lastCoordinates: Coordinates;
-
-    constructor(options?: GridOptions, ...args: any);
-    get(row: number, column: number): any;
-    set(row: number, column: number, value: any): this;
-    setArray(array: Collection, offset: number): void;
-    getCoordinates(index: number): Coordinates;
-    toArrays(withPadding?: boolean): any[][];
-    static getLength(rows: number, columns: number): number;
-    static fromArrays(arrays: any[][], pad: any): SymmetricGrid;
-}
-
-export declare function SymmetricGridMixin<T extends Collection>(Base?: Constructor<T>): Constructor<T & SymmetricGrid>
-
-type GridStructure = Grid | BinaryGrid | SymmetricGrid;
-
 interface AdjacencyListOptions {
     vertices: number;
     edges: number;
@@ -258,10 +258,9 @@ export declare class UnweightedAdjacencyList extends Uint32Array {
     addEdge(x: number, y: number): this;
     removeEdge(x: number, y: number): this;
     hasEdge(x: number, y: number): boolean;
-    private get(x: number, y: number): Bit;
-    private set(x: number, y: number): this;
-    private unset(x: number, y: number): this;
-    setArray(array: Collection, offset: number): void;
+    getEdge(x: number, y: number): Bit;
+    private setEdge(x: number, y: number): this;
+    private unsetEdge(x: number, y: number): this;
     outEdges(x: number): Iterable<number>;
     inEdges(x: number): Iterable<number>;
     private setOffsets(): void;
@@ -282,10 +281,9 @@ declare class WeightedAdjacencyList {
     addEdge(x: number, y: number, weight: number): this;
     removeEdge(x: number, y: number): this;
     hasEdge(x: number, y: number): boolean;
-    private get(x: number, y: number): Bit;
-    private set(x: number, y: number, weight: number): this;
-    private unset(x: number, y: number): this;
-    setArray(array: Collection, offset: number): void;
+    getEdge(x: number, y: number): number;
+    private setEdge(x: number, y: number, weight: number): this;
+    private unsetEdge(x: number, y: number): this;
     outEdges(x: number): Iterable<number>;
     inEdges(x: number): Iterable<number>;
     private setOffsets(): void;
@@ -311,6 +309,7 @@ export declare class UnweightedAdjacencyMatrix extends BinaryGrid {
     addEdge(x: number, y: number): this;
     removeEdge(x: number, y: number): this;
     hasEdge(x: number, y: number): boolean;
+    getEdge(x: number, y: number): number;
     outEdges(x: number): Iterable<number>;
     inEdges(x: number): Iterable<number>;
     static getLength(size: number): number;
@@ -333,6 +332,7 @@ declare class WeightedAdjacencyMatrix {
     addEdge(x: number, y: number): this;
     removeEdge(x: number, y: number): this;
     hasEdge(x: number, y: number): boolean;
+    getEdge(x: number, y: number): number;
     outEdges(x: number): Iterable<number>;
     inEdges(x: number): Iterable<number>;
     static getLength(size: number): number;

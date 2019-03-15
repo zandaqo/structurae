@@ -82,6 +82,12 @@ describe('Grid', () => {
       expect(grid.get(0, 5)).toBe(9);
       expect(grid.get(1, 3)).toBe(7);
     });
+
+    it('proxies to TypedArray#set if array like parameter is supplied', () => {
+      const grid = new Uint32Grid({ columns: 4, rows: 1 });
+      grid.set([1, 2, 3]);
+      expect(Array.from(grid)).toEqual([1, 2, 3, 0]);
+    });
   });
 
   describe('setArray', () => {

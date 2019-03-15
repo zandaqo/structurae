@@ -237,7 +237,7 @@ unweightedGraph.inEdges(2);
 weightedGraph.addEdge(0, 1, 5);
 weightedGraph.hasEdge(0, 1);
 //=> true
-weightedGraph.get(0, 1);
+weightedGraph.getEdge(0, 1);
 //=> 5
 ```
 
@@ -288,7 +288,7 @@ weightedGraph.hasEdge(0, 1);
 //=> true
 weightedGraph.hasEdge(1, 0);
 //=> false
-weightedGraph.get(1, 0);
+weightedGraph.getEdge(1, 0);
 //=> 3
 ``` 
 
