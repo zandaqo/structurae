@@ -11,7 +11,9 @@
 <dd><p>Stores and operates on data in Numbers and BigInts treating them as bitfields.</p>
 </dd>
 <dt><a href="#Graph">Graph</a> ⇐ <code><a href="#AdjacencyStructure">AdjacencyStructure</a></code></dt>
-<dd></dd>
+<dd><p>Extends an adjacency list/matrix structure and provides methods for traversal (BFS, DFS),
+pathfinding (Dijkstra, Bellman-Ford), spanning tree construction (BFS, Prim), etc.</p>
+</dd>
 <dt><a href="#Grid">Grid</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
 <dd><p>Extends built-in indexed collections to handle 2 dimensional data.</p>
 </dd>
@@ -37,13 +39,13 @@
 <dd><p>Implements Adjacency List data structure for unweighted graphs.</p>
 </dd>
 <dt><a href="#UnweightedAdjacencyMatrix">UnweightedAdjacencyMatrix</a> ⇐ <code><a href="#BinaryGrid">BinaryGrid</a></code></dt>
-<dd><p>Implements Adjacency Matrix using BinaryGrid to handle unweighted graphs.</p>
+<dd><p>Implements Adjacency Matrix for unweighted graphs.</p>
 </dd>
 <dt><a href="#WeightedAdjacencyList">WeightedAdjacencyList</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
 <dd><p>Implements Adjacency List data structure for weighted graphs.</p>
 </dd>
 <dt><a href="#WeightedAdjacencyMatrix">WeightedAdjacencyMatrix</a> ⇐ <code><a href="#Grid">Grid</a></code></dt>
-<dd><p>Implements Adjacency Matrix using Grid or SymmetricGrid to handle weighted graphs.</p>
+<dd><p>Implements Adjacency Matrix for weighted graphs.</p>
 </dd>
 </dl>
 
@@ -51,7 +53,7 @@
 
 <dl>
 <dt><a href="#GraphMixin">GraphMixin(Base, [undirected])</a> ⇒ <code><a href="#Graph">Graph</a></code></dt>
-<dd><p>Creates a Graph class.</p>
+<dd><p>Creates a Graph class extending a given adjacency structure.</p>
 </dd>
 <dt><a href="#GridMixin">GridMixin(Base)</a> ⇒ <code><a href="#Grid">Grid</a></code></dt>
 <dd><p>Creates a Grid class extending a given Array-like class.</p>
@@ -741,63 +743,79 @@ The static version of `BitField#match`, matches a given value against a precompu
 <a name="Graph"></a>
 
 ## Graph ⇐ [<code>AdjacencyStructure</code>](#AdjacencyStructure)
+Extends an adjacency list/matrix structure and provides methods for traversal (BFS, DFS),
+pathfinding (Dijkstra, Bellman-Ford), spanning tree construction (BFS, Prim), etc.
+
 **Kind**: global class  
 **Extends**: [<code>AdjacencyStructure</code>](#AdjacencyStructure)  
 
 * [Graph](#Graph) ⇐ [<code>AdjacencyStructure</code>](#AdjacencyStructure)
-    * [.isGray(x)](#Graph+isGray) ⇒ <code>boolean</code>
-    * [.setGray(x)](#Graph+setGray) ⇒ [<code>Graph</code>](#Graph)
-    * [.isBlack(x)](#Graph+isBlack) ⇒ <code>boolean</code>
-    * [.setBlack(x)](#Graph+setBlack) ⇒ [<code>Graph</code>](#Graph)
+    * [new Graph(options, ...args)](#new_Graph_new)
+    * [.isGray(vertex)](#Graph+isGray) ⇒ <code>boolean</code>
+    * [.setGray(vertex)](#Graph+setGray) ⇒ [<code>Graph</code>](#Graph)
+    * [.isBlack(vertex)](#Graph+isBlack) ⇒ <code>boolean</code>
+    * [.setBlack(vertex)](#Graph+setBlack) ⇒ [<code>Graph</code>](#Graph)
     * [.traverse([isDFS], [start], [gray], [white], [black])](#Graph+traverse)
     * [.isAcyclic()](#Graph+isAcyclic) ⇒ <code>boolean</code>
     * [.topologicalSort()](#Graph+topologicalSort) ⇒ <code>Array.&lt;number&gt;</code>
-    * [.path(start, end, isAcyclic, isNonNegative)](#Graph+path) ⇒ <code>Array.&lt;number&gt;</code>
+    * [.path(start, end, [isAcyclic], [isNonNegative])](#Graph+path) ⇒ <code>Array.&lt;number&gt;</code>
     * [.tree([start])](#Graph+tree) ⇒ <code>Array.&lt;number&gt;</code>
+
+<a name="new_Graph_new"></a>
+
+### new Graph(options, ...args)
+
+| Param | Type |
+| --- | --- |
+| options | <code>Object</code> | 
+| options.vertices | <code>number</code> | 
+| [options.edges] | <code>number</code> | 
+| [options.pad] | <code>number</code> | 
+| ...args | <code>\*</code> | 
 
 <a name="Graph+isGray"></a>
 
-### graph.isGray(x) ⇒ <code>boolean</code>
+### graph.isGray(vertex) ⇒ <code>boolean</code>
 Checks if a vertex is entered during a traversal.
 
 **Kind**: instance method of [<code>Graph</code>](#Graph)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| x | <code>number</code> | the vertex |
+| vertex | <code>number</code> | the vertex |
 
 <a name="Graph+setGray"></a>
 
-### graph.setGray(x) ⇒ [<code>Graph</code>](#Graph)
+### graph.setGray(vertex) ⇒ [<code>Graph</code>](#Graph)
 Marks a vertex as entered during a traversal.
 
 **Kind**: instance method of [<code>Graph</code>](#Graph)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| x | <code>number</code> | the vertex |
+| vertex | <code>number</code> | the vertex |
 
 <a name="Graph+isBlack"></a>
 
-### graph.isBlack(x) ⇒ <code>boolean</code>
+### graph.isBlack(vertex) ⇒ <code>boolean</code>
 Checks if a vertex has been fully processed during a traversal.
 
 **Kind**: instance method of [<code>Graph</code>](#Graph)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| x | <code>number</code> | the vertex |
+| vertex | <code>number</code> | the vertex |
 
 <a name="Graph+setBlack"></a>
 
-### graph.setBlack(x) ⇒ [<code>Graph</code>](#Graph)
+### graph.setBlack(vertex) ⇒ [<code>Graph</code>](#Graph)
 Marks a vertex as fully processed during a traversal.
 
 **Kind**: instance method of [<code>Graph</code>](#Graph)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| x | <code>number</code> | the vertex |
+| vertex | <code>number</code> | the vertex |
 
 <a name="Graph+traverse"></a>
 
@@ -808,11 +826,11 @@ Does a Breadth-First or Depth-First traversal of the graph.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| [isDFS] | <code>boolean</code> |  | whether to do DFS traversal, does BFS otherwise |
+| [isDFS] | <code>boolean</code> | <code>false</code> | whether to do DFS traversal, does BFS otherwise |
 | [start] | <code>number</code> | <code>0</code> | the vertex to start at |
 | [gray] | <code>boolean</code> | <code>true</code> | whether to return vertices upon entering |
-| [white] | <code>boolean</code> |  | whether to return edges upon first encountering |
-| [black] | <code>boolean</code> |  | whether to return vertices after processing |
+| [white] | <code>boolean</code> | <code>false</code> | whether to return edges upon first encountering |
+| [black] | <code>boolean</code> | <code>false</code> | whether to return vertices after processing |
 
 <a name="Graph+isAcyclic"></a>
 
@@ -828,17 +846,17 @@ Returns a list of vertexes sorted topologically.
 **Kind**: instance method of [<code>Graph</code>](#Graph)  
 <a name="Graph+path"></a>
 
-### graph.path(start, end, isAcyclic, isNonNegative) ⇒ <code>Array.&lt;number&gt;</code>
+### graph.path(start, end, [isAcyclic], [isNonNegative]) ⇒ <code>Array.&lt;number&gt;</code>
 Returns a list of vertices along the shortest path between two given vertices.
 
 **Kind**: instance method of [<code>Graph</code>](#Graph)  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| start | <code>number</code> | the starting vertex |
-| end | <code>number</code> | the ending vertex |
-| isAcyclic | <code>boolean</code> | whether the graph is acyclic |
-| isNonNegative | <code>boolean</code> | whether all edges are non-negative |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| start | <code>number</code> |  | the starting vertex |
+| end | <code>number</code> |  | the ending vertex |
+| [isAcyclic] | <code>boolean</code> | <code>false</code> | whether the graph is acyclic |
+| [isNonNegative] | <code>boolean</code> | <code>false</code> | whether all edges are non-negative |
 
 <a name="Graph+tree"></a>
 
@@ -1011,9 +1029,9 @@ Returns an array of arrays where each nested array correspond to a row in the gr
 
 **Kind**: instance method of [<code>Grid</code>](#Grid)  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| [withPadding] | <code>boolean</code> | whether to remove padding from the end of the rows |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [withPadding] | <code>boolean</code> | <code>false</code> | whether to remove padding from the end of the rows |
 
 **Example**  
 ```js
@@ -1335,11 +1353,11 @@ starting element and less or equal to the provided ending element.
 **Kind**: instance method of [<code>SortedArray</code>](#SortedArray)  
 **Returns**: [<code>SortedCollection</code>](#SortedCollection) - the resulting range of elements  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| start | <code>\*</code> | the starting element |
-| end | <code>\*</code> | the ending element |
-| [subarray] | <code>boolean</code> | return a subarray instead of copying resulting value with slice |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| start | <code>\*</code> |  | the starting element |
+| end | <code>\*</code> |  | the ending element |
+| [subarray] | <code>boolean</code> | <code>false</code> | return a subarray instead of copying resulting value with slice |
 
 **Example**  
 ```js
@@ -1436,11 +1454,11 @@ starting element and less or equal to the provided ending element.
 **Kind**: instance method of [<code>SortedCollection</code>](#SortedCollection)  
 **Returns**: [<code>SortedCollection</code>](#SortedCollection) - the resulting range of elements  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| start | <code>\*</code> | the starting element |
-| end | <code>\*</code> | the ending element |
-| [subarray] | <code>boolean</code> | return a subarray instead of copying resulting value with slice |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| start | <code>\*</code> |  | the starting element |
+| end | <code>\*</code> |  | the ending element |
+| [subarray] | <code>boolean</code> | <code>false</code> | return a subarray instead of copying resulting value with slice |
 
 **Example**  
 ```js
@@ -2113,8 +2131,8 @@ Implements Adjacency List data structure for unweighted graphs.
         * [.removeEdge(x, y)](#UnweightedAdjacencyList+removeEdge) ⇒ [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)
         * [.hasEdge(x, y)](#UnweightedAdjacencyList+hasEdge) ⇒ <code>boolean</code>
         * [.setArray(array, [offset])](#UnweightedAdjacencyList+setArray) ⇒ <code>void</code>
-        * [.outEdges(x)](#UnweightedAdjacencyList+outEdges)
-        * [.inEdges(x)](#UnweightedAdjacencyList+inEdges)
+        * [.outEdges(vertex)](#UnweightedAdjacencyList+outEdges)
+        * [.inEdges(vertex)](#UnweightedAdjacencyList+inEdges)
         * [.isFull()](#UnweightedAdjacencyList+isFull) ⇒ <code>boolean</code>
         * [.grow([vertices], [edges])](#UnweightedAdjacencyList+grow) ⇒ [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)
     * _static_
@@ -2189,25 +2207,25 @@ Proxies to TypedArray#set.
 
 <a name="UnweightedAdjacencyList+outEdges"></a>
 
-### unweightedAdjacencyList.outEdges(x)
+### unweightedAdjacencyList.outEdges(vertex)
 Iterates over outgoing edges of a vertex.
 
 **Kind**: instance method of [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| x | <code>number</code> | the vertex |
+| vertex | <code>number</code> | the vertex |
 
 <a name="UnweightedAdjacencyList+inEdges"></a>
 
-### unweightedAdjacencyList.inEdges(x)
+### unweightedAdjacencyList.inEdges(vertex)
 Iterates over incoming edges of a vertex.
 
 **Kind**: instance method of [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| x | <code>number</code> | the vertex |
+| vertex | <code>number</code> | the vertex |
 
 <a name="UnweightedAdjacencyList+isFull"></a>
 
@@ -2277,7 +2295,7 @@ Creates an adjacency list from a given grid or adjacency matrix.
 <a name="UnweightedAdjacencyMatrix"></a>
 
 ## UnweightedAdjacencyMatrix ⇐ [<code>BinaryGrid</code>](#BinaryGrid)
-Implements Adjacency Matrix using BinaryGrid to handle unweighted graphs.
+Implements Adjacency Matrix for unweighted graphs.
 
 **Kind**: global class  
 **Extends**: [<code>BinaryGrid</code>](#BinaryGrid)  
@@ -2288,8 +2306,8 @@ Implements Adjacency Matrix using BinaryGrid to handle unweighted graphs.
         * [.addEdge(x, y)](#UnweightedAdjacencyMatrix+addEdge) ⇒ [<code>UnweightedAdjacencyMatrix</code>](#UnweightedAdjacencyMatrix)
         * [.removeEdge(x, y)](#UnweightedAdjacencyMatrix+removeEdge) ⇒ [<code>UnweightedAdjacencyMatrix</code>](#UnweightedAdjacencyMatrix)
         * [.hasEdge(x, y)](#UnweightedAdjacencyMatrix+hasEdge) ⇒ <code>boolean</code>
-        * [.outEdges(x)](#UnweightedAdjacencyMatrix+outEdges)
-        * [.inEdges(x)](#UnweightedAdjacencyMatrix+inEdges)
+        * [.outEdges(vertex)](#UnweightedAdjacencyMatrix+outEdges)
+        * [.inEdges(vertex)](#UnweightedAdjacencyMatrix+inEdges)
         * [.get(row, column)](#BinaryGrid+get) ⇒ <code>number</code>
         * [.set(row, column, value)](#BinaryGrid+set) ⇒ [<code>BinaryGrid</code>](#BinaryGrid)
         * [.setArray(array, [offset])](#BinaryGrid+setArray) ⇒ <code>void</code>
@@ -2347,25 +2365,25 @@ Checks if there is an edge between two vertices.
 
 <a name="UnweightedAdjacencyMatrix+outEdges"></a>
 
-### unweightedAdjacencyMatrix.outEdges(x)
+### unweightedAdjacencyMatrix.outEdges(vertex)
 Iterates over outgoing edges of a vertex.
 
 **Kind**: instance method of [<code>UnweightedAdjacencyMatrix</code>](#UnweightedAdjacencyMatrix)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| x | <code>number</code> | the vertex |
+| vertex | <code>number</code> | the vertex |
 
 <a name="UnweightedAdjacencyMatrix+inEdges"></a>
 
-### unweightedAdjacencyMatrix.inEdges(x)
+### unweightedAdjacencyMatrix.inEdges(vertex)
 Iterates over incoming edges of a vertex.
 
 **Kind**: instance method of [<code>UnweightedAdjacencyMatrix</code>](#UnweightedAdjacencyMatrix)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| x | <code>number</code> | the vertex |
+| vertex | <code>number</code> | the vertex |
 
 <a name="BinaryGrid+get"></a>
 
@@ -2453,8 +2471,8 @@ Implements Adjacency List data structure for weighted graphs.
         * [.removeEdge(x, y)](#WeightedAdjacencyList+removeEdge) ⇒ [<code>WeightedAdjacencyList</code>](#WeightedAdjacencyList)
         * [.hasEdge(x, y)](#WeightedAdjacencyList+hasEdge) ⇒ <code>boolean</code>
         * [.setArray(array, [offset])](#WeightedAdjacencyList+setArray) ⇒ <code>void</code>
-        * [.outEdges(x)](#WeightedAdjacencyList+outEdges)
-        * [.inEdges(x)](#WeightedAdjacencyList+inEdges)
+        * [.outEdges(vertex)](#WeightedAdjacencyList+outEdges)
+        * [.inEdges(vertex)](#WeightedAdjacencyList+inEdges)
         * [.isFull()](#WeightedAdjacencyList+isFull) ⇒ <code>boolean</code>
         * [.grow([vertices], [edges])](#WeightedAdjacencyList+grow) ⇒ [<code>WeightedAdjacencyList</code>](#WeightedAdjacencyList)
     * _static_
@@ -2528,25 +2546,25 @@ Proxies to TypedArray#set.
 
 <a name="WeightedAdjacencyList+outEdges"></a>
 
-### weightedAdjacencyList.outEdges(x)
+### weightedAdjacencyList.outEdges(vertex)
 Iterates over outgoing edges of a vertex.
 
 **Kind**: instance method of [<code>WeightedAdjacencyList</code>](#WeightedAdjacencyList)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| x | <code>number</code> | the vertex |
+| vertex | <code>number</code> | the vertex |
 
 <a name="WeightedAdjacencyList+inEdges"></a>
 
-### weightedAdjacencyList.inEdges(x)
+### weightedAdjacencyList.inEdges(vertex)
 Iterates over incoming edges of a vertex.
 
 **Kind**: instance method of [<code>WeightedAdjacencyList</code>](#WeightedAdjacencyList)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| x | <code>number</code> | the vertex |
+| vertex | <code>number</code> | the vertex |
 
 <a name="WeightedAdjacencyList+isFull"></a>
 
@@ -2604,7 +2622,7 @@ Creates an adjacency list from a given grid or adjacency matrix.
 <a name="WeightedAdjacencyMatrix"></a>
 
 ## WeightedAdjacencyMatrix ⇐ [<code>Grid</code>](#Grid)
-Implements Adjacency Matrix using Grid or SymmetricGrid to handle weighted graphs.
+Implements Adjacency Matrix for weighted graphs.
 
 **Kind**: global class  
 **Extends**: [<code>Grid</code>](#Grid)  
@@ -2617,8 +2635,8 @@ Implements Adjacency Matrix using Grid or SymmetricGrid to handle weighted graph
         * [.addEdge(x, y, weight)](#WeightedAdjacencyMatrix+addEdge) ⇒ [<code>WeightedAdjacencyMatrix</code>](#WeightedAdjacencyMatrix)
         * [.removeEdge(x, y)](#WeightedAdjacencyMatrix+removeEdge) ⇒ [<code>WeightedAdjacencyMatrix</code>](#WeightedAdjacencyMatrix)
         * [.hasEdge(x, y)](#WeightedAdjacencyMatrix+hasEdge) ⇒ <code>boolean</code>
-        * [.outEdges(x)](#WeightedAdjacencyMatrix+outEdges)
-        * [.inEdges(x)](#WeightedAdjacencyMatrix+inEdges)
+        * [.outEdges(vertex)](#WeightedAdjacencyMatrix+outEdges)
+        * [.inEdges(vertex)](#WeightedAdjacencyMatrix+inEdges)
         * [.getIndex(row, column)](#Grid+getIndex) ⇒ <code>\*</code>
         * [.get(row, column)](#Grid+get) ⇒ <code>\*</code>
         * [.set(row, column, value)](#Grid+set) ⇒ [<code>Grid</code>](#Grid)
@@ -2697,25 +2715,25 @@ Checks if there is an edge between two vertices.
 
 <a name="WeightedAdjacencyMatrix+outEdges"></a>
 
-### weightedAdjacencyMatrix.outEdges(x)
+### weightedAdjacencyMatrix.outEdges(vertex)
 Iterates over outgoing edges of a vertex.
 
 **Kind**: instance method of [<code>WeightedAdjacencyMatrix</code>](#WeightedAdjacencyMatrix)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| x | <code>number</code> | the vertex |
+| vertex | <code>number</code> | the vertex |
 
 <a name="WeightedAdjacencyMatrix+inEdges"></a>
 
-### weightedAdjacencyMatrix.inEdges(x)
+### weightedAdjacencyMatrix.inEdges(vertex)
 Iterates over incoming edges of a vertex.
 
 **Kind**: instance method of [<code>WeightedAdjacencyMatrix</code>](#WeightedAdjacencyMatrix)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| x | <code>number</code> | the vertex |
+| vertex | <code>number</code> | the vertex |
 
 <a name="Grid+getIndex"></a>
 
@@ -2814,9 +2832,9 @@ Returns an array of arrays where each nested array correspond to a row in the gr
 
 **Kind**: instance method of [<code>WeightedAdjacencyMatrix</code>](#WeightedAdjacencyMatrix)  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| [withPadding] | <code>boolean</code> | whether to remove padding from the end of the rows |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [withPadding] | <code>boolean</code> | <code>false</code> | whether to remove padding from the end of the rows |
 
 **Example**  
 ```js
@@ -2850,7 +2868,7 @@ Creates an adjacency matrix from a given adjacency list.
 <a name="GraphMixin"></a>
 
 ## GraphMixin(Base, [undirected]) ⇒ [<code>Graph</code>](#Graph)
-Creates a Graph class.
+Creates a Graph class extending a given adjacency structure.
 
 **Kind**: global function  
 

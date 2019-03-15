@@ -343,10 +343,16 @@ export declare function WeightedAdjacencyMatrixMixin<T extends GridStructure>(Ba
 type AdjacencyStructure = UnweightedAdjacencyList | UnweightedAdjacencyMatrix
     | WeightedAdjacencyList | WeightedAdjacencyMatrix;
 
+interface GraphOptions {
+    vertices: number;
+    edges?: number;
+    pad?: number;
+}
+
 declare class Graph {
     colors: BinaryGrid;
 
-    constructor();
+    constructor(options: GraphOptions, ...args: any);
     isGray(x: number): boolean;
     setGray(x: number): this;
     isBlack(x: number): boolean;
