@@ -33,7 +33,8 @@ pathfinding (Dijkstra, Bellman-Ford), spanning tree construction (BFS, Prim), et
 <dd><p>Extends Uint8Array to handle C-like representation of UTF-8 encoded strings.</p>
 </dd>
 <dt><a href="#SymmetricGrid">SymmetricGrid</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
-<dd><p>A grid to handle symmetric or triangular matrices using half the space required for a normal grid.</p>
+<dd><p>A grid to handle symmetric or triangular matrices
+using half the space required for a normal grid.</p>
 </dd>
 <dt><a href="#UnweightedAdjacencyList">UnweightedAdjacencyList</a> ⇐ <code>Uint32Array</code></dt>
 <dd><p>Implements Adjacency List data structure for unweighted graphs.</p>
@@ -98,6 +99,8 @@ pathfinding (Dijkstra, Bellman-Ford), spanning tree construction (BFS, Prim), et
 <dt><a href="#Collection">Collection</a> : <code>Array</code> | <code>Int8Array</code> | <code>Uint8Array</code> | <code>Uint8ClampedArray</code> | <code>Int16Array</code> | <code>Uint16Array</code> | <code>Int32Array</code> | <code>Uint32Array</code> | <code>Float32Array</code> | <code>Float64Array</code></dt>
 <dd></dd>
 <dt><a href="#Coordinates">Coordinates</a> : <code>Object</code></dt>
+<dd></dd>
+<dt><a href="#RecordFieldType">RecordFieldType</a> : <code>&#x27;Int8&#x27;</code> | <code>&#x27;Uint8&#x27;</code> | <code>&#x27;Int16&#x27;</code> | <code>&#x27;Uint16&#x27;</code> | <code>&#x27;Int32&#x27;</code> | <code>&#x27;Uint32&#x27;</code> | <code>&#x27;Float32&#x27;</code> | <code>&#x27;Float64&#x27;</code> | <code>&#x27;BigInt64&#x27;</code> | <code>&#x27;BigUint64&#x27;</code> | <code>&#x27;String&#x27;</code></dt>
 <dd></dd>
 <dt><a href="#RecordField">RecordField</a> : <code>Object</code></dt>
 <dd></dd>
@@ -1150,14 +1153,14 @@ people.size
 <a name="RecordArray+get"></a>
 
 ### recordArray.get(index, field) ⇒ <code>\*</code>
-Returns the value of a given field of a struct at the given index.
+Returns the value of a given field of a record at the given index.
 
 **Kind**: instance method of [<code>RecordArray</code>](#RecordArray)  
 **Returns**: <code>\*</code> - value of the field  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| index | <code>number</code> | the index of a struct |
+| index | <code>number</code> | the index of a record |
 | field | <code>string</code> | the name of the field |
 
 **Example**  
@@ -1172,13 +1175,13 @@ person.get(0, 'age');
 <a name="RecordArray+set"></a>
 
 ### recordArray.set(index, field, value) ⇒ <code>this</code>
-Sets a value to a field of a struct at a given index.
+Sets a value to a field of a record at a given index.
 
 **Kind**: instance method of [<code>RecordArray</code>](#RecordArray)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| index | <code>number</code> | the index of a struct |
+| index | <code>number</code> | the index of a record |
 | field | <code>string</code> | the name of the field |
 | value | <code>\*</code> | the value to be set |
 
@@ -1224,19 +1227,19 @@ Returns the byte offset in the ArrayBuffer of a given field.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| index | <code>number</code> | the index of the struct |
+| index | <code>number</code> | the index of the record |
 | field | <code>string</code> | the name of the field |
 
 <a name="RecordArray+toObject"></a>
 
 ### recordArray.toObject(index) ⇒ <code>Object</code>
-The object representation of a given struct.
+The object representation of a given record.
 
 **Kind**: instance method of [<code>RecordArray</code>](#RecordArray)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| index | <code>number</code> | the index of the struct |
+| index | <code>number</code> | the index of the record |
 
 **Example**  
 ```js
@@ -1347,7 +1350,7 @@ starting element and less or equal to the provided ending element.
 | --- | --- | --- | --- |
 | start | <code>\*</code> |  | the starting element |
 | end | <code>\*</code> |  | the ending element |
-| [subarray] | <code>boolean</code> | <code>false</code> | return a subarray instead of copying resulting value with slice |
+| [subarray] | <code>boolean</code> | <code>false</code> | return a subarray                                   instead of copying resulting value with slice |
 
 **Example**  
 ```js
@@ -1448,7 +1451,7 @@ starting element and less or equal to the provided ending element.
 | --- | --- | --- | --- |
 | start | <code>\*</code> |  | the starting element |
 | end | <code>\*</code> |  | the ending element |
-| [subarray] | <code>boolean</code> | <code>false</code> | return a subarray instead of copying resulting value with slice |
+| [subarray] | <code>boolean</code> | <code>false</code> | return a subarray                                   instead of copying resulting value with slice |
 
 **Example**  
 ```js
@@ -1499,8 +1502,9 @@ The default comparator.
 <a name="SortedCollection.getDifference"></a>
 
 ### SortedCollection.getDifference(a, b, [symmetric], [comparator], [container]) ⇒ <code>Array</code>
-Returns the difference of two sorted arrays, i.e. elements present in the first array but not
-in the second array. If `symmetric=true` finds the symmetric difference of two arrays, that is,
+Returns the difference of two sorted arrays,
+i.e. elements present in the first array but not in the second array.
+If `symmetric=true` finds the symmetric difference of two arrays, that is,
 the elements that are absent in one or another array.
 
 **Kind**: static method of [<code>SortedCollection</code>](#SortedCollection)  
@@ -1901,6 +1905,7 @@ stringView.trim();
 
 ### StringView.fromString(string, [size]) ⇒ [<code>StringView</code>](#StringView)
 Creates a StringView from a string.
+todo use TextEncoder.encodeInto when supported by Node.js (FF supports already)
 
 **Kind**: static method of [<code>StringView</code>](#StringView)  
 **Returns**: [<code>StringView</code>](#StringView) - a new StringView  
@@ -1940,7 +1945,8 @@ const stringView = StringView.getByteSize('abc😀a');
 <a name="SymmetricGrid"></a>
 
 ## SymmetricGrid ⇐ [<code>CollectionConstructor</code>](#CollectionConstructor)
-A grid to handle symmetric or triangular matrices using half the space required for a normal grid.
+A grid to handle symmetric or triangular matrices
+using half the space required for a normal grid.
 
 **Kind**: global class  
 **Extends**: [<code>CollectionConstructor</code>](#CollectionConstructor)  
@@ -3036,6 +3042,10 @@ Creates a WeightedAdjacencyMatrix class extending a given Array-like class.
 | row | <code>number</code> | row index |
 | column | <code>number</code> | column index |
 
+<a name="RecordFieldType"></a>
+
+## RecordFieldType : <code>&#x27;Int8&#x27;</code> \| <code>&#x27;Uint8&#x27;</code> \| <code>&#x27;Int16&#x27;</code> \| <code>&#x27;Uint16&#x27;</code> \| <code>&#x27;Int32&#x27;</code> \| <code>&#x27;Uint32&#x27;</code> \| <code>&#x27;Float32&#x27;</code> \| <code>&#x27;Float64&#x27;</code> \| <code>&#x27;BigInt64&#x27;</code> \| <code>&#x27;BigUint64&#x27;</code> \| <code>&#x27;String&#x27;</code>
+**Kind**: global typedef  
 <a name="RecordField"></a>
 
 ## RecordField : <code>Object</code>
@@ -3045,7 +3055,7 @@ Creates a WeightedAdjacencyMatrix class extending a given Array-like class.
 | Name | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> |  |
-| type | <code>string</code> |  |
+| type | [<code>RecordFieldType</code>](#RecordFieldType) |  |
 | [size] | <code>number</code> | the maximum size in bytes for a string type |
 | [littleEndian] | <code>boolean</code> |  |
 

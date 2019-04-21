@@ -47,6 +47,11 @@ describe('RecordArray', () => {
       expect(people.buffer.byteLength).toBe(160);
       expect(people.stringView instanceof StringView).toBe(false);
     });
+
+    it('throws if invalid field type is provided', () => {
+      expect(() => { new RecordArray([{ name: 'abc', type: 'Int128' }], 10); })
+        .toThrowError('Type "Int128" is not a valid type.');
+    });
   });
 
   describe('get', () => {
@@ -70,11 +75,6 @@ describe('RecordArray', () => {
       expect(actual instanceof StringView).toBe(true);
       expect(actual.buffer === records.buffer).toBe(true);
       expect(actual.length).toBe(22);
-    });
-
-    it('returns 0 if the field type is not found', () => {
-      const records = new RecordArray([{ name: 'a', type: 'NonExistant' }], 1);
-      expect(records.get(0, 'a')).toBe(0);
     });
   });
 
