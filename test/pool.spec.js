@@ -52,4 +52,13 @@ describe('Pool', () => {
       expect(pool.get()).toBe(5);
     });
   });
+
+  describe('getLength', () => {
+    it('calculates the required length of Uint16Array to hold the pool', () => {
+      expect(Pool.getLength(10)).toBe(1);
+      expect(Pool.getLength(16)).toBe(1);
+      expect(Pool.getLength(17)).toBe(2);
+      expect(Pool.getLength(32)).toBe(2);
+    });
+  });
 });

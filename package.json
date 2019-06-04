@@ -1,6 +1,6 @@
 {
   "name": "structurae",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Data structures for performance-sensitive modern JavaScript applications.",
   "main": "index.js",
   "types": "index.d.ts",
@@ -45,14 +45,14 @@
     "url": "https://github.com/zandaqo/structurae/issues"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.11",
+    "@types/jest": "^24.0.13",
     "benchmark": "^2.1.4",
-    "codecov": "^3.3.0",
+    "codecov": "^3.5.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.17.2",
-    "jest": "^24.7.1",
-    "jsdoc-to-markdown": "^4.0.1"
+    "eslint-plugin-import": "^2.17.3",
+    "jest": "^24.8.0",
+    "jsdoc-to-markdown": "^5.0.0"
   },
   "jest": {
     "testEnvironment": "node",

@@ -205,6 +205,7 @@ export declare class Pool extends Uint16Array {
     constructor(size: number);
     get(): number;
     free(index: number): void;
+    static getLength(size: number): number;
 }
 
 export declare class StringView extends Uint8Array {

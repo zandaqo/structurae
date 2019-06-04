@@ -10,6 +10,9 @@
 <dt><a href="#BitField">BitField</a></dt>
 <dd><p>Stores and operates on data in Numbers and BigInts treating them as bitfields.</p>
 </dd>
+<dt><a href="#BitVector">BitVector</a> ⇐ <code>Uint16Array</code></dt>
+<dd><p>Manages availability of objects in object pools.</p>
+</dd>
 <dt><a href="#Graph">Graph</a> ⇐ <code><a href="#AdjacencyStructure">AdjacencyStructure</a></code></dt>
 <dd><p>Extends an adjacency list/matrix structure and provides methods for traversal (BFS, DFS),
 pathfinding (Dijkstra, Bellman-Ford), spanning tree construction (BFS, Prim), etc.</p>
@@ -67,6 +70,10 @@ using half the space required for a normal grid.</p>
 <dt><a href="#SymmetricGridMixin">SymmetricGridMixin(Base)</a> ⇒ <code><a href="#SymmetricGrid">SymmetricGrid</a></code></dt>
 <dd><p>Creates a SymmetricGrid class extending a given Array-like class.</p>
 </dd>
+<dt><a href="#popCount32">popCount32(value)</a> ⇒ <code>number</code></dt>
+<dd></dd>
+<dt><a href="#getLSBIndex">getLSBIndex(value)</a> ⇒ <code>number</code></dt>
+<dd></dd>
 <dt><a href="#WeightedAdjacencyListMixin">WeightedAdjacencyListMixin(Base)</a> ⇒ <code><a href="#WeightedAdjacencyList">WeightedAdjacencyList</a></code></dt>
 <dd><p>Creates a WeightedAdjacencyList class extending a given TypedArray class.</p>
 </dd>
@@ -410,6 +417,18 @@ Stores and operates on data in Numbers and BigInts treating them as bitfields.
 | --- | --- | --- |
 | [data] | [<code>AnyNumber</code>](#AnyNumber) \| <code>Array.&lt;number&gt;</code> | <code>0</code> | 
 
+**Example**  
+```js
+class Person extends BitField {}
+Person.fields = [
+ { name: 'age', size: 7 },
+ { name: 'gender', size: 1 },
+];
+new Person([20, 1]).value
+//=> 41
+new Person(41).value
+//=> 41
+```
 <a name="BitField+value"></a>
 
 ### bitField.value : <code>number</code> \| <code>BigInt</code>
@@ -731,6 +750,48 @@ The static version of `BitField#match`, matches a given value against a precompu
 | value | [<code>AnyNumber</code>](#AnyNumber) | a value to check |
 | matcher | [<code>Matcher</code>](#Matcher) | a precomputed set of values |
 
+<a name="BitVector"></a>
+
+## BitVector ⇐ <code>Uint16Array</code>
+Manages availability of objects in object pools.
+
+**Kind**: global class  
+**Extends**: <code>Uint16Array</code>  
+
+* [BitVector](#BitVector) ⇐ <code>Uint16Array</code>
+    * [new BitVector([options], [...args])](#new_BitVector_new)
+    * [.get()](#BitVector+get) ⇒ <code>number</code>
+    * [.set(index, [value])](#BitVector+set) ⇒ <code>void</code>
+
+<a name="new_BitVector_new"></a>
+
+### new BitVector([options], [...args])
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [options] | <code>Object</code> |  |  |
+| [options.bits] | <code>number</code> | <code>16</code> | the number of bits |
+| [...args] | <code>\*</code> |  |  |
+
+<a name="BitVector+get"></a>
+
+### bitVector.get() ⇒ <code>number</code>
+Returns the bit value at a given index.
+
+**Kind**: instance method of [<code>BitVector</code>](#BitVector)  
+**Returns**: <code>number</code> - the next available index  
+<a name="BitVector+set"></a>
+
+### bitVector.set(index, [value]) ⇒ <code>void</code>
+Sets the bit value at a given index.
+
+**Kind**: instance method of [<code>BitVector</code>](#BitVector)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| index | <code>number</code> |  | 
+| [value] | <code>number</code> | <code>1</code> | 
+
 <a name="Graph"></a>
 
 ## Graph ⇐ [<code>AdjacencyStructure</code>](#AdjacencyStructure)
@@ -900,6 +961,20 @@ in that case creates and empty grid of specified parameters.
 | [options.pad] | <code>\*</code> | <code>0</code> | the initial value of cells |
 | [...args] | <code>\*</code> |  |  |
 
+**Example**  
+```js
+new ArrayGrid('a')
+//=> ArrayGrid ['a']
+
+new ArrayGrid(2)
+//=> ArrayGrid [undefined, undefined]
+
+new ArrayGrid({ rows: 3, columns: 2 })
+//=> ArrayGrid [0, 0, 0, 0, 0, 0]
+
+new ArrayGrid({ rows: 3, columns: 2, pad: 1 })
+//=> ArrayGrid [1, 1, 1, 1, 1, 1]
+```
 <a name="Grid+columns"></a>
 
 ### grid.columns ⇒ <code>void</code>
@@ -1072,8 +1147,11 @@ Manages availability of objects in object pools.
 
 * [Pool](#Pool) ⇐ <code>Uint16Array</code>
     * [new Pool(size)](#new_Pool_new)
-    * [.get()](#Pool+get) ⇒ <code>number</code>
-    * [.free(index)](#Pool+free) ⇒ <code>void</code>
+    * _instance_
+        * [.get()](#Pool+get) ⇒ <code>number</code>
+        * [.free(index)](#Pool+free) ⇒ <code>void</code>
+    * _static_
+        * [.getLength(size)](#Pool.getLength) ⇒ <code>number</code>
 
 <a name="new_Pool_new"></a>
 
@@ -1100,6 +1178,17 @@ Makes a given index available.
 | Param | Type | Description |
 | --- | --- | --- |
 | index | <code>number</code> | index to be freed |
+
+<a name="Pool.getLength"></a>
+
+### Pool.getLength(size) ⇒ <code>number</code>
+Returns the length of underlying TypedArray required to hold the pool.
+
+**Kind**: static method of [<code>Pool</code>](#Pool)  
+
+| Param | Type |
+| --- | --- |
+| size | <code>number</code> | 
 
 <a name="RecordArray"></a>
 
@@ -1134,6 +1223,18 @@ Extends DataView to use ArrayBuffer as an array of records or C-like structs.
 | [byteOffset] | <code>number</code> |  | the byteOffset in an existing ArrayBuffer |
 | [byteLength] | <code>number</code> |  | the byteLength in an existing ArrayBuffer |
 
+**Example**  
+```js
+const people = new RecordArray([
+  { name: 'age', type: 'Uint8' },
+  { name: 'score', type: 'Float32' },
+], 20);
+
+const cars = new RecordArray([
+  { name: 'name', type: 'String', size: 10 },
+  { name: 'speed', type: 'Float32' }
+], 100)
+```
 <a name="RecordArray+size"></a>
 
 ### recordArray.size : <code>number</code>
@@ -1978,6 +2079,20 @@ in that case creates and empty grid of specified parameters.
 | [options.pad] | <code>\*</code> | <code>0</code> | the initial value of cells |
 | [...args] | <code>\*</code> |  |  |
 
+**Example**  
+```js
+new SymmetricGrid('a')
+//=> SymmetricGrid ['a']
+
+new SymmetricGrid(2)
+//=> SymmetricGrid [undefined, undefined]
+
+new SymmetricGrid({ rows: 3 })
+//=> SymmetricGrid [0, 0, 0, 0]
+
+new SymmetricGrid({ rows: 3, pad: 1 })
+//=> SymmetricGrid [1, 1, 1, 1]
+```
 <a name="SymmetricGrid+get"></a>
 
 ### symmetricGrid.get(row, column) ⇒ <code>\*</code>
@@ -2401,6 +2516,7 @@ Iterates over incoming edges of a vertex.
 Returns the value of a bit at given coordinates.
 
 **Kind**: instance method of [<code>UnweightedAdjacencyMatrix</code>](#UnweightedAdjacencyMatrix)  
+**Overrides**: [<code>get</code>](#BinaryGrid+get)  
 
 | Param | Type |
 | --- | --- |
@@ -2414,6 +2530,7 @@ Sets the value of a bit at given coordinates.
 Proxies to TypedArray#set if the first parameter is Array-like.
 
 **Kind**: instance method of [<code>UnweightedAdjacencyMatrix</code>](#UnweightedAdjacencyMatrix)  
+**Overrides**: [<code>set</code>](#BinaryGrid+set)  
 
 | Param | Type | Default |
 | --- | --- | --- |
@@ -2677,6 +2794,7 @@ Specifies the number of columns of the grid.
 Number of rows in the grid.
 
 **Kind**: instance property of [<code>WeightedAdjacencyMatrix</code>](#WeightedAdjacencyMatrix)  
+**Overrides**: [<code>rows</code>](#Grid+rows)  
 <a name="WeightedAdjacencyMatrix+addEdge"></a>
 
 ### weightedAdjacencyMatrix.addEdge(x, y, weight) ⇒ [<code>WeightedAdjacencyMatrix</code>](#WeightedAdjacencyMatrix)
@@ -2754,6 +2872,7 @@ Iterates over incoming edges of a vertex.
 Returns an array index of an element at given coordinates.
 
 **Kind**: instance method of [<code>WeightedAdjacencyMatrix</code>](#WeightedAdjacencyMatrix)  
+**Overrides**: [<code>getIndex</code>](#Grid+getIndex)  
 
 | Param | Type |
 | --- | --- |
@@ -2772,6 +2891,7 @@ a.get(1, 0);
 Returns an element from given coordinates.
 
 **Kind**: instance method of [<code>WeightedAdjacencyMatrix</code>](#WeightedAdjacencyMatrix)  
+**Overrides**: [<code>get</code>](#Grid+get)  
 
 | Param | Type |
 | --- | --- |
@@ -2792,6 +2912,7 @@ Proxies to TypedArray#set if the first parameter is Array-like
 and the grid is based on a TypedArray.
 
 **Kind**: instance method of [<code>WeightedAdjacencyMatrix</code>](#WeightedAdjacencyMatrix)  
+**Overrides**: [<code>set</code>](#Grid+set)  
 **Returns**: [<code>Grid</code>](#Grid) - the instance  
 
 | Param | Type |
@@ -2814,6 +2935,7 @@ Implements in-place replacement of the grid elements if it's based on Array.
 Proxies to TypedArray#set if the grid is based on a TypedArray.
 
 **Kind**: instance method of [<code>WeightedAdjacencyMatrix</code>](#WeightedAdjacencyMatrix)  
+**Overrides**: [<code>setArray</code>](#Grid+setArray)  
 
 | Param | Type |
 | --- | --- |
@@ -2826,6 +2948,7 @@ Proxies to TypedArray#set if the grid is based on a TypedArray.
 Gets coordinates of an element at specified index.
 
 **Kind**: instance method of [<code>WeightedAdjacencyMatrix</code>](#WeightedAdjacencyMatrix)  
+**Overrides**: [<code>getCoordinates</code>](#Grid+getCoordinates)  
 **Returns**: [<code>Coordinates</code>](#Coordinates) - coordinates  
 
 | Param | Type |
@@ -2846,6 +2969,7 @@ a.getCoordinates(2);
 Returns an array of arrays where each nested array correspond to a row in the grid.
 
 **Kind**: instance method of [<code>WeightedAdjacencyMatrix</code>](#WeightedAdjacencyMatrix)  
+**Overrides**: [<code>toArrays</code>](#Grid+toArrays)  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -2947,6 +3071,24 @@ Creates a SymmetricGrid class extending a given Array-like class.
 ```js
 const SymmetricGrid = SymmetricGridMixin(Array);
 ```
+<a name="popCount32"></a>
+
+## popCount32(value) ⇒ <code>number</code>
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| value | <code>number</code> | 
+
+<a name="getLSBIndex"></a>
+
+## getLSBIndex(value) ⇒ <code>number</code>
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| value | <code>number</code> | 
+
 <a name="WeightedAdjacencyListMixin"></a>
 
 ## WeightedAdjacencyListMixin(Base) ⇒ [<code>WeightedAdjacencyList</code>](#WeightedAdjacencyList)
