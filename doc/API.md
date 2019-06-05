@@ -10,9 +10,6 @@
 <dt><a href="#BitField">BitField</a></dt>
 <dd><p>Stores and operates on data in Numbers and BigInts treating them as bitfields.</p>
 </dd>
-<dt><a href="#BitVector">BitVector</a> ⇐ <code>Uint16Array</code></dt>
-<dd><p>Manages availability of objects in object pools.</p>
-</dd>
 <dt><a href="#Graph">Graph</a> ⇐ <code><a href="#AdjacencyStructure">AdjacencyStructure</a></code></dt>
 <dd><p>Extends an adjacency list/matrix structure and provides methods for traversal (BFS, DFS),
 pathfinding (Dijkstra, Bellman-Ford), spanning tree construction (BFS, Prim), etc.</p>
@@ -22,6 +19,9 @@ pathfinding (Dijkstra, Bellman-Ford), spanning tree construction (BFS, Prim), et
 </dd>
 <dt><a href="#Pool">Pool</a> ⇐ <code>Uint16Array</code></dt>
 <dd><p>Manages availability of objects in object pools.</p>
+</dd>
+<dt><a href="#RankedBitArray">RankedBitArray</a> ⇐ <code>Uint16Array</code></dt>
+<dd><p>A bit array that supports constant time rank and O(logN) time select operations.</p>
 </dd>
 <dt><a href="#RecordArray">RecordArray</a> ⇐ <code>DataView</code></dt>
 <dd><p>Extends DataView to use ArrayBuffer as an array of records or C-like structs.</p>
@@ -750,48 +750,6 @@ The static version of `BitField#match`, matches a given value against a precompu
 | value | [<code>AnyNumber</code>](#AnyNumber) | a value to check |
 | matcher | [<code>Matcher</code>](#Matcher) | a precomputed set of values |
 
-<a name="BitVector"></a>
-
-## BitVector ⇐ <code>Uint16Array</code>
-Manages availability of objects in object pools.
-
-**Kind**: global class  
-**Extends**: <code>Uint16Array</code>  
-
-* [BitVector](#BitVector) ⇐ <code>Uint16Array</code>
-    * [new BitVector([options], [...args])](#new_BitVector_new)
-    * [.get()](#BitVector+get) ⇒ <code>number</code>
-    * [.set(index, [value])](#BitVector+set) ⇒ <code>void</code>
-
-<a name="new_BitVector_new"></a>
-
-### new BitVector([options], [...args])
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| [options] | <code>Object</code> |  |  |
-| [options.bits] | <code>number</code> | <code>16</code> | the number of bits |
-| [...args] | <code>\*</code> |  |  |
-
-<a name="BitVector+get"></a>
-
-### bitVector.get() ⇒ <code>number</code>
-Returns the bit value at a given index.
-
-**Kind**: instance method of [<code>BitVector</code>](#BitVector)  
-**Returns**: <code>number</code> - the next available index  
-<a name="BitVector+set"></a>
-
-### bitVector.set(index, [value]) ⇒ <code>void</code>
-Sets the bit value at a given index.
-
-**Kind**: instance method of [<code>BitVector</code>](#BitVector)  
-
-| Param | Type | Default |
-| --- | --- | --- |
-| index | <code>number</code> |  | 
-| [value] | <code>number</code> | <code>1</code> | 
-
 <a name="Graph"></a>
 
 ## Graph ⇐ [<code>AdjacencyStructure</code>](#AdjacencyStructure)
@@ -1185,6 +1143,98 @@ Makes a given index available.
 Returns the length of underlying TypedArray required to hold the pool.
 
 **Kind**: static method of [<code>Pool</code>](#Pool)  
+
+| Param | Type |
+| --- | --- |
+| size | <code>number</code> | 
+
+<a name="RankedBitArray"></a>
+
+## RankedBitArray ⇐ <code>Uint16Array</code>
+A bit array that supports constant time rank and O(logN) time select operations.
+
+**Kind**: global class  
+**Extends**: <code>Uint16Array</code>  
+
+* [RankedBitArray](#RankedBitArray) ⇐ <code>Uint16Array</code>
+    * [new RankedBitArray([options], [...args])](#new_RankedBitArray_new)
+    * _instance_
+        * [.size](#RankedBitArray+size) : <code>number</code>
+        * [.get(index)](#RankedBitArray+get) ⇒ <code>number</code>
+        * [.set(index, [value])](#RankedBitArray+set) ⇒ [<code>RankedBitArray</code>](#RankedBitArray)
+        * [.rank(index)](#RankedBitArray+rank) ⇒ <code>number</code>
+        * [.select(index)](#RankedBitArray+select) ⇒ <code>number</code>
+    * _static_
+        * [.getLength(size)](#RankedBitArray.getLength) ⇒ <code>number</code>
+
+<a name="new_RankedBitArray_new"></a>
+
+### new RankedBitArray([options], [...args])
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [options] | <code>Object</code> |  |  |
+| [options.size] | <code>number</code> | <code>16</code> | the number of bits |
+| [...args] | <code>\*</code> |  |  |
+
+<a name="RankedBitArray+size"></a>
+
+### rankedBitArray.size : <code>number</code>
+Returns the amount of available bits in the array.
+
+**Kind**: instance property of [<code>RankedBitArray</code>](#RankedBitArray)  
+<a name="RankedBitArray+get"></a>
+
+### rankedBitArray.get(index) ⇒ <code>number</code>
+Returns the bit value at a given index.
+
+**Kind**: instance method of [<code>RankedBitArray</code>](#RankedBitArray)  
+**Returns**: <code>number</code> - the next available index  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="RankedBitArray+set"></a>
+
+### rankedBitArray.set(index, [value]) ⇒ [<code>RankedBitArray</code>](#RankedBitArray)
+Sets the bit value at a given index.
+
+**Kind**: instance method of [<code>RankedBitArray</code>](#RankedBitArray)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| index | <code>number</code> |  | 
+| [value] | <code>number</code> | <code>1</code> | 
+
+<a name="RankedBitArray+rank"></a>
+
+### rankedBitArray.rank(index) ⇒ <code>number</code>
+Returns the rank of a bit at a given index.
+
+**Kind**: instance method of [<code>RankedBitArray</code>](#RankedBitArray)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="RankedBitArray+select"></a>
+
+### rankedBitArray.select(index) ⇒ <code>number</code>
+Returns the select of a bit at a given index.
+
+**Kind**: instance method of [<code>RankedBitArray</code>](#RankedBitArray)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="RankedBitArray.getLength"></a>
+
+### RankedBitArray.getLength(size) ⇒ <code>number</code>
+Returns the length of underlying TypedArray required to hold the bit array.
+
+**Kind**: static method of [<code>RankedBitArray</code>](#RankedBitArray)  
 
 | Param | Type |
 | --- | --- |

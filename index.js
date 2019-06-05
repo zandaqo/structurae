@@ -3,6 +3,7 @@ const GraphMixin = require('./lib/graph');
 const GridMixin = require('./lib/grid');
 const BinaryHeap = require('./lib/binary-heap.js');
 const Pool = require('./lib/pool');
+const RankedBitArray = require('./lib/ranked-bit-array');
 const RecordArray = require('./lib/record-array');
 const SortedArray = require('./lib/sorted-array');
 const SortedMixin = require('./lib/sorted-collection');
@@ -34,6 +35,7 @@ module.exports = {
   GridMixin,
   BinaryHeap,
   Pool,
+  RankedBitArray,
   RecordArray,
   SortedArray,
   SortedMixin,
