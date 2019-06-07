@@ -7,6 +7,8 @@
 <dt><a href="#BinaryHeap">BinaryHeap</a> ⇐ <code>Array</code></dt>
 <dd><p>Extends Array to implement the Binary Heap data structure.</p>
 </dd>
+<dt><a href="#BitArray">BitArray</a> ⇐ <code>Uint32Array</code></dt>
+<dd></dd>
 <dt><a href="#BitField">BitField</a></dt>
 <dd><p>Stores and operates on data in Numbers and BigInts treating them as bitfields.</p>
 </dd>
@@ -17,7 +19,7 @@ pathfinding (Dijkstra, Bellman-Ford), spanning tree construction (BFS, Prim), et
 <dt><a href="#Grid">Grid</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
 <dd><p>Extends built-in indexed collections to handle 2 dimensional data.</p>
 </dd>
-<dt><a href="#Pool">Pool</a> ⇐ <code>Uint16Array</code></dt>
+<dt><a href="#Pool">Pool</a> ⇐ <code><a href="#BitArray">BitArray</a></code></dt>
 <dd><p>Manages availability of objects in object pools.</p>
 </dd>
 <dt><a href="#RankedBitArray">RankedBitArray</a> ⇐ <code>Uint16Array</code></dt>
@@ -370,6 +372,81 @@ regardless of number or type of the arguments.
 | Param | Type | Description |
 | --- | --- | --- |
 | ...elements | <code>\*</code> | the elements of which to create the heap |
+
+<a name="BitArray"></a>
+
+## BitArray ⇐ <code>Uint32Array</code>
+**Kind**: global class  
+**Extends**: <code>Uint32Array</code>  
+
+* [BitArray](#BitArray) ⇐ <code>Uint32Array</code>
+    * [new BitArray([size], [...args])](#new_BitArray_new)
+    * _instance_
+        * [.size](#BitArray+size) : <code>number</code>
+        * [.getBit(index)](#BitArray+getBit) ⇒ <code>number</code>
+        * [.setBit(index, [value])](#BitArray+setBit) ⇒ [<code>BitArray</code>](#BitArray)
+        * [.getBitPosition(index)](#BitArray+getBitPosition) ⇒ [<code>BitCoordinates</code>](#BitCoordinates)
+    * _static_
+        * [.getLength(size)](#BitArray.getLength) ⇒ <code>number</code>
+
+<a name="new_BitArray_new"></a>
+
+### new BitArray([size], [...args])
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [size] | <code>number</code> | <code>32</code> | the number of bits |
+| [...args] | <code>\*</code> |  |  |
+
+<a name="BitArray+size"></a>
+
+### bitArray.size : <code>number</code>
+Returns the amount of available bits in the array.
+
+**Kind**: instance property of [<code>BitArray</code>](#BitArray)  
+<a name="BitArray+getBit"></a>
+
+### bitArray.getBit(index) ⇒ <code>number</code>
+Returns the bit value at a given index.
+
+**Kind**: instance method of [<code>BitArray</code>](#BitArray)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="BitArray+setBit"></a>
+
+### bitArray.setBit(index, [value]) ⇒ [<code>BitArray</code>](#BitArray)
+Sets the bit value at a given index.
+
+**Kind**: instance method of [<code>BitArray</code>](#BitArray)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| index | <code>number</code> |  | 
+| [value] | <code>number</code> | <code>1</code> | 
+
+<a name="BitArray+getBitPosition"></a>
+
+### bitArray.getBitPosition(index) ⇒ [<code>BitCoordinates</code>](#BitCoordinates)
+**Kind**: instance method of [<code>BitArray</code>](#BitArray)  
+**Access**: protected  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="BitArray.getLength"></a>
+
+### BitArray.getLength(size) ⇒ <code>number</code>
+Returns the length of underlying TypedArray required to hold the bit array.
+
+**Kind**: static method of [<code>BitArray</code>](#BitArray)  
+
+| Param | Type |
+| --- | --- |
+| size | <code>number</code> | 
 
 <a name="BitField"></a>
 
@@ -1097,19 +1174,20 @@ a.get(2, 1);
 
 <a name="Pool"></a>
 
-## Pool ⇐ <code>Uint16Array</code>
+## Pool ⇐ [<code>BitArray</code>](#BitArray)
 Manages availability of objects in object pools.
 
 **Kind**: global class  
-**Extends**: <code>Uint16Array</code>  
+**Extends**: [<code>BitArray</code>](#BitArray)  
 
-* [Pool](#Pool) ⇐ <code>Uint16Array</code>
+* [Pool](#Pool) ⇐ [<code>BitArray</code>](#BitArray)
     * [new Pool(size)](#new_Pool_new)
-    * _instance_
-        * [.get()](#Pool+get) ⇒ <code>number</code>
-        * [.free(index)](#Pool+free) ⇒ <code>void</code>
-    * _static_
-        * [.getLength(size)](#Pool.getLength) ⇒ <code>number</code>
+    * [.size](#BitArray+size) : <code>number</code>
+    * [.get()](#Pool+get) ⇒ <code>number</code>
+    * [.free(index)](#Pool+free) ⇒ <code>void</code>
+    * [.getBit(index)](#BitArray+getBit) ⇒ <code>number</code>
+    * [.setBit(index, [value])](#BitArray+setBit) ⇒ [<code>BitArray</code>](#BitArray)
+    * [.getBitPosition(index)](#BitArray+getBitPosition) ⇒ [<code>BitCoordinates</code>](#BitCoordinates)
 
 <a name="new_Pool_new"></a>
 
@@ -1119,6 +1197,13 @@ Manages availability of objects in object pools.
 | --- | --- | --- |
 | size | <code>number</code> | the size of the pool |
 
+<a name="BitArray+size"></a>
+
+### pool.size : <code>number</code>
+Returns the amount of available bits in the array.
+
+**Kind**: instance property of [<code>Pool</code>](#Pool)  
+**Overrides**: [<code>size</code>](#BitArray+size)  
 <a name="Pool+get"></a>
 
 ### pool.get() ⇒ <code>number</code>
@@ -1137,16 +1222,41 @@ Makes a given index available.
 | --- | --- | --- |
 | index | <code>number</code> | index to be freed |
 
-<a name="Pool.getLength"></a>
+<a name="BitArray+getBit"></a>
 
-### Pool.getLength(size) ⇒ <code>number</code>
-Returns the length of underlying TypedArray required to hold the pool.
+### pool.getBit(index) ⇒ <code>number</code>
+Returns the bit value at a given index.
 
-**Kind**: static method of [<code>Pool</code>](#Pool)  
+**Kind**: instance method of [<code>Pool</code>](#Pool)  
+**Overrides**: [<code>getBit</code>](#BitArray+getBit)  
 
 | Param | Type |
 | --- | --- |
-| size | <code>number</code> | 
+| index | <code>number</code> | 
+
+<a name="BitArray+setBit"></a>
+
+### pool.setBit(index, [value]) ⇒ [<code>BitArray</code>](#BitArray)
+Sets the bit value at a given index.
+
+**Kind**: instance method of [<code>Pool</code>](#Pool)  
+**Overrides**: [<code>setBit</code>](#BitArray+setBit)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| index | <code>number</code> |  | 
+| [value] | <code>number</code> | <code>1</code> | 
+
+<a name="BitArray+getBitPosition"></a>
+
+### pool.getBitPosition(index) ⇒ [<code>BitCoordinates</code>](#BitCoordinates)
+**Kind**: instance method of [<code>Pool</code>](#Pool)  
+**Overrides**: [<code>getBitPosition</code>](#BitArray+getBitPosition)  
+**Access**: protected  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
 
 <a name="RankedBitArray"></a>
 
@@ -1157,25 +1267,13 @@ A bit array that supports constant time rank and O(logN) time select operations.
 **Extends**: <code>Uint16Array</code>  
 
 * [RankedBitArray](#RankedBitArray) ⇐ <code>Uint16Array</code>
-    * [new RankedBitArray([options], [...args])](#new_RankedBitArray_new)
     * _instance_
         * [.size](#RankedBitArray+size) : <code>number</code>
-        * [.get(index)](#RankedBitArray+get) ⇒ <code>number</code>
-        * [.set(index, [value])](#RankedBitArray+set) ⇒ [<code>RankedBitArray</code>](#RankedBitArray)
+        * [.setBit(index, [value])](#RankedBitArray+setBit) ⇒ [<code>RankedBitArray</code>](#RankedBitArray)
         * [.rank(index)](#RankedBitArray+rank) ⇒ <code>number</code>
         * [.select(index)](#RankedBitArray+select) ⇒ <code>number</code>
     * _static_
         * [.getLength(size)](#RankedBitArray.getLength) ⇒ <code>number</code>
-
-<a name="new_RankedBitArray_new"></a>
-
-### new RankedBitArray([options], [...args])
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| [options] | <code>Object</code> |  |  |
-| [options.size] | <code>number</code> | <code>16</code> | the number of bits |
-| [...args] | <code>\*</code> |  |  |
 
 <a name="RankedBitArray+size"></a>
 
@@ -1183,21 +1281,9 @@ A bit array that supports constant time rank and O(logN) time select operations.
 Returns the amount of available bits in the array.
 
 **Kind**: instance property of [<code>RankedBitArray</code>](#RankedBitArray)  
-<a name="RankedBitArray+get"></a>
+<a name="RankedBitArray+setBit"></a>
 
-### rankedBitArray.get(index) ⇒ <code>number</code>
-Returns the bit value at a given index.
-
-**Kind**: instance method of [<code>RankedBitArray</code>](#RankedBitArray)  
-**Returns**: <code>number</code> - the next available index  
-
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
-
-<a name="RankedBitArray+set"></a>
-
-### rankedBitArray.set(index, [value]) ⇒ [<code>RankedBitArray</code>](#RankedBitArray)
+### rankedBitArray.setBit(index, [value]) ⇒ [<code>RankedBitArray</code>](#RankedBitArray)
 Sets the bit value at a given index.
 
 **Kind**: instance method of [<code>RankedBitArray</code>](#RankedBitArray)  

@@ -200,27 +200,27 @@ export declare class RecordArray extends DataView {
     toObject(index: number): object;
 }
 
-export declare class Pool extends Uint16Array {
-    private nextAvailable: number;
-    constructor(size: number);
+export declare class BitArray extends Uint32Array {
+    size: number;
+    private lastPosition: BitPosition;
+
+    constructor(size: number|ArrayLike<number>|ArrayBuffer, ...args: any);
+    getBit(index: number): Bit;
+    setBit(index: number, value: Bit): this;
+    protected getBitPosition(index: number): void;
+    static getLength(size: number): number;
+}
+
+export declare class Pool extends BitArray {
     get(): number;
     free(index: number): void;
     static getLength(size: number): number;
 }
-interface BitArrayOptions {
-    size: number;
-}
 
-export declare class RankedBitArray extends Uint16Array {
-    size: number;
-    private lastPosition: BitPosition;
-
-    constructor(options?: BitArrayOptions, ...args: any);
-    get(index: number): Bit;
-    set(index: number|ArrayLike<number>, value: Bit): this;
+export declare class RankedBitArray extends BitArray {
+    setBit(index: number, value: Bit): this;
     rank(index: number): number;
     select(index: number): number;
-    private getBitPosition(index: number): void;
     private updateRanks(): void;
     static getLength(size: number): number;
 }

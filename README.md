@@ -6,7 +6,10 @@
 
 A collection of data structures for high-performance JavaScript applications that includes:
 
-- [BitField](https://github.com/zandaqo/structurae#BitField) - stores and operates on data in Numbers and BigInts treating them as bitfields.
+- Bits:
+    - [BitField](https://github.com/zandaqo/structurae#BitField) - stores and operates on data in Numbers and BigInts treating them as bitfields.
+    - BitArray - an array of bits implemented with Uint32Array.
+    - RankedBitArray - extends BitArray with O(1) time rank and O(logN) select methods.
 - [Graphs](https://github.com/zandaqo/structurae#Graphs):
     - [Graph](https://github.com/zandaqo/structurae#Graph) -  extends an adjacency list/matrix structure and provides methods for traversal (BFS, DFS),
      pathfinding (Dijkstra, Bellman-Ford), spanning tree construction (BFS, Prim), etc.
