@@ -221,7 +221,6 @@ export declare class RankedBitArray extends BitArray {
     setBit(index: number, value: Bit): this;
     rank(index: number): number;
     select(index: number): number;
-    private updateRanks(): void;
     static getLength(size: number): number;
 }
 

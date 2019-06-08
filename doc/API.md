@@ -8,7 +8,8 @@
 <dd><p>Extends Array to implement the Binary Heap data structure.</p>
 </dd>
 <dt><a href="#BitArray">BitArray</a> ⇐ <code>Uint32Array</code></dt>
-<dd></dd>
+<dd><p>Uses Uint32Array as a vector or array of bits.</p>
+</dd>
 <dt><a href="#BitField">BitField</a></dt>
 <dd><p>Stores and operates on data in Numbers and BigInts treating them as bitfields.</p>
 </dd>
@@ -22,7 +23,7 @@ pathfinding (Dijkstra, Bellman-Ford), spanning tree construction (BFS, Prim), et
 <dt><a href="#Pool">Pool</a> ⇐ <code><a href="#BitArray">BitArray</a></code></dt>
 <dd><p>Manages availability of objects in object pools.</p>
 </dd>
-<dt><a href="#RankedBitArray">RankedBitArray</a> ⇐ <code>Uint16Array</code></dt>
+<dt><a href="#RankedBitArray">RankedBitArray</a> ⇐ <code><a href="#BitArray">BitArray</a></code></dt>
 <dd><p>A bit array that supports constant time rank and O(logN) time select operations.</p>
 </dd>
 <dt><a href="#RecordArray">RecordArray</a> ⇐ <code>DataView</code></dt>
@@ -376,6 +377,8 @@ regardless of number or type of the arguments.
 <a name="BitArray"></a>
 
 ## BitArray ⇐ <code>Uint32Array</code>
+Uses Uint32Array as a vector or array of bits.
+
 **Kind**: global class  
 **Extends**: <code>Uint32Array</code>  
 
@@ -1260,18 +1263,20 @@ Sets the bit value at a given index.
 
 <a name="RankedBitArray"></a>
 
-## RankedBitArray ⇐ <code>Uint16Array</code>
+## RankedBitArray ⇐ [<code>BitArray</code>](#BitArray)
 A bit array that supports constant time rank and O(logN) time select operations.
 
 **Kind**: global class  
-**Extends**: <code>Uint16Array</code>  
+**Extends**: [<code>BitArray</code>](#BitArray)  
 
-* [RankedBitArray](#RankedBitArray) ⇐ <code>Uint16Array</code>
+* [RankedBitArray](#RankedBitArray) ⇐ [<code>BitArray</code>](#BitArray)
     * _instance_
         * [.size](#RankedBitArray+size) : <code>number</code>
         * [.setBit(index, [value])](#RankedBitArray+setBit) ⇒ [<code>RankedBitArray</code>](#RankedBitArray)
         * [.rank(index)](#RankedBitArray+rank) ⇒ <code>number</code>
         * [.select(index)](#RankedBitArray+select) ⇒ <code>number</code>
+        * [.getBit(index)](#BitArray+getBit) ⇒ <code>number</code>
+        * [.getBitPosition(index)](#BitArray+getBitPosition) ⇒ [<code>BitCoordinates</code>](#BitCoordinates)
     * _static_
         * [.getLength(size)](#RankedBitArray.getLength) ⇒ <code>number</code>
 
@@ -1281,12 +1286,14 @@ A bit array that supports constant time rank and O(logN) time select operations.
 Returns the amount of available bits in the array.
 
 **Kind**: instance property of [<code>RankedBitArray</code>](#RankedBitArray)  
+**Overrides**: [<code>size</code>](#BitArray+size)  
 <a name="RankedBitArray+setBit"></a>
 
 ### rankedBitArray.setBit(index, [value]) ⇒ [<code>RankedBitArray</code>](#RankedBitArray)
 Sets the bit value at a given index.
 
 **Kind**: instance method of [<code>RankedBitArray</code>](#RankedBitArray)  
+**Overrides**: [<code>setBit</code>](#BitArray+setBit)  
 
 | Param | Type | Default |
 | --- | --- | --- |
@@ -1310,6 +1317,27 @@ Returns the rank of a bit at a given index.
 Returns the select of a bit at a given index.
 
 **Kind**: instance method of [<code>RankedBitArray</code>](#RankedBitArray)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="BitArray+getBit"></a>
+
+### rankedBitArray.getBit(index) ⇒ <code>number</code>
+Returns the bit value at a given index.
+
+**Kind**: instance method of [<code>RankedBitArray</code>](#RankedBitArray)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="BitArray+getBitPosition"></a>
+
+### rankedBitArray.getBitPosition(index) ⇒ [<code>BitCoordinates</code>](#BitCoordinates)
+**Kind**: instance method of [<code>RankedBitArray</code>](#RankedBitArray)  
+**Access**: protected  
 
 | Param | Type |
 | --- | --- |

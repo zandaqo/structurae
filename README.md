@@ -8,8 +8,8 @@ A collection of data structures for high-performance JavaScript applications tha
 
 - Bits:
     - [BitField](https://github.com/zandaqo/structurae#BitField) - stores and operates on data in Numbers and BigInts treating them as bitfields.
-    - BitArray - an array of bits implemented with Uint32Array.
-    - RankedBitArray - extends BitArray with O(1) time rank and O(logN) select methods.
+    - [BitArray](https://github.com/zandaqo/structurae#BitArray) - an array of bits implemented with Uint32Array.
+    - [RankedBitArray](https://github.com/zandaqo/structurae#RankedBitArray) - extends BitArray with O(1) time rank and O(logN) select methods.
 - [Graphs](https://github.com/zandaqo/structurae#Graphs):
     - [Graph](https://github.com/zandaqo/structurae#Graph) -  extends an adjacency list/matrix structure and provides methods for traversal (BFS, DFS),
      pathfinding (Dijkstra, Bellman-Ford), spanning tree construction (BFS, Prim), etc.
@@ -199,6 +199,41 @@ Person.match(new Person([20, 1]).valueOf(), matcher);
 Person.match(new Person([19, 1]).valueOf(), matcher);
 //=> false
 ```
+
+### BitArray
+BitArray uses Uint32Array as an array or vector of bits. It's a simpler version of BitField that only sets and checks individual bits:
+
+```javascript
+const array = new BitArray(10);
+array.getBit(0)
+//=> 0
+array.setBit(0).getBit(0);
+//=> 1
+array.size
+//=> 10
+array.length
+//=> 1
+```
+
+BitArray is the base class for [Pool](https://github.com/zandaqo/structurae#Pool) and [RankedBitArray](https://github.com/zandaqo/structurae#RankedBitArray) classes. 
+It's useful in cases where one needs more bits than can be stored in a number, but doesn't want to use BigInts as it is done by [BitField](https://github.com/zandaqo/structurae#BitField).
+
+### RankedBitArray
+RankedBitArray is an extension of BitArray with methods to efficiently calculate rank and select. 
+The rank is calculated in constant time where as select has O(logN) time complexity.
+This is often used as a basic element in implementing succinct data structures.
+
+```javascript
+const array = new RankedBitArray(10);
+array.setBit(1).setBit(3).setBit(7);
+array.rank(2);
+//=> 1
+array.rank(7);
+//=> 2
+array.select(2);
+//=> 3
+```
+
 
 ### Graphs
 Structurae offers classes that implement Adjacency List (`UnweightedAdjacencyList`, `WeightedAdjacencyList`) and Adjacency Matrix (`UnweightedAdjacencyMatrix`, 

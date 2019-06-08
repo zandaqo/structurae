@@ -44,10 +44,10 @@ describe('RankedBitArray', () => {
   describe('rank', () => {
     it('returns the rank of a bit at a given index', () => {
       const array = new RankedBitArray(64);
-      array.setBit(33);
-      array.setBit(16);
-      array.setBit(9);
-      array.setBit(5);
+      array.setBit(33)
+        .setBit(16)
+        .setBit(9)
+        .setBit(5);
       expect(array.rank(36)).toBe(4);
       expect(array.rank(33)).toBe(3);
       expect(array.rank(16)).toBe(2);
@@ -59,11 +59,11 @@ describe('RankedBitArray', () => {
   describe('select', () => {
     it('the select of a bit at a given index', () => {
       const array = new RankedBitArray(320);
-      array.setBit(300);
-      array.setBit(20);
-      array.setBit(16);
-      array.setBit(9);
-      array.setBit(5);
+      array.setBit(300)
+        .setBit(20)
+        .setBit(16)
+        .setBit(9)
+        .setBit(5);
       expect(array.select(4)).toBe(20);
       expect(array.select(3)).toBe(16);
       expect(array.select(2)).toBe(9);
