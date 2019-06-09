@@ -1372,6 +1372,7 @@ Extends DataView to use ArrayBuffer as an array of records or C-like structs.
         * [.setString(offset, value, size)](#RecordArray+setString) ⇒ <code>void</code>
         * [.getByteOffset(index, field)](#RecordArray+getByteOffset) ⇒ <code>number</code>
         * [.toObject(index)](#RecordArray+toObject) ⇒ <code>Object</code>
+        * [.fromObject(index, object)](#RecordArray+fromObject) ⇒ [<code>RecordArray</code>](#RecordArray)
     * _static_
         * [.getLength(fields, [size])](#RecordArray.getLength) ⇒ <code>number</code>
 
@@ -1505,6 +1506,28 @@ The object representation of a given record.
 | Param | Type | Description |
 | --- | --- | --- |
 | index | <code>number</code> | the index of the record |
+
+**Example**  
+```js
+const people = new RecordArray([
+  { name: 'age', type: 'Uint8' },
+  { name: 'score', type: 'Float32' },
+], 20);
+
+person.set(0, 'age', 10).set(0, 'score', 5.0).toObject(0);
+//=> { age: 10, score: 5.0 }
+```
+<a name="RecordArray+fromObject"></a>
+
+### recordArray.fromObject(index, object) ⇒ [<code>RecordArray</code>](#RecordArray)
+Stores a given object as a record at a given index.
+
+**Kind**: instance method of [<code>RecordArray</code>](#RecordArray)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| index | <code>number</code> | the index of the record |
+| object | <code>Object</code> | the object to be stored |
 
 **Example**  
 ```js

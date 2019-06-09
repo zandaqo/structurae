@@ -128,7 +128,7 @@ describe('RecordArray', () => {
   });
 
   describe('toObject', () => {
-    it('returns an object representation of a given struct', () => {
+    it('returns an object representation of a given record', () => {
       const people = new RecordArray(peopleSchema, 10);
       people.set(0, 'age', 10)
         .set(0, 'height', 50)
@@ -136,6 +136,28 @@ describe('RecordArray', () => {
         .set(0, 'score', 5);
       expect(people.toObject(0)).toEqual({
         age: 10, height: 50, weight: 60, score: 5,
+      });
+    });
+  });
+
+  describe('fromObject', () => {
+    it('stores a given object as a record at a given index', () => {
+      const people = new RecordArray(peopleSchema, 10);
+      people.fromObject(0, {
+        age: 10, height: 50, weight: 60, score: 5,
+      });
+      expect(people.toObject(0)).toEqual({
+        age: 10, height: 50, weight: 60, score: 5,
+      });
+    });
+
+    it('skips missing fields', () => {
+      const people = new RecordArray(peopleSchema, 10);
+      people.fromObject(0, {
+        age: 10, weight: 60, score: 5,
+      });
+      expect(people.toObject(0)).toEqual({
+        age: 10, height: 0, weight: 60, score: 5,
       });
     });
   });

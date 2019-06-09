@@ -36,6 +36,7 @@ npm i structurae
 - [API documentation](https://github.com/zandaqo/structurae/blob/master/doc/API.md)
 - Articles:
     - [Structurae: Data Structures for Heigh-Performance JavaScript](https://blog.usejournal.com/structurae-data-structures-for-high-performance-javascript-9b7da4c73f8)
+    - [Structurae 1.0: Graphs, Strings, and WebAssembly](https://medium.com/@zandaqo/structurae-1-0-graphs-strings-and-webassembly-25dd964d5a70)
 
 ## Overview
 ### BitField
@@ -529,6 +530,10 @@ people.get(0, 'age');
 people.set(0, 'age', 10).set(0, 'score', 5.0);
 people.toObject(0);
 //=> { age: 10, score: 5.0, name: '' }
+// populate record from an object
+people.fromObject(0, { age: 15, score: 6.0, name: ''})
+people.toObject(0);
+//=> { age: 15, score: 6.0, name: '' }
 ```
 
 The String type is handled with [StringView](https://github.com/zandaqo/structurae#StringView).
