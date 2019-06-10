@@ -55,6 +55,8 @@ describe('RecordArray', () => {
       expect(records.buffer).toBe(buffer);
       expect(records.byteLength).toBe(640);
       expect(records.byteOffset).toBe(160);
+      expect(records.byteView.length).toBe(640);
+      expect(records.byteView.byteOffset).toBe(160);
     });
 
     it('supports typed arrays', () => {
@@ -150,11 +152,13 @@ describe('RecordArray', () => {
     });
 
     it('sets an array for typed array field', () => {
-      const records = new RecordArray(arraySchema, 5);
+      const buffer = new ArrayBuffer(1512);
+      const records = new RecordArray(arraySchema, undefined, buffer, 1000);
       const array = records.get(0, 'c');
       expect(Array.from(array)).toEqual([0, 0, 0, 0]);
       records.set(0, 'c', [1, 2, 3, 4]);
       expect(Array.from(array)).toEqual([1, 2, 3, 4]);
+      expect(Array.from(records.get(0, 'c'))).toEqual([1, 2, 3, 4]);
     });
 
     it('sets a smaller array for typed array field', () => {
