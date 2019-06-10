@@ -74,9 +74,14 @@ using half the space required for a normal grid.</p>
 <dd><p>Creates a SymmetricGrid class extending a given Array-like class.</p>
 </dd>
 <dt><a href="#popCount32">popCount32(value)</a> ⇒ <code>number</code></dt>
-<dd></dd>
+<dd><p>Counts set bits in a given number.</p>
+</dd>
 <dt><a href="#getLSBIndex">getLSBIndex(value)</a> ⇒ <code>number</code></dt>
-<dd></dd>
+<dd><p>Returns the index of the Least Significant Bit in a number.</p>
+</dd>
+<dt><a href="#getGTEMultiple">getGTEMultiple(value, base)</a> ⇒ <code>number</code></dt>
+<dd><p>Returns a multiple of a base number that is greater or equal to a given value.</p>
+</dd>
 <dt><a href="#WeightedAdjacencyListMixin">WeightedAdjacencyListMixin(Base)</a> ⇒ <code><a href="#WeightedAdjacencyList">WeightedAdjacencyList</a></code></dt>
 <dd><p>Creates a WeightedAdjacencyList class extending a given TypedArray class.</p>
 </dd>
@@ -1367,8 +1372,10 @@ Extends DataView to use ArrayBuffer as an array of records or C-like structs.
     * _instance_
         * [.size](#RecordArray+size) : <code>number</code>
         * [.get(index, field)](#RecordArray+get) ⇒ <code>\*</code>
-        * [.set(index, field, value)](#RecordArray+set) ⇒ <code>this</code>
+        * [.getArray(offset, size, type)](#RecordArray+getArray) ⇒ [<code>RecordArray</code>](#RecordArray)
         * [.getString(offset, size)](#RecordArray+getString) ⇒ [<code>StringView</code>](#StringView)
+        * [.set(index, field, value)](#RecordArray+set) ⇒ <code>this</code>
+        * [.setArray(offset, value, size, type)](#RecordArray+setArray) ⇒ [<code>RecordArray</code>](#RecordArray)
         * [.setString(offset, value, size)](#RecordArray+setString) ⇒ <code>void</code>
         * [.getByteOffset(index, field)](#RecordArray+getByteOffset) ⇒ <code>number</code>
         * [.toObject(index)](#RecordArray+toObject) ⇒ <code>Object</code>
@@ -1438,6 +1445,27 @@ const people = new RecordArray([
 
 person.get(0, 'age');
 ```
+<a name="RecordArray+getArray"></a>
+
+### recordArray.getArray(offset, size, type) ⇒ [<code>RecordArray</code>](#RecordArray)
+**Kind**: instance method of [<code>RecordArray</code>](#RecordArray)  
+
+| Param | Type |
+| --- | --- |
+| offset | <code>number</code> | 
+| size | <code>number</code> | 
+| type | <code>string</code> | 
+
+<a name="RecordArray+getString"></a>
+
+### recordArray.getString(offset, size) ⇒ [<code>StringView</code>](#StringView)
+**Kind**: instance method of [<code>RecordArray</code>](#RecordArray)  
+
+| Param | Type |
+| --- | --- |
+| offset | <code>number</code> | 
+| size | <code>number</code> | 
+
 <a name="RecordArray+set"></a>
 
 ### recordArray.set(index, field, value) ⇒ <code>this</code>
@@ -1462,15 +1490,17 @@ person.set(0, 'age', 10);
 person.get(0, 'age');
 //=> 10
 ```
-<a name="RecordArray+getString"></a>
+<a name="RecordArray+setArray"></a>
 
-### recordArray.getString(offset, size) ⇒ [<code>StringView</code>](#StringView)
+### recordArray.setArray(offset, value, size, type) ⇒ [<code>RecordArray</code>](#RecordArray)
 **Kind**: instance method of [<code>RecordArray</code>](#RecordArray)  
 
 | Param | Type |
 | --- | --- |
 | offset | <code>number</code> | 
+| value | <code>ArrayLike</code> | 
 | size | <code>number</code> | 
+| type | <code>string</code> | 
 
 <a name="RecordArray+setString"></a>
 
@@ -3261,6 +3291,8 @@ const SymmetricGrid = SymmetricGridMixin(Array);
 <a name="popCount32"></a>
 
 ## popCount32(value) ⇒ <code>number</code>
+Counts set bits in a given number.
+
 **Kind**: global function  
 
 | Param | Type |
@@ -3270,11 +3302,25 @@ const SymmetricGrid = SymmetricGridMixin(Array);
 <a name="getLSBIndex"></a>
 
 ## getLSBIndex(value) ⇒ <code>number</code>
+Returns the index of the Least Significant Bit in a number.
+
 **Kind**: global function  
 
 | Param | Type |
 | --- | --- |
 | value | <code>number</code> | 
+
+<a name="getGTEMultiple"></a>
+
+## getGTEMultiple(value, base) ⇒ <code>number</code>
+Returns a multiple of a base number that is greater or equal to a given value.
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| value | <code>number</code> | 
+| base | <code>number</code> | 
 
 <a name="WeightedAdjacencyListMixin"></a>
 

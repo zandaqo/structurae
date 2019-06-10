@@ -178,6 +178,8 @@ interface RecordField {
     type: RecordFieldType;
     size?: number;
     littleEndian?: boolean;
+    start?: number;
+    end?: number;
 }
 
 interface RecordSchema {
@@ -186,18 +188,21 @@ interface RecordSchema {
 
 export declare class RecordArray extends DataView {
     size: number;
+    byteView: StringView;
     private fields: RecordField[];
     private schema: RecordSchema;
     private offset: number;
-    private offsets: object;
-    private stringView: StringView;
 
     constructor(fields: RecordField[], size: number, buffer?: ArrayBuffer, byteOffset?: number, byteLength?: number);
     get(index: number, field: string): any;
+    getArray(offset: number, size: number, type: string): StringView;
+    getString(offset: number, size: number): StringView;
     set(index: number, field: string, value: any, littleEndian?: boolean): this;
-    getString(offset: number, littleEndian: boolean, size: number): StringView;
-    setString(offset: number, value: Collection): void;
+    setArray(offset: number, value: Collection, size: number, type: string): void;
+    setString(offset: number, value: Collection, size: number): void;
     toObject(index: number): object;
+    fromObject(index: number, object: object): this;
+    static getLength(fields: RecordField[], size: number): number;
 }
 
 export declare class BitArray extends Uint32Array {

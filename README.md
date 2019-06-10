@@ -511,8 +511,9 @@ pool.get();
 
 ### RecordArray
 RecordArray extends DataView to use ArrayBuffer as an array of records or C-like structs. 
-Records can contain fields of any type supported by DataView plus strings. 
-For a string, the maximum size in bytes should be defined. 
+Records can contain fields of any type supported by DataView, strings, and TypedArrays. 
+For a string, the maximum size in bytes should be defined, for typed array fields size property specifies 
+the length of the array.
 
 ```javascript
 const { RecordArray } = require('structurae');
@@ -546,6 +547,23 @@ people.set(0, name).get(0, 'name');
 //=> StringView(10) [83, 109, 105, 116, 104, 0, 0, 0, 0, 0]
 people.get(0, 'name').toString();
 //=> Smith
+```
+
+Getting a TypedArray field will return a new TypedArray that uses the same buffer as the RecordArray,
+that is, any change made on the new TypedArray will reflect in the RecordArray and vice versa:
+```javascript
+const people = new RecordArray([
+   { name: 'age', type: 'Uint8' },
+   { name: 'scores', type: 'Float32Array', size: 2 },
+], 10);
+const scores = people.get(0, 'scores');
+//=> Float32Array [0, 0];
+scores[1] = 1.2;
+people.get(0, 'scores');
+//=> Float32Array [0, 1.2]
+people.set(0, 'scores', [2, 3]);
+scores[0];
+//=> 2
 ```
 
 ### Sorted Structures

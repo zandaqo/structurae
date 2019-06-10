@@ -24,6 +24,21 @@ describe('RecordArray', () => {
     { name: 'score', type: 'Int32' },
   ];
 
+  const arraySchema = [
+    { name: 'a', type: 'Int8Array', size: 1 },
+    { name: 'b', type: 'Uint8Array', size: 2 },
+    { name: 'c', type: 'Int16Array', size: 4 },
+    { name: 'd', type: 'Uint16Array', size: 4 },
+    { name: 'e', type: 'Int32Array', size: 4 },
+    { name: 'f', type: 'Uint32Array', size: 4 },
+    { name: 'g', type: 'Float32Array', size: 4 },
+    { name: 'h', type: 'Float64Array', size: 8 },
+    { name: 'i', type: 'BigInt64Array', size: 8 },
+    { name: 'j', type: 'BigUint64Array', size: 16 },
+    { name: 'k', type: 'String', size: 2 },
+    { name: 'l', type: 'Int8' },
+  ];
+
   describe('constructor', () => {
     it('creates an instance of RecordArray', () => {
       const records = new RecordArray(recordSchema, 10);
@@ -31,7 +46,7 @@ describe('RecordArray', () => {
       expect(records.buffer.byteLength).toBe(640);
       expect(records instanceof DataView).toBe(true);
       expect(records.size).toBe(10);
-      expect(records.stringView instanceof StringView).toBe(true);
+      expect(records.byteView instanceof StringView).toBe(true);
     });
 
     it('creates an instance using preexisting ArrayBuffer', () => {
@@ -42,10 +57,9 @@ describe('RecordArray', () => {
       expect(records.byteOffset).toBe(160);
     });
 
-    it('creates an instance without string fields', () => {
-      const people = new RecordArray(peopleSchema, 10);
-      expect(people.buffer.byteLength).toBe(160);
-      expect(people.stringView instanceof StringView).toBe(false);
+    it('supports typed arrays', () => {
+      const records = new RecordArray(arraySchema, 10);
+      expect(records.buffer.byteLength).toBe(5120);
     });
 
     it('throws if invalid field type is provided', () => {
@@ -75,6 +89,15 @@ describe('RecordArray', () => {
       expect(actual instanceof StringView).toBe(true);
       expect(actual.buffer === records.buffer).toBe(true);
       expect(actual.length).toBe(22);
+    });
+
+    it('returns a typed array from an array field', () => {
+      const records = new RecordArray(arraySchema, 1);
+      const actual = records.get(0, 'c');
+      expect(actual instanceof Int16Array).toBe(true);
+      expect(actual.buffer === records.buffer).toBe(true);
+      expect(actual.length).toBe(4);
+      expect(actual.byteLength).toBe(8);
     });
   });
 
@@ -125,6 +148,24 @@ describe('RecordArray', () => {
       const decoded = decoder.decode(encoded);
       expect(decoded.slice(0, 4)).toEqual('maga');
     });
+
+    it('sets an array for typed array field', () => {
+      const records = new RecordArray(arraySchema, 5);
+      const array = records.get(0, 'c');
+      expect(Array.from(array)).toEqual([0, 0, 0, 0]);
+      records.set(0, 'c', [1, 2, 3, 4]);
+      expect(Array.from(array)).toEqual([1, 2, 3, 4]);
+    });
+
+    it('sets a smaller array for typed array field', () => {
+      const records = new RecordArray(arraySchema, 5);
+      const array = records.get(0, 'c');
+      expect(Array.from(array)).toEqual([0, 0, 0, 0]);
+      records.set(0, 'c', [1, 2, 3, 4]);
+      expect(Array.from(array)).toEqual([1, 2, 3, 4]);
+      records.set(0, 'c', [1, 2]);
+      expect(Array.from(array)).toEqual([1, 2, 0, 0]);
+    });
   });
 
   describe('toObject', () => {
@@ -166,6 +207,10 @@ describe('RecordArray', () => {
     it('returns the length of underlying ArrayBuffer required to hold the given amount of records', () => {
       expect(RecordArray.getLength(peopleSchema, 10)).toBe(160);
       expect(RecordArray.getLength(recordSchema, 10)).toBe(640);
+      expect(RecordArray.getLength([
+        { name: 'a', type: 'Int8' },
+        { name: 'b', type: 'Uint32Array', size: 2 },
+      ], 10)).toBe(160);
     });
   });
 });
