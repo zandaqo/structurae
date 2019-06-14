@@ -185,7 +185,7 @@ describe('RecordArray', () => {
     });
   });
 
-  describe('fromObject', () => {
+  describe('from', () => {
     it('stores a given object as a record at a given index', () => {
       const people = new RecordArray(peopleSchema, 10);
       people.fromObject(0, {

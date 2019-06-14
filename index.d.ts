@@ -2,12 +2,16 @@
 // Project: structurae
 // Definitions by: Maga D. Zandaqo <denelxan@gmail.com> (http://maga.name)
 
-type Collection = any[] | Int8Array | Uint8Array | Uint8ClampedArray | Int16Array |
+type TypedArray = Int8Array | Uint8Array | Uint8ClampedArray | Int16Array |
     Uint16Array | Int32Array | Uint32Array | Float32Array | Float64Array;
 
-type CollectionConstructor = ArrayConstructor | Int8ArrayConstructor | Uint8ArrayConstructor
+type TypedArrayConstructor = Int8ArrayConstructor | Uint8ArrayConstructor
     | Uint8ClampedArrayConstructor | Int16Array | Uint16ArrayConstructor | Int32ArrayConstructor
     | Uint32ArrayConstructor | Float32ArrayConstructor | Float64ArrayConstructor;
+
+type Collection = any[] | TypedArray;
+
+type CollectionConstructor = ArrayConstructor | TypedArrayConstructor;
 
 interface Constructor<T> {
     new (...args): T;
@@ -195,15 +199,97 @@ export declare class RecordArray extends DataView {
 
     constructor(fields: RecordField[], size: number, buffer?: ArrayBuffer, byteOffset?: number, byteLength?: number);
     get(index: number, field: string): any;
-    getArray(offset: number, size: number, type: string): StringView;
+    getArray(offset: number, size: number, type: string): Collection;
     getString(offset: number, size: number): StringView;
-    set(index: number, field: string, value: any, littleEndian?: boolean): this;
+    set(index: number, field: string, value: any): this;
     setArray(offset: number, value: Collection, size: number, type: string): void;
     setString(offset: number, value: Collection, size: number): void;
     toObject(index: number): object;
     fromObject(index: number, object: object): this;
     static getLength(fields: RecordField[], size: number): number;
 }
+
+type ViewType = typeof ArrayView | typeof ObjectView | typeof TypedArrayView | typeof StringView;
+type ArrayViewType = typeof ArrayView | typeof TypedArrayView;
+
+type View = ObjectView | ArrayView | TypedArrayView | StringView;
+
+type ObjectViewFieldType = 'int8' | 'uint8' | 'int16' | 'uint16'
+    | 'int32' | 'uint32' | 'float32' | 'float64'
+    | 'bigint64' | 'biguint64' | 'string' | ViewType;
+
+interface ObjectViewField {
+    type: ObjectViewFieldType;
+    size?: number;
+    littleEndian?: boolean;
+    start?: number;
+    length?: number;
+    ctor?: ViewType;
+}
+
+interface ObjectViewSchema {
+    [propName: string]: ObjectViewField;
+}
+
+export declare class ObjectView extends DataView {
+    size: number;
+    private byteView: Uint8Array;
+    static fields: string[];
+    static schema: ObjectViewSchema;
+    static isInitialized: boolean;
+
+    constructor(buffer?: ArrayBuffer, byteOffset?: number, byteLength?: number);
+    get(field: string): number | View;
+    private getObject(field: string, length: number, Ctor: ViewType): View;
+    set(field: string, value: any): this;
+    private setArray(start: number, value: ArrayView | TypedArrayView | ArrayLike<number>, length: number, Ctor: ArrayViewType): this;
+    private setObject(start: number, value: ObjectView | Object, length: number, Ctor: typeof ObjectView): this;
+    private setString(start: number, value: StringView | string, length: number): this;
+    toObject(): object;
+    static from(object: object, objectView?: ObjectView): ObjectView;
+    static getLength(): number;
+    static initialize(): void;
+}
+
+export declare class ArrayView extends DataView {
+    size: number;
+    private byteView: Uint8Array;
+
+    constructor(sizeOrBuffer?: ArrayBuffer | number, byteOffset?: number, byteLength?: number);
+    get(index: number): ObjectView;
+    set(index: string, value: ObjectView | object): this;
+    toObject(): object;
+    static from(value: ArrayLike<object>, array?: ArrayView): ArrayView;
+    static getLength(size: number): number;
+}
+
+export declare function ArrayViewMixin(ViewClass: typeof ObjectView): typeof ArrayView;
+
+export declare class TypedArrayView extends DataView {
+    size: number;
+    private byteView: Uint8Array;
+    static typeGetter: string;
+    static typeSetter: string;
+    static offset: number;
+
+    constructor(sizeOrBuffer?: ArrayBuffer | number, byteOffset?: number, byteLength?: number);
+    get(index: number): number;
+    set(index: string, value: number): this;
+    toObject(): object;
+    static from(value: ArrayLike<number>, array?: TypedArrayView): TypedArrayView;
+    static getLength(size: number): number;
+}
+
+export declare class Int8View extends TypedArrayView {}
+export declare class Uint8View extends TypedArrayView {}
+export declare class Int16View extends TypedArrayView {}
+export declare class Uint16View extends TypedArrayView {}
+export declare class Int32View extends TypedArrayView {}
+export declare class Uint32View extends TypedArrayView {}
+export declare class Float32View extends TypedArrayView {}
+export declare class Float64View extends TypedArrayView {}
+export declare class BigInt64View extends TypedArrayView {}
+export declare class BigUint64View extends TypedArrayView {}
 
 export declare class BitArray extends Uint32Array {
     size: number;

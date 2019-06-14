@@ -1,6 +1,8 @@
 ## Classes
 
 <dl>
+<dt><a href="#ArrayView">ArrayView</a> ⇐ <code>DataView</code></dt>
+<dd></dd>
 <dt><a href="#BinaryGrid">BinaryGrid</a> ⇐ <code>Uint16Array</code></dt>
 <dd><p>Implements a grid or 2D matrix of bits.</p>
 </dd>
@@ -20,6 +22,8 @@ pathfinding (Dijkstra, Bellman-Ford), spanning tree construction (BFS, Prim), et
 <dt><a href="#Grid">Grid</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
 <dd><p>Extends built-in indexed collections to handle 2 dimensional data.</p>
 </dd>
+<dt><a href="#ObjectView">ObjectView</a> ⇐ <code>DataView</code></dt>
+<dd></dd>
 <dt><a href="#Pool">Pool</a> ⇐ <code><a href="#BitArray">BitArray</a></code></dt>
 <dd><p>Manages availability of objects in object pools.</p>
 </dd>
@@ -42,6 +46,28 @@ pathfinding (Dijkstra, Bellman-Ford), spanning tree construction (BFS, Prim), et
 <dd><p>A grid to handle symmetric or triangular matrices
 using half the space required for a normal grid.</p>
 </dd>
+<dt><a href="#TypedArrayView">TypedArrayView</a> ⇐ <code>DataView</code></dt>
+<dd></dd>
+<dt><a href="#Int8View">Int8View</a> ⇐ <code><a href="#TypedArrayView">TypedArrayView</a></code></dt>
+<dd></dd>
+<dt><a href="#Uint8View">Uint8View</a> ⇐ <code><a href="#TypedArrayView">TypedArrayView</a></code></dt>
+<dd></dd>
+<dt><a href="#Int16View">Int16View</a> ⇐ <code><a href="#TypedArrayView">TypedArrayView</a></code></dt>
+<dd></dd>
+<dt><a href="#Uint16View">Uint16View</a> ⇐ <code><a href="#TypedArrayView">TypedArrayView</a></code></dt>
+<dd></dd>
+<dt><a href="#Int32View">Int32View</a> ⇐ <code><a href="#TypedArrayView">TypedArrayView</a></code></dt>
+<dd></dd>
+<dt><a href="#Uint32View">Uint32View</a> ⇐ <code><a href="#TypedArrayView">TypedArrayView</a></code></dt>
+<dd></dd>
+<dt><a href="#Float32View">Float32View</a> ⇐ <code><a href="#TypedArrayView">TypedArrayView</a></code></dt>
+<dd></dd>
+<dt><a href="#Float64View">Float64View</a> ⇐ <code><a href="#TypedArrayView">TypedArrayView</a></code></dt>
+<dd></dd>
+<dt><a href="#BigInt64View">BigInt64View</a> ⇐ <code><a href="#TypedArrayView">TypedArrayView</a></code></dt>
+<dd></dd>
+<dt><a href="#BigUint64View">BigUint64View</a> ⇐ <code><a href="#TypedArrayView">TypedArrayView</a></code></dt>
+<dd></dd>
 <dt><a href="#UnweightedAdjacencyList">UnweightedAdjacencyList</a> ⇐ <code>Uint32Array</code></dt>
 <dd><p>Implements Adjacency List data structure for unweighted graphs.</p>
 </dd>
@@ -59,6 +85,8 @@ using half the space required for a normal grid.</p>
 ## Functions
 
 <dl>
+<dt><a href="#ArrayViewMixin">ArrayViewMixin(ViewClass)</a> ⇒ <code><a href="#ArrayView">Class.&lt;ArrayView&gt;</a></code></dt>
+<dd></dd>
 <dt><a href="#GraphMixin">GraphMixin(Base, [undirected])</a> ⇒ <code><a href="#Graph">Graph</a></code></dt>
 <dd><p>Creates a Graph class extending a given adjacency structure.</p>
 </dd>
@@ -109,17 +137,72 @@ using half the space required for a normal grid.</p>
 <dd></dd>
 <dt><a href="#AdjacencyStructure">AdjacencyStructure</a> : <code><a href="#UnweightedAdjacencyList">UnweightedAdjacencyList</a></code> | <code><a href="#UnweightedAdjacencyMatrix">UnweightedAdjacencyMatrix</a></code> | <code><a href="#WeightedAdjacencyList">WeightedAdjacencyList</a></code> | <code><a href="#WeightedAdjacencyMatrix">WeightedAdjacencyMatrix</a></code></dt>
 <dd></dd>
-<dt><a href="#CollectionConstructor">CollectionConstructor</a> : <code>ArrayConstructor</code> | <code>Int8ArrayConstructor</code> | <code>Int8ArrayConstructor</code> | <code>Uint8ArrayConstructor</code> | <code>Uint8ClampedArrayConstructor</code> | <code>Int16ArrayConstructor</code> | <code>Uint16ArrayConstructor</code> | <code>Int32ArrayConstructor</code> | <code>Uint32ArrayConstructor</code> | <code>Float32ArrayConstructor</code> | <code>Float64ArrayConstructor</code></dt>
+<dt><a href="#TypedArrayConstructor">TypedArrayConstructor</a> : <code>Int8ArrayConstructor</code> | <code>Int8ArrayConstructor</code> | <code>Uint8ArrayConstructor</code> | <code>Uint8ClampedArrayConstructor</code> | <code>Int16ArrayConstructor</code> | <code>Uint16ArrayConstructor</code> | <code>Int32ArrayConstructor</code> | <code>Uint32ArrayConstructor</code> | <code>Float32ArrayConstructor</code> | <code>Float64ArrayConstructor</code></dt>
 <dd></dd>
-<dt><a href="#Collection">Collection</a> : <code>Array</code> | <code>Int8Array</code> | <code>Uint8Array</code> | <code>Uint8ClampedArray</code> | <code>Int16Array</code> | <code>Uint16Array</code> | <code>Int32Array</code> | <code>Uint32Array</code> | <code>Float32Array</code> | <code>Float64Array</code></dt>
+<dt><a href="#CollectionConstructor">CollectionConstructor</a> : <code>ArrayConstructor</code> | <code><a href="#TypedArrayConstructor">TypedArrayConstructor</a></code></dt>
+<dd></dd>
+<dt><a href="#TypedArray">TypedArray</a> : <code>Int8Array</code> | <code>Uint8Array</code> | <code>Uint8ClampedArray</code> | <code>Int16Array</code> | <code>Uint16Array</code> | <code>Int32Array</code> | <code>Uint32Array</code> | <code>Float32Array</code> | <code>Float64Array</code></dt>
+<dd></dd>
+<dt><a href="#Collection">Collection</a> : <code>Array</code> | <code><a href="#TypedArray">TypedArray</a></code></dt>
 <dd></dd>
 <dt><a href="#Coordinates">Coordinates</a> : <code>Object</code></dt>
+<dd></dd>
+<dt><a href="#ObjectViewFieldType">ObjectViewFieldType</a> : <code>&#x27;int8&#x27;</code> | <code>&#x27;uint8&#x27;</code> | <code>&#x27;int16&#x27;</code> | <code>&#x27;uint16&#x27;</code> | <code>&#x27;int32&#x27;</code> | <code>&#x27;uint32&#x27;</code> | <code>&#x27;float32&#x27;</code> | <code>&#x27;float64&#x27;</code> | <code>&#x27;bigint64&#x27;</code> | <code>&#x27;biguint64&#x27;</code> | <code>&#x27;string&#x27;</code> | <code>&#x27;array&#x27;</code> | <code>&#x27;object&#x27;</code> | <code><a href="#ArrayView">Class.&lt;ArrayView&gt;</a></code> | <code><a href="#ObjectView">Class.&lt;ObjectView&gt;</a></code> | <code><a href="#TypedArrayView">Class.&lt;TypedArrayView&gt;</a></code></dt>
+<dd></dd>
+<dt><a href="#ObjectViewField">ObjectViewField</a> : <code>Object</code></dt>
 <dd></dd>
 <dt><a href="#RecordFieldType">RecordFieldType</a> : <code>&#x27;Int8&#x27;</code> | <code>&#x27;Uint8&#x27;</code> | <code>&#x27;Int16&#x27;</code> | <code>&#x27;Uint16&#x27;</code> | <code>&#x27;Int32&#x27;</code> | <code>&#x27;Uint32&#x27;</code> | <code>&#x27;Float32&#x27;</code> | <code>&#x27;Float64&#x27;</code> | <code>&#x27;BigInt64&#x27;</code> | <code>&#x27;BigUint64&#x27;</code> | <code>&#x27;String&#x27;</code></dt>
 <dd></dd>
 <dt><a href="#RecordField">RecordField</a> : <code>Object</code></dt>
 <dd></dd>
 </dl>
+
+<a name="ArrayView"></a>
+
+## ArrayView ⇐ <code>DataView</code>
+**Kind**: global class  
+**Extends**: <code>DataView</code>  
+
+* [ArrayView](#ArrayView) ⇐ <code>DataView</code>
+    * [new ArrayView([sizeOrBuffer], [byteOffset], [byteLength])](#new_ArrayView_new)
+    * [.size](#ArrayView+size) : <code>number</code>
+    * [.get(index)](#ArrayView+get) ⇒ [<code>ObjectView</code>](#ObjectView)
+    * [.set(index, value)](#ArrayView+set) ⇒ [<code>ArrayView</code>](#ArrayView)
+
+<a name="new_ArrayView_new"></a>
+
+### new ArrayView([sizeOrBuffer], [byteOffset], [byteLength])
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [sizeOrBuffer] | <code>number</code> \| <code>ArrayBuffer</code> | <code>1</code> | the maximum size of the array                                              or an existing ArrayBuffer to use |
+| [byteOffset] | <code>number</code> |  | the byteOffset in an existing ArrayBuffer |
+| [byteLength] | <code>number</code> |  | the byteLength in an existing ArrayBuffer |
+
+<a name="ArrayView+size"></a>
+
+### arrayView.size : <code>number</code>
+Returns the amount of available bits in the array.
+
+**Kind**: instance property of [<code>ArrayView</code>](#ArrayView)  
+<a name="ArrayView+get"></a>
+
+### arrayView.get(index) ⇒ [<code>ObjectView</code>](#ObjectView)
+**Kind**: instance method of [<code>ArrayView</code>](#ArrayView)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="ArrayView+set"></a>
+
+### arrayView.set(index, value) ⇒ [<code>ArrayView</code>](#ArrayView)
+**Kind**: instance method of [<code>ArrayView</code>](#ArrayView)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+| value | [<code>ObjectView</code>](#ObjectView) \| <code>Object</code> | 
 
 <a name="BinaryGrid"></a>
 
@@ -1180,6 +1263,86 @@ a.get(2, 1);
 | arrays | <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> |  |  |
 | [pad] | <code>\*</code> | <code>0</code> | the value to pad the arrays to create equal sized rows |
 
+<a name="ObjectView"></a>
+
+## ObjectView ⇐ <code>DataView</code>
+**Kind**: global class  
+**Extends**: <code>DataView</code>  
+
+* [ObjectView](#ObjectView) ⇐ <code>DataView</code>
+    * [new ObjectView([buffer], [byteOffset], [byteLength])](#new_ObjectView_new)
+    * _instance_
+        * [.get(field)](#ObjectView+get) ⇒ <code>\*</code>
+        * [.set(field, value)](#ObjectView+set) ⇒ [<code>ObjectView</code>](#ObjectView)
+        * [.toObject()](#ObjectView+toObject) ⇒ <code>Object</code>
+    * _static_
+        * [.isInitialized](#ObjectView.isInitialized) : <code>boolean</code>
+        * [.from(object, objectView)](#ObjectView.from) ⇒ [<code>ObjectView</code>](#ObjectView)
+        * [.getLength()](#ObjectView.getLength) ⇒ <code>number</code>
+
+<a name="new_ObjectView_new"></a>
+
+### new ObjectView([buffer], [byteOffset], [byteLength])
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [buffer] | <code>ArrayBuffer</code> | an existing ArrayBuffer to use |
+| [byteOffset] | <code>number</code> | the byteOffset in an existing ArrayBuffer |
+| [byteLength] | <code>number</code> | the byteLength in an existing ArrayBuffer |
+
+<a name="ObjectView+get"></a>
+
+### objectView.get(field) ⇒ <code>\*</code>
+Returns the value of a given field.
+
+**Kind**: instance method of [<code>ObjectView</code>](#ObjectView)  
+**Returns**: <code>\*</code> - value of the field  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| field | <code>string</code> | the name of the field |
+
+<a name="ObjectView+set"></a>
+
+### objectView.set(field, value) ⇒ [<code>ObjectView</code>](#ObjectView)
+Sets a value to a field.
+
+**Kind**: instance method of [<code>ObjectView</code>](#ObjectView)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| field | <code>string</code> | the name of the field |
+| value | <code>\*</code> | the value to be set |
+
+<a name="ObjectView+toObject"></a>
+
+### objectView.toObject() ⇒ <code>Object</code>
+Returns an Object corresponding to the object view.
+
+**Kind**: instance method of [<code>ObjectView</code>](#ObjectView)  
+<a name="ObjectView.isInitialized"></a>
+
+### ObjectView.isInitialized : <code>boolean</code>
+**Kind**: static property of [<code>ObjectView</code>](#ObjectView)  
+<a name="ObjectView.from"></a>
+
+### ObjectView.from(object, objectView) ⇒ [<code>ObjectView</code>](#ObjectView)
+Assigns fields of a given object to the provided object view
+or a new object view.
+
+**Kind**: static method of [<code>ObjectView</code>](#ObjectView)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| object | <code>Object</code> | the object to take data from |
+| objectView | [<code>ObjectView</code>](#ObjectView) | the object view to assign fields to |
+
+<a name="ObjectView.getLength"></a>
+
+### ObjectView.getLength() ⇒ <code>number</code>
+Returns the byte length of an object view.
+
+**Kind**: static method of [<code>ObjectView</code>](#ObjectView)  
 <a name="Pool"></a>
 
 ## Pool ⇐ [<code>BitArray</code>](#BitArray)
@@ -2446,6 +2609,586 @@ a.get(2, 1);
 | arrays | <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> |  |  |
 | [pad] | <code>\*</code> | <code>0</code> | the value to pad the arrays to create equal sized rows |
 
+<a name="TypedArrayView"></a>
+
+## TypedArrayView ⇐ <code>DataView</code>
+**Kind**: global class  
+**Extends**: <code>DataView</code>  
+
+* [TypedArrayView](#TypedArrayView) ⇐ <code>DataView</code>
+    * [new TypedArrayView([sizeOrBuffer], [byteOffset], [byteLength])](#new_TypedArrayView_new)
+    * _instance_
+        * [.size](#TypedArrayView+size) : <code>number</code>
+        * [.get(index)](#TypedArrayView+get) ⇒ <code>number</code>
+        * [.set(index, value)](#TypedArrayView+set) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
+    * _static_
+        * [.typeGetter](#TypedArrayView.typeGetter) : <code>string</code>
+        * [.typeSetter](#TypedArrayView.typeSetter) : <code>string</code>
+        * [.offset](#TypedArrayView.offset) : <code>number</code>
+
+<a name="new_TypedArrayView_new"></a>
+
+### new TypedArrayView([sizeOrBuffer], [byteOffset], [byteLength])
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [sizeOrBuffer] | <code>number</code> \| <code>ArrayBuffer</code> | <code>1</code> | the maximum size of the array                                              or an existing ArrayBuffer to use |
+| [byteOffset] | <code>number</code> |  | the byteOffset in an existing ArrayBuffer |
+| [byteLength] | <code>number</code> |  | the byteLength in an existing ArrayBuffer |
+
+<a name="TypedArrayView+size"></a>
+
+### typedArrayView.size : <code>number</code>
+Returns the amount of available bits in the array.
+
+**Kind**: instance property of [<code>TypedArrayView</code>](#TypedArrayView)  
+<a name="TypedArrayView+get"></a>
+
+### typedArrayView.get(index) ⇒ <code>number</code>
+**Kind**: instance method of [<code>TypedArrayView</code>](#TypedArrayView)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="TypedArrayView+set"></a>
+
+### typedArrayView.set(index, value) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
+**Kind**: instance method of [<code>TypedArrayView</code>](#TypedArrayView)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+| value | <code>number</code> | 
+
+<a name="TypedArrayView.typeGetter"></a>
+
+### TypedArrayView.typeGetter : <code>string</code>
+**Kind**: static property of [<code>TypedArrayView</code>](#TypedArrayView)  
+<a name="TypedArrayView.typeSetter"></a>
+
+### TypedArrayView.typeSetter : <code>string</code>
+**Kind**: static property of [<code>TypedArrayView</code>](#TypedArrayView)  
+<a name="TypedArrayView.offset"></a>
+
+### TypedArrayView.offset : <code>number</code>
+**Kind**: static property of [<code>TypedArrayView</code>](#TypedArrayView)  
+<a name="Int8View"></a>
+
+## Int8View ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
+**Kind**: global class  
+**Extends**: [<code>TypedArrayView</code>](#TypedArrayView)  
+
+* [Int8View](#Int8View) ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
+    * _instance_
+        * [.size](#TypedArrayView+size) : <code>number</code>
+        * [.get(index)](#TypedArrayView+get) ⇒ <code>number</code>
+        * [.set(index, value)](#TypedArrayView+set) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
+    * _static_
+        * [.typeGetter](#Int8View.typeGetter) : <code>string</code>
+        * [.typeSetter](#Int8View.typeSetter) : <code>string</code>
+        * [.offset](#Int8View.offset) : <code>number</code>
+
+<a name="TypedArrayView+size"></a>
+
+### int8View.size : <code>number</code>
+Returns the amount of available bits in the array.
+
+**Kind**: instance property of [<code>Int8View</code>](#Int8View)  
+<a name="TypedArrayView+get"></a>
+
+### int8View.get(index) ⇒ <code>number</code>
+**Kind**: instance method of [<code>Int8View</code>](#Int8View)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="TypedArrayView+set"></a>
+
+### int8View.set(index, value) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
+**Kind**: instance method of [<code>Int8View</code>](#Int8View)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+| value | <code>number</code> | 
+
+<a name="Int8View.typeGetter"></a>
+
+### Int8View.typeGetter : <code>string</code>
+**Kind**: static property of [<code>Int8View</code>](#Int8View)  
+<a name="Int8View.typeSetter"></a>
+
+### Int8View.typeSetter : <code>string</code>
+**Kind**: static property of [<code>Int8View</code>](#Int8View)  
+<a name="Int8View.offset"></a>
+
+### Int8View.offset : <code>number</code>
+**Kind**: static property of [<code>Int8View</code>](#Int8View)  
+<a name="Uint8View"></a>
+
+## Uint8View ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
+**Kind**: global class  
+**Extends**: [<code>TypedArrayView</code>](#TypedArrayView)  
+
+* [Uint8View](#Uint8View) ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
+    * [.size](#Uint8View+size) : <code>number</code>
+    * [.get(index)](#Uint8View+get) ⇒ <code>number</code>
+    * [.set(index, value)](#Uint8View+set) ⇒ [<code>Uint8View</code>](#Uint8View)
+
+<a name="Uint8View+size"></a>
+
+### uint8View.size : <code>number</code>
+Returns the amount of available bits in the array.
+
+**Kind**: instance property of [<code>Uint8View</code>](#Uint8View)  
+**Overrides**: [<code>size</code>](#TypedArrayView+size)  
+<a name="Uint8View+get"></a>
+
+### uint8View.get(index) ⇒ <code>number</code>
+**Kind**: instance method of [<code>Uint8View</code>](#Uint8View)  
+**Overrides**: [<code>get</code>](#TypedArrayView+get)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="Uint8View+set"></a>
+
+### uint8View.set(index, value) ⇒ [<code>Uint8View</code>](#Uint8View)
+**Kind**: instance method of [<code>Uint8View</code>](#Uint8View)  
+**Overrides**: [<code>set</code>](#TypedArrayView+set)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+| value | <code>number</code> | 
+
+<a name="Int16View"></a>
+
+## Int16View ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
+**Kind**: global class  
+**Extends**: [<code>TypedArrayView</code>](#TypedArrayView)  
+
+* [Int16View](#Int16View) ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
+    * _instance_
+        * [.size](#TypedArrayView+size) : <code>number</code>
+        * [.get(index)](#TypedArrayView+get) ⇒ <code>number</code>
+        * [.set(index, value)](#TypedArrayView+set) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
+    * _static_
+        * [.typeGetter](#Int16View.typeGetter) : <code>string</code>
+        * [.typeSetter](#Int16View.typeSetter) : <code>string</code>
+        * [.offset](#Int16View.offset) : <code>number</code>
+
+<a name="TypedArrayView+size"></a>
+
+### int16View.size : <code>number</code>
+Returns the amount of available bits in the array.
+
+**Kind**: instance property of [<code>Int16View</code>](#Int16View)  
+<a name="TypedArrayView+get"></a>
+
+### int16View.get(index) ⇒ <code>number</code>
+**Kind**: instance method of [<code>Int16View</code>](#Int16View)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="TypedArrayView+set"></a>
+
+### int16View.set(index, value) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
+**Kind**: instance method of [<code>Int16View</code>](#Int16View)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+| value | <code>number</code> | 
+
+<a name="Int16View.typeGetter"></a>
+
+### Int16View.typeGetter : <code>string</code>
+**Kind**: static property of [<code>Int16View</code>](#Int16View)  
+<a name="Int16View.typeSetter"></a>
+
+### Int16View.typeSetter : <code>string</code>
+**Kind**: static property of [<code>Int16View</code>](#Int16View)  
+<a name="Int16View.offset"></a>
+
+### Int16View.offset : <code>number</code>
+**Kind**: static property of [<code>Int16View</code>](#Int16View)  
+<a name="Uint16View"></a>
+
+## Uint16View ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
+**Kind**: global class  
+**Extends**: [<code>TypedArrayView</code>](#TypedArrayView)  
+
+* [Uint16View](#Uint16View) ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
+    * _instance_
+        * [.size](#TypedArrayView+size) : <code>number</code>
+        * [.get(index)](#TypedArrayView+get) ⇒ <code>number</code>
+        * [.set(index, value)](#TypedArrayView+set) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
+    * _static_
+        * [.typeGetter](#Uint16View.typeGetter) : <code>string</code>
+        * [.typeSetter](#Uint16View.typeSetter) : <code>string</code>
+        * [.offset](#Uint16View.offset) : <code>number</code>
+
+<a name="TypedArrayView+size"></a>
+
+### uint16View.size : <code>number</code>
+Returns the amount of available bits in the array.
+
+**Kind**: instance property of [<code>Uint16View</code>](#Uint16View)  
+<a name="TypedArrayView+get"></a>
+
+### uint16View.get(index) ⇒ <code>number</code>
+**Kind**: instance method of [<code>Uint16View</code>](#Uint16View)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="TypedArrayView+set"></a>
+
+### uint16View.set(index, value) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
+**Kind**: instance method of [<code>Uint16View</code>](#Uint16View)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+| value | <code>number</code> | 
+
+<a name="Uint16View.typeGetter"></a>
+
+### Uint16View.typeGetter : <code>string</code>
+**Kind**: static property of [<code>Uint16View</code>](#Uint16View)  
+<a name="Uint16View.typeSetter"></a>
+
+### Uint16View.typeSetter : <code>string</code>
+**Kind**: static property of [<code>Uint16View</code>](#Uint16View)  
+<a name="Uint16View.offset"></a>
+
+### Uint16View.offset : <code>number</code>
+**Kind**: static property of [<code>Uint16View</code>](#Uint16View)  
+<a name="Int32View"></a>
+
+## Int32View ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
+**Kind**: global class  
+**Extends**: [<code>TypedArrayView</code>](#TypedArrayView)  
+
+* [Int32View](#Int32View) ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
+    * _instance_
+        * [.size](#TypedArrayView+size) : <code>number</code>
+        * [.get(index)](#TypedArrayView+get) ⇒ <code>number</code>
+        * [.set(index, value)](#TypedArrayView+set) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
+    * _static_
+        * [.typeGetter](#Int32View.typeGetter) : <code>string</code>
+        * [.typeSetter](#Int32View.typeSetter) : <code>string</code>
+        * [.offset](#Int32View.offset) : <code>number</code>
+
+<a name="TypedArrayView+size"></a>
+
+### int32View.size : <code>number</code>
+Returns the amount of available bits in the array.
+
+**Kind**: instance property of [<code>Int32View</code>](#Int32View)  
+<a name="TypedArrayView+get"></a>
+
+### int32View.get(index) ⇒ <code>number</code>
+**Kind**: instance method of [<code>Int32View</code>](#Int32View)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="TypedArrayView+set"></a>
+
+### int32View.set(index, value) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
+**Kind**: instance method of [<code>Int32View</code>](#Int32View)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+| value | <code>number</code> | 
+
+<a name="Int32View.typeGetter"></a>
+
+### Int32View.typeGetter : <code>string</code>
+**Kind**: static property of [<code>Int32View</code>](#Int32View)  
+<a name="Int32View.typeSetter"></a>
+
+### Int32View.typeSetter : <code>string</code>
+**Kind**: static property of [<code>Int32View</code>](#Int32View)  
+<a name="Int32View.offset"></a>
+
+### Int32View.offset : <code>number</code>
+**Kind**: static property of [<code>Int32View</code>](#Int32View)  
+<a name="Uint32View"></a>
+
+## Uint32View ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
+**Kind**: global class  
+**Extends**: [<code>TypedArrayView</code>](#TypedArrayView)  
+
+* [Uint32View](#Uint32View) ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
+    * _instance_
+        * [.size](#TypedArrayView+size) : <code>number</code>
+        * [.get(index)](#TypedArrayView+get) ⇒ <code>number</code>
+        * [.set(index, value)](#TypedArrayView+set) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
+    * _static_
+        * [.typeGetter](#Uint32View.typeGetter) : <code>string</code>
+        * [.typeSetter](#Uint32View.typeSetter) : <code>string</code>
+        * [.offset](#Uint32View.offset) : <code>number</code>
+
+<a name="TypedArrayView+size"></a>
+
+### uint32View.size : <code>number</code>
+Returns the amount of available bits in the array.
+
+**Kind**: instance property of [<code>Uint32View</code>](#Uint32View)  
+<a name="TypedArrayView+get"></a>
+
+### uint32View.get(index) ⇒ <code>number</code>
+**Kind**: instance method of [<code>Uint32View</code>](#Uint32View)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="TypedArrayView+set"></a>
+
+### uint32View.set(index, value) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
+**Kind**: instance method of [<code>Uint32View</code>](#Uint32View)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+| value | <code>number</code> | 
+
+<a name="Uint32View.typeGetter"></a>
+
+### Uint32View.typeGetter : <code>string</code>
+**Kind**: static property of [<code>Uint32View</code>](#Uint32View)  
+<a name="Uint32View.typeSetter"></a>
+
+### Uint32View.typeSetter : <code>string</code>
+**Kind**: static property of [<code>Uint32View</code>](#Uint32View)  
+<a name="Uint32View.offset"></a>
+
+### Uint32View.offset : <code>number</code>
+**Kind**: static property of [<code>Uint32View</code>](#Uint32View)  
+<a name="Float32View"></a>
+
+## Float32View ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
+**Kind**: global class  
+**Extends**: [<code>TypedArrayView</code>](#TypedArrayView)  
+
+* [Float32View](#Float32View) ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
+    * _instance_
+        * [.size](#TypedArrayView+size) : <code>number</code>
+        * [.get(index)](#TypedArrayView+get) ⇒ <code>number</code>
+        * [.set(index, value)](#TypedArrayView+set) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
+    * _static_
+        * [.typeGetter](#Float32View.typeGetter) : <code>string</code>
+        * [.typeSetter](#Float32View.typeSetter) : <code>string</code>
+        * [.offset](#Float32View.offset) : <code>number</code>
+
+<a name="TypedArrayView+size"></a>
+
+### float32View.size : <code>number</code>
+Returns the amount of available bits in the array.
+
+**Kind**: instance property of [<code>Float32View</code>](#Float32View)  
+<a name="TypedArrayView+get"></a>
+
+### float32View.get(index) ⇒ <code>number</code>
+**Kind**: instance method of [<code>Float32View</code>](#Float32View)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="TypedArrayView+set"></a>
+
+### float32View.set(index, value) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
+**Kind**: instance method of [<code>Float32View</code>](#Float32View)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+| value | <code>number</code> | 
+
+<a name="Float32View.typeGetter"></a>
+
+### Float32View.typeGetter : <code>string</code>
+**Kind**: static property of [<code>Float32View</code>](#Float32View)  
+<a name="Float32View.typeSetter"></a>
+
+### Float32View.typeSetter : <code>string</code>
+**Kind**: static property of [<code>Float32View</code>](#Float32View)  
+<a name="Float32View.offset"></a>
+
+### Float32View.offset : <code>number</code>
+**Kind**: static property of [<code>Float32View</code>](#Float32View)  
+<a name="Float64View"></a>
+
+## Float64View ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
+**Kind**: global class  
+**Extends**: [<code>TypedArrayView</code>](#TypedArrayView)  
+
+* [Float64View](#Float64View) ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
+    * _instance_
+        * [.size](#TypedArrayView+size) : <code>number</code>
+        * [.get(index)](#TypedArrayView+get) ⇒ <code>number</code>
+        * [.set(index, value)](#TypedArrayView+set) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
+    * _static_
+        * [.typeGetter](#Float64View.typeGetter) : <code>string</code>
+        * [.typeSetter](#Float64View.typeSetter) : <code>string</code>
+        * [.offset](#Float64View.offset) : <code>number</code>
+
+<a name="TypedArrayView+size"></a>
+
+### float64View.size : <code>number</code>
+Returns the amount of available bits in the array.
+
+**Kind**: instance property of [<code>Float64View</code>](#Float64View)  
+<a name="TypedArrayView+get"></a>
+
+### float64View.get(index) ⇒ <code>number</code>
+**Kind**: instance method of [<code>Float64View</code>](#Float64View)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="TypedArrayView+set"></a>
+
+### float64View.set(index, value) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
+**Kind**: instance method of [<code>Float64View</code>](#Float64View)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+| value | <code>number</code> | 
+
+<a name="Float64View.typeGetter"></a>
+
+### Float64View.typeGetter : <code>string</code>
+**Kind**: static property of [<code>Float64View</code>](#Float64View)  
+<a name="Float64View.typeSetter"></a>
+
+### Float64View.typeSetter : <code>string</code>
+**Kind**: static property of [<code>Float64View</code>](#Float64View)  
+<a name="Float64View.offset"></a>
+
+### Float64View.offset : <code>number</code>
+**Kind**: static property of [<code>Float64View</code>](#Float64View)  
+<a name="BigInt64View"></a>
+
+## BigInt64View ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
+**Kind**: global class  
+**Extends**: [<code>TypedArrayView</code>](#TypedArrayView)  
+
+* [BigInt64View](#BigInt64View) ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
+    * _instance_
+        * [.size](#TypedArrayView+size) : <code>number</code>
+        * [.get(index)](#TypedArrayView+get) ⇒ <code>number</code>
+        * [.set(index, value)](#TypedArrayView+set) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
+    * _static_
+        * [.typeGetter](#BigInt64View.typeGetter) : <code>string</code>
+        * [.typeSetter](#BigInt64View.typeSetter) : <code>string</code>
+        * [.offset](#BigInt64View.offset) : <code>number</code>
+
+<a name="TypedArrayView+size"></a>
+
+### bigInt64View.size : <code>number</code>
+Returns the amount of available bits in the array.
+
+**Kind**: instance property of [<code>BigInt64View</code>](#BigInt64View)  
+<a name="TypedArrayView+get"></a>
+
+### bigInt64View.get(index) ⇒ <code>number</code>
+**Kind**: instance method of [<code>BigInt64View</code>](#BigInt64View)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="TypedArrayView+set"></a>
+
+### bigInt64View.set(index, value) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
+**Kind**: instance method of [<code>BigInt64View</code>](#BigInt64View)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+| value | <code>number</code> | 
+
+<a name="BigInt64View.typeGetter"></a>
+
+### BigInt64View.typeGetter : <code>string</code>
+**Kind**: static property of [<code>BigInt64View</code>](#BigInt64View)  
+<a name="BigInt64View.typeSetter"></a>
+
+### BigInt64View.typeSetter : <code>string</code>
+**Kind**: static property of [<code>BigInt64View</code>](#BigInt64View)  
+<a name="BigInt64View.offset"></a>
+
+### BigInt64View.offset : <code>number</code>
+**Kind**: static property of [<code>BigInt64View</code>](#BigInt64View)  
+<a name="BigUint64View"></a>
+
+## BigUint64View ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
+**Kind**: global class  
+**Extends**: [<code>TypedArrayView</code>](#TypedArrayView)  
+
+* [BigUint64View](#BigUint64View) ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
+    * _instance_
+        * [.size](#TypedArrayView+size) : <code>number</code>
+        * [.get(index)](#TypedArrayView+get) ⇒ <code>number</code>
+        * [.set(index, value)](#TypedArrayView+set) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
+    * _static_
+        * [.typeGetter](#BigUint64View.typeGetter) : <code>string</code>
+        * [.typeSetter](#BigUint64View.typeSetter) : <code>string</code>
+        * [.offset](#BigUint64View.offset) : <code>number</code>
+
+<a name="TypedArrayView+size"></a>
+
+### bigUint64View.size : <code>number</code>
+Returns the amount of available bits in the array.
+
+**Kind**: instance property of [<code>BigUint64View</code>](#BigUint64View)  
+<a name="TypedArrayView+get"></a>
+
+### bigUint64View.get(index) ⇒ <code>number</code>
+**Kind**: instance method of [<code>BigUint64View</code>](#BigUint64View)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="TypedArrayView+set"></a>
+
+### bigUint64View.set(index, value) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
+**Kind**: instance method of [<code>BigUint64View</code>](#BigUint64View)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+| value | <code>number</code> | 
+
+<a name="BigUint64View.typeGetter"></a>
+
+### BigUint64View.typeGetter : <code>string</code>
+**Kind**: static property of [<code>BigUint64View</code>](#BigUint64View)  
+<a name="BigUint64View.typeSetter"></a>
+
+### BigUint64View.typeSetter : <code>string</code>
+**Kind**: static property of [<code>BigUint64View</code>](#BigUint64View)  
+<a name="BigUint64View.offset"></a>
+
+### BigUint64View.offset : <code>number</code>
+**Kind**: static property of [<code>BigUint64View</code>](#BigUint64View)  
 <a name="UnweightedAdjacencyList"></a>
 
 ## UnweightedAdjacencyList ⇐ <code>Uint32Array</code>
@@ -3221,6 +3964,15 @@ Creates an adjacency matrix from a given adjacency list.
 | list | [<code>WeightedAdjacencyList</code>](#WeightedAdjacencyList) |  | 
 | [pad] | <code>number</code> | <code>0</code> | 
 
+<a name="ArrayViewMixin"></a>
+
+## ArrayViewMixin(ViewClass) ⇒ [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| ViewClass | [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView) | 
+
 <a name="GraphMixin"></a>
 
 ## GraphMixin(Base, [undirected]) ⇒ [<code>Graph</code>](#Graph)
@@ -3398,13 +4150,21 @@ Creates a WeightedAdjacencyMatrix class extending a given Array-like class.
 
 ## AdjacencyStructure : [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList) \| [<code>UnweightedAdjacencyMatrix</code>](#UnweightedAdjacencyMatrix) \| [<code>WeightedAdjacencyList</code>](#WeightedAdjacencyList) \| [<code>WeightedAdjacencyMatrix</code>](#WeightedAdjacencyMatrix)
 **Kind**: global typedef  
+<a name="TypedArrayConstructor"></a>
+
+## TypedArrayConstructor : <code>Int8ArrayConstructor</code> \| <code>Int8ArrayConstructor</code> \| <code>Uint8ArrayConstructor</code> \| <code>Uint8ClampedArrayConstructor</code> \| <code>Int16ArrayConstructor</code> \| <code>Uint16ArrayConstructor</code> \| <code>Int32ArrayConstructor</code> \| <code>Uint32ArrayConstructor</code> \| <code>Float32ArrayConstructor</code> \| <code>Float64ArrayConstructor</code>
+**Kind**: global typedef  
 <a name="CollectionConstructor"></a>
 
-## CollectionConstructor : <code>ArrayConstructor</code> \| <code>Int8ArrayConstructor</code> \| <code>Int8ArrayConstructor</code> \| <code>Uint8ArrayConstructor</code> \| <code>Uint8ClampedArrayConstructor</code> \| <code>Int16ArrayConstructor</code> \| <code>Uint16ArrayConstructor</code> \| <code>Int32ArrayConstructor</code> \| <code>Uint32ArrayConstructor</code> \| <code>Float32ArrayConstructor</code> \| <code>Float64ArrayConstructor</code>
+## CollectionConstructor : <code>ArrayConstructor</code> \| [<code>TypedArrayConstructor</code>](#TypedArrayConstructor)
+**Kind**: global typedef  
+<a name="TypedArray"></a>
+
+## TypedArray : <code>Int8Array</code> \| <code>Uint8Array</code> \| <code>Uint8ClampedArray</code> \| <code>Int16Array</code> \| <code>Uint16Array</code> \| <code>Int32Array</code> \| <code>Uint32Array</code> \| <code>Float32Array</code> \| <code>Float64Array</code>
 **Kind**: global typedef  
 <a name="Collection"></a>
 
-## Collection : <code>Array</code> \| <code>Int8Array</code> \| <code>Uint8Array</code> \| <code>Uint8ClampedArray</code> \| <code>Int16Array</code> \| <code>Uint16Array</code> \| <code>Int32Array</code> \| <code>Uint32Array</code> \| <code>Float32Array</code> \| <code>Float64Array</code>
+## Collection : <code>Array</code> \| [<code>TypedArray</code>](#TypedArray)
 **Kind**: global typedef  
 <a name="Coordinates"></a>
 
@@ -3416,6 +4176,25 @@ Creates a WeightedAdjacencyMatrix class extending a given Array-like class.
 | --- | --- | --- |
 | row | <code>number</code> | row index |
 | column | <code>number</code> | column index |
+
+<a name="ObjectViewFieldType"></a>
+
+## ObjectViewFieldType : <code>&#x27;int8&#x27;</code> \| <code>&#x27;uint8&#x27;</code> \| <code>&#x27;int16&#x27;</code> \| <code>&#x27;uint16&#x27;</code> \| <code>&#x27;int32&#x27;</code> \| <code>&#x27;uint32&#x27;</code> \| <code>&#x27;float32&#x27;</code> \| <code>&#x27;float64&#x27;</code> \| <code>&#x27;bigint64&#x27;</code> \| <code>&#x27;biguint64&#x27;</code> \| <code>&#x27;string&#x27;</code> \| <code>&#x27;array&#x27;</code> \| <code>&#x27;object&#x27;</code> \| [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView) \| [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView) \| [<code>Class.&lt;TypedArrayView&gt;</code>](#TypedArrayView)
+**Kind**: global typedef  
+<a name="ObjectViewField"></a>
+
+## ObjectViewField : <code>Object</code>
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| type | [<code>ObjectViewFieldType</code>](#ObjectViewFieldType) |  |
+| [size] | <code>number</code> | the maximum size in bytes for a string type |
+| [littleEndian] | <code>boolean</code> |  |
+| [start] | <code>number</code> |  |
+| [length] | <code>number</code> |  |
+| [ctor] | <code>Constructor</code> |  |
 
 <a name="RecordFieldType"></a>
 
