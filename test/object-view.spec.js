@@ -40,11 +40,10 @@ Invalid.schema = {
 describe('ObjectView', () => {
   describe('constructor', () => {
     it('creates an instance of ObjectView', () => {
-      const person = new Person();
+      const person = Person.from({});
       expect(person.buffer instanceof ArrayBuffer).toBe(true);
       expect(person.buffer.byteLength).toBe(40);
       expect(person instanceof DataView).toBe(true);
-      expect(person.byteView instanceof Uint8Array).toBe(true);
     });
 
     it('creates an instance using preexisting ArrayBuffer', () => {
@@ -53,19 +52,17 @@ describe('ObjectView', () => {
       expect(person.buffer).toBe(buffer);
       expect(person.byteLength).toBe(40);
       expect(person.byteOffset).toBe(9);
-      expect(person.byteView.length).toBe(40);
-      expect(person.byteView.byteOffset).toBe(9);
     });
 
     it('throws if invalid field type is used', () => {
-      expect(() => { new Invalid(); })
+      expect(() => { Invalid.from({}); })
         .toThrowError('Type "Int128" is not a valid type.');
     });
   });
 
   describe('get', () => {
     it('returns the value of a given field', () => {
-      const person = new Primitives();
+      const person = Primitives.from({});
       expect(person.get('a')).toBe(0);
       expect(person.get('b')).toBe(0);
       expect(person.get('c')).toBe(0);
@@ -79,7 +76,7 @@ describe('ObjectView', () => {
     });
 
     it('returns a StringView for a string field', () => {
-      const person = new Person();
+      const person = Person.from({});
       const actual = person.get('name');
       expect(actual instanceof StringView).toBe(true);
       expect(actual.buffer === person.buffer).toBe(true);
@@ -87,7 +84,7 @@ describe('ObjectView', () => {
     });
 
     it('returns a TypedArrayView from an array field', () => {
-      const person = new Person();
+      const person = Person.from({});
       const actual = person.get('scores');
       expect(actual instanceof DataView).toBe(true);
       expect(actual.buffer === person.buffer).toBe(true);
@@ -96,7 +93,7 @@ describe('ObjectView', () => {
     });
 
     it('returns an ObjectView for an object field', () => {
-      const person = new Person();
+      const person = Person.from({});
       const actual = person.get('pet');
       expect(actual instanceof Pet).toBe(true);
       expect(actual.buffer === person.buffer).toBe(true);
@@ -107,7 +104,7 @@ describe('ObjectView', () => {
 
   describe('set', () => {
     it('sets a given value to a given field', () => {
-      const primitives = new Primitives();
+      const primitives = Primitives.from({});
       expect(primitives.set('a', 1)
         .get('a')).toBe(1);
       expect(primitives.set('b', 1)
@@ -131,26 +128,26 @@ describe('ObjectView', () => {
     });
 
     it('sets a buffer for a string field', () => {
-      const person = new Person();
+      const person = Person.from({});
       const value = new StringView(10);
       value[0] = 35;
       value[9] = 33;
-      person.set('name', value);
+      person.setView('name', value);
       const actual = person.get('name');
       expect(actual).toEqual(value);
       expect(actual.buffer !== value.buffer).toBe(true);
     });
 
     it('sets a string for a string field', () => {
-      const person = new Person();
+      const person = Person.from({});
       person.set('name', 'maga');
       expect(person.get('name').toString()).toBe('maga');
     });
 
     it('sets a TypedArrayView for an array field', () => {
-      const person = new Person();
+      const person = Person.from({});
       const scores = Int16View.from([10, 0, 0, 0, -10]);
-      person.set('scores', scores);
+      person.setView('scores', scores);
       expect(Array.from(person.get('scores'))).toEqual([10, 0, 0, 0, -10]);
     });
 
@@ -165,15 +162,16 @@ describe('ObjectView', () => {
     });
 
     it('sets an ObjectView for an object field', () => {
-      const person = new Person();
-      const pet = new Pet();
-      pet.set('age', 10).set('name', 'tuzik');
-      person.set('pet', pet);
+      const person = Person.from({});
+      const pet = Pet.from({});
+      pet.set('age', 10);
+      pet.set('name', 'tuzik');
+      person.setView('pet', pet);
       expect(person.get('pet').toObject()).toEqual({ age: 10, name: 'tuzik' });
     });
 
     it('sets an object for an object field', () => {
-      const person = new Person();
+      const person = Person.from({});
       const pet = { age: 10, name: 'tuzik' };
       person.set('pet', pet);
       expect(person.get('pet').toObject()).toEqual({ age: 10, name: 'tuzik' });
@@ -182,7 +180,7 @@ describe('ObjectView', () => {
 
   describe('toObject', () => {
     it('returns an Object corresponding to the object view', () => {
-      const person = new Person();
+      const person = Person.from({});
       person.set('age', 10)
         .set('height', 50)
         .set('weight', 60)
@@ -201,6 +199,14 @@ describe('ObjectView', () => {
           name: 'tuzik',
         },
       });
+    });
+
+    it('handles primitive types', () => {
+      const expected = {
+        a: 2, b: 3, c: 4, d: 1, e: 2, f: 4, g: 5, h: 6, i: BigInt(78), j: BigInt(97),
+      };
+      const primitives = Primitives.from(expected);
+      expect(primitives.toObject()).toEqual(expected);
     });
   });
 
@@ -233,7 +239,7 @@ describe('ObjectView', () => {
           name: 'tuzik',
         },
       };
-      const person = new Person();
+      const person = Person.from({});
       Person.from(object, person);
       expect(person.toObject()).toEqual(object);
     });

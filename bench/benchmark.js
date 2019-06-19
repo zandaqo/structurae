@@ -3,18 +3,18 @@
 /* eslint no-console: 0 */
 
 const Benchmark = require('benchmark');
-const GridMixin = require('./lib/grid');
-const BitField = require('./lib/bit-field');
-const RecordArray = require('./lib/record-array');
-const Pool = require('./lib/pool');
-const StringView = require('./lib/string-view');
-const SortedArray = require('./lib/sorted-array');
-const BinaryHeap = require('./lib/binary-heap');
-const UnweightedAdjacencyMatrix = require('./lib/unweighted-adjacency-matrix');
-const WeightedAdjacencyMatrixMixin = require('./lib/weighted-adjacency-matrix');
-const UnweightedAdjacencyList = require('./lib/unweighted-adjacency-list');
-const WeightedAdjacencyListMixin = require('./lib/weighted-adjacency-list');
-const GraphMixin = require('./lib/graph');
+const GridMixin = require('../lib/grid');
+const BitField = require('../lib/bit-field');
+const RecordArray = require('../lib/record-array');
+const Pool = require('../lib/pool');
+const StringView = require('../lib/string-view');
+const SortedArray = require('../lib/sorted-array');
+const BinaryHeap = require('../lib/binary-heap');
+const UnweightedAdjacencyMatrix = require('../lib/unweighted-adjacency-matrix');
+const WeightedAdjacencyMatrixMixin = require('../lib/weighted-adjacency-matrix');
+const UnweightedAdjacencyList = require('../lib/unweighted-adjacency-list');
+const WeightedAdjacencyListMixin = require('../lib/weighted-adjacency-list');
+const GraphMixin = require('../lib/graph');
 
 const benchmarkOptions = {
   onStart(event) {

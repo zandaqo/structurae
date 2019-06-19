@@ -1,7 +1,7 @@
 ## Classes
 
 <dl>
-<dt><a href="#ArrayView">ArrayView</a> ⇐ <code>DataView</code></dt>
+<dt><a href="#ArrayView">ArrayView</a> ⇐ <code><a href="#ObjectView">ObjectView</a></code></dt>
 <dd></dd>
 <dt><a href="#BinaryGrid">BinaryGrid</a> ⇐ <code>Uint16Array</code></dt>
 <dd><p>Implements a grid or 2D matrix of bits.</p>
@@ -85,7 +85,7 @@ using half the space required for a normal grid.</p>
 ## Functions
 
 <dl>
-<dt><a href="#ArrayViewMixin">ArrayViewMixin(ViewClass)</a> ⇒ <code><a href="#ArrayView">Class.&lt;ArrayView&gt;</a></code></dt>
+<dt><a href="#ArrayViewMixin">ArrayViewMixin(ObjectViewClass)</a> ⇒ <code><a href="#ArrayView">Class.&lt;ArrayView&gt;</a></code></dt>
 <dd></dd>
 <dt><a href="#GraphMixin">GraphMixin(Base, [undirected])</a> ⇒ <code><a href="#Graph">Graph</a></code></dt>
 <dd><p>Creates a Graph class extending a given adjacency structure.</p>
@@ -147,7 +147,7 @@ using half the space required for a normal grid.</p>
 <dd></dd>
 <dt><a href="#Coordinates">Coordinates</a> : <code>Object</code></dt>
 <dd></dd>
-<dt><a href="#ObjectViewFieldType">ObjectViewFieldType</a> : <code>&#x27;int8&#x27;</code> | <code>&#x27;uint8&#x27;</code> | <code>&#x27;int16&#x27;</code> | <code>&#x27;uint16&#x27;</code> | <code>&#x27;int32&#x27;</code> | <code>&#x27;uint32&#x27;</code> | <code>&#x27;float32&#x27;</code> | <code>&#x27;float64&#x27;</code> | <code>&#x27;bigint64&#x27;</code> | <code>&#x27;biguint64&#x27;</code> | <code>&#x27;string&#x27;</code> | <code>&#x27;array&#x27;</code> | <code>&#x27;object&#x27;</code> | <code><a href="#ArrayView">Class.&lt;ArrayView&gt;</a></code> | <code><a href="#ObjectView">Class.&lt;ObjectView&gt;</a></code> | <code><a href="#TypedArrayView">Class.&lt;TypedArrayView&gt;</a></code></dt>
+<dt><a href="#ObjectViewFieldType">ObjectViewFieldType</a> : <code>&#x27;int8&#x27;</code> | <code>&#x27;uint8&#x27;</code> | <code>&#x27;int16&#x27;</code> | <code>&#x27;uint16&#x27;</code> | <code>&#x27;int32&#x27;</code> | <code>&#x27;uint32&#x27;</code> | <code>&#x27;float32&#x27;</code> | <code>&#x27;float64&#x27;</code> | <code>&#x27;bigint64&#x27;</code> | <code>&#x27;biguint64&#x27;</code> | <code>&#x27;string&#x27;</code> | <code>&#x27;array&#x27;</code> | <code>&#x27;object&#x27;</code> | <code>&#x27;typedarray&#x27;</code> | <code><a href="#ArrayView">Class.&lt;ArrayView&gt;</a></code> | <code><a href="#ObjectView">Class.&lt;ObjectView&gt;</a></code> | <code><a href="#TypedArrayView">Class.&lt;TypedArrayView&gt;</a></code></dt>
 <dd></dd>
 <dt><a href="#ObjectViewField">ObjectViewField</a> : <code>Object</code></dt>
 <dd></dd>
@@ -159,25 +159,21 @@ using half the space required for a normal grid.</p>
 
 <a name="ArrayView"></a>
 
-## ArrayView ⇐ <code>DataView</code>
+## ArrayView ⇐ [<code>ObjectView</code>](#ObjectView)
 **Kind**: global class  
-**Extends**: <code>DataView</code>  
+**Extends**: [<code>ObjectView</code>](#ObjectView)  
 
-* [ArrayView](#ArrayView) ⇐ <code>DataView</code>
-    * [new ArrayView([sizeOrBuffer], [byteOffset], [byteLength])](#new_ArrayView_new)
-    * [.size](#ArrayView+size) : <code>number</code>
-    * [.get(index)](#ArrayView+get) ⇒ [<code>ObjectView</code>](#ObjectView)
-    * [.set(index, value)](#ArrayView+set) ⇒ [<code>ArrayView</code>](#ArrayView)
-
-<a name="new_ArrayView_new"></a>
-
-### new ArrayView([sizeOrBuffer], [byteOffset], [byteLength])
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| [sizeOrBuffer] | <code>number</code> \| <code>ArrayBuffer</code> | <code>1</code> | the maximum size of the array                                              or an existing ArrayBuffer to use |
-| [byteOffset] | <code>number</code> |  | the byteOffset in an existing ArrayBuffer |
-| [byteLength] | <code>number</code> |  | the byteLength in an existing ArrayBuffer |
+* [ArrayView](#ArrayView) ⇐ [<code>ObjectView</code>](#ObjectView)
+    * _instance_
+        * [.size](#ArrayView+size) : <code>number</code>
+        * [.get(index)](#ArrayView+get) ⇒ [<code>ObjectView</code>](#ObjectView)
+        * [.set(index, value)](#ArrayView+set) ⇒ [<code>ArrayView</code>](#ArrayView)
+        * [.setView(index, value)](#ArrayView+setView) ⇒ [<code>ArrayView</code>](#ArrayView)
+        * [.toObject()](#ArrayView+toObject) ⇒ <code>Array.&lt;Object&gt;</code>
+    * _static_
+        * [.from(value, [array])](#ArrayView.from) ⇒ [<code>ArrayView</code>](#ArrayView)
+        * [.getLength(size)](#ArrayView.getLength) ⇒ <code>number</code>
+        * [.of(size)](#ArrayView.of) ⇒ [<code>ArrayView</code>](#ArrayView)
 
 <a name="ArrayView+size"></a>
 
@@ -189,6 +185,7 @@ Returns the amount of available bits in the array.
 
 ### arrayView.get(index) ⇒ [<code>ObjectView</code>](#ObjectView)
 **Kind**: instance method of [<code>ArrayView</code>](#ArrayView)  
+**Overrides**: [<code>get</code>](#ObjectView+get)  
 
 | Param | Type |
 | --- | --- |
@@ -198,11 +195,56 @@ Returns the amount of available bits in the array.
 
 ### arrayView.set(index, value) ⇒ [<code>ArrayView</code>](#ArrayView)
 **Kind**: instance method of [<code>ArrayView</code>](#ArrayView)  
+**Overrides**: [<code>set</code>](#ObjectView+set)  
 
 | Param | Type |
 | --- | --- |
 | index | <code>number</code> | 
-| value | [<code>ObjectView</code>](#ObjectView) \| <code>Object</code> | 
+| value | <code>Object</code> | 
+
+<a name="ArrayView+setView"></a>
+
+### arrayView.setView(index, value) ⇒ [<code>ArrayView</code>](#ArrayView)
+**Kind**: instance method of [<code>ArrayView</code>](#ArrayView)  
+**Overrides**: [<code>setView</code>](#ObjectView+setView)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+| value | [<code>ObjectView</code>](#ObjectView) | 
+
+<a name="ArrayView+toObject"></a>
+
+### arrayView.toObject() ⇒ <code>Array.&lt;Object&gt;</code>
+**Kind**: instance method of [<code>ArrayView</code>](#ArrayView)  
+**Overrides**: [<code>toObject</code>](#ObjectView+toObject)  
+<a name="ArrayView.from"></a>
+
+### ArrayView.from(value, [array]) ⇒ [<code>ArrayView</code>](#ArrayView)
+**Kind**: static method of [<code>ArrayView</code>](#ArrayView)  
+
+| Param | Type |
+| --- | --- |
+| value | <code>ArrayLike.&lt;Object&gt;</code> | 
+| [array] | [<code>ArrayView</code>](#ArrayView) | 
+
+<a name="ArrayView.getLength"></a>
+
+### ArrayView.getLength(size) ⇒ <code>number</code>
+**Kind**: static method of [<code>ArrayView</code>](#ArrayView)  
+
+| Param | Type |
+| --- | --- |
+| size | <code>number</code> | 
+
+<a name="ArrayView.of"></a>
+
+### ArrayView.of(size) ⇒ [<code>ArrayView</code>](#ArrayView)
+**Kind**: static method of [<code>ArrayView</code>](#ArrayView)  
+
+| Param | Type |
+| --- | --- |
+| size | <code>number</code> | 
 
 <a name="BinaryGrid"></a>
 
@@ -1270,25 +1312,15 @@ a.get(2, 1);
 **Extends**: <code>DataView</code>  
 
 * [ObjectView](#ObjectView) ⇐ <code>DataView</code>
-    * [new ObjectView([buffer], [byteOffset], [byteLength])](#new_ObjectView_new)
     * _instance_
         * [.get(field)](#ObjectView+get) ⇒ <code>\*</code>
         * [.set(field, value)](#ObjectView+set) ⇒ [<code>ObjectView</code>](#ObjectView)
+        * [.setView(field, value)](#ObjectView+setView) ⇒ [<code>ObjectView</code>](#ObjectView)
         * [.toObject()](#ObjectView+toObject) ⇒ <code>Object</code>
     * _static_
         * [.isInitialized](#ObjectView.isInitialized) : <code>boolean</code>
-        * [.from(object, objectView)](#ObjectView.from) ⇒ [<code>ObjectView</code>](#ObjectView)
+        * [.from(object, [view])](#ObjectView.from) ⇒ [<code>ObjectView</code>](#ObjectView)
         * [.getLength()](#ObjectView.getLength) ⇒ <code>number</code>
-
-<a name="new_ObjectView_new"></a>
-
-### new ObjectView([buffer], [byteOffset], [byteLength])
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [buffer] | <code>ArrayBuffer</code> | an existing ArrayBuffer to use |
-| [byteOffset] | <code>number</code> | the byteOffset in an existing ArrayBuffer |
-| [byteLength] | <code>number</code> | the byteLength in an existing ArrayBuffer |
 
 <a name="ObjectView+get"></a>
 
@@ -1314,6 +1346,18 @@ Sets a value to a field.
 | field | <code>string</code> | the name of the field |
 | value | <code>\*</code> | the value to be set |
 
+<a name="ObjectView+setView"></a>
+
+### objectView.setView(field, value) ⇒ [<code>ObjectView</code>](#ObjectView)
+Sets an ObjectView value to a field.
+
+**Kind**: instance method of [<code>ObjectView</code>](#ObjectView)  
+
+| Param | Type |
+| --- | --- |
+| field | <code>string</code> | 
+| value | [<code>ObjectView</code>](#ObjectView) \| [<code>ArrayView</code>](#ArrayView) \| [<code>TypedArrayView</code>](#TypedArrayView) \| [<code>StringView</code>](#StringView) | 
+
 <a name="ObjectView+toObject"></a>
 
 ### objectView.toObject() ⇒ <code>Object</code>
@@ -1326,7 +1370,7 @@ Returns an Object corresponding to the object view.
 **Kind**: static property of [<code>ObjectView</code>](#ObjectView)  
 <a name="ObjectView.from"></a>
 
-### ObjectView.from(object, objectView) ⇒ [<code>ObjectView</code>](#ObjectView)
+### ObjectView.from(object, [view]) ⇒ [<code>ObjectView</code>](#ObjectView)
 Assigns fields of a given object to the provided object view
 or a new object view.
 
@@ -1335,7 +1379,7 @@ or a new object view.
 | Param | Type | Description |
 | --- | --- | --- |
 | object | <code>Object</code> | the object to take data from |
-| objectView | [<code>ObjectView</code>](#ObjectView) | the object view to assign fields to |
+| [view] | [<code>ObjectView</code>](#ObjectView) | the object view to assign fields to |
 
 <a name="ObjectView.getLength"></a>
 
@@ -2227,6 +2271,8 @@ Extends Uint8Array to handle C-like representation of UTF-8 encoded strings.
         * [.toString()](#StringView+toString) ⇒ <code>string</code>
         * [.trim()](#StringView+trim) ⇒ [<code>StringView</code>](#StringView)
     * _static_
+        * [.encoder](#StringView.encoder) : <code>TextEncoder</code>
+        * [.decoder](#StringView.decoder) : <code>TextDecoder</code>
         * [.fromString(string, [size])](#StringView.fromString) ⇒ [<code>StringView</code>](#StringView)
         * [.getByteSize(string)](#StringView.getByteSize) ⇒ <code>number</code>
 
@@ -2382,6 +2428,14 @@ stringView
 stringView.trim();
 //=> StringView [ 97, 98, 99, 240, 159, 152, 128, 97 ]
 ```
+<a name="StringView.encoder"></a>
+
+### StringView.encoder : <code>TextEncoder</code>
+**Kind**: static property of [<code>StringView</code>](#StringView)  
+<a name="StringView.decoder"></a>
+
+### StringView.decoder : <code>TextDecoder</code>
+**Kind**: static property of [<code>StringView</code>](#StringView)  
 <a name="StringView.fromString"></a>
 
 ### StringView.fromString(string, [size]) ⇒ [<code>StringView</code>](#StringView)
@@ -2616,7 +2670,6 @@ a.get(2, 1);
 **Extends**: <code>DataView</code>  
 
 * [TypedArrayView](#TypedArrayView) ⇐ <code>DataView</code>
-    * [new TypedArrayView([sizeOrBuffer], [byteOffset], [byteLength])](#new_TypedArrayView_new)
     * _instance_
         * [.size](#TypedArrayView+size) : <code>number</code>
         * [.get(index)](#TypedArrayView+get) ⇒ <code>number</code>
@@ -2625,16 +2678,6 @@ a.get(2, 1);
         * [.typeGetter](#TypedArrayView.typeGetter) : <code>string</code>
         * [.typeSetter](#TypedArrayView.typeSetter) : <code>string</code>
         * [.offset](#TypedArrayView.offset) : <code>number</code>
-
-<a name="new_TypedArrayView_new"></a>
-
-### new TypedArrayView([sizeOrBuffer], [byteOffset], [byteLength])
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| [sizeOrBuffer] | <code>number</code> \| <code>ArrayBuffer</code> | <code>1</code> | the maximum size of the array                                              or an existing ArrayBuffer to use |
-| [byteOffset] | <code>number</code> |  | the byteOffset in an existing ArrayBuffer |
-| [byteLength] | <code>number</code> |  | the byteLength in an existing ArrayBuffer |
 
 <a name="TypedArrayView+size"></a>
 
@@ -2733,38 +2776,52 @@ Returns the amount of available bits in the array.
 **Extends**: [<code>TypedArrayView</code>](#TypedArrayView)  
 
 * [Uint8View](#Uint8View) ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
-    * [.size](#Uint8View+size) : <code>number</code>
-    * [.get(index)](#Uint8View+get) ⇒ <code>number</code>
-    * [.set(index, value)](#Uint8View+set) ⇒ [<code>Uint8View</code>](#Uint8View)
+    * _instance_
+        * [.size](#TypedArrayView+size) : <code>number</code>
+        * [.get(index)](#TypedArrayView+get) ⇒ <code>number</code>
+        * [.set(index, value)](#TypedArrayView+set) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
+    * _static_
+        * [.typeGetter](#Uint8View.typeGetter) : <code>string</code>
+        * [.typeSetter](#Uint8View.typeSetter) : <code>string</code>
+        * [.offset](#Uint8View.offset) : <code>number</code>
 
-<a name="Uint8View+size"></a>
+<a name="TypedArrayView+size"></a>
 
 ### uint8View.size : <code>number</code>
 Returns the amount of available bits in the array.
 
 **Kind**: instance property of [<code>Uint8View</code>](#Uint8View)  
-**Overrides**: [<code>size</code>](#TypedArrayView+size)  
-<a name="Uint8View+get"></a>
+<a name="TypedArrayView+get"></a>
 
 ### uint8View.get(index) ⇒ <code>number</code>
 **Kind**: instance method of [<code>Uint8View</code>](#Uint8View)  
-**Overrides**: [<code>get</code>](#TypedArrayView+get)  
 
 | Param | Type |
 | --- | --- |
 | index | <code>number</code> | 
 
-<a name="Uint8View+set"></a>
+<a name="TypedArrayView+set"></a>
 
-### uint8View.set(index, value) ⇒ [<code>Uint8View</code>](#Uint8View)
+### uint8View.set(index, value) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
 **Kind**: instance method of [<code>Uint8View</code>](#Uint8View)  
-**Overrides**: [<code>set</code>](#TypedArrayView+set)  
 
 | Param | Type |
 | --- | --- |
 | index | <code>number</code> | 
 | value | <code>number</code> | 
 
+<a name="Uint8View.typeGetter"></a>
+
+### Uint8View.typeGetter : <code>string</code>
+**Kind**: static property of [<code>Uint8View</code>](#Uint8View)  
+<a name="Uint8View.typeSetter"></a>
+
+### Uint8View.typeSetter : <code>string</code>
+**Kind**: static property of [<code>Uint8View</code>](#Uint8View)  
+<a name="Uint8View.offset"></a>
+
+### Uint8View.offset : <code>number</code>
+**Kind**: static property of [<code>Uint8View</code>](#Uint8View)  
 <a name="Int16View"></a>
 
 ## Int16View ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
@@ -3966,12 +4023,12 @@ Creates an adjacency matrix from a given adjacency list.
 
 <a name="ArrayViewMixin"></a>
 
-## ArrayViewMixin(ViewClass) ⇒ [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
+## ArrayViewMixin(ObjectViewClass) ⇒ [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
 **Kind**: global function  
 
 | Param | Type |
 | --- | --- |
-| ViewClass | [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView) | 
+| ObjectViewClass | [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView) | 
 
 <a name="GraphMixin"></a>
 
@@ -4179,7 +4236,7 @@ Creates a WeightedAdjacencyMatrix class extending a given Array-like class.
 
 <a name="ObjectViewFieldType"></a>
 
-## ObjectViewFieldType : <code>&#x27;int8&#x27;</code> \| <code>&#x27;uint8&#x27;</code> \| <code>&#x27;int16&#x27;</code> \| <code>&#x27;uint16&#x27;</code> \| <code>&#x27;int32&#x27;</code> \| <code>&#x27;uint32&#x27;</code> \| <code>&#x27;float32&#x27;</code> \| <code>&#x27;float64&#x27;</code> \| <code>&#x27;bigint64&#x27;</code> \| <code>&#x27;biguint64&#x27;</code> \| <code>&#x27;string&#x27;</code> \| <code>&#x27;array&#x27;</code> \| <code>&#x27;object&#x27;</code> \| [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView) \| [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView) \| [<code>Class.&lt;TypedArrayView&gt;</code>](#TypedArrayView)
+## ObjectViewFieldType : <code>&#x27;int8&#x27;</code> \| <code>&#x27;uint8&#x27;</code> \| <code>&#x27;int16&#x27;</code> \| <code>&#x27;uint16&#x27;</code> \| <code>&#x27;int32&#x27;</code> \| <code>&#x27;uint32&#x27;</code> \| <code>&#x27;float32&#x27;</code> \| <code>&#x27;float64&#x27;</code> \| <code>&#x27;bigint64&#x27;</code> \| <code>&#x27;biguint64&#x27;</code> \| <code>&#x27;string&#x27;</code> \| <code>&#x27;array&#x27;</code> \| <code>&#x27;object&#x27;</code> \| <code>&#x27;typedarray&#x27;</code> \| [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView) \| [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView) \| [<code>Class.&lt;TypedArrayView&gt;</code>](#TypedArrayView)
 **Kind**: global typedef  
 <a name="ObjectViewField"></a>
 
@@ -4194,7 +4251,7 @@ Creates a WeightedAdjacencyMatrix class extending a given Array-like class.
 | [littleEndian] | <code>boolean</code> |  |
 | [start] | <code>number</code> |  |
 | [length] | <code>number</code> |  |
-| [ctor] | <code>Constructor</code> |  |
+| [ctor] | [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView) \| [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView) \| [<code>Class.&lt;TypedArrayView&gt;</code>](#TypedArrayView) |  |
 
 <a name="RecordFieldType"></a>
 

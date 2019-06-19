@@ -25,19 +25,16 @@ describe('ArrayView', () => {
   describe('ArrayViewMixin', () => {
     it('creates an array class for a given object class', () => {
       const PetsView = ArrayViewMixin(Pet);
-      expect(PetsView.ViewClass).toBe(Pet);
-      expect(PetsView.viewLength).toBe(11);
+      expect(PetsView.objectLength).toBe(11);
     });
   });
 
   describe('constructor', () => {
     it('creates an array of a given size', () => {
-      const array = new PeopleView(10);
+      const array = PeopleView.of(10);
       expect(array.size).toBe(10);
       expect(array.byteOffset).toBe(0);
       expect(array.byteLength).toBe(610);
-      expect(array.byteView instanceof Uint8Array).toBe(true);
-      expect(array.byteView.buffer).toBe(array.buffer);
     });
 
     it('creates an array with a given buffer', () => {
@@ -51,7 +48,7 @@ describe('ArrayView', () => {
 
   describe('get', () => {
     it('returns an object at a given index', () => {
-      const array = new PeopleView(10);
+      const array = PeopleView.of(10);
       const actual = array.get(1);
       expect(actual instanceof Person).toBe(true);
       expect(actual.byteOffset).toBe(61);
@@ -83,12 +80,12 @@ describe('ArrayView', () => {
         traits: [1, 2, 3, 4, 0, 0, 0, 0, 0, 0],
       };
       const objectView = Person.from(object);
-      array.set(3, objectView);
+      array.setView(3, objectView);
       expect(array.get(3).toObject()).toEqual(object);
     });
 
     it('sets an object at a given index', () => {
-      const array = new PeopleView(10);
+      const array = PeopleView.of(10);
       const object = {
         age: 10,
         height: 50,
@@ -114,7 +111,7 @@ describe('ArrayView', () => {
 
   describe('size', () => {
     it('returns the amount of objects in the array', () => {
-      const array = new PeopleView(9);
+      const array = PeopleView.of(9);
       expect(array.byteLength).toBe(549);
       expect(array.size).toBe(9);
     });
@@ -124,7 +121,7 @@ describe('ArrayView', () => {
     it('returns an array of objects in the array', () => {
       const PetArray = ArrayViewMixin(Pet);
       const expected = [{ age: 1, name: 'a' }, { age: 2, name: 'b' }, { age: 3, name: 'c' }];
-      const pets = new PetArray(3);
+      const pets = PetArray.of(3);
       pets.set(0, expected[0])
         .set(1, expected[1])
         .set(2, expected[2]);
@@ -146,6 +143,13 @@ describe('ArrayView', () => {
     it('returns the byte length required to hold the array', () => {
       expect(PeopleView.getLength(1)).toBe(61);
       expect(PeopleView.getLength(5)).toBe(305);
+    });
+  });
+
+  describe('iterator', () => {
+    it('iterates over elements of the array', () => {
+      const people = PeopleView.of(10);
+      expect([...people].length).toBe(10);
     });
   });
 });

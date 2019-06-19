@@ -215,8 +215,8 @@ type ArrayViewType = typeof ArrayView | typeof TypedArrayView;
 type View = ObjectView | ArrayView | TypedArrayView | StringView;
 
 type ObjectViewFieldType = 'int8' | 'uint8' | 'int16' | 'uint16'
-    | 'int32' | 'uint32' | 'float32' | 'float64'
-    | 'bigint64' | 'biguint64' | 'string' | ViewType;
+    | 'int32' | 'uint32' | 'float32' | 'float64' | 'bigint64' | 'biguint64'
+    | 'string' | 'array' | 'object' | 'typedarray' | ViewType;
 
 interface ObjectViewField {
     type: ObjectViewFieldType;
@@ -232,51 +232,54 @@ interface ObjectViewSchema {
 }
 
 export declare class ObjectView extends DataView {
-    size: number;
-    private byteView: Uint8Array;
     static fields: string[];
     static schema: ObjectViewSchema;
     static isInitialized: boolean;
+    static objectLength: number;
 
-    constructor(buffer?: ArrayBuffer, byteOffset?: number, byteLength?: number);
     get(field: string): number | View;
-    private getObject(field: string, length: number, Ctor: ViewType): View;
+    private getArray(position: number, ctor: typeof ObjectView | typeof ArrayView, size: number): ArrayLike<object>;
+    private getTypedArray(position: number, ctor: typeof TypedArrayView, size: number): ArrayLike<number>;
+    private getObject(schema: ObjectViewSchema, offset: number): object;
+    private getView(position: number, length: number, ctor: ViewType): View;
     set(field: string, value: any): this;
-    private setArray(start: number, value: ArrayView | TypedArrayView | ArrayLike<number>, length: number, Ctor: ArrayViewType): this;
-    private setObject(start: number, value: ObjectView | Object, length: number, Ctor: typeof ObjectView): this;
-    private setString(start: number, value: StringView | string, length: number): this;
+    private setArray(position: number, value: ArrayLike<object>, ctor: ViewType, size: number): void;
+    private setObject(position: number, value: object, ctor: ViewType): void;
+    private setString(position: number, value: string, length: number): void;
+    private setTypedArray(position: number, value: ArrayLike<number>, ctor: typeof TypedArrayView, size: number): void;
+    private setValue(field: string, value: any, schema: ObjectViewSchema, offset: number): this;
+    setView(field: string, value: View): this;
     toObject(): object;
     static from(object: object, objectView?: ObjectView): ObjectView;
     static getLength(): number;
     static initialize(): void;
 }
 
-export declare class ArrayView extends DataView {
+export declare class ArrayView extends ObjectView {
     size: number;
-    private byteView: Uint8Array;
 
-    constructor(sizeOrBuffer?: ArrayBuffer | number, byteOffset?: number, byteLength?: number);
     get(index: number): ObjectView;
-    set(index: string, value: ObjectView | object): this;
-    toObject(): object;
+    set(index: number, value: object): this;
+    setView(index: number, value: ObjectView): this;
+    toObject(): object[];
     static from(value: ArrayLike<object>, array?: ArrayView): ArrayView;
+    static of(size: number): ArrayView;
     static getLength(size: number): number;
 }
 
-export declare function ArrayViewMixin(ViewClass: typeof ObjectView): typeof ArrayView;
+export declare function ArrayViewMixin<T extends ObjectView>(Base: Constructor<T>): Constructor<T & ArrayView>
 
 export declare class TypedArrayView extends DataView {
     size: number;
-    private byteView: Uint8Array;
     static typeGetter: string;
     static typeSetter: string;
     static offset: number;
 
-    constructor(sizeOrBuffer?: ArrayBuffer | number, byteOffset?: number, byteLength?: number);
     get(index: number): number;
-    set(index: string, value: number): this;
+    set(index: number, value: number): this;
     toObject(): object;
     static from(value: ArrayLike<number>, array?: TypedArrayView): TypedArrayView;
+    static of(size: number): TypedArrayView;
     static getLength(size: number): number;
 }
 
