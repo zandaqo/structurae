@@ -1,6 +1,6 @@
 const ObjectView = require('../lib/object-view');
 const StringView = require('../lib/string-view');
-const { Int16View } = require('../lib/typed-array-view');
+const TypedArrayViewMixin = require('../lib/typed-array-view');
 
 class Pet extends ObjectView {}
 Pet.schema = {
@@ -146,7 +146,7 @@ describe('ObjectView', () => {
 
     it('sets a TypedArrayView for an array field', () => {
       const person = Person.from({});
-      const scores = Int16View.from([10, 0, 0, 0, -10]);
+      const scores = TypedArrayViewMixin('int16').from([10, 0, 0, 0, -10]);
       person.setView('scores', scores);
       expect(Array.from(person.get('scores'))).toEqual([10, 0, 0, 0, -10]);
     });

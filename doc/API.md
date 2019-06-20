@@ -48,26 +48,6 @@ using half the space required for a normal grid.</p>
 </dd>
 <dt><a href="#TypedArrayView">TypedArrayView</a> ⇐ <code>DataView</code></dt>
 <dd></dd>
-<dt><a href="#Int8View">Int8View</a> ⇐ <code><a href="#TypedArrayView">TypedArrayView</a></code></dt>
-<dd></dd>
-<dt><a href="#Uint8View">Uint8View</a> ⇐ <code><a href="#TypedArrayView">TypedArrayView</a></code></dt>
-<dd></dd>
-<dt><a href="#Int16View">Int16View</a> ⇐ <code><a href="#TypedArrayView">TypedArrayView</a></code></dt>
-<dd></dd>
-<dt><a href="#Uint16View">Uint16View</a> ⇐ <code><a href="#TypedArrayView">TypedArrayView</a></code></dt>
-<dd></dd>
-<dt><a href="#Int32View">Int32View</a> ⇐ <code><a href="#TypedArrayView">TypedArrayView</a></code></dt>
-<dd></dd>
-<dt><a href="#Uint32View">Uint32View</a> ⇐ <code><a href="#TypedArrayView">TypedArrayView</a></code></dt>
-<dd></dd>
-<dt><a href="#Float32View">Float32View</a> ⇐ <code><a href="#TypedArrayView">TypedArrayView</a></code></dt>
-<dd></dd>
-<dt><a href="#Float64View">Float64View</a> ⇐ <code><a href="#TypedArrayView">TypedArrayView</a></code></dt>
-<dd></dd>
-<dt><a href="#BigInt64View">BigInt64View</a> ⇐ <code><a href="#TypedArrayView">TypedArrayView</a></code></dt>
-<dd></dd>
-<dt><a href="#BigUint64View">BigUint64View</a> ⇐ <code><a href="#TypedArrayView">TypedArrayView</a></code></dt>
-<dd></dd>
 <dt><a href="#UnweightedAdjacencyList">UnweightedAdjacencyList</a> ⇐ <code>Uint32Array</code></dt>
 <dd><p>Implements Adjacency List data structure for unweighted graphs.</p>
 </dd>
@@ -101,6 +81,8 @@ using half the space required for a normal grid.</p>
 <dt><a href="#SymmetricGridMixin">SymmetricGridMixin(Base)</a> ⇒ <code><a href="#SymmetricGrid">SymmetricGrid</a></code></dt>
 <dd><p>Creates a SymmetricGrid class extending a given Array-like class.</p>
 </dd>
+<dt><a href="#TypedArrayViewMixin">TypedArrayViewMixin(type, [littleEndian])</a> ⇒ <code><a href="#TypedArrayView">Class.&lt;TypedArrayView&gt;</a></code></dt>
+<dd></dd>
 <dt><a href="#popCount32">popCount32(value)</a> ⇒ <code>number</code></dt>
 <dd><p>Counts set bits in a given number.</p>
 </dd>
@@ -178,12 +160,14 @@ using half the space required for a normal grid.</p>
 <a name="ArrayView+size"></a>
 
 ### arrayView.size : <code>number</code>
-Returns the amount of available bits in the array.
+Returns the amount of available objects in the array.
 
 **Kind**: instance property of [<code>ArrayView</code>](#ArrayView)  
 <a name="ArrayView+get"></a>
 
 ### arrayView.get(index) ⇒ [<code>ObjectView</code>](#ObjectView)
+Returns an object at a given index.
+
 **Kind**: instance method of [<code>ArrayView</code>](#ArrayView)  
 **Overrides**: [<code>get</code>](#ObjectView+get)  
 
@@ -194,6 +178,8 @@ Returns the amount of available bits in the array.
 <a name="ArrayView+set"></a>
 
 ### arrayView.set(index, value) ⇒ [<code>ArrayView</code>](#ArrayView)
+Sets an object at a given index.
+
 **Kind**: instance method of [<code>ArrayView</code>](#ArrayView)  
 **Overrides**: [<code>set</code>](#ObjectView+set)  
 
@@ -205,6 +191,8 @@ Returns the amount of available bits in the array.
 <a name="ArrayView+setView"></a>
 
 ### arrayView.setView(index, value) ⇒ [<code>ArrayView</code>](#ArrayView)
+Sets an object view at a given index.
+
 **Kind**: instance method of [<code>ArrayView</code>](#ArrayView)  
 **Overrides**: [<code>setView</code>](#ObjectView+setView)  
 
@@ -216,11 +204,15 @@ Returns the amount of available bits in the array.
 <a name="ArrayView+toObject"></a>
 
 ### arrayView.toObject() ⇒ <code>Array.&lt;Object&gt;</code>
+Returns an array representation of the array view.
+
 **Kind**: instance method of [<code>ArrayView</code>](#ArrayView)  
 **Overrides**: [<code>toObject</code>](#ObjectView+toObject)  
 <a name="ArrayView.from"></a>
 
 ### ArrayView.from(value, [array]) ⇒ [<code>ArrayView</code>](#ArrayView)
+Creates an array view from a given array of objects.
+
 **Kind**: static method of [<code>ArrayView</code>](#ArrayView)  
 
 | Param | Type |
@@ -231,6 +223,8 @@ Returns the amount of available bits in the array.
 <a name="ArrayView.getLength"></a>
 
 ### ArrayView.getLength(size) ⇒ <code>number</code>
+Returns the byte length of an array view to hold a given amount of objects.
+
 **Kind**: static method of [<code>ArrayView</code>](#ArrayView)  
 
 | Param | Type |
@@ -240,11 +234,13 @@ Returns the amount of available bits in the array.
 <a name="ArrayView.of"></a>
 
 ### ArrayView.of(size) ⇒ [<code>ArrayView</code>](#ArrayView)
+Creates an empty array view of specified size.
+
 **Kind**: static method of [<code>ArrayView</code>](#ArrayView)  
 
-| Param | Type |
-| --- | --- |
-| size | <code>number</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| size | <code>number</code> | <code>1</code> | 
 
 <a name="BinaryGrid"></a>
 
@@ -2674,20 +2670,23 @@ a.get(2, 1);
         * [.size](#TypedArrayView+size) : <code>number</code>
         * [.get(index)](#TypedArrayView+get) ⇒ <code>number</code>
         * [.set(index, value)](#TypedArrayView+set) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
+        * [.toObject()](#TypedArrayView+toObject) ⇒ <code>Array.&lt;number&gt;</code>
     * _static_
-        * [.typeGetter](#TypedArrayView.typeGetter) : <code>string</code>
-        * [.typeSetter](#TypedArrayView.typeSetter) : <code>string</code>
-        * [.offset](#TypedArrayView.offset) : <code>number</code>
+        * [.getLength(size)](#TypedArrayView.getLength) ⇒ <code>number</code>
+        * [.from(value, [array])](#TypedArrayView.from) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
+        * [.of(size)](#TypedArrayView.of) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
 
 <a name="TypedArrayView+size"></a>
 
 ### typedArrayView.size : <code>number</code>
-Returns the amount of available bits in the array.
+Returns the amount of available numbers in the array.
 
 **Kind**: instance property of [<code>TypedArrayView</code>](#TypedArrayView)  
 <a name="TypedArrayView+get"></a>
 
 ### typedArrayView.get(index) ⇒ <code>number</code>
+Returns a number at a given index.
+
 **Kind**: instance method of [<code>TypedArrayView</code>](#TypedArrayView)  
 
 | Param | Type |
@@ -2697,6 +2696,8 @@ Returns the amount of available bits in the array.
 <a name="TypedArrayView+set"></a>
 
 ### typedArrayView.set(index, value) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
+Sets a number at a given index.
+
 **Kind**: instance method of [<code>TypedArrayView</code>](#TypedArrayView)  
 
 | Param | Type |
@@ -2704,548 +2705,46 @@ Returns the amount of available bits in the array.
 | index | <code>number</code> | 
 | value | <code>number</code> | 
 
-<a name="TypedArrayView.typeGetter"></a>
+<a name="TypedArrayView+toObject"></a>
 
-### TypedArrayView.typeGetter : <code>string</code>
-**Kind**: static property of [<code>TypedArrayView</code>](#TypedArrayView)  
-<a name="TypedArrayView.typeSetter"></a>
+### typedArrayView.toObject() ⇒ <code>Array.&lt;number&gt;</code>
+Returns an array representation of the array view.
 
-### TypedArrayView.typeSetter : <code>string</code>
-**Kind**: static property of [<code>TypedArrayView</code>](#TypedArrayView)  
-<a name="TypedArrayView.offset"></a>
+**Kind**: instance method of [<code>TypedArrayView</code>](#TypedArrayView)  
+<a name="TypedArrayView.getLength"></a>
 
-### TypedArrayView.offset : <code>number</code>
-**Kind**: static property of [<code>TypedArrayView</code>](#TypedArrayView)  
-<a name="Int8View"></a>
+### TypedArrayView.getLength(size) ⇒ <code>number</code>
+Returns the byte length of an array view to hold a given amount of numbers.
 
-## Int8View ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
-**Kind**: global class  
-**Extends**: [<code>TypedArrayView</code>](#TypedArrayView)  
-
-* [Int8View](#Int8View) ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
-    * _instance_
-        * [.size](#TypedArrayView+size) : <code>number</code>
-        * [.get(index)](#TypedArrayView+get) ⇒ <code>number</code>
-        * [.set(index, value)](#TypedArrayView+set) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
-    * _static_
-        * [.typeGetter](#Int8View.typeGetter) : <code>string</code>
-        * [.typeSetter](#Int8View.typeSetter) : <code>string</code>
-        * [.offset](#Int8View.offset) : <code>number</code>
-
-<a name="TypedArrayView+size"></a>
-
-### int8View.size : <code>number</code>
-Returns the amount of available bits in the array.
-
-**Kind**: instance property of [<code>Int8View</code>](#Int8View)  
-<a name="TypedArrayView+get"></a>
-
-### int8View.get(index) ⇒ <code>number</code>
-**Kind**: instance method of [<code>Int8View</code>](#Int8View)  
+**Kind**: static method of [<code>TypedArrayView</code>](#TypedArrayView)  
 
 | Param | Type |
 | --- | --- |
-| index | <code>number</code> | 
+| size | <code>number</code> | 
 
-<a name="TypedArrayView+set"></a>
+<a name="TypedArrayView.from"></a>
 
-### int8View.set(index, value) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
-**Kind**: instance method of [<code>Int8View</code>](#Int8View)  
+### TypedArrayView.from(value, [array]) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
+Creates an array view from a given array of numbers.
 
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
-| value | <code>number</code> | 
-
-<a name="Int8View.typeGetter"></a>
-
-### Int8View.typeGetter : <code>string</code>
-**Kind**: static property of [<code>Int8View</code>](#Int8View)  
-<a name="Int8View.typeSetter"></a>
-
-### Int8View.typeSetter : <code>string</code>
-**Kind**: static property of [<code>Int8View</code>](#Int8View)  
-<a name="Int8View.offset"></a>
-
-### Int8View.offset : <code>number</code>
-**Kind**: static property of [<code>Int8View</code>](#Int8View)  
-<a name="Uint8View"></a>
-
-## Uint8View ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
-**Kind**: global class  
-**Extends**: [<code>TypedArrayView</code>](#TypedArrayView)  
-
-* [Uint8View](#Uint8View) ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
-    * _instance_
-        * [.size](#TypedArrayView+size) : <code>number</code>
-        * [.get(index)](#TypedArrayView+get) ⇒ <code>number</code>
-        * [.set(index, value)](#TypedArrayView+set) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
-    * _static_
-        * [.typeGetter](#Uint8View.typeGetter) : <code>string</code>
-        * [.typeSetter](#Uint8View.typeSetter) : <code>string</code>
-        * [.offset](#Uint8View.offset) : <code>number</code>
-
-<a name="TypedArrayView+size"></a>
-
-### uint8View.size : <code>number</code>
-Returns the amount of available bits in the array.
-
-**Kind**: instance property of [<code>Uint8View</code>](#Uint8View)  
-<a name="TypedArrayView+get"></a>
-
-### uint8View.get(index) ⇒ <code>number</code>
-**Kind**: instance method of [<code>Uint8View</code>](#Uint8View)  
+**Kind**: static method of [<code>TypedArrayView</code>](#TypedArrayView)  
 
 | Param | Type |
 | --- | --- |
-| index | <code>number</code> | 
+| value | <code>ArrayLike.&lt;number&gt;</code> | 
+| [array] | [<code>TypedArrayView</code>](#TypedArrayView) | 
 
-<a name="TypedArrayView+set"></a>
+<a name="TypedArrayView.of"></a>
 
-### uint8View.set(index, value) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
-**Kind**: instance method of [<code>Uint8View</code>](#Uint8View)  
+### TypedArrayView.of(size) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
+Creates an empty array view of specified size.
 
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
-| value | <code>number</code> | 
+**Kind**: static method of [<code>TypedArrayView</code>](#TypedArrayView)  
 
-<a name="Uint8View.typeGetter"></a>
+| Param | Type | Default |
+| --- | --- | --- |
+| size | <code>number</code> | <code>1</code> | 
 
-### Uint8View.typeGetter : <code>string</code>
-**Kind**: static property of [<code>Uint8View</code>](#Uint8View)  
-<a name="Uint8View.typeSetter"></a>
-
-### Uint8View.typeSetter : <code>string</code>
-**Kind**: static property of [<code>Uint8View</code>](#Uint8View)  
-<a name="Uint8View.offset"></a>
-
-### Uint8View.offset : <code>number</code>
-**Kind**: static property of [<code>Uint8View</code>](#Uint8View)  
-<a name="Int16View"></a>
-
-## Int16View ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
-**Kind**: global class  
-**Extends**: [<code>TypedArrayView</code>](#TypedArrayView)  
-
-* [Int16View](#Int16View) ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
-    * _instance_
-        * [.size](#TypedArrayView+size) : <code>number</code>
-        * [.get(index)](#TypedArrayView+get) ⇒ <code>number</code>
-        * [.set(index, value)](#TypedArrayView+set) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
-    * _static_
-        * [.typeGetter](#Int16View.typeGetter) : <code>string</code>
-        * [.typeSetter](#Int16View.typeSetter) : <code>string</code>
-        * [.offset](#Int16View.offset) : <code>number</code>
-
-<a name="TypedArrayView+size"></a>
-
-### int16View.size : <code>number</code>
-Returns the amount of available bits in the array.
-
-**Kind**: instance property of [<code>Int16View</code>](#Int16View)  
-<a name="TypedArrayView+get"></a>
-
-### int16View.get(index) ⇒ <code>number</code>
-**Kind**: instance method of [<code>Int16View</code>](#Int16View)  
-
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
-
-<a name="TypedArrayView+set"></a>
-
-### int16View.set(index, value) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
-**Kind**: instance method of [<code>Int16View</code>](#Int16View)  
-
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
-| value | <code>number</code> | 
-
-<a name="Int16View.typeGetter"></a>
-
-### Int16View.typeGetter : <code>string</code>
-**Kind**: static property of [<code>Int16View</code>](#Int16View)  
-<a name="Int16View.typeSetter"></a>
-
-### Int16View.typeSetter : <code>string</code>
-**Kind**: static property of [<code>Int16View</code>](#Int16View)  
-<a name="Int16View.offset"></a>
-
-### Int16View.offset : <code>number</code>
-**Kind**: static property of [<code>Int16View</code>](#Int16View)  
-<a name="Uint16View"></a>
-
-## Uint16View ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
-**Kind**: global class  
-**Extends**: [<code>TypedArrayView</code>](#TypedArrayView)  
-
-* [Uint16View](#Uint16View) ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
-    * _instance_
-        * [.size](#TypedArrayView+size) : <code>number</code>
-        * [.get(index)](#TypedArrayView+get) ⇒ <code>number</code>
-        * [.set(index, value)](#TypedArrayView+set) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
-    * _static_
-        * [.typeGetter](#Uint16View.typeGetter) : <code>string</code>
-        * [.typeSetter](#Uint16View.typeSetter) : <code>string</code>
-        * [.offset](#Uint16View.offset) : <code>number</code>
-
-<a name="TypedArrayView+size"></a>
-
-### uint16View.size : <code>number</code>
-Returns the amount of available bits in the array.
-
-**Kind**: instance property of [<code>Uint16View</code>](#Uint16View)  
-<a name="TypedArrayView+get"></a>
-
-### uint16View.get(index) ⇒ <code>number</code>
-**Kind**: instance method of [<code>Uint16View</code>](#Uint16View)  
-
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
-
-<a name="TypedArrayView+set"></a>
-
-### uint16View.set(index, value) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
-**Kind**: instance method of [<code>Uint16View</code>](#Uint16View)  
-
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
-| value | <code>number</code> | 
-
-<a name="Uint16View.typeGetter"></a>
-
-### Uint16View.typeGetter : <code>string</code>
-**Kind**: static property of [<code>Uint16View</code>](#Uint16View)  
-<a name="Uint16View.typeSetter"></a>
-
-### Uint16View.typeSetter : <code>string</code>
-**Kind**: static property of [<code>Uint16View</code>](#Uint16View)  
-<a name="Uint16View.offset"></a>
-
-### Uint16View.offset : <code>number</code>
-**Kind**: static property of [<code>Uint16View</code>](#Uint16View)  
-<a name="Int32View"></a>
-
-## Int32View ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
-**Kind**: global class  
-**Extends**: [<code>TypedArrayView</code>](#TypedArrayView)  
-
-* [Int32View](#Int32View) ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
-    * _instance_
-        * [.size](#TypedArrayView+size) : <code>number</code>
-        * [.get(index)](#TypedArrayView+get) ⇒ <code>number</code>
-        * [.set(index, value)](#TypedArrayView+set) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
-    * _static_
-        * [.typeGetter](#Int32View.typeGetter) : <code>string</code>
-        * [.typeSetter](#Int32View.typeSetter) : <code>string</code>
-        * [.offset](#Int32View.offset) : <code>number</code>
-
-<a name="TypedArrayView+size"></a>
-
-### int32View.size : <code>number</code>
-Returns the amount of available bits in the array.
-
-**Kind**: instance property of [<code>Int32View</code>](#Int32View)  
-<a name="TypedArrayView+get"></a>
-
-### int32View.get(index) ⇒ <code>number</code>
-**Kind**: instance method of [<code>Int32View</code>](#Int32View)  
-
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
-
-<a name="TypedArrayView+set"></a>
-
-### int32View.set(index, value) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
-**Kind**: instance method of [<code>Int32View</code>](#Int32View)  
-
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
-| value | <code>number</code> | 
-
-<a name="Int32View.typeGetter"></a>
-
-### Int32View.typeGetter : <code>string</code>
-**Kind**: static property of [<code>Int32View</code>](#Int32View)  
-<a name="Int32View.typeSetter"></a>
-
-### Int32View.typeSetter : <code>string</code>
-**Kind**: static property of [<code>Int32View</code>](#Int32View)  
-<a name="Int32View.offset"></a>
-
-### Int32View.offset : <code>number</code>
-**Kind**: static property of [<code>Int32View</code>](#Int32View)  
-<a name="Uint32View"></a>
-
-## Uint32View ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
-**Kind**: global class  
-**Extends**: [<code>TypedArrayView</code>](#TypedArrayView)  
-
-* [Uint32View](#Uint32View) ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
-    * _instance_
-        * [.size](#TypedArrayView+size) : <code>number</code>
-        * [.get(index)](#TypedArrayView+get) ⇒ <code>number</code>
-        * [.set(index, value)](#TypedArrayView+set) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
-    * _static_
-        * [.typeGetter](#Uint32View.typeGetter) : <code>string</code>
-        * [.typeSetter](#Uint32View.typeSetter) : <code>string</code>
-        * [.offset](#Uint32View.offset) : <code>number</code>
-
-<a name="TypedArrayView+size"></a>
-
-### uint32View.size : <code>number</code>
-Returns the amount of available bits in the array.
-
-**Kind**: instance property of [<code>Uint32View</code>](#Uint32View)  
-<a name="TypedArrayView+get"></a>
-
-### uint32View.get(index) ⇒ <code>number</code>
-**Kind**: instance method of [<code>Uint32View</code>](#Uint32View)  
-
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
-
-<a name="TypedArrayView+set"></a>
-
-### uint32View.set(index, value) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
-**Kind**: instance method of [<code>Uint32View</code>](#Uint32View)  
-
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
-| value | <code>number</code> | 
-
-<a name="Uint32View.typeGetter"></a>
-
-### Uint32View.typeGetter : <code>string</code>
-**Kind**: static property of [<code>Uint32View</code>](#Uint32View)  
-<a name="Uint32View.typeSetter"></a>
-
-### Uint32View.typeSetter : <code>string</code>
-**Kind**: static property of [<code>Uint32View</code>](#Uint32View)  
-<a name="Uint32View.offset"></a>
-
-### Uint32View.offset : <code>number</code>
-**Kind**: static property of [<code>Uint32View</code>](#Uint32View)  
-<a name="Float32View"></a>
-
-## Float32View ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
-**Kind**: global class  
-**Extends**: [<code>TypedArrayView</code>](#TypedArrayView)  
-
-* [Float32View](#Float32View) ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
-    * _instance_
-        * [.size](#TypedArrayView+size) : <code>number</code>
-        * [.get(index)](#TypedArrayView+get) ⇒ <code>number</code>
-        * [.set(index, value)](#TypedArrayView+set) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
-    * _static_
-        * [.typeGetter](#Float32View.typeGetter) : <code>string</code>
-        * [.typeSetter](#Float32View.typeSetter) : <code>string</code>
-        * [.offset](#Float32View.offset) : <code>number</code>
-
-<a name="TypedArrayView+size"></a>
-
-### float32View.size : <code>number</code>
-Returns the amount of available bits in the array.
-
-**Kind**: instance property of [<code>Float32View</code>](#Float32View)  
-<a name="TypedArrayView+get"></a>
-
-### float32View.get(index) ⇒ <code>number</code>
-**Kind**: instance method of [<code>Float32View</code>](#Float32View)  
-
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
-
-<a name="TypedArrayView+set"></a>
-
-### float32View.set(index, value) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
-**Kind**: instance method of [<code>Float32View</code>](#Float32View)  
-
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
-| value | <code>number</code> | 
-
-<a name="Float32View.typeGetter"></a>
-
-### Float32View.typeGetter : <code>string</code>
-**Kind**: static property of [<code>Float32View</code>](#Float32View)  
-<a name="Float32View.typeSetter"></a>
-
-### Float32View.typeSetter : <code>string</code>
-**Kind**: static property of [<code>Float32View</code>](#Float32View)  
-<a name="Float32View.offset"></a>
-
-### Float32View.offset : <code>number</code>
-**Kind**: static property of [<code>Float32View</code>](#Float32View)  
-<a name="Float64View"></a>
-
-## Float64View ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
-**Kind**: global class  
-**Extends**: [<code>TypedArrayView</code>](#TypedArrayView)  
-
-* [Float64View](#Float64View) ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
-    * _instance_
-        * [.size](#TypedArrayView+size) : <code>number</code>
-        * [.get(index)](#TypedArrayView+get) ⇒ <code>number</code>
-        * [.set(index, value)](#TypedArrayView+set) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
-    * _static_
-        * [.typeGetter](#Float64View.typeGetter) : <code>string</code>
-        * [.typeSetter](#Float64View.typeSetter) : <code>string</code>
-        * [.offset](#Float64View.offset) : <code>number</code>
-
-<a name="TypedArrayView+size"></a>
-
-### float64View.size : <code>number</code>
-Returns the amount of available bits in the array.
-
-**Kind**: instance property of [<code>Float64View</code>](#Float64View)  
-<a name="TypedArrayView+get"></a>
-
-### float64View.get(index) ⇒ <code>number</code>
-**Kind**: instance method of [<code>Float64View</code>](#Float64View)  
-
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
-
-<a name="TypedArrayView+set"></a>
-
-### float64View.set(index, value) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
-**Kind**: instance method of [<code>Float64View</code>](#Float64View)  
-
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
-| value | <code>number</code> | 
-
-<a name="Float64View.typeGetter"></a>
-
-### Float64View.typeGetter : <code>string</code>
-**Kind**: static property of [<code>Float64View</code>](#Float64View)  
-<a name="Float64View.typeSetter"></a>
-
-### Float64View.typeSetter : <code>string</code>
-**Kind**: static property of [<code>Float64View</code>](#Float64View)  
-<a name="Float64View.offset"></a>
-
-### Float64View.offset : <code>number</code>
-**Kind**: static property of [<code>Float64View</code>](#Float64View)  
-<a name="BigInt64View"></a>
-
-## BigInt64View ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
-**Kind**: global class  
-**Extends**: [<code>TypedArrayView</code>](#TypedArrayView)  
-
-* [BigInt64View](#BigInt64View) ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
-    * _instance_
-        * [.size](#TypedArrayView+size) : <code>number</code>
-        * [.get(index)](#TypedArrayView+get) ⇒ <code>number</code>
-        * [.set(index, value)](#TypedArrayView+set) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
-    * _static_
-        * [.typeGetter](#BigInt64View.typeGetter) : <code>string</code>
-        * [.typeSetter](#BigInt64View.typeSetter) : <code>string</code>
-        * [.offset](#BigInt64View.offset) : <code>number</code>
-
-<a name="TypedArrayView+size"></a>
-
-### bigInt64View.size : <code>number</code>
-Returns the amount of available bits in the array.
-
-**Kind**: instance property of [<code>BigInt64View</code>](#BigInt64View)  
-<a name="TypedArrayView+get"></a>
-
-### bigInt64View.get(index) ⇒ <code>number</code>
-**Kind**: instance method of [<code>BigInt64View</code>](#BigInt64View)  
-
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
-
-<a name="TypedArrayView+set"></a>
-
-### bigInt64View.set(index, value) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
-**Kind**: instance method of [<code>BigInt64View</code>](#BigInt64View)  
-
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
-| value | <code>number</code> | 
-
-<a name="BigInt64View.typeGetter"></a>
-
-### BigInt64View.typeGetter : <code>string</code>
-**Kind**: static property of [<code>BigInt64View</code>](#BigInt64View)  
-<a name="BigInt64View.typeSetter"></a>
-
-### BigInt64View.typeSetter : <code>string</code>
-**Kind**: static property of [<code>BigInt64View</code>](#BigInt64View)  
-<a name="BigInt64View.offset"></a>
-
-### BigInt64View.offset : <code>number</code>
-**Kind**: static property of [<code>BigInt64View</code>](#BigInt64View)  
-<a name="BigUint64View"></a>
-
-## BigUint64View ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
-**Kind**: global class  
-**Extends**: [<code>TypedArrayView</code>](#TypedArrayView)  
-
-* [BigUint64View](#BigUint64View) ⇐ [<code>TypedArrayView</code>](#TypedArrayView)
-    * _instance_
-        * [.size](#TypedArrayView+size) : <code>number</code>
-        * [.get(index)](#TypedArrayView+get) ⇒ <code>number</code>
-        * [.set(index, value)](#TypedArrayView+set) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
-    * _static_
-        * [.typeGetter](#BigUint64View.typeGetter) : <code>string</code>
-        * [.typeSetter](#BigUint64View.typeSetter) : <code>string</code>
-        * [.offset](#BigUint64View.offset) : <code>number</code>
-
-<a name="TypedArrayView+size"></a>
-
-### bigUint64View.size : <code>number</code>
-Returns the amount of available bits in the array.
-
-**Kind**: instance property of [<code>BigUint64View</code>](#BigUint64View)  
-<a name="TypedArrayView+get"></a>
-
-### bigUint64View.get(index) ⇒ <code>number</code>
-**Kind**: instance method of [<code>BigUint64View</code>](#BigUint64View)  
-
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
-
-<a name="TypedArrayView+set"></a>
-
-### bigUint64View.set(index, value) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
-**Kind**: instance method of [<code>BigUint64View</code>](#BigUint64View)  
-
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
-| value | <code>number</code> | 
-
-<a name="BigUint64View.typeGetter"></a>
-
-### BigUint64View.typeGetter : <code>string</code>
-**Kind**: static property of [<code>BigUint64View</code>](#BigUint64View)  
-<a name="BigUint64View.typeSetter"></a>
-
-### BigUint64View.typeSetter : <code>string</code>
-**Kind**: static property of [<code>BigUint64View</code>](#BigUint64View)  
-<a name="BigUint64View.offset"></a>
-
-### BigUint64View.offset : <code>number</code>
-**Kind**: static property of [<code>BigUint64View</code>](#BigUint64View)  
 <a name="UnweightedAdjacencyList"></a>
 
 ## UnweightedAdjacencyList ⇐ <code>Uint32Array</code>
@@ -4097,6 +3596,16 @@ Creates a SymmetricGrid class extending a given Array-like class.
 ```js
 const SymmetricGrid = SymmetricGridMixin(Array);
 ```
+<a name="TypedArrayViewMixin"></a>
+
+## TypedArrayViewMixin(type, [littleEndian]) ⇒ [<code>Class.&lt;TypedArrayView&gt;</code>](#TypedArrayView)
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| type | <code>string</code> | 
+| [littleEndian] | <code>boolean</code> | 
+
 <a name="popCount32"></a>
 
 ## popCount32(value) ⇒ <code>number</code>

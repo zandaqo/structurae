@@ -210,7 +210,6 @@ export declare class RecordArray extends DataView {
 }
 
 type ViewType = typeof ArrayView | typeof ObjectView | typeof TypedArrayView | typeof StringView;
-type ArrayViewType = typeof ArrayView | typeof TypedArrayView;
 
 type View = ObjectView | ArrayView | TypedArrayView | StringView;
 
@@ -255,7 +254,7 @@ export declare class ObjectView extends DataView {
     static initialize(): void;
 }
 
-export declare class ArrayView extends ObjectView {
+declare class ArrayView extends ObjectView {
     size: number;
 
     get(index: number): ObjectView;
@@ -269,30 +268,22 @@ export declare class ArrayView extends ObjectView {
 
 export declare function ArrayViewMixin<T extends ObjectView>(Base: Constructor<T>): Constructor<T & ArrayView>
 
-export declare class TypedArrayView extends DataView {
+declare class TypedArrayView extends DataView {
     size: number;
-    static typeGetter: string;
-    static typeSetter: string;
-    static offset: number;
+    private static typeGetter: string;
+    private static typeSetter: string;
+    private static offset: number;
+    private static littleEndian: boolean;
 
     get(index: number): number;
     set(index: number, value: number): this;
     toObject(): object;
+    static getLength(size: number): number;
     static from(value: ArrayLike<number>, array?: TypedArrayView): TypedArrayView;
     static of(size: number): TypedArrayView;
-    static getLength(size: number): number;
 }
 
-export declare class Int8View extends TypedArrayView {}
-export declare class Uint8View extends TypedArrayView {}
-export declare class Int16View extends TypedArrayView {}
-export declare class Uint16View extends TypedArrayView {}
-export declare class Int32View extends TypedArrayView {}
-export declare class Uint32View extends TypedArrayView {}
-export declare class Float32View extends TypedArrayView {}
-export declare class Float64View extends TypedArrayView {}
-export declare class BigInt64View extends TypedArrayView {}
-export declare class BigUint64View extends TypedArrayView {}
+export declare function TypedArrayViewMixin(type: string, littleEndian: boolean): TypedArrayView;
 
 export declare class BitArray extends Uint32Array {
     size: number;

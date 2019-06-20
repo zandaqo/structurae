@@ -7,7 +7,6 @@ const RankedBitArray = require('./lib/ranked-bit-array');
 const RecordArray = require('./lib/record-array');
 const SortedArray = require('./lib/sorted-array');
 const SortedMixin = require('./lib/sorted-collection');
-const StringView = require('./lib/string-view');
 const SymmetricGridMixin = require('./lib/symmetric-grid');
 const UnweightedAdjacencyList = require('./lib/unweighted-adjacency-list');
 const UnweightedAdjacencyMatrix = require('./lib/unweighted-adjacency-matrix');
@@ -15,6 +14,8 @@ const WeightedAdjacencyListMixin = require('./lib/weighted-adjacency-list');
 const WeightedAdjacencyMatrixMixin = require('./lib/weighted-adjacency-matrix');
 const ArrayViewMixin = require('./lib/array-view');
 const ObjectView = require('./lib/object-view');
+const StringView = require('./lib/string-view');
+const TypedArrayViewMixin = require('./lib/typed-array-view');
 
 /**
  * @external ArrayBuffer
@@ -41,7 +42,6 @@ module.exports = {
   RecordArray,
   SortedArray,
   SortedMixin,
-  StringView,
   SymmetricGridMixin,
   UnweightedAdjacencyList,
   UnweightedAdjacencyMatrix,
@@ -49,4 +49,6 @@ module.exports = {
   WeightedAdjacencyMatrixMixin,
   ArrayViewMixin,
   ObjectView,
+  StringView,
+  TypedArrayViewMixin,
 };
