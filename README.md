@@ -6,9 +6,15 @@
 
 A collection of data structures for high-performance JavaScript applications that includes:
 
-- Bits:
+- [Binary Structures](https://github.com/zandaqo/structurae#Binary_Structures):
+    - [ArrayView](https://github.com/zandaqo/structurae#ArrayView) - an array of C-like structs, ObjectViews, implemented with DataView
+    - [ObjectView](https://github.com/zandaqo/structurae#ObjectView) - extends DataView to implement C-like struct.
+    - [StringView](https://github.com/zandaqo/structurae#StringView) - extends Uint8Array to handle C-like representation of UTF-8 encoded strings.
+    - [TypedArrayView](https://github.com/zandaqo/structurae#TypedArrayView) - a DataView based TypedArray that supports endianness and can be set at any offset.
+- Bit Structures:
     - [BitField](https://github.com/zandaqo/structurae#BitField) - stores and operates on data in Numbers and BigInts treating them as bitfields.
     - [BitArray](https://github.com/zandaqo/structurae#BitArray) - an array of bits implemented with Uint32Array.
+    - [Pool](https://github.com/zandaqo/structurae#Pool) - manages availability of objects in object pools.
     - [RankedBitArray](https://github.com/zandaqo/structurae#RankedBitArray) - extends BitArray with O(1) time rank and O(logN) select methods.
 - [Graphs](https://github.com/zandaqo/structurae#Graphs):
     - [Graph](https://github.com/zandaqo/structurae#Graph) -  extends an adjacency list/matrix structure and provides methods for traversal (BFS, DFS),
@@ -19,13 +25,10 @@ A collection of data structures for high-performance JavaScript applications tha
     - [BinaryGrid](https://github.com/zandaqo/structurae#BinaryGrid) - creates a grid or 2D matrix of bits.
     - [Grid](https://github.com/zandaqo/structurae#Grid) - extends built-in indexed collections to handle 2 dimensional data (e.g. nested arrays).
     - [SymmetricGrid](https://github.com/zandaqo/structurae#SymmetricGrid) - a grid to handle symmetric or triangular matrices using half the space required for a normal grid.
-- [Pool](https://github.com/zandaqo/structurae#Pool) - manages availability of objects in object pools.
-- [RecordArray](https://github.com/zandaqo/structurae#RecordArray) - extends DataView to use ArrayBuffer as an array of records or C-like structs.
 - [Sorted Structures](https://github.com/zandaqo/structurae#sorted-structures):
     - [BinaryHeap](https://github.com/zandaqo/structurae#BinaryHeap) - extends Array to implement the Binary Heap data structure.
     - [SortedCollection](https://github.com/zandaqo/structurae#SortedCollection) - extends TypedArrays  to handle sorted data.
     - [SortedArray](https://github.com/zandaqo/structurae#SortedArray) -  extends Array to handle sorted data.
-- [StringView](https://github.com/zandaqo/structurae#StringView) - extends Uint8Array to handle C-like representation of UTF-8 encoded strings.
 
 ## Installation
 ```
@@ -39,7 +42,171 @@ npm i structurae
     - [Structurae 1.0: Graphs, Strings, and WebAssembly](https://medium.com/@zandaqo/structurae-1-0-graphs-strings-and-webassembly-25dd964d5a70)
 
 ## Overview
-### BitField
+
+### Binary Structures
+Binary data in JavaScript is represented by ArrayBuffer and accessed through "view" objects--TypedArrays and DataView.
+However, both of those interfaces are limited to working with numbers. Structurae offers a set of classes that extend these interfaces to
+support using ArrayBuffers for strings, objects, and arrays of objects defined with schema akin to C-like structs.
+Useful on their own, when combined, these classes form the basis for a simple, zero-copy binary protocol that is smaller and faster than
+other binary formats used in JavaScript, such as BSON or MessagePack.
+ 
+#### ArrayView
+DataView based array of ObjectViews (aka C-like structs):
+```javascript
+const { ObjectView, ArrayViewMixin } = require('structurae');
+
+class Person extends ObjectView {}
+Person.schema = {
+  id: { type: 'uint32' },
+  name: { type: 'string', length: 10 },
+};
+
+// an array class for Person objects
+const PeopleArray = ArrayViewMixin(Person);
+
+// create an empty array view of 10 Person objects
+const people = PeopleArray.of(10);
+
+// create an array view from a given array
+const hitchhikers = PeopleArray.from([
+  { id: 1, name: 'Arthur' },
+  { id: 2, name: 'Ford' },
+]);
+const arthur = hitchhikers.get(0);
+//=> Person [14]
+arthur.toObject();
+//=> { id: 1, name: 'Arthur' }
+
+// set the first object data
+hitchhikers.set(0, { id: 3, name: 'Trillian' });
+hitchhikers.get(0).toObject();
+//=> { id: 3, name: 'Trillian' }
+
+hitchhikers.toObject();
+//=> [{ id: 1, name: 'Arthur' }, { id: 2, name: 'Ford' }]
+```
+
+#### ObjectView
+Extends DataView to implement C-like struct. The fields are defined in ObjectView.schema an can be of any primitive type supported by DataView, 
+their arrays, strings, or other objects and arrays of objects.
+```javascript
+class House extends ObjectView {}
+House.schema = {
+  size: { type: 'uint32' }, // a primitive type
+};
+
+class Pet extends ObjectView {}
+Pet.schema = {
+  type: { type: 'string', length: 10 }, // // string with max length of 10 bytes
+};
+
+
+class Person extends ObjectView {}
+Person.schema = {
+  name: { type: 'string', length: 10 }
+  scores: { type: 'uint32', size: 10 }, // a an array of 10 numbers
+  house: { type: House }, // another object view
+  pets: { type: Pet, size: 3 }, // an array of 3 pet objects
+};
+
+const person = Person.from({
+  name: 'Zaphod',
+  scores: [1, 2, 3],
+  house: {
+    size: 1,
+  },
+  pets: [
+    { type: 'dog' }, { type: 'cat' }
+  ],
+});
+person.byteLength
+//=> 44
+person.get('scores').get(0)
+//=> 1
+person.get('name');
+//=> Zaphod
+person.get('scores').toObject()
+//=> [1, 2, 3, 0, 0, 0, 0, 0, 0, 0,]
+person.set('house', { size: 5 });
+person.get('house').get('size');
+//=> 5
+person.toObject()
+//=> { name: 'Zaphod', scores: [1, 2, 3, 0, 0, 0, 0, 0, 0, 0,], house: { size: 5 }, pets: [{ type: 'dog' }, { type: 'cat' }, { type: '' }] }
+```
+
+#### StringView
+Encoding API (available both in modern browsers and Node.js) allows us to convert JavaScript strings to 
+(and from) UTF-8 encoded stream of bytes represented by a Uint8Array. StringView extends Uint8Array with string related methods
+ and relies on Encoding API internally for conversions.
+You can use `StringView.fromString` to create an encoded string, and `StringView#toString` to convert it back to a string:
+```javascript
+const { StringView } = require('structurae');
+
+const stringView = StringView.fromString('abc😀a');
+//=> StringView [ 97, 98, 99, 240, 159, 152, 128, 97 ]
+stringView.toString();
+//=> 'abc😀a'
+stringView == 'abc😀a';
+//=> true
+```
+
+While the array itself holds code points, StringView provides methods to operate on characters of the underlying string:
+```javascript
+const stringView = StringView.fromString('abc😀');
+stringView.length; // length of the view in bytes
+//=> 8
+stringView.size; // the amount of characters in the string
+//=> 4
+stringView.charAt(0); // get the first character in the string
+//=> 'a'
+stringView.charAt(3); // get the fourth character in the string
+//=> '😀'
+[...stringView.characters()] // iterate over characters
+//=> ['a', 'b', 'c', '😀']
+stringView.substring(0, 4);
+//=> 'abc😀'
+```
+
+StringView also offers methods for searching and in-place changing the underlying string without decoding:
+```javascript
+const stringView = StringView.fromString('abc😀a');
+const searchValue = StringView.fromString('😀');
+stringView.search(searchValue); // equivalent of String#indexOf
+//=> 3
+
+const replacement = StringView.fromString('d');
+stringView.replace(searchValue, replacement).toString();
+//=> 'abcda'
+
+stringView.reverse().toString();
+//=> 'adcba'
+```
+#### TypedArrayView
+TypedArrays in JavaScript have two limitations that make them cumbersome to use in conjunction with DataView.
+First, there is no way to specify the endianness of numbers in TypedArrays unlike DataView,
+second, TypedArrays require their offset (byteOffset) to be a multiple of their element size (BYTES_PER_ELEMENT), 
+which means that they often cannot "view" into existing ArrayBuffer starting from cirtain positions.
+TypedArrayViews are essentially TypedArrays that circumvent both issues by using DataView.
+You can specify endianness and instantiate them at any position in an existing ArrayBuffer.
+TypedArrayViews are internally used by ObjectView to handle arrays of numbers, although, they can be used on their own:
+```javascript
+const { TypedArrayViewMixin } = require('structurae');
+
+// create a class for little endian doubles
+const Float64View = TypedArrayViewMixin('float64', true);
+const buffer = new ArrayBuffer(11);
+const doubles = new Float64View(buffer, 3, 8);
+doubles.byteLength
+//=> 20
+doubles.byteOffset
+//=> 3
+doubles.set(0, 5).set(1, 10);
+[...doubles]
+//=> [5, 10]
+```
+
+### Bit Structures
+#### BitField
 BitField uses JavaScript Numbers and BigInts as bitfields to store and operate on data using bitwise operations.
 By default, BitField operates on 31 bit long bitfield where bits are indexed from least significant to most:
 ```javascript
@@ -201,7 +368,7 @@ Person.match(new Person([19, 1]).valueOf(), matcher);
 //=> false
 ```
 
-### BitArray
+#### BitArray
 BitArray uses Uint32Array as an array or vector of bits. It's a simpler version of BitField that only sets and checks individual bits:
 
 ```javascript
@@ -219,7 +386,30 @@ array.length
 BitArray is the base class for [Pool](https://github.com/zandaqo/structurae#Pool) and [RankedBitArray](https://github.com/zandaqo/structurae#RankedBitArray) classes. 
 It's useful in cases where one needs more bits than can be stored in a number, but doesn't want to use BigInts as it is done by [BitField](https://github.com/zandaqo/structurae#BitField).
 
-### RankedBitArray
+#### Pool
+Implements a fast algorithm to manage availability of objects in an object pool using a BitArray.
+```javascript
+const { Pool } = require('structurae');
+
+// create a pool of 1600 indexes
+const pool = new Pool(100 * 16);
+
+// get the next available index and make it unavailable
+pool.get();
+//=> 0
+pool.get();
+//=> 1
+
+// set index available
+pool.free(0);
+pool.get();
+//=> 0
+
+pool.get();
+//=> 2
+```
+
+#### RankedBitArray
 RankedBitArray is an extension of BitArray with methods to efficiently calculate rank and select. 
 The rank is calculated in constant time where as select has O(logN) time complexity.
 This is often used as a basic element in implementing succinct data structures.
@@ -234,7 +424,6 @@ array.rank(7);
 array.select(2);
 //=> 3
 ```
-
 
 ### Graphs
 Structurae offers classes that implement Adjacency List (`UnweightedAdjacencyList`, `WeightedAdjacencyList`) and Adjacency Matrix (`UnweightedAdjacencyMatrix`, 
@@ -486,86 +675,6 @@ symmetricGrid.get(5, 0);
 //=> 10
 ```
 
-### Pool
-Implements a fast algorithm to manage availability of objects in an object pool.
-```javascript
-const { Pool } = require('structurae');
-
-// create a pool of 1600 indexes
-const pool = new Pool(100 * 16);
-
-// get the next available index and make it unavailable
-pool.get();
-//=> 0
-pool.get();
-//=> 1
-
-// set index available
-pool.free(0);
-pool.get();
-//=> 0
-
-pool.get();
-//=> 2
-```
-
-### RecordArray
-RecordArray extends DataView to use ArrayBuffer as an array of records or C-like structs. 
-Records can contain fields of any type supported by DataView, strings, and TypedArrays. 
-For a string, the maximum size in bytes should be defined, for typed array fields size property specifies 
-the length of the array.
-
-```javascript
-const { RecordArray } = require('structurae');
-
-// create an array of 20 records where each has 'age', 'score', and 'name' fields
-const people = new RecordArray([
- { name: 'age', type: 'Uint8' },
- { name: 'score', type: 'Float32' },
- { name: 'name', type: 'String', size: 10 },
-], 20);
-// get the 'age' field value for the first struct in the array
-people.get(0, 'age');
-//=> 0
-// set the 'age' and 'score' field values for the first struct
-people.set(0, 'age', 10).set(0, 'score', 5.0);
-people.toObject(0);
-//=> { age: 10, score: 5.0, name: '' }
-// populate record from an object
-people.fromObject(0, { age: 15, score: 6.0, name: ''})
-people.toObject(0);
-//=> { age: 15, score: 6.0, name: '' }
-```
-
-The String type is handled with [StringView](https://github.com/zandaqo/structurae#StringView).
- You can use its methods to convert them to and from strings.
-```javascript
-people.get(0, 'name');
-//=> StringView(10) [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-const name = StringView.fromString('Smith');
-people.set(0, name).get(0, 'name');
-//=> StringView(10) [83, 109, 105, 116, 104, 0, 0, 0, 0, 0]
-people.get(0, 'name').toString();
-//=> Smith
-```
-
-Getting a TypedArray field will return a new TypedArray that uses the same buffer as the RecordArray,
-that is, any change made on the new TypedArray will reflect in the RecordArray and vice versa:
-```javascript
-const people = new RecordArray([
-   { name: 'age', type: 'Uint8' },
-   { name: 'scores', type: 'Float32Array', size: 2 },
-], 10);
-const scores = people.get(0, 'scores');
-//=> Float32Array [0, 0];
-scores[1] = 1.2;
-people.get(0, 'scores');
-//=> Float32Array [0, 1.2]
-people.set(0, 'scores', [2, 3]);
-scores[0];
-//=> 2
-```
-
 ### Sorted Structures
 #### BinaryHeap
 BinaryHeap extends built-in Array to implement the Binary Heap data structure. 
@@ -700,54 +809,6 @@ a.push(1);
 //=> 2
 a
 //=> SortedArray [ 1, 2 ]
-```
-
-### StringView
-Encoding API (available both in modern browsers and Node.js) allows us to convert JavaScript strings to 
-(and from) UTF-8 encoded stream of bytes represented by a Uint8Array. StringView extends Uint8Array with string related methods
- and relies on Encoding API internally for conversions.
-You can use `StringView.fromString` to create an encoded string, and `StringView#toString` to convert it back to a string:
-```javascript
-const { StringView } = require('structurae');
-
-const stringView = StringView.fromString('abc😀a');
-//=> StringView [ 97, 98, 99, 240, 159, 152, 128, 97 ]
-stringView.toString();
-//=> 'abc😀a'
-stringView == 'abc😀a';
-//=> true
-```
-
-While the array itself holds code points, StringView provides methods to operate on characters of the underlying string:
-```javascript
-const stringView = StringView.fromString('abc😀');
-stringView.length; // length of the view in bytes
-//=> 8
-stringView.size; // the amount of characters in the string
-//=> 4
-stringView.charAt(0); // get the first character in the string
-//=> 'a'
-stringView.charAt(3); // get the fourth character in the string
-//=> '😀'
-[...stringView.characters()] // iterate over characters
-//=> ['a', 'b', 'c', '😀']
-stringView.substring(0, 4);
-//=> 'abc😀'
-```
-
-StringView also offers methods for searching and in-place changing the underlying string without decoding:
-```javascript
-const stringView = StringView.fromString('abc😀a');
-const searchValue = StringView.fromString('😀');
-stringView.search(searchValue); // equivalent of String#indexOf
-//=> 3
-
-const replacement = StringView.fromString('d');
-stringView.replace(searchValue, replacement).toString();
-//=> 'abcda'
-
-stringView.reverse().toString();
-//=> 'adcba'
 ```
 
 ## License

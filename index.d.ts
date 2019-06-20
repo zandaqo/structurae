@@ -213,9 +213,10 @@ type ViewType = typeof ArrayView | typeof ObjectView | typeof TypedArrayView | t
 
 type View = ObjectView | ArrayView | TypedArrayView | StringView;
 
-type ObjectViewFieldType = 'int8' | 'uint8' | 'int16' | 'uint16'
-    | 'int32' | 'uint32' | 'float32' | 'float64' | 'bigint64' | 'biguint64'
-    | 'string' | 'array' | 'object' | 'typedarray' | ViewType;
+type PrimitiveFieldType = 'int8' | 'uint8' | 'int16' | 'uint16'
+    | 'int32' | 'uint32' | 'float32' | 'float64' | 'bigint64' | 'biguint64';
+
+type ObjectViewFieldType = PrimitiveFieldType | 'string' | 'array' | 'object' | 'typedarray' | ViewType;
 
 interface ObjectViewField {
     type: ObjectViewFieldType;
@@ -283,7 +284,7 @@ declare class TypedArrayView extends DataView {
     static of(size: number): TypedArrayView;
 }
 
-export declare function TypedArrayViewMixin(type: string, littleEndian: boolean): TypedArrayView;
+export declare function TypedArrayViewMixin(type: PrimitiveFieldType, littleEndian: boolean): TypedArrayView;
 
 export declare class BitArray extends Uint32Array {
     size: number;

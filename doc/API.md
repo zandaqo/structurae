@@ -30,7 +30,7 @@ pathfinding (Dijkstra, Bellman-Ford), spanning tree construction (BFS, Prim), et
 <dt><a href="#RankedBitArray">RankedBitArray</a> ⇐ <code><a href="#BitArray">BitArray</a></code></dt>
 <dd><p>A bit array that supports constant time rank and O(logN) time select operations.</p>
 </dd>
-<dt><a href="#RecordArray">RecordArray</a> ⇐ <code>DataView</code></dt>
+<dt><del><a href="#RecordArray">RecordArray</a> ⇐ <code>DataView</code></del></dt>
 <dd><p>Extends DataView to use ArrayBuffer as an array of records or C-like structs.</p>
 </dd>
 <dt><a href="#SortedArray">SortedArray</a> ⇐ <code><a href="#SortedCollection">SortedCollection</a></code></dt>
@@ -1564,13 +1564,15 @@ Returns the length of underlying TypedArray required to hold the bit array.
 
 <a name="RecordArray"></a>
 
-## RecordArray ⇐ <code>DataView</code>
+## ~~RecordArray ⇐ <code>DataView</code>~~
+***Deprecated***
+
 Extends DataView to use ArrayBuffer as an array of records or C-like structs.
 
 **Kind**: global class  
 **Extends**: <code>DataView</code>  
 
-* [RecordArray](#RecordArray) ⇐ <code>DataView</code>
+* ~~[RecordArray](#RecordArray) ⇐ <code>DataView</code>~~
     * [new RecordArray(fields, [size], [buffer], [byteOffset], [byteLength])](#new_RecordArray_new)
     * _instance_
         * [.size](#RecordArray+size) : <code>number</code>
