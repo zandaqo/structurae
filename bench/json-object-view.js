@@ -115,11 +115,20 @@ for (let i = 0; i < 100; i++) {
   objects.push(jsf.generate(JSONSchema));
 }
 
-new Benchmark.Suite('Serialize/Deserialize:', benchmarkOptions)
-  .add('ObjectView', () => {
-    const result = People.from(objects).toObject();
-  })
-  .add('JSON', () => {
-    const result = JSON.parse(JSON.stringify(objects));
-  })
-  .run();
+const suits = [
+  new Benchmark.Suite('ObjectView Serialize/Deserialize:', benchmarkOptions)
+    .add('ObjectView', () => {
+      const result = People.from(objects).toObject();
+    })
+    .add('JSON', () => {
+      const result = JSON.parse(JSON.stringify(objects));
+    }),
+];
+
+if (require.main === module) {
+  suits.forEach(suite => suite.run());
+}
+
+module.exports = {
+  suits,
+};

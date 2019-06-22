@@ -23,7 +23,7 @@
     "lint": "eslint ./lib/*.js ./test/*.js",
     "coverage:report": "cat ./coverage/lcov.info | codecov",
     "doc:api": "jsdoc2md > doc/API.md",
-    "benchmark": "node bench/benchmark.js"
+    "benchmark": "node bench/index.js"
   },
   "directories": {
     "lib": "lib",
