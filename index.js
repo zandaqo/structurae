@@ -15,6 +15,7 @@ const WeightedAdjacencyMatrixMixin = require('./lib/weighted-adjacency-matrix');
 const ArrayViewMixin = require('./lib/array-view');
 const ObjectView = require('./lib/object-view');
 const StringView = require('./lib/string-view');
+const StringArrayView = require('./lib/string-array-view');
 const TypedArrayViewMixin = require('./lib/typed-array-view');
 
 /**
@@ -50,5 +51,6 @@ module.exports = {
   ArrayViewMixin,
   ObjectView,
   StringView,
+  StringArrayView,
   TypedArrayViewMixin,
 };

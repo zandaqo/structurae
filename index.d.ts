@@ -128,7 +128,6 @@ export class BitField {
     static isValid(data: number[]|UnpackedInt): boolean;
     static getMinSize(number: number): number;
     static getMatcher(matcher: UnpackedInt): Matcher;
-    static [Symbol.iterator]: Iterable<number>;
     static fields: (Field|FieldName)[];
     static size: number;
     static masks: Masks;
@@ -209,6 +208,20 @@ export declare class RecordArray extends DataView {
     static getLength(fields: RecordField[], size: number): number;
 }
 
+declare class ArrayView extends ObjectView {
+    size: number;
+
+    get(index: number): ObjectView;
+    set(index: number, value: object): this;
+    setView(index: number, value: ObjectView): this;
+    toObject(): object[];
+    static from(value: ArrayLike<object>, array?: ArrayView): ArrayView;
+    static of(size: number): ArrayView;
+    static getLength(size: number): number;
+}
+
+export declare function ArrayViewMixin<T extends ObjectView>(Base: Constructor<T>): Constructor<T & ArrayView>
+
 type ViewType = typeof ArrayView | typeof ObjectView | typeof TypedArrayView | typeof StringView;
 
 type View = ObjectView | ArrayView | TypedArrayView | StringView;
@@ -255,19 +268,42 @@ export declare class ObjectView extends DataView {
     static initialize(): void;
 }
 
-declare class ArrayView extends ObjectView {
+export declare class StringView extends Uint8Array {
     size: number;
+    static masks: Int8Array;
+    static encoder: TextEncoder;
+    static decoder: TextDecoder;
 
-    get(index: number): ObjectView;
-    set(index: number, value: object): this;
-    setView(index: number, value: ObjectView): this;
-    toObject(): object[];
-    static from(value: ArrayLike<object>, array?: ArrayView): ArrayView;
-    static of(size: number): ArrayView;
-    static getLength(size: number): number;
+    characters(): Iterable<string>;
+    charAt(index?: number): string;
+    private getCharEnd(index: number): number;
+    private getCharStart(index: number, startCharIndex?: number, startIndex?: number): number;
+    replace(pattern: Collection, replacement: Collection): this;
+    reverse(): this;
+    search(searchValue: Collection, fromIndex?: number): number;
+    private searchNaive(searchValue: Collection, fromIndex?: number): number;
+    private searchShiftOr(searchValue: Collection, fromIndex?: number): number;
+    substring(indexStart: number, indexEnd?: number): string;
+    private toChar(index: number): string;
+    toString(): string;
+    trim(): StringView;
+    static fromString(string: string, size?: number): StringView;
+    static getByteSize(string: string): number;
 }
 
-export declare function ArrayViewMixin<T extends ObjectView>(Base: Constructor<T>): Constructor<T & ArrayView>
+export declare class StringArrayView {
+    size: number;
+    stringLength: number;
+    bytes: Uint8Array;
+
+    constructor(buffer: ArrayBuffer, byteOffset: number, byteLength: number, stringLength: number);
+    get(index: number): StringView;
+    set(index: number, value: string|StringView): this;
+    toObject(): Array<string>;
+    static from(value: ArrayLike<string>, stringLength: number, array?: StringArrayView): StringArrayView;
+    static getLength(size: number, stringLength: number): number;
+    static of(size: number, stringLength: number): StringArrayView;
+}
 
 declare class TypedArrayView extends DataView {
     size: number;
@@ -308,27 +344,6 @@ export declare class RankedBitArray extends BitArray {
     rank(index: number): number;
     select(index: number): number;
     static getLength(size: number): number;
-}
-
-export declare class StringView extends Uint8Array {
-    size: number;
-    static masks: Int8Array;
-
-    characters(): Iterable<string>;
-    charAt(index?: number): string;
-    private getCharEnd(index: number): number;
-    private getCharStart(index: number, startCharIndex?: number, startIndex?: number): number;
-    replace(pattern: Collection, replacement: Collection): this;
-    reverse(): this;
-    search(searchValue: Collection, fromIndex?: number): number;
-    private searchNaive(searchValue: Collection, fromIndex?: number): number;
-    private searchShiftOr(searchValue: Collection, fromIndex?: number): number;
-    substring(indexStart: number, indexEnd?: number): string;
-    private toChar(index: number): string;
-    toString(): string;
-    trim(): StringView;
-    static fromString(string: string, size?: number): StringView;
-    static getByteSize(string: string): number;
 }
 
 export declare class BinaryHeap extends Array {

@@ -181,6 +181,32 @@ stringView.replace(searchValue, replacement).toString();
 stringView.reverse().toString();
 //=> 'adcba'
 ```
+
+#### StringArrayView
+An array of StringViews. Operates on an array of strings stored in an ArrayBuffer.
+```javascript
+const { StringArrayView } = require('structurae');
+
+// create a StringArrayView from a given array of strings with maximum string length of 4 bytes
+const list = StringArrayView.from(['a', 'bc', 'defg'], 4);
+list.get(0);
+//=> StringView [];
+list.get(0).toString();
+//=> 'a'
+list.toObject();
+//=> ['a', 'bc', 'defg']
+
+// create an empty array of 10 strings with maximum length of 5 bytes
+const emptyList = StringArrayView.of(3, 5);
+emptyList.get(0).toString();
+//=> ''
+emptyList.set(0, 'ab').get(0).toString();
+//=> 'ab'
+
+[...emptyList].map(i => i.toString());
+//=> ['ab', '', '']
+```
+
 #### TypedArrayView
 TypedArrays in JavaScript have two limitations that make them cumbersome to use in conjunction with DataView.
 First, there is no way to specify the endianness of numbers in TypedArrays unlike DataView,

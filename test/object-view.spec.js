@@ -1,5 +1,6 @@
 const ObjectView = require('../lib/object-view');
 const StringView = require('../lib/string-view');
+const StringArrayView = require('../lib/string-array-view');
 const TypedArrayViewMixin = require('../lib/typed-array-view');
 
 class Pet extends ObjectView {}
@@ -30,6 +31,12 @@ Primitives.schema = {
   h: { type: 'float64' },
   i: { type: 'bigint64' },
   j: { type: 'biguint64' },
+};
+
+class Lists extends ObjectView {}
+Lists.schema = {
+  id: { type: 'uint32' },
+  items: { type: 'string', size: 3, length: 10 },
 };
 
 class Invalid extends ObjectView {}
@@ -99,6 +106,12 @@ describe('ObjectView', () => {
       expect(actual.buffer === person.buffer).toBe(true);
       expect(actual.byteOffset).toBe(29);
       expect(actual.byteLength).toBe(11);
+    });
+
+    it('returns a StringArrayView for a string array field', () => {
+      const list = Lists.from({ items: ['a'] });
+      expect(list.get('items') instanceof StringArrayView).toBe(true);
+      expect(list.get('items').toObject()).toEqual(['a', '', '']);
     });
   });
 
@@ -175,6 +188,16 @@ describe('ObjectView', () => {
       const pet = { age: 10, name: 'tuzik' };
       person.set('pet', pet);
       expect(person.get('pet').toObject()).toEqual({ age: 10, name: 'tuzik' });
+    });
+
+    it('sets an array of strings', () => {
+      const items = ['a', 'abcdefg', 'h'];
+      const list = Lists.from({});
+      list.set('items', items);
+      expect(list.toObject()).toEqual({
+        id: 0,
+        items,
+      });
     });
   });
 

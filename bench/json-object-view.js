@@ -47,6 +47,7 @@ Person.schema = {
   pets: { type: Pet, size: 3 },
   scores: { type: 'uint8', size: 50 },
   house: { type: House },
+  parents: { type: 'string', size: 2, length: 10 },
 };
 
 const People = ArrayViewMixin(Person);
@@ -105,8 +106,15 @@ const JSONSchema = {
       },
       required: ['type', 'id', 'size'],
     },
+    parents: {
+      type: 'array',
+      items: [
+        { type: 'string', minLength: 5, maxLength: 10 },
+        { type: 'string', minLength: 5, maxLength: 10 },
+      ],
+    },
   },
-  required: ['type', 'id', 'name', 'weight', 'height', 'scores', 'pets', 'house'],
+  required: ['type', 'id', 'name', 'weight', 'height', 'scores', 'pets', 'house', 'parents'],
 };
 
 const objects = [];
