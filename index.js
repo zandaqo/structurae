@@ -13,6 +13,7 @@ const UnweightedAdjacencyMatrix = require('./lib/unweighted-adjacency-matrix');
 const WeightedAdjacencyListMixin = require('./lib/weighted-adjacency-list');
 const WeightedAdjacencyMatrixMixin = require('./lib/weighted-adjacency-matrix');
 const ArrayViewMixin = require('./lib/array-view');
+const CollectionView = require('./lib/collection-view');
 const ObjectView = require('./lib/object-view');
 const StringView = require('./lib/string-view');
 const StringArrayView = require('./lib/string-array-view');
@@ -49,6 +50,7 @@ module.exports = {
   WeightedAdjacencyListMixin,
   WeightedAdjacencyMatrixMixin,
   ArrayViewMixin,
+  CollectionView,
   ObjectView,
   StringView,
   StringArrayView,

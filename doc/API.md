@@ -15,6 +15,8 @@
 <dt><a href="#BitField">BitField</a></dt>
 <dd><p>Stores and operates on data in Numbers and BigInts treating them as bitfields.</p>
 </dd>
+<dt><a href="#CollectionView">CollectionView</a> ⇐ <code>DataView</code></dt>
+<dd></dd>
 <dt><a href="#Graph">Graph</a> ⇐ <code><a href="#AdjacencyStructure">AdjacencyStructure</a></code></dt>
 <dd><p>Extends an adjacency list/matrix structure and provides methods for traversal (BFS, DFS),
 pathfinding (Dijkstra, Bellman-Ford), spanning tree construction (BFS, Prim), etc.</p>
@@ -38,6 +40,9 @@ pathfinding (Dijkstra, Bellman-Ford), spanning tree construction (BFS, Prim), et
 </dd>
 <dt><a href="#SortedCollection">SortedCollection</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
 <dd><p>Extends TypedArrays  to handle sorted data.</p>
+</dd>
+<dt><a href="#StringArrayView">StringArrayView</a></dt>
+<dd><p>An array of StringViews. Uses an ArrayBuffer to hold an array of UTF-8 encoded strings.</p>
 </dd>
 <dt><a href="#StringView">StringView</a> ⇐ <code>Uint8Array</code></dt>
 <dd><p>Extends Uint8Array to handle C-like representation of UTF-8 encoded strings.</p>
@@ -956,6 +961,85 @@ The static version of `BitField#match`, matches a given value against a precompu
 | value | [<code>AnyNumber</code>](#AnyNumber) | a value to check |
 | matcher | [<code>Matcher</code>](#Matcher) | a precomputed set of values |
 
+<a name="CollectionView"></a>
+
+## CollectionView ⇐ <code>DataView</code>
+**Kind**: global class  
+**Extends**: <code>DataView</code>  
+
+* [CollectionView](#CollectionView) ⇐ <code>DataView</code>
+    * _instance_
+        * [.get(index)](#CollectionView+get) ⇒ [<code>CollectionView</code>](#CollectionView)
+        * [.set(index, value)](#CollectionView+set) ⇒ [<code>CollectionView</code>](#CollectionView)
+        * [.toObject()](#CollectionView+toObject) ⇒ <code>Array.&lt;Object&gt;</code>
+    * _static_
+        * [.from(value, [array])](#CollectionView.from) ⇒ [<code>CollectionView</code>](#CollectionView)
+        * [.getLength(sizes)](#CollectionView.getLength) ⇒ <code>number</code>
+        * [.of(sizes)](#CollectionView.of) ⇒ [<code>CollectionView</code>](#CollectionView)
+
+<a name="CollectionView+get"></a>
+
+### collectionView.get(index) ⇒ [<code>CollectionView</code>](#CollectionView)
+Returns a view at a given index.
+
+**Kind**: instance method of [<code>CollectionView</code>](#CollectionView)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="CollectionView+set"></a>
+
+### collectionView.set(index, value) ⇒ [<code>CollectionView</code>](#CollectionView)
+Sets .
+
+**Kind**: instance method of [<code>CollectionView</code>](#CollectionView)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+| value | <code>Object</code> | 
+
+<a name="CollectionView+toObject"></a>
+
+### collectionView.toObject() ⇒ <code>Array.&lt;Object&gt;</code>
+Returns an array representation of the collection view.
+
+**Kind**: instance method of [<code>CollectionView</code>](#CollectionView)  
+<a name="CollectionView.from"></a>
+
+### CollectionView.from(value, [array]) ⇒ [<code>CollectionView</code>](#CollectionView)
+Creates a collection view from a given collection of objects.
+
+**Kind**: static method of [<code>CollectionView</code>](#CollectionView)  
+
+| Param | Type |
+| --- | --- |
+| value | <code>Array.&lt;Object&gt;</code> | 
+| [array] | [<code>CollectionView</code>](#CollectionView) | 
+
+<a name="CollectionView.getLength"></a>
+
+### CollectionView.getLength(sizes) ⇒ <code>number</code>
+Returns the byte length of a collection view to hold a given amount of objects.
+
+**Kind**: static method of [<code>CollectionView</code>](#CollectionView)  
+
+| Param | Type |
+| --- | --- |
+| sizes | <code>Array.&lt;number&gt;</code> | 
+
+<a name="CollectionView.of"></a>
+
+### CollectionView.of(sizes) ⇒ [<code>CollectionView</code>](#CollectionView)
+Creates an empty collection view of specified size.
+
+**Kind**: static method of [<code>CollectionView</code>](#CollectionView)  
+
+| Param | Type |
+| --- | --- |
+| sizes | <code>Array.&lt;number&gt;</code> | 
+
 <a name="Graph"></a>
 
 ## Graph ⇐ [<code>AdjacencyStructure</code>](#AdjacencyStructure)
@@ -1349,10 +1433,10 @@ Sets an ObjectView value to a field.
 
 **Kind**: instance method of [<code>ObjectView</code>](#ObjectView)  
 
-| Param | Type |
-| --- | --- |
-| field | <code>string</code> | 
-| value | [<code>ObjectView</code>](#ObjectView) \| [<code>ArrayView</code>](#ArrayView) \| [<code>TypedArrayView</code>](#TypedArrayView) \| [<code>StringView</code>](#StringView) | 
+| Param | Type | Description |
+| --- | --- | --- |
+| field | <code>string</code> | the name of the field |
+| value | [<code>ObjectView</code>](#ObjectView) \| [<code>ArrayView</code>](#ArrayView) \| [<code>TypedArrayView</code>](#TypedArrayView) \| [<code>StringView</code>](#StringView) | the view to set |
 
 <a name="ObjectView+toObject"></a>
 
@@ -2249,6 +2333,108 @@ Checks whether an array has any duplicating elements.
 SortedCollection.isUnique([1, 2, 2, 3, 4]);
 //=> false
 ```
+<a name="StringArrayView"></a>
+
+## StringArrayView
+An array of StringViews. Uses an ArrayBuffer to hold an array of UTF-8 encoded strings.
+
+**Kind**: global class  
+
+* [StringArrayView](#StringArrayView)
+    * [new StringArrayView(buffer, byteOffset, byteLength, stringLength)](#new_StringArrayView_new)
+    * _instance_
+        * [.size](#StringArrayView+size) : <code>number</code>
+        * [.get(index)](#StringArrayView+get) ⇒ [<code>StringView</code>](#StringView)
+        * [.set(index, value)](#StringArrayView+set) ⇒ [<code>StringArrayView</code>](#StringArrayView)
+        * [.toObject()](#StringArrayView+toObject) ⇒ <code>Array.&lt;string&gt;</code>
+    * _static_
+        * [.from(value, stringLength, [array])](#StringArrayView.from) ⇒ [<code>StringArrayView</code>](#StringArrayView)
+        * [.getLength(size, stringLength)](#StringArrayView.getLength) ⇒ <code>number</code>
+        * [.of(size, stringLength)](#StringArrayView.of) ⇒ [<code>StringArrayView</code>](#StringArrayView)
+
+<a name="new_StringArrayView_new"></a>
+
+### new StringArrayView(buffer, byteOffset, byteLength, stringLength)
+
+| Param | Type | Description |
+| --- | --- | --- |
+| buffer | <code>ArrayBuffer</code> | the buffer to use |
+| byteOffset | <code>number</code> | the byte offset into the buffer |
+| byteLength | <code>number</code> | the total length of the buffer to use |
+| stringLength | <code>number</code> | the maximum length of a string inside the array |
+
+<a name="StringArrayView+size"></a>
+
+### stringArrayView.size : <code>number</code>
+Returns the amount of available strings in the array.
+
+**Kind**: instance property of [<code>StringArrayView</code>](#StringArrayView)  
+<a name="StringArrayView+get"></a>
+
+### stringArrayView.get(index) ⇒ [<code>StringView</code>](#StringView)
+Returns a StringView at a given index.
+
+**Kind**: instance method of [<code>StringArrayView</code>](#StringArrayView)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="StringArrayView+set"></a>
+
+### stringArrayView.set(index, value) ⇒ [<code>StringArrayView</code>](#StringArrayView)
+Sets a string or StringView at a given index.
+
+**Kind**: instance method of [<code>StringArrayView</code>](#StringArrayView)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+| value | <code>string</code> \| [<code>StringView</code>](#StringView) | 
+
+<a name="StringArrayView+toObject"></a>
+
+### stringArrayView.toObject() ⇒ <code>Array.&lt;string&gt;</code>
+Returns an array of strings held inside the array view.
+
+**Kind**: instance method of [<code>StringArrayView</code>](#StringArrayView)  
+<a name="StringArrayView.from"></a>
+
+### StringArrayView.from(value, stringLength, [array]) ⇒ [<code>StringArrayView</code>](#StringArrayView)
+Creates an array view from a given array of strings.
+
+**Kind**: static method of [<code>StringArrayView</code>](#StringArrayView)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>ArrayLike.&lt;string&gt;</code> | an array of strings to store in the new array view |
+| stringLength | <code>number</code> | the maximum length of a string |
+| [array] | [<code>StringArrayView</code>](#StringArrayView) | an existing StringArrayView to populate with given strings |
+
+<a name="StringArrayView.getLength"></a>
+
+### StringArrayView.getLength(size, stringLength) ⇒ <code>number</code>
+Returns the byte length of an array view to hold a given amount of strings.
+
+**Kind**: static method of [<code>StringArrayView</code>](#StringArrayView)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| size | <code>number</code> | the amount of strings |
+| stringLength | <code>number</code> | the maximum length of a string |
+
+<a name="StringArrayView.of"></a>
+
+### StringArrayView.of(size, stringLength) ⇒ [<code>StringArrayView</code>](#StringArrayView)
+Creates an empty array view of specified size.
+
+**Kind**: static method of [<code>StringArrayView</code>](#StringArrayView)  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| size | <code>number</code> | <code>1</code> | the amount of strings |
+| stringLength | <code>number</code> | <code>1</code> | the maximum length of a string |
+
 <a name="StringView"></a>
 
 ## StringView ⇐ <code>Uint8Array</code>
@@ -2438,7 +2624,6 @@ stringView.trim();
 
 ### StringView.fromString(string, [size]) ⇒ [<code>StringView</code>](#StringView)
 Creates a StringView from a string.
-todo use TextEncoder.encodeInto when supported by Node.js (FF supports already)
 
 **Kind**: static method of [<code>StringView</code>](#StringView)  
 **Returns**: [<code>StringView</code>](#StringView) - a new StringView  

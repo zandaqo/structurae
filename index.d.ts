@@ -222,9 +222,9 @@ declare class ArrayView extends ObjectView {
 
 export declare function ArrayViewMixin<T extends ObjectView>(Base: Constructor<T>): Constructor<T & ArrayView>
 
-type ViewType = typeof ArrayView | typeof ObjectView | typeof TypedArrayView | typeof StringView;
+type ViewType = typeof ArrayView | typeof ObjectView | typeof TypedArrayView | typeof StringView | typeof StringArrayView;
 
-type View = ObjectView | ArrayView | TypedArrayView | StringView;
+type View = ObjectView | ArrayView | TypedArrayView | StringView | StringArrayView;
 
 type PrimitiveFieldType = 'int8' | 'uint8' | 'int16' | 'uint16'
     | 'int32' | 'uint32' | 'float32' | 'float64' | 'bigint64' | 'biguint64';
@@ -321,6 +321,17 @@ declare class TypedArrayView extends DataView {
 }
 
 export declare function TypedArrayViewMixin(type: PrimitiveFieldType, littleEndian: boolean): TypedArrayView;
+
+export declare class CollectionView extends DataView {
+    static schema: ViewType[];
+
+    get(index: number): View;
+    set(index: number, value: object): this;
+    toObject(): object[];
+    static from(value: object[], array?: CollectionView): CollectionView;
+    static getLength(sizes: number[]): number;
+    static of(sizes: number[]): CollectionView;
+}
 
 export declare class BitArray extends Uint32Array {
     size: number;
