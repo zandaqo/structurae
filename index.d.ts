@@ -208,7 +208,18 @@ export declare class RecordArray extends DataView {
     static getLength(fields: RecordField[], size: number): number;
 }
 
-declare class ArrayView extends ObjectView {
+declare class ExtendedDataView extends DataView {
+    getArray(position: number, ctor: typeof ObjectView | typeof ArrayView, size: number): ArrayLike<object>;
+    getTypedArray(position: number, ctor: typeof TypedArrayView, size: number): ArrayLike<number>;
+    getObject(schema: ObjectViewSchema, offset: number): object;
+    setArray(position: number, value: ArrayLike<object>, ctor: ViewType, size: number): void;
+    setObject(position: number, value: object, ctor: ViewType): void;
+    setString(position: number, value: string, length: number): void;
+    setTypedArray(position: number, value: ArrayLike<number>, ctor: typeof TypedArrayView, size: number): void;
+    setValue(field: string, value: any, schema: ObjectViewSchema, offset: number): this;
+}
+
+declare class ArrayView extends ExtendedDataView {
     size: number;
 
     get(index: number): ObjectView;
@@ -244,23 +255,15 @@ interface ObjectViewSchema {
     [propName: string]: ObjectViewField;
 }
 
-export declare class ObjectView extends DataView {
+export declare class ObjectView extends ExtendedDataView {
     static fields: string[];
     static schema: ObjectViewSchema;
     static isInitialized: boolean;
     static objectLength: number;
 
     get(field: string): number | View;
-    private getArray(position: number, ctor: typeof ObjectView | typeof ArrayView, size: number): ArrayLike<object>;
-    private getTypedArray(position: number, ctor: typeof TypedArrayView, size: number): ArrayLike<number>;
-    private getObject(schema: ObjectViewSchema, offset: number): object;
     private getView(position: number, length: number, ctor: ViewType): View;
     set(field: string, value: any): this;
-    private setArray(position: number, value: ArrayLike<object>, ctor: ViewType, size: number): void;
-    private setObject(position: number, value: object, ctor: ViewType): void;
-    private setString(position: number, value: string, length: number): void;
-    private setTypedArray(position: number, value: ArrayLike<number>, ctor: typeof TypedArrayView, size: number): void;
-    private setValue(field: string, value: any, schema: ObjectViewSchema, offset: number): this;
     setView(field: string, value: View): this;
     toObject(): object;
     static from(object: object, objectView?: ObjectView): ObjectView;

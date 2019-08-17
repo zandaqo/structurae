@@ -86,6 +86,40 @@ hitchhikers.toObject();
 //=> [{ id: 1, name: 'Arthur' }, { id: 2, name: 'Ford' }]
 ```
 
+#### CollectionView
+Whereas ArrayView requires its contents to be of a specific ObjectView class, CollectionView allows holding objects and arrays
+of different types as well as being optional, i.e. it does not allocate space upon creation for missing members.
+
+```javascript
+const { ObjectView, ArrayViewMixin, CollectionView } = require('structurae');
+
+class Person extends ObjectView {}
+Person.schema = {
+  id: { type: 'uint32' },
+  name: { type: 'string', length: 10 },
+};
+
+class Pet extends ObjectView {}
+Pet.schema = {
+  type: { type: 'string', length: 10 }, // // string with max length of 10 bytes
+};
+
+const Pets = ArrayViewMixin(Pet);
+
+class PersonWithPets extends CollectionView {}
+PersonWithPets.schema = [Person, Pets];
+
+// create a person with one pet
+const arthur = PersonWithPets.from([{ id: 1, name: 'Artur'}, [{ type: 'dog'}]]);
+arthur.byteLength
+//=> 24
+
+// create a person with no pets
+const arthur = PersonWithPets.from([{ id: 1, name: 'Artur'}, undefined]);
+arthur.byteLength
+//=> 14
+```
+
 #### ObjectView
 Extends DataView to implement C-like struct. The fields are defined in ObjectView.schema an can be of any primitive type supported by DataView, 
 their arrays, strings, or other objects and arrays of objects.
@@ -103,7 +137,7 @@ Pet.schema = {
 
 class Person extends ObjectView {}
 Person.schema = {
-  name: { type: 'string', length: 10 }
+  name: { type: 'string', length: 10 },
   scores: { type: 'uint32', size: 10 }, // a an array of 10 numbers
   house: { type: House }, // another object view
   pets: { type: Pet, size: 3 }, // an array of 3 pet objects

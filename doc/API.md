@@ -17,6 +17,8 @@
 </dd>
 <dt><a href="#CollectionView">CollectionView</a> ⇐ <code>DataView</code></dt>
 <dd></dd>
+<dt><a href="#ExtendedDataView">ExtendedDataView</a> ⇐ <code>DataView</code></dt>
+<dd></dd>
 <dt><a href="#Graph">Graph</a> ⇐ <code><a href="#AdjacencyStructure">AdjacencyStructure</a></code></dt>
 <dd><p>Extends an adjacency list/matrix structure and provides methods for traversal (BFS, DFS),
 pathfinding (Dijkstra, Bellman-Ford), spanning tree construction (BFS, Prim), etc.</p>
@@ -969,7 +971,7 @@ The static version of `BitField#match`, matches a given value against a precompu
 
 * [CollectionView](#CollectionView) ⇐ <code>DataView</code>
     * _instance_
-        * [.get(index)](#CollectionView+get) ⇒ [<code>CollectionView</code>](#CollectionView)
+        * [.get(index)](#CollectionView+get) ⇒ <code>View</code>
         * [.set(index, value)](#CollectionView+set) ⇒ [<code>CollectionView</code>](#CollectionView)
         * [.toObject()](#CollectionView+toObject) ⇒ <code>Array.&lt;Object&gt;</code>
     * _static_
@@ -979,7 +981,7 @@ The static version of `BitField#match`, matches a given value against a precompu
 
 <a name="CollectionView+get"></a>
 
-### collectionView.get(index) ⇒ [<code>CollectionView</code>](#CollectionView)
+### collectionView.get(index) ⇒ <code>View</code>
 Returns a view at a given index.
 
 **Kind**: instance method of [<code>CollectionView</code>](#CollectionView)  
@@ -1039,6 +1041,139 @@ Creates an empty collection view of specified size.
 | Param | Type |
 | --- | --- |
 | sizes | <code>Array.&lt;number&gt;</code> | 
+
+<a name="ExtendedDataView"></a>
+
+## ExtendedDataView ⇐ <code>DataView</code>
+**Kind**: global class  
+**Extends**: <code>DataView</code>  
+
+* [ExtendedDataView](#ExtendedDataView) ⇐ <code>DataView</code>
+    * [.getArray(position, ctor, size)](#ExtendedDataView+getArray) ⇒ <code>Array.&lt;Object&gt;</code>
+    * [.getStringArray(position, size, length, stringLength)](#ExtendedDataView+getStringArray) ⇒ <code>Array.&lt;string&gt;</code>
+    * [.getTypedArray(position, ctor, size)](#ExtendedDataView+getTypedArray) ⇒ <code>Array.&lt;number&gt;</code>
+    * [.getObject(schema, offset)](#ExtendedDataView+getObject) ⇒ <code>Object</code>
+    * [.setArray(position, value, ctor, size)](#ExtendedDataView+setArray) ⇒ <code>void</code>
+    * [.setObject(position, value, ctor)](#ExtendedDataView+setObject) ⇒ <code>void</code>
+    * [.setString(position, value, length)](#ExtendedDataView+setString) ⇒ <code>void</code>
+    * [.setStringArray(position, value, size, length, stringLength)](#ExtendedDataView+setStringArray) ⇒ <code>void</code>
+    * [.setTypedArray(position, value, ctor, size)](#ExtendedDataView+setTypedArray) ⇒ <code>void</code>
+    * [.setValue(field, value, [schema], [offset])](#ExtendedDataView+setValue) ⇒ [<code>ExtendedDataView</code>](#ExtendedDataView)
+
+<a name="ExtendedDataView+getArray"></a>
+
+### extendedDataView.getArray(position, ctor, size) ⇒ <code>Array.&lt;Object&gt;</code>
+**Kind**: instance method of [<code>ExtendedDataView</code>](#ExtendedDataView)  
+
+| Param | Type |
+| --- | --- |
+| position | <code>number</code> | 
+| ctor | [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView) \| [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView) | 
+| size | <code>number</code> | 
+
+<a name="ExtendedDataView+getStringArray"></a>
+
+### extendedDataView.getStringArray(position, size, length, stringLength) ⇒ <code>Array.&lt;string&gt;</code>
+**Kind**: instance method of [<code>ExtendedDataView</code>](#ExtendedDataView)  
+
+| Param | Type |
+| --- | --- |
+| position | <code>number</code> | 
+| size | <code>number</code> | 
+| length | <code>number</code> | 
+| stringLength | <code>number</code> | 
+
+<a name="ExtendedDataView+getTypedArray"></a>
+
+### extendedDataView.getTypedArray(position, ctor, size) ⇒ <code>Array.&lt;number&gt;</code>
+**Kind**: instance method of [<code>ExtendedDataView</code>](#ExtendedDataView)  
+
+| Param | Type |
+| --- | --- |
+| position | <code>number</code> | 
+| ctor | [<code>Class.&lt;TypedArrayView&gt;</code>](#TypedArrayView) | 
+| size | <code>number</code> | 
+
+<a name="ExtendedDataView+getObject"></a>
+
+### extendedDataView.getObject(schema, offset) ⇒ <code>Object</code>
+**Kind**: instance method of [<code>ExtendedDataView</code>](#ExtendedDataView)  
+
+| Param | Type |
+| --- | --- |
+| schema | <code>object</code> | 
+| offset | <code>number</code> | 
+
+<a name="ExtendedDataView+setArray"></a>
+
+### extendedDataView.setArray(position, value, ctor, size) ⇒ <code>void</code>
+**Kind**: instance method of [<code>ExtendedDataView</code>](#ExtendedDataView)  
+
+| Param | Type |
+| --- | --- |
+| position | <code>number</code> | 
+| value | <code>ArrayLike.&lt;object&gt;</code> | 
+| ctor | [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView) \| [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView) | 
+| size | <code>number</code> | 
+
+<a name="ExtendedDataView+setObject"></a>
+
+### extendedDataView.setObject(position, value, ctor) ⇒ <code>void</code>
+**Kind**: instance method of [<code>ExtendedDataView</code>](#ExtendedDataView)  
+
+| Param | Type |
+| --- | --- |
+| position | <code>number</code> | 
+| value | <code>Object</code> | 
+| ctor | [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView) | 
+
+<a name="ExtendedDataView+setString"></a>
+
+### extendedDataView.setString(position, value, length) ⇒ <code>void</code>
+**Kind**: instance method of [<code>ExtendedDataView</code>](#ExtendedDataView)  
+
+| Param | Type |
+| --- | --- |
+| position | <code>number</code> | 
+| value | <code>string</code> | 
+| length | <code>number</code> | 
+
+<a name="ExtendedDataView+setStringArray"></a>
+
+### extendedDataView.setStringArray(position, value, size, length, stringLength) ⇒ <code>void</code>
+**Kind**: instance method of [<code>ExtendedDataView</code>](#ExtendedDataView)  
+
+| Param | Type |
+| --- | --- |
+| position | <code>number</code> | 
+| value | <code>string</code> | 
+| size | <code>number</code> | 
+| length | <code>number</code> | 
+| stringLength | <code>number</code> | 
+
+<a name="ExtendedDataView+setTypedArray"></a>
+
+### extendedDataView.setTypedArray(position, value, ctor, size) ⇒ <code>void</code>
+**Kind**: instance method of [<code>ExtendedDataView</code>](#ExtendedDataView)  
+
+| Param | Type |
+| --- | --- |
+| position | <code>number</code> | 
+| value | <code>ArrayLike.&lt;number&gt;</code> | 
+| ctor | [<code>Class.&lt;TypedArrayView&gt;</code>](#TypedArrayView) | 
+| size | <code>number</code> | 
+
+<a name="ExtendedDataView+setValue"></a>
+
+### extendedDataView.setValue(field, value, [schema], [offset]) ⇒ [<code>ExtendedDataView</code>](#ExtendedDataView)
+**Kind**: instance method of [<code>ExtendedDataView</code>](#ExtendedDataView)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| field | <code>string</code> |  | 
+| value | <code>\*</code> |  | 
+| [schema] | <code>\*</code> |  | 
+| [offset] | <code>number</code> | <code>0</code> | 
 
 <a name="Graph"></a>
 

@@ -25,7 +25,7 @@ describe('ArrayView', () => {
   describe('ArrayViewMixin', () => {
     it('creates an array class for a given object class', () => {
       const PetsView = ArrayViewMixin(Pet);
-      expect(PetsView.objectLength).toBe(11);
+      expect(PetsView.getLength(10)).toBe(110);
     });
   });
 
