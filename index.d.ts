@@ -226,6 +226,7 @@ declare class ArrayView extends ExtendedDataView {
     set(index: number, value: object): this;
     setView(index: number, value: ObjectView): this;
     toObject(): object[];
+    [Symbol.iterator](): IterableIterator<ObjectView>;
     static from(value: ArrayLike<object>, array?: ArrayView): ArrayView;
     static of(size: number): ArrayView;
     static getLength(size: number): number;
@@ -318,6 +319,7 @@ declare class TypedArrayView extends DataView {
     get(index: number): number;
     set(index: number, value: number): this;
     toObject(): object;
+    [Symbol.iterator](): IterableIterator<number>;
     static getLength(size: number): number;
     static from(value: ArrayLike<number>, array?: TypedArrayView): TypedArrayView;
     static of(size: number): TypedArrayView;
@@ -331,6 +333,7 @@ export declare class CollectionView extends DataView {
     get(index: number): View;
     set(index: number, value: object): this;
     toObject(): object[];
+    [Symbol.iterator](): IterableIterator<View>;
     static from(value: object[], array?: CollectionView): CollectionView;
     static getLength(sizes: number[]): number;
     static of(sizes: number[]): CollectionView;
@@ -396,8 +399,8 @@ export declare class UnweightedAdjacencyList extends Uint32Array {
     getEdge(x: number, y: number): Bit;
     private setEdge(x: number, y: number): this;
     private unsetEdge(x: number, y: number): this;
-    outEdges(x: number): Iterable<number>;
-    inEdges(x: number): Iterable<number>;
+    outEdges(x: number): IterableIterator<number>;
+    inEdges(x: number): IterableIterator<number>;
     private setOffsets(): void;
     isFull(): boolean;
     grow(vertices?: number, edges?: number): UnweightedAdjacencyList;
@@ -419,8 +422,8 @@ declare class WeightedAdjacencyList {
     getEdge(x: number, y: number): number;
     private setEdge(x: number, y: number, weight: number): this;
     private unsetEdge(x: number, y: number): this;
-    outEdges(x: number): Iterable<number>;
-    inEdges(x: number): Iterable<number>;
+    outEdges(x: number): IterableIterator<number>;
+    inEdges(x: number): IterableIterator<number>;
     private setOffsets(): void;
     isFull(): boolean;
     grow(vertices?: number, edges?: number): UnweightedAdjacencyList;
@@ -445,8 +448,8 @@ export declare class UnweightedAdjacencyMatrix extends BinaryGrid {
     removeEdge(x: number, y: number): this;
     hasEdge(x: number, y: number): boolean;
     getEdge(x: number, y: number): number;
-    outEdges(x: number): Iterable<number>;
-    inEdges(x: number): Iterable<number>;
+    outEdges(x: number): IterableIterator<number>;
+    inEdges(x: number): IterableIterator<number>;
     static getLength(size: number): number;
     static fromList(list: UnweightedAdjacencyList): UnweightedAdjacencyMatrix;
 }
@@ -468,8 +471,8 @@ declare class WeightedAdjacencyMatrix {
     removeEdge(x: number, y: number): this;
     hasEdge(x: number, y: number): boolean;
     getEdge(x: number, y: number): number;
-    outEdges(x: number): Iterable<number>;
-    inEdges(x: number): Iterable<number>;
+    outEdges(x: number): IterableIterator<number>;
+    inEdges(x: number): IterableIterator<number>;
     static getLength(size: number): number;
     static fromList(list: WeightedAdjacencyList, pad: number): WeightedAdjacencyMatrix;
 }
@@ -493,7 +496,7 @@ declare class Graph {
     setGray(x: number): this;
     isBlack(x: number): boolean;
     setBlack(x: number): this;
-    traverse(isDFS?: boolean, start?: number, gray?: boolean, white?: boolean, black?: boolean): Iterable<number>;
+    traverse(isDFS?: boolean, start?: number, gray?: boolean, white?: boolean, black?: boolean): IterableIterator<number>;
     path(start: number, end: number, isAcyclic?: boolean, isPositive?: boolean): number[];
     tree(start?: number): number[];
     isAcyclic(): boolean;

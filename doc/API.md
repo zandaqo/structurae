@@ -1190,7 +1190,7 @@ pathfinding (Dijkstra, Bellman-Ford), spanning tree construction (BFS, Prim), et
     * [.setGray(vertex)](#Graph+setGray) ⇒ [<code>Graph</code>](#Graph)
     * [.isBlack(vertex)](#Graph+isBlack) ⇒ <code>boolean</code>
     * [.setBlack(vertex)](#Graph+setBlack) ⇒ [<code>Graph</code>](#Graph)
-    * [.traverse([isDFS], [start], [gray], [white], [black])](#Graph+traverse)
+    * [.traverse([isDFS], [start], [gray], [white], [black])](#Graph+traverse) ⇒ <code>Iterable.&lt;number&gt;</code>
     * [.isAcyclic()](#Graph+isAcyclic) ⇒ <code>boolean</code>
     * [.topologicalSort()](#Graph+topologicalSort) ⇒ <code>Array.&lt;number&gt;</code>
     * [.path(start, end, [isAcyclic], [isNonNegative])](#Graph+path) ⇒ <code>Array.&lt;number&gt;</code>
@@ -1254,10 +1254,11 @@ Marks a vertex as fully processed during a traversal.
 
 <a name="Graph+traverse"></a>
 
-### graph.traverse([isDFS], [start], [gray], [white], [black])
+### graph.traverse([isDFS], [start], [gray], [white], [black]) ⇒ <code>Iterable.&lt;number&gt;</code>
 Does a Breadth-First or Depth-First traversal of the graph.
 
 **Kind**: instance method of [<code>Graph</code>](#Graph)  
+**Returns**: <code>Iterable.&lt;number&gt;</code> - the vertex at each step  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -2581,7 +2582,7 @@ Extends Uint8Array to handle C-like representation of UTF-8 encoded strings.
 * [StringView](#StringView) ⇐ <code>Uint8Array</code>
     * _instance_
         * [.size](#StringView+size) : <code>number</code>
-        * [.characters()](#StringView+characters)
+        * [.characters()](#StringView+characters) ⇒ <code>Iterable.&lt;string&gt;</code>
         * [.charAt([index])](#StringView+charAt) ⇒ <code>string</code>
         * [.replace(pattern, replacement)](#StringView+replace) ⇒ [<code>StringView</code>](#StringView)
         * [.reverse()](#StringView+reverse) ⇒ [<code>StringView</code>](#StringView)
@@ -2611,7 +2612,7 @@ stringView.length
 ```
 <a name="StringView+characters"></a>
 
-### stringView.characters()
+### stringView.characters() ⇒ <code>Iterable.&lt;string&gt;</code>
 Iterates over the characters in the StringView.
 
 **Kind**: instance method of [<code>StringView</code>](#StringView)  
@@ -3082,8 +3083,8 @@ Implements Adjacency List data structure for unweighted graphs.
         * [.removeEdge(x, y)](#UnweightedAdjacencyList+removeEdge) ⇒ [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)
         * [.hasEdge(x, y)](#UnweightedAdjacencyList+hasEdge) ⇒ <code>boolean</code>
         * [.getEdge(x, y)](#UnweightedAdjacencyList+getEdge) ⇒ <code>number</code>
-        * [.outEdges(vertex)](#UnweightedAdjacencyList+outEdges)
-        * [.inEdges(vertex)](#UnweightedAdjacencyList+inEdges)
+        * [.outEdges(vertex)](#UnweightedAdjacencyList+outEdges) ⇒ <code>Iterable.&lt;number&gt;</code>
+        * [.inEdges(vertex)](#UnweightedAdjacencyList+inEdges) ⇒ <code>Iterable.&lt;number&gt;</code>
         * [.isFull()](#UnweightedAdjacencyList+isFull) ⇒ <code>boolean</code>
         * [.grow([vertices], [edges])](#UnweightedAdjacencyList+grow) ⇒ [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)
     * _static_
@@ -3158,7 +3159,7 @@ Returns 1 if the edge between the given vertices exists, 0 otherwise.
 
 <a name="UnweightedAdjacencyList+outEdges"></a>
 
-### unweightedAdjacencyList.outEdges(vertex)
+### unweightedAdjacencyList.outEdges(vertex) ⇒ <code>Iterable.&lt;number&gt;</code>
 Iterates over outgoing edges of a vertex.
 
 **Kind**: instance method of [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)  
@@ -3169,7 +3170,7 @@ Iterates over outgoing edges of a vertex.
 
 <a name="UnweightedAdjacencyList+inEdges"></a>
 
-### unweightedAdjacencyList.inEdges(vertex)
+### unweightedAdjacencyList.inEdges(vertex) ⇒ <code>Iterable.&lt;number&gt;</code>
 Iterates over incoming edges of a vertex.
 
 **Kind**: instance method of [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList)  
@@ -3258,8 +3259,8 @@ Implements Adjacency Matrix for unweighted graphs.
         * [.removeEdge(x, y)](#UnweightedAdjacencyMatrix+removeEdge) ⇒ [<code>UnweightedAdjacencyMatrix</code>](#UnweightedAdjacencyMatrix)
         * [.hasEdge(x, y)](#UnweightedAdjacencyMatrix+hasEdge) ⇒ <code>boolean</code>
         * [.getEdge(x, y)](#UnweightedAdjacencyMatrix+getEdge) ⇒ <code>number</code>
-        * [.outEdges(vertex)](#UnweightedAdjacencyMatrix+outEdges)
-        * [.inEdges(vertex)](#UnweightedAdjacencyMatrix+inEdges)
+        * [.outEdges(vertex)](#UnweightedAdjacencyMatrix+outEdges) ⇒ <code>Iterable.&lt;number&gt;</code>
+        * [.inEdges(vertex)](#UnweightedAdjacencyMatrix+inEdges) ⇒ <code>Iterable.&lt;number&gt;</code>
         * [.get(row, column)](#BinaryGrid+get) ⇒ <code>number</code>
         * [.set(row, [column], [value])](#BinaryGrid+set) ⇒ [<code>BinaryGrid</code>](#BinaryGrid)
     * _static_
@@ -3328,7 +3329,7 @@ Returns 1 if the edge between the given vertices exists, 0 otherwise.
 
 <a name="UnweightedAdjacencyMatrix+outEdges"></a>
 
-### unweightedAdjacencyMatrix.outEdges(vertex)
+### unweightedAdjacencyMatrix.outEdges(vertex) ⇒ <code>Iterable.&lt;number&gt;</code>
 Iterates over outgoing edges of a vertex.
 
 **Kind**: instance method of [<code>UnweightedAdjacencyMatrix</code>](#UnweightedAdjacencyMatrix)  
@@ -3339,7 +3340,7 @@ Iterates over outgoing edges of a vertex.
 
 <a name="UnweightedAdjacencyMatrix+inEdges"></a>
 
-### unweightedAdjacencyMatrix.inEdges(vertex)
+### unweightedAdjacencyMatrix.inEdges(vertex) ⇒ <code>Iterable.&lt;number&gt;</code>
 Iterates over incoming edges of a vertex.
 
 **Kind**: instance method of [<code>UnweightedAdjacencyMatrix</code>](#UnweightedAdjacencyMatrix)  
@@ -3425,8 +3426,8 @@ Implements Adjacency List data structure for weighted graphs.
         * [.removeEdge(x, y)](#WeightedAdjacencyList+removeEdge) ⇒ [<code>WeightedAdjacencyList</code>](#WeightedAdjacencyList)
         * [.hasEdge(x, y)](#WeightedAdjacencyList+hasEdge) ⇒ <code>boolean</code>
         * [.getEdge(x, y)](#WeightedAdjacencyList+getEdge) ⇒ <code>number</code>
-        * [.outEdges(vertex)](#WeightedAdjacencyList+outEdges)
-        * [.inEdges(vertex)](#WeightedAdjacencyList+inEdges)
+        * [.outEdges(vertex)](#WeightedAdjacencyList+outEdges) ⇒ <code>Iterable.&lt;number&gt;</code>
+        * [.inEdges(vertex)](#WeightedAdjacencyList+inEdges) ⇒ <code>Iterable.&lt;number&gt;</code>
         * [.isFull()](#WeightedAdjacencyList+isFull) ⇒ <code>boolean</code>
         * [.grow([vertices], [edges])](#WeightedAdjacencyList+grow) ⇒ [<code>WeightedAdjacencyList</code>](#WeightedAdjacencyList)
     * _static_
@@ -3501,7 +3502,7 @@ or NaN if the edge doesn't exist.
 
 <a name="WeightedAdjacencyList+outEdges"></a>
 
-### weightedAdjacencyList.outEdges(vertex)
+### weightedAdjacencyList.outEdges(vertex) ⇒ <code>Iterable.&lt;number&gt;</code>
 Iterates over outgoing edges of a vertex.
 
 **Kind**: instance method of [<code>WeightedAdjacencyList</code>](#WeightedAdjacencyList)  
@@ -3512,7 +3513,7 @@ Iterates over outgoing edges of a vertex.
 
 <a name="WeightedAdjacencyList+inEdges"></a>
 
-### weightedAdjacencyList.inEdges(vertex)
+### weightedAdjacencyList.inEdges(vertex) ⇒ <code>Iterable.&lt;number&gt;</code>
 Iterates over incoming edges of a vertex.
 
 **Kind**: instance method of [<code>WeightedAdjacencyList</code>](#WeightedAdjacencyList)  
@@ -3591,8 +3592,8 @@ Implements Adjacency Matrix for weighted graphs.
         * [.removeEdge(x, y)](#WeightedAdjacencyMatrix+removeEdge) ⇒ [<code>WeightedAdjacencyMatrix</code>](#WeightedAdjacencyMatrix)
         * [.hasEdge(x, y)](#WeightedAdjacencyMatrix+hasEdge) ⇒ <code>boolean</code>
         * [.getEdge(x, y)](#WeightedAdjacencyMatrix+getEdge) ⇒ <code>number</code>
-        * [.outEdges(vertex)](#WeightedAdjacencyMatrix+outEdges)
-        * [.inEdges(vertex)](#WeightedAdjacencyMatrix+inEdges)
+        * [.outEdges(vertex)](#WeightedAdjacencyMatrix+outEdges) ⇒ <code>Iterable.&lt;number&gt;</code>
+        * [.inEdges(vertex)](#WeightedAdjacencyMatrix+inEdges) ⇒ <code>Iterable.&lt;number&gt;</code>
         * [.getIndex(row, column)](#Grid+getIndex) ⇒ <code>\*</code>
         * [.get(row, column)](#Grid+get) ⇒ <code>\*</code>
         * [.set(row, [column], [value])](#Grid+set) ⇒ [<code>Grid</code>](#Grid)
@@ -3684,7 +3685,7 @@ Returns the weight of the edge between given vertices if it exists.
 
 <a name="WeightedAdjacencyMatrix+outEdges"></a>
 
-### weightedAdjacencyMatrix.outEdges(vertex)
+### weightedAdjacencyMatrix.outEdges(vertex) ⇒ <code>Iterable.&lt;number&gt;</code>
 Iterates over outgoing edges of a vertex.
 
 **Kind**: instance method of [<code>WeightedAdjacencyMatrix</code>](#WeightedAdjacencyMatrix)  
@@ -3695,7 +3696,7 @@ Iterates over outgoing edges of a vertex.
 
 <a name="WeightedAdjacencyMatrix+inEdges"></a>
 
-### weightedAdjacencyMatrix.inEdges(vertex)
+### weightedAdjacencyMatrix.inEdges(vertex) ⇒ <code>Iterable.&lt;number&gt;</code>
 Iterates over incoming edges of a vertex.
 
 **Kind**: instance method of [<code>WeightedAdjacencyMatrix</code>](#WeightedAdjacencyMatrix)  

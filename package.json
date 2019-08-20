@@ -1,6 +1,6 @@
 {
   "name": "structurae",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Data structures for performance-sensitive modern JavaScript applications.",
   "main": "index.js",
   "types": "index.d.ts",
@@ -45,7 +45,7 @@
     "url": "https://github.com/zandaqo/structurae/issues"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.17",
+    "@types/jest": "^24.0.18",
     "benchmark": "^2.1.4",
     "codecov": "^3.5.0",
     "eslint": "^5.16.0",
