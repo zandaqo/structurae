@@ -51,6 +51,7 @@
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.2.0",
     "eslint-plugin-import": "^2.18.2",
+    "fast-text-encoding": "^1.0.0",
     "jest": "^24.9.0",
     "jsdoc-to-markdown": "^5.0.0",
     "json-schema-faker": "^0.5.0-rc17"
