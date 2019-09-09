@@ -59,14 +59,14 @@ describe('CollectionView', () => {
     });
   });
 
-  describe('toObject', () => {
+  describe('toJSON', () => {
     it('returns an array representation of the collection view', () => {
       const expected = [
         [{ age: 20 }, { age: 30 }],
         [{ age: 10 }, { age: 5 }],
       ];
       const collection = PeopleAndPets.from(expected);
-      expect(collection.toObject()).toEqual([[{
+      expect(collection.toJSON()).toEqual([[{
         age: 20,
         height: 0,
         name: '',

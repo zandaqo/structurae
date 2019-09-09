@@ -51,10 +51,10 @@ describe('TypedArrayView', () => {
         });
       });
 
-      describe('toObject', () => {
+      describe('toJSON', () => {
         const expected = isBigInt ? sampleBigIntArray : sampleArray;
         const array = Ctor.from(expected);
-        expect(array.toObject()).toEqual(expected);
+        expect(array.toJSON()).toEqual(expected);
       });
     });
   }

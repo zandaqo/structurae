@@ -126,7 +126,7 @@ for (let i = 0; i < 100; i++) {
 const suits = [
   new Benchmark.Suite('ObjectView Serialize/Deserialize:', benchmarkOptions)
     .add('ObjectView', () => {
-      const result = People.from(objects).toObject();
+      const result = People.from(objects).toJSON();
     })
     .add('JSON', () => {
       const result = JSON.parse(JSON.stringify(objects));

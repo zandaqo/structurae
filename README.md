@@ -72,17 +72,19 @@ const hitchhikers = PeopleArray.from([
   { id: 1, name: 'Arthur' },
   { id: 2, name: 'Ford' },
 ]);
-const arthur = hitchhikers.get(0);
+// get a view of the first object
+hitchhikers.get(0);
 //=> Person [14]
-arthur.toObject();
+// get the value of the first object
+hitchhikers.getValue(0);
 //=> { id: 1, name: 'Arthur' }
 
 // set the first object data
 hitchhikers.set(0, { id: 3, name: 'Trillian' });
-hitchhikers.get(0).toObject();
+hitchhikers.get(0).toJSON();
 //=> { id: 3, name: 'Trillian' }
 
-hitchhikers.toObject();
+hitchhikers.toJSON();
 //=> [{ id: 1, name: 'Arthur' }, { id: 2, name: 'Ford' }]
 ```
 
@@ -157,14 +159,16 @@ person.byteLength
 //=> 44
 person.get('scores').get(0)
 //=> 1
-person.get('name');
+person.get('name')
+//=> StringView [10]
+person.getValue('name');
 //=> Zaphod
-person.get('scores').toObject()
+person.getValue('scores')
 //=> [1, 2, 3, 0, 0, 0, 0, 0, 0, 0,]
 person.set('house', { size: 5 });
-person.get('house').get('size');
-//=> 5
-person.toObject()
+person.getValue('house');
+//=> { size: 5 }
+person.toJSON()
 //=> { name: 'Zaphod', scores: [1, 2, 3, 0, 0, 0, 0, 0, 0, 0,], house: { size: 5 }, pets: [{ type: 'dog' }, { type: 'cat' }, { type: '' }] }
 ```
 
@@ -225,16 +229,16 @@ const { StringArrayView } = require('structurae');
 const list = StringArrayView.from(['a', 'bc', 'defg'], 4);
 list.get(0);
 //=> StringView [];
-list.get(0).toString();
+list.getValue(0);
 //=> 'a'
-list.toObject();
+list.toJSON();
 //=> ['a', 'bc', 'defg']
 
 // create an empty array of 10 strings with maximum length of 5 bytes
 const emptyList = StringArrayView.of(3, 5);
-emptyList.get(0).toString();
+emptyList.getValue(0);
 //=> ''
-emptyList.set(0, 'ab').get(0).toString();
+emptyList.set(0, 'ab').getValue(0);
 //=> 'ab'
 
 [...emptyList].map(i => i.toString());

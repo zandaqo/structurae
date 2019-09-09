@@ -47,13 +47,22 @@ describe('ArrayView', () => {
   });
 
   describe('get', () => {
-    it('returns an object at a given index', () => {
+    it('returns an object view at a given index', () => {
       const array = PeopleView.of(10);
       const actual = array.get(1);
       expect(actual instanceof Person).toBe(true);
       expect(actual.byteOffset).toBe(61);
       expect(actual.byteLength).toBe(61);
       expect(actual.buffer).toBe(array.buffer);
+    });
+  });
+
+  describe('getValue', () => {
+    it('returns an object at a given index', () => {
+      const PetArray = ArrayViewMixin(Pet);
+      const array = [{ age: 1, name: 'a' }, { age: 2, name: 'b' }, { age: 3, name: 'c' }];
+      const pets = PetArray.from(array);
+      expect(pets.getValue(0)).toEqual(array[0]);
     });
   });
 
@@ -81,7 +90,7 @@ describe('ArrayView', () => {
       };
       const objectView = Person.from(object);
       array.setView(3, objectView);
-      expect(array.get(3).toObject()).toEqual(object);
+      expect(array.get(3).toJSON()).toEqual(object);
     });
 
     it('sets an object at a given index', () => {
@@ -105,7 +114,7 @@ describe('ArrayView', () => {
         traits: [1, 2, 3, 4, 0, 0, 0, 0, 0, 0],
       };
       array.set(1, object);
-      expect(array.get(1).toObject()).toEqual(object);
+      expect(array.get(1).toJSON()).toEqual(object);
     });
   });
 
@@ -117,7 +126,7 @@ describe('ArrayView', () => {
     });
   });
 
-  describe('toObject', () => {
+  describe('toJSON', () => {
     it('returns an array of objects in the array', () => {
       const PetArray = ArrayViewMixin(Pet);
       const expected = [{ age: 1, name: 'a' }, { age: 2, name: 'b' }, { age: 3, name: 'c' }];
@@ -125,7 +134,7 @@ describe('ArrayView', () => {
       pets.set(0, expected[0])
         .set(1, expected[1])
         .set(2, expected[2]);
-      expect(pets.toObject()).toEqual(expected);
+      expect(pets.toJSON()).toEqual(expected);
     });
   });
 
@@ -135,7 +144,7 @@ describe('ArrayView', () => {
       const expected = [{ age: 1, name: 'a' }, { age: 2, name: 'b' }, { age: 3, name: 'c' }];
       const pets = PetArray.from(expected);
       expect(pets.size).toBe(3);
-      expect(pets.toObject()).toEqual(expected);
+      expect(pets.toJSON()).toEqual(expected);
     });
   });
 

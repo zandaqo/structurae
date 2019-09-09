@@ -44,6 +44,28 @@ Invalid.schema = {
   a: { type: 'Int128' },
 };
 
+class BooleanView extends ObjectView {
+  getBoolean(position) {
+    return !!this.getUint8(position);
+  }
+
+  setBoolean(position, value) {
+    this.setUint8(position, value ? 1 : 0);
+  }
+}
+BooleanView.schema = {
+  a: { type: 'boolean' },
+};
+BooleanView.types = {
+  ...ObjectView.types,
+  boolean(field) {
+    field.view = DataView;
+    field.length = 1;
+    field.getter = 'getBoolean';
+    field.setter = 'setBoolean';
+  },
+};
+
 describe('ObjectView', () => {
   describe('constructor', () => {
     it('creates an instance of ObjectView', () => {
@@ -59,6 +81,12 @@ describe('ObjectView', () => {
       expect(person.buffer).toBe(buffer);
       expect(person.byteLength).toBe(40);
       expect(person.byteOffset).toBe(9);
+    });
+
+    it('creates an ObjectView with custom typed field', () => {
+      const boolean = BooleanView.from({ a: true });
+      expect(boolean instanceof BooleanView).toBe(true);
+      expect(boolean.byteLength).toBe(1);
     });
 
     it('throws if invalid field type is used', () => {
@@ -110,8 +138,39 @@ describe('ObjectView', () => {
 
     it('returns a StringArrayView for a string array field', () => {
       const list = Lists.from({ items: ['a'] });
-      expect(list.get('items') instanceof StringArrayView).toBe(true);
-      expect(list.get('items').toObject()).toEqual(['a', '', '']);
+      const items = list.get('items');
+      expect(items instanceof StringArrayView).toBe(true);
+      expect(items.toJSON()).toEqual(['a', '', '']);
+    });
+
+    it('returns a view for a custom typed field', () => {
+      const boolean = BooleanView.from({ a: true });
+      expect(boolean.get('a') instanceof DataView).toBe(true);
+    });
+  });
+
+  describe('getValue', () => {
+    it('returns a JavaScript value contained in the field', () => {
+      const object = {
+        age: 10,
+        height: 50,
+        scores: [1, 2, 3, 0, 0],
+        weight: 60,
+        name: 'maga',
+        pet: {
+          age: 1,
+          name: 'tuzik',
+        },
+      };
+      const person = Person.from(object);
+      expect(person.getValue('age')).toBe(object.age);
+      expect(person.getValue('scores')).toEqual(object.scores);
+      expect(person.getValue('pet')).toEqual(object.pet);
+    });
+
+    it('returns a custom field value using its getter', () => {
+      const boolean = BooleanView.from({ a: true });
+      expect(boolean.getValue('a')).toBe(true);
     });
   });
 
@@ -180,28 +239,33 @@ describe('ObjectView', () => {
       pet.set('age', 10);
       pet.set('name', 'tuzik');
       person.setView('pet', pet);
-      expect(person.get('pet').toObject()).toEqual({ age: 10, name: 'tuzik' });
+      expect(person.get('pet').toJSON()).toEqual({ age: 10, name: 'tuzik' });
     });
 
     it('sets an object for an object field', () => {
       const person = Person.from({});
       const pet = { age: 10, name: 'tuzik' };
       person.set('pet', pet);
-      expect(person.get('pet').toObject()).toEqual({ age: 10, name: 'tuzik' });
+      expect(person.get('pet').toJSON()).toEqual({ age: 10, name: 'tuzik' });
     });
 
     it('sets an array of strings', () => {
       const items = ['a', 'abcdefg', 'h'];
       const list = Lists.from({});
       list.set('items', items);
-      expect(list.toObject()).toEqual({
+      expect(list.toJSON()).toEqual({
         id: 0,
         items,
       });
     });
+
+    it('sets custom type field value using its setter', () => {
+      const boolean = BooleanView.from({ a: true });
+      expect(boolean.set('a', false).getValue('a')).toBe(false);
+    });
   });
 
-  describe('toObject', () => {
+  describe('toJSON', () => {
     it('returns an Object corresponding to the object view', () => {
       const person = Person.from({});
       person.set('age', 10)
@@ -210,7 +274,7 @@ describe('ObjectView', () => {
         .set('scores', [1, 2, 3])
         .set('pet', { age: 1, name: 'tuzik' })
         .set('name', 'maga');
-      const result = person.toObject();
+      const result = person.toJSON();
       expect(result).toEqual({
         age: 10,
         height: 50,
@@ -229,7 +293,12 @@ describe('ObjectView', () => {
         a: 2, b: 3, c: 4, d: 1, e: 2, f: 4, g: 5, h: 6, i: BigInt(78), j: BigInt(97),
       };
       const primitives = Primitives.from(expected);
-      expect(primitives.toObject()).toEqual(expected);
+      expect(primitives.toJSON()).toEqual(expected);
+    });
+
+    it('handles custom type fields', () => {
+      const boolean = BooleanView.from({ a: true });
+      expect(boolean.toJSON()).toEqual({ a: true });
     });
   });
 
@@ -247,7 +316,7 @@ describe('ObjectView', () => {
         },
       };
       const person = Person.from(object);
-      expect(person.toObject()).toEqual(object);
+      expect(person.toJSON()).toEqual(object);
     });
 
     it('fills an existing object view with properties of a given object', () => {
@@ -264,7 +333,7 @@ describe('ObjectView', () => {
       };
       const person = Person.from({});
       Person.from(object, person);
-      expect(person.toObject()).toEqual(object);
+      expect(person.toJSON()).toEqual(object);
     });
   });
 

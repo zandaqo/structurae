@@ -100,6 +100,13 @@ describe('StringView', () => {
     });
   });
 
+  describe('toJSON', () => {
+    it('returns a string representation of the StringView', () => {
+      const stringView = StringView.fromString('foo', 10);
+      expect(JSON.stringify(stringView)).toBe('"foo"');
+    });
+  });
+
   describe('trim', () => {
     it('returns a StringView without trailing zeros', () => {
       const stringView = StringView.fromString('foo', 10);

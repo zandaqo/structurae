@@ -209,23 +209,27 @@ export declare class RecordArray extends DataView {
 }
 
 declare class ExtendedDataView extends DataView {
-    getArray(position: number, ctor: typeof ObjectView | typeof ArrayView, size: number): ArrayLike<object>;
-    getTypedArray(position: number, ctor: typeof TypedArrayView, size: number): ArrayLike<number>;
-    getObject(schema: ObjectViewSchema, offset: number): object;
-    setArray(position: number, value: ArrayLike<object>, ctor: ViewType, size: number): void;
-    setObject(position: number, value: object, ctor: ViewType): void;
-    setString(position: number, value: string, length: number): void;
-    setTypedArray(position: number, value: ArrayLike<number>, ctor: typeof TypedArrayView, size: number): void;
-    setValue(field: string, value: any, schema: ObjectViewSchema, offset: number): this;
+    protected getArray(position: number, field: ObjectViewField): ArrayLike<object>;
+    protected getTypedArray(position: number, field: ObjectViewField): ArrayLike<number>;
+    protected getObject(position: number, field: ObjectViewField): object;
+    protected getString(position: number, field: ObjectViewField): object;
+    protected setArray(position: number, value: ArrayLike<object>, field: ObjectViewField): void;
+    protected setObject(position: number, value: object, field: ObjectViewField): void;
+    protected setString(position: number, value: string, field: ObjectViewField): void;
+    protected setStringArray(position: number, value: string[], field: ObjectViewField): void;
+    protected setTypedArray(position: number, value: ArrayLike<number>, field: ObjectViewField): void;
+    protected setValue(field: string, value: any, schema: ObjectViewSchema, offset: number): this;
 }
 
 declare class ArrayView extends ExtendedDataView {
     size: number;
 
     get(index: number): ObjectView;
+    getValue(index: number): object;
     set(index: number, value: object): this;
     setView(index: number, value: ObjectView): this;
     toObject(): object[];
+    toJSON(): object[];
     [Symbol.iterator](): IterableIterator<ObjectView>;
     static from(value: ArrayLike<object>, array?: ArrayView): ArrayView;
     static of(size: number): ArrayView;
@@ -241,7 +245,7 @@ type View = ObjectView | ArrayView | TypedArrayView | StringView | StringArrayVi
 type PrimitiveFieldType = 'int8' | 'uint8' | 'int16' | 'uint16'
     | 'int32' | 'uint32' | 'float32' | 'float64' | 'bigint64' | 'biguint64';
 
-type ObjectViewFieldType = PrimitiveFieldType | 'string' | 'array' | 'object' | 'typedarray' | ViewType;
+type ObjectViewFieldType = PrimitiveFieldType| string | ViewType;
 
 interface ObjectViewField {
     type: ObjectViewFieldType;
@@ -249,7 +253,9 @@ interface ObjectViewField {
     littleEndian?: boolean;
     start?: number;
     length?: number;
-    ctor?: ViewType;
+    view?: ViewType;
+    getter?: string;
+    setter?: string;
 }
 
 interface ObjectViewSchema {
@@ -263,13 +269,15 @@ export declare class ObjectView extends ExtendedDataView {
     static objectLength: number;
 
     get(field: string): number | View;
-    private getView(position: number, length: number, ctor: ViewType): View;
+    getValue(field: string): any;
     set(field: string, value: any): this;
     setView(field: string, value: View): this;
     toObject(): object;
+    toJSON(): object;
     static from(object: object, objectView?: ObjectView): ObjectView;
     static getLength(): number;
     static initialize(): void;
+    private static getFieldKind(field: ObjectViewField): string;
 }
 
 export declare class StringView extends Uint8Array {
@@ -290,6 +298,7 @@ export declare class StringView extends Uint8Array {
     substring(indexStart: number, indexEnd?: number): string;
     private toChar(index: number): string;
     toString(): string;
+    toJSON(): string;
     trim(): StringView;
     static fromString(string: string, size?: number): StringView;
     static getByteSize(string: string): number;
@@ -302,11 +311,14 @@ export declare class StringArrayView {
 
     constructor(buffer: ArrayBuffer, byteOffset: number, byteLength: number, stringLength: number);
     get(index: number): StringView;
-    set(index: number, value: string|StringView): this;
+    getValue(index: number): string;
+    set(index: number, value: string): this;
+    setView(index: number, value: Uint8Array): this;
     toObject(): Array<string>;
+    toJSON(): Array<string>;
     static from(value: ArrayLike<string>, stringLength: number, array?: StringArrayView): StringArrayView;
-    static getLength(size: number, stringLength: number): number;
     static of(size: number, stringLength: number): StringArrayView;
+    static getLength(size: number, stringLength: number): number;
 }
 
 declare class TypedArrayView extends DataView {
@@ -318,7 +330,8 @@ declare class TypedArrayView extends DataView {
 
     get(index: number): number;
     set(index: number, value: number): this;
-    toObject(): object;
+    toObject(): Array<number>;
+    toJSON(): Array<number>;
     [Symbol.iterator](): IterableIterator<number>;
     static getLength(size: number): number;
     static from(value: ArrayLike<number>, array?: TypedArrayView): TypedArrayView;
@@ -333,6 +346,7 @@ export declare class CollectionView extends DataView {
     get(index: number): View;
     set(index: number, value: object): this;
     toObject(): object[];
+    toJSON(): object[];
     [Symbol.iterator](): IterableIterator<View>;
     static from(value: object[], array?: CollectionView): CollectionView;
     static getLength(sizes: number[]): number;

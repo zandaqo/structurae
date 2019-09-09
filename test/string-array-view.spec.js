@@ -11,20 +11,37 @@ describe('StringViewArray', () => {
     });
   });
 
+  describe('getValue', () => {
+    it('returns the string at a given index', () => {
+      const array = StringArrayView.from(['abc', 'cbd', 'ab'], 4);
+      expect(array.getValue(0)).toBe('abc');
+      expect(array.getValue(1)).toBe('cbd');
+      expect(array.getValue(2)).toBe('ab');
+    });
+  });
+
   describe('set', () => {
     it('sets string at a given index', () => {
       const array = StringArrayView.of(4, 4);
       expect(array.get(0).toString()).toBe('');
-      expect(array.set(0, 'abcd').get(0).toString()).toBe('abcd');
-      expect(array.set(0, 'ab').get(0).toString()).toBe('ab');
+      expect(array.set(0, 'abcd').getValue(0)).toBe('abcd');
+      expect(array.set(0, 'ab').getValue(0)).toBe('ab');
     });
   });
 
-  describe('toObject', () => {
+  describe('setView', () => {
+    it('sets a string view at a given index', () => {
+      const array = StringArrayView.of(4, 4);
+      expect(array.setView(0, StringView.fromString('abcd')).getValue(0)).toBe('abcd');
+      expect(array.setView(1, StringView.fromString('ab')).getValue(1)).toBe('ab');
+    });
+  });
+
+  describe('toJSON', () => {
     it('returns an array of strings in the array view', () => {
       const strings = ['abc', 'cbd', 'ab'];
       const array = StringArrayView.from(strings, 4);
-      expect(array.toObject()).toEqual(strings);
+      expect(array.toJSON()).toEqual(strings);
     });
   });
 
@@ -58,7 +75,7 @@ describe('StringViewArray', () => {
     it('iterates over strings stored in the array', () => {
       const expected = ['abc', 'cbd', 'ab'];
       const array = StringArrayView.from(expected, 4);
-      expect(Array.from(array).map(i => i.toString())).toEqual(expected);
+      expect(Array.from(array).map((i) => i.toString())).toEqual(expected);
     });
   });
 });

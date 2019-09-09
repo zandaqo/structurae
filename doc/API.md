@@ -156,9 +156,11 @@ using half the space required for a normal grid.</p>
     * _instance_
         * [.size](#ArrayView+size) : <code>number</code>
         * [.get(index)](#ArrayView+get) ⇒ [<code>ObjectView</code>](#ObjectView)
+        * [.getValue(index)](#ArrayView+getValue) ⇒ <code>Object</code>
         * [.set(index, value)](#ArrayView+set) ⇒ [<code>ArrayView</code>](#ArrayView)
         * [.setView(index, value)](#ArrayView+setView) ⇒ [<code>ArrayView</code>](#ArrayView)
-        * [.toObject()](#ArrayView+toObject) ⇒ <code>Array.&lt;Object&gt;</code>
+        * ~~[.toObject()](#ArrayView+toObject) ⇒ <code>Array.&lt;Object&gt;</code>~~
+        * [.toJSON()](#ArrayView+toJSON) ⇒ <code>Array.&lt;Object&gt;</code>
     * _static_
         * [.from(value, [array])](#ArrayView.from) ⇒ [<code>ArrayView</code>](#ArrayView)
         * [.getLength(size)](#ArrayView.getLength) ⇒ <code>number</code>
@@ -173,10 +175,22 @@ Returns the amount of available objects in the array.
 <a name="ArrayView+get"></a>
 
 ### arrayView.get(index) ⇒ [<code>ObjectView</code>](#ObjectView)
-Returns an object at a given index.
+Returns an object view at a given index.
 
 **Kind**: instance method of [<code>ArrayView</code>](#ArrayView)  
 **Overrides**: [<code>get</code>](#ObjectView+get)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="ArrayView+getValue"></a>
+
+### arrayView.getValue(index) ⇒ <code>Object</code>
+Returns an object at a given index.
+
+**Kind**: instance method of [<code>ArrayView</code>](#ArrayView)  
+**Overrides**: [<code>getValue</code>](#ObjectView+getValue)  
 
 | Param | Type |
 | --- | --- |
@@ -210,11 +224,18 @@ Sets an object view at a given index.
 
 <a name="ArrayView+toObject"></a>
 
-### arrayView.toObject() ⇒ <code>Array.&lt;Object&gt;</code>
-Returns an array representation of the array view.
+### ~~arrayView.toObject() ⇒ <code>Array.&lt;Object&gt;</code>~~
+***Deprecated***
 
 **Kind**: instance method of [<code>ArrayView</code>](#ArrayView)  
 **Overrides**: [<code>toObject</code>](#ObjectView+toObject)  
+<a name="ArrayView+toJSON"></a>
+
+### arrayView.toJSON() ⇒ <code>Array.&lt;Object&gt;</code>
+Returns an array representation of the array view.
+
+**Kind**: instance method of [<code>ArrayView</code>](#ArrayView)  
+**Overrides**: [<code>toJSON</code>](#ObjectView+toJSON)  
 <a name="ArrayView.from"></a>
 
 ### ArrayView.from(value, [array]) ⇒ [<code>ArrayView</code>](#ArrayView)
@@ -973,7 +994,8 @@ The static version of `BitField#match`, matches a given value against a precompu
     * _instance_
         * [.get(index)](#CollectionView+get) ⇒ <code>View</code>
         * [.set(index, value)](#CollectionView+set) ⇒ [<code>CollectionView</code>](#CollectionView)
-        * [.toObject()](#CollectionView+toObject) ⇒ <code>Array.&lt;Object&gt;</code>
+        * ~~[.toObject()](#CollectionView+toObject) ⇒ <code>Array.&lt;Object&gt;</code>~~
+        * [.toJSON()](#CollectionView+toJSON) ⇒ <code>Array.&lt;Object&gt;</code>
     * _static_
         * [.from(value, [array])](#CollectionView.from) ⇒ [<code>CollectionView</code>](#CollectionView)
         * [.getLength(sizes)](#CollectionView.getLength) ⇒ <code>number</code>
@@ -1004,7 +1026,13 @@ Sets .
 
 <a name="CollectionView+toObject"></a>
 
-### collectionView.toObject() ⇒ <code>Array.&lt;Object&gt;</code>
+### ~~collectionView.toObject() ⇒ <code>Array.&lt;Object&gt;</code>~~
+***Deprecated***
+
+**Kind**: instance method of [<code>CollectionView</code>](#CollectionView)  
+<a name="CollectionView+toJSON"></a>
+
+### collectionView.toJSON() ⇒ <code>Array.&lt;Object&gt;</code>
 Returns an array representation of the collection view.
 
 **Kind**: instance method of [<code>CollectionView</code>](#CollectionView)  
@@ -1049,128 +1077,142 @@ Creates an empty collection view of specified size.
 **Extends**: <code>DataView</code>  
 
 * [ExtendedDataView](#ExtendedDataView) ⇐ <code>DataView</code>
-    * [.getArray(position, ctor, size)](#ExtendedDataView+getArray) ⇒ <code>Array.&lt;Object&gt;</code>
-    * [.getStringArray(position, size, length, stringLength)](#ExtendedDataView+getStringArray) ⇒ <code>Array.&lt;string&gt;</code>
-    * [.getTypedArray(position, ctor, size)](#ExtendedDataView+getTypedArray) ⇒ <code>Array.&lt;number&gt;</code>
-    * [.getObject(schema, offset)](#ExtendedDataView+getObject) ⇒ <code>Object</code>
-    * [.setArray(position, value, ctor, size)](#ExtendedDataView+setArray) ⇒ <code>void</code>
-    * [.setObject(position, value, ctor)](#ExtendedDataView+setObject) ⇒ <code>void</code>
-    * [.setString(position, value, length)](#ExtendedDataView+setString) ⇒ <code>void</code>
-    * [.setStringArray(position, value, size, length, stringLength)](#ExtendedDataView+setStringArray) ⇒ <code>void</code>
-    * [.setTypedArray(position, value, ctor, size)](#ExtendedDataView+setTypedArray) ⇒ <code>void</code>
-    * [.setValue(field, value, [schema], [offset])](#ExtendedDataView+setValue) ⇒ [<code>ExtendedDataView</code>](#ExtendedDataView)
+    * [.getArray(position, field)](#ExtendedDataView+getArray) ⇒ <code>Array.&lt;Object&gt;</code>
+    * [.getStringArray(position, field)](#ExtendedDataView+getStringArray) ⇒ <code>Array.&lt;string&gt;</code>
+    * [.getTypedArray(position, field)](#ExtendedDataView+getTypedArray) ⇒ <code>Array.&lt;number&gt;</code>
+    * [.getObject(position, field)](#ExtendedDataView+getObject) ⇒ <code>Object</code>
+    * [.getString(position, field)](#ExtendedDataView+getString) ⇒ <code>string</code>
+    * [.setArray(position, value, field)](#ExtendedDataView+setArray) ⇒ <code>void</code>
+    * [.setObject(position, value, field)](#ExtendedDataView+setObject) ⇒ <code>void</code>
+    * [.setString(position, value, field)](#ExtendedDataView+setString) ⇒ <code>void</code>
+    * [.setStringArray(position, value, field)](#ExtendedDataView+setStringArray) ⇒ <code>void</code>
+    * [.setTypedArray(position, value, field)](#ExtendedDataView+setTypedArray) ⇒ <code>void</code>
+    * [.setValue(name, value, [schema], [offset])](#ExtendedDataView+setValue) ⇒ [<code>ExtendedDataView</code>](#ExtendedDataView)
 
 <a name="ExtendedDataView+getArray"></a>
 
-### extendedDataView.getArray(position, ctor, size) ⇒ <code>Array.&lt;Object&gt;</code>
+### extendedDataView.getArray(position, field) ⇒ <code>Array.&lt;Object&gt;</code>
 **Kind**: instance method of [<code>ExtendedDataView</code>](#ExtendedDataView)  
+**Access**: protected  
 
 | Param | Type |
 | --- | --- |
 | position | <code>number</code> | 
-| ctor | [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView) \| [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView) | 
-| size | <code>number</code> | 
+| field | [<code>ObjectViewField</code>](#ObjectViewField) | 
 
 <a name="ExtendedDataView+getStringArray"></a>
 
-### extendedDataView.getStringArray(position, size, length, stringLength) ⇒ <code>Array.&lt;string&gt;</code>
+### extendedDataView.getStringArray(position, field) ⇒ <code>Array.&lt;string&gt;</code>
 **Kind**: instance method of [<code>ExtendedDataView</code>](#ExtendedDataView)  
+**Access**: protected  
 
 | Param | Type |
 | --- | --- |
 | position | <code>number</code> | 
-| size | <code>number</code> | 
-| length | <code>number</code> | 
-| stringLength | <code>number</code> | 
+| field | [<code>ObjectViewField</code>](#ObjectViewField) | 
 
 <a name="ExtendedDataView+getTypedArray"></a>
 
-### extendedDataView.getTypedArray(position, ctor, size) ⇒ <code>Array.&lt;number&gt;</code>
+### extendedDataView.getTypedArray(position, field) ⇒ <code>Array.&lt;number&gt;</code>
 **Kind**: instance method of [<code>ExtendedDataView</code>](#ExtendedDataView)  
+**Access**: protected  
 
 | Param | Type |
 | --- | --- |
 | position | <code>number</code> | 
-| ctor | [<code>Class.&lt;TypedArrayView&gt;</code>](#TypedArrayView) | 
-| size | <code>number</code> | 
+| field | [<code>ObjectViewField</code>](#ObjectViewField) | 
 
 <a name="ExtendedDataView+getObject"></a>
 
-### extendedDataView.getObject(schema, offset) ⇒ <code>Object</code>
+### extendedDataView.getObject(position, field) ⇒ <code>Object</code>
 **Kind**: instance method of [<code>ExtendedDataView</code>](#ExtendedDataView)  
+**Access**: protected  
 
 | Param | Type |
 | --- | --- |
-| schema | <code>object</code> | 
-| offset | <code>number</code> | 
+| position | <code>number</code> | 
+| field | [<code>ObjectViewField</code>](#ObjectViewField) | 
+
+<a name="ExtendedDataView+getString"></a>
+
+### extendedDataView.getString(position, field) ⇒ <code>string</code>
+**Kind**: instance method of [<code>ExtendedDataView</code>](#ExtendedDataView)  
+**Access**: protected  
+
+| Param | Type |
+| --- | --- |
+| position | <code>number</code> | 
+| field | [<code>ObjectViewField</code>](#ObjectViewField) | 
 
 <a name="ExtendedDataView+setArray"></a>
 
-### extendedDataView.setArray(position, value, ctor, size) ⇒ <code>void</code>
+### extendedDataView.setArray(position, value, field) ⇒ <code>void</code>
 **Kind**: instance method of [<code>ExtendedDataView</code>](#ExtendedDataView)  
+**Access**: protected  
 
 | Param | Type |
 | --- | --- |
 | position | <code>number</code> | 
 | value | <code>ArrayLike.&lt;object&gt;</code> | 
-| ctor | [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView) \| [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView) | 
-| size | <code>number</code> | 
+| field | [<code>ObjectViewField</code>](#ObjectViewField) | 
 
 <a name="ExtendedDataView+setObject"></a>
 
-### extendedDataView.setObject(position, value, ctor) ⇒ <code>void</code>
+### extendedDataView.setObject(position, value, field) ⇒ <code>void</code>
 **Kind**: instance method of [<code>ExtendedDataView</code>](#ExtendedDataView)  
+**Access**: protected  
 
 | Param | Type |
 | --- | --- |
 | position | <code>number</code> | 
 | value | <code>Object</code> | 
-| ctor | [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView) | 
+| field | [<code>ObjectViewField</code>](#ObjectViewField) | 
 
 <a name="ExtendedDataView+setString"></a>
 
-### extendedDataView.setString(position, value, length) ⇒ <code>void</code>
+### extendedDataView.setString(position, value, field) ⇒ <code>void</code>
 **Kind**: instance method of [<code>ExtendedDataView</code>](#ExtendedDataView)  
+**Access**: protected  
 
 | Param | Type |
 | --- | --- |
 | position | <code>number</code> | 
 | value | <code>string</code> | 
-| length | <code>number</code> | 
+| field | [<code>ObjectViewField</code>](#ObjectViewField) | 
 
 <a name="ExtendedDataView+setStringArray"></a>
 
-### extendedDataView.setStringArray(position, value, size, length, stringLength) ⇒ <code>void</code>
+### extendedDataView.setStringArray(position, value, field) ⇒ <code>void</code>
 **Kind**: instance method of [<code>ExtendedDataView</code>](#ExtendedDataView)  
+**Access**: protected  
 
 | Param | Type |
 | --- | --- |
 | position | <code>number</code> | 
 | value | <code>string</code> | 
-| size | <code>number</code> | 
-| length | <code>number</code> | 
-| stringLength | <code>number</code> | 
+| field | [<code>ObjectViewField</code>](#ObjectViewField) | 
 
 <a name="ExtendedDataView+setTypedArray"></a>
 
-### extendedDataView.setTypedArray(position, value, ctor, size) ⇒ <code>void</code>
+### extendedDataView.setTypedArray(position, value, field) ⇒ <code>void</code>
 **Kind**: instance method of [<code>ExtendedDataView</code>](#ExtendedDataView)  
+**Access**: protected  
 
 | Param | Type |
 | --- | --- |
 | position | <code>number</code> | 
 | value | <code>ArrayLike.&lt;number&gt;</code> | 
-| ctor | [<code>Class.&lt;TypedArrayView&gt;</code>](#TypedArrayView) | 
-| size | <code>number</code> | 
+| field | [<code>ObjectViewField</code>](#ObjectViewField) | 
 
 <a name="ExtendedDataView+setValue"></a>
 
-### extendedDataView.setValue(field, value, [schema], [offset]) ⇒ [<code>ExtendedDataView</code>](#ExtendedDataView)
+### extendedDataView.setValue(name, value, [schema], [offset]) ⇒ [<code>ExtendedDataView</code>](#ExtendedDataView)
 **Kind**: instance method of [<code>ExtendedDataView</code>](#ExtendedDataView)  
+**Access**: protected  
 
 | Param | Type | Default |
 | --- | --- | --- |
-| field | <code>string</code> |  | 
+| name | <code>string</code> |  | 
 | value | <code>\*</code> |  | 
 | [schema] | <code>\*</code> |  | 
 | [offset] | <code>number</code> | <code>0</code> | 
@@ -1530,9 +1572,11 @@ a.get(2, 1);
 * [ObjectView](#ObjectView) ⇐ <code>DataView</code>
     * _instance_
         * [.get(field)](#ObjectView+get) ⇒ <code>\*</code>
+        * [.getValue(field)](#ObjectView+getValue) ⇒ <code>\*</code>
         * [.set(field, value)](#ObjectView+set) ⇒ [<code>ObjectView</code>](#ObjectView)
         * [.setView(field, value)](#ObjectView+setView) ⇒ [<code>ObjectView</code>](#ObjectView)
-        * [.toObject()](#ObjectView+toObject) ⇒ <code>Object</code>
+        * ~~[.toObject()](#ObjectView+toObject) ⇒ <code>Object</code>~~
+        * [.toJSON()](#ObjectView+toJSON) ⇒ <code>Object</code>
     * _static_
         * [.isInitialized](#ObjectView.isInitialized) : <code>boolean</code>
         * [.from(object, [view])](#ObjectView.from) ⇒ [<code>ObjectView</code>](#ObjectView)
@@ -1541,7 +1585,19 @@ a.get(2, 1);
 <a name="ObjectView+get"></a>
 
 ### objectView.get(field) ⇒ <code>\*</code>
-Returns the value of a given field.
+Returns the value or view of a given field.
+
+**Kind**: instance method of [<code>ObjectView</code>](#ObjectView)  
+**Returns**: <code>\*</code> - value of the field  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| field | <code>string</code> | the name of the field |
+
+<a name="ObjectView+getValue"></a>
+
+### objectView.getValue(field) ⇒ <code>\*</code>
+Returns the JavaScript value of a given field.
 
 **Kind**: instance method of [<code>ObjectView</code>](#ObjectView)  
 **Returns**: <code>\*</code> - value of the field  
@@ -1576,7 +1632,13 @@ Sets an ObjectView value to a field.
 
 <a name="ObjectView+toObject"></a>
 
-### objectView.toObject() ⇒ <code>Object</code>
+### ~~objectView.toObject() ⇒ <code>Object</code>~~
+***Deprecated***
+
+**Kind**: instance method of [<code>ObjectView</code>](#ObjectView)  
+<a name="ObjectView+toJSON"></a>
+
+### objectView.toJSON() ⇒ <code>Object</code>
 Returns an Object corresponding to the object view.
 
 **Kind**: instance method of [<code>ObjectView</code>](#ObjectView)  
@@ -2481,8 +2543,11 @@ An array of StringViews. Uses an ArrayBuffer to hold an array of UTF-8 encoded s
     * _instance_
         * [.size](#StringArrayView+size) : <code>number</code>
         * [.get(index)](#StringArrayView+get) ⇒ [<code>StringView</code>](#StringView)
+        * [.getValue(index)](#StringArrayView+getValue) ⇒ <code>string</code>
         * [.set(index, value)](#StringArrayView+set) ⇒ [<code>StringArrayView</code>](#StringArrayView)
-        * [.toObject()](#StringArrayView+toObject) ⇒ <code>Array.&lt;string&gt;</code>
+        * [.setView(index, value)](#StringArrayView+setView) ⇒ [<code>StringArrayView</code>](#StringArrayView)
+        * ~~[.toObject()](#StringArrayView+toObject) ⇒ <code>Array.&lt;string&gt;</code>~~
+        * [.toJSON()](#StringArrayView+toJSON) ⇒ <code>Array.&lt;string&gt;</code>
     * _static_
         * [.from(value, stringLength, [array])](#StringArrayView.from) ⇒ [<code>StringArrayView</code>](#StringArrayView)
         * [.getLength(size, stringLength)](#StringArrayView.getLength) ⇒ <code>number</code>
@@ -2516,21 +2581,50 @@ Returns a StringView at a given index.
 | --- | --- |
 | index | <code>number</code> | 
 
-<a name="StringArrayView+set"></a>
+<a name="StringArrayView+getValue"></a>
 
-### stringArrayView.set(index, value) ⇒ [<code>StringArrayView</code>](#StringArrayView)
-Sets a string or StringView at a given index.
+### stringArrayView.getValue(index) ⇒ <code>string</code>
+Returns a string at a given index.
 
 **Kind**: instance method of [<code>StringArrayView</code>](#StringArrayView)  
 
 | Param | Type |
 | --- | --- |
 | index | <code>number</code> | 
-| value | <code>string</code> \| [<code>StringView</code>](#StringView) | 
+
+<a name="StringArrayView+set"></a>
+
+### stringArrayView.set(index, value) ⇒ [<code>StringArrayView</code>](#StringArrayView)
+Sets a string at a given index.
+
+**Kind**: instance method of [<code>StringArrayView</code>](#StringArrayView)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+| value | <code>string</code> | 
+
+<a name="StringArrayView+setView"></a>
+
+### stringArrayView.setView(index, value) ⇒ [<code>StringArrayView</code>](#StringArrayView)
+Sets a StringView at a given index.
+
+**Kind**: instance method of [<code>StringArrayView</code>](#StringArrayView)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+| value | <code>Uint8Array</code> | 
 
 <a name="StringArrayView+toObject"></a>
 
-### stringArrayView.toObject() ⇒ <code>Array.&lt;string&gt;</code>
+### ~~stringArrayView.toObject() ⇒ <code>Array.&lt;string&gt;</code>~~
+***Deprecated***
+
+**Kind**: instance method of [<code>StringArrayView</code>](#StringArrayView)  
+<a name="StringArrayView+toJSON"></a>
+
+### stringArrayView.toJSON() ⇒ <code>Array.&lt;string&gt;</code>
 Returns an array of strings held inside the array view.
 
 **Kind**: instance method of [<code>StringArrayView</code>](#StringArrayView)  
@@ -2589,6 +2683,7 @@ Extends Uint8Array to handle C-like representation of UTF-8 encoded strings.
         * [.search(searchValue, [fromIndex])](#StringView+search) ⇒ <code>number</code>
         * [.substring(indexStart, [indexEnd])](#StringView+substring) ⇒ <code>string</code>
         * [.toString()](#StringView+toString) ⇒ <code>string</code>
+        * [.toJSON()](#StringView+toJSON) ⇒ <code>string</code>
         * [.trim()](#StringView+trim) ⇒ [<code>StringView</code>](#StringView)
     * _static_
         * [.encoder](#StringView.encoder) : <code>TextEncoder</code>
@@ -2734,6 +2829,10 @@ stringView.toString();
 stringView == 'abc😀a'
 //=> true
 ```
+<a name="StringView+toJSON"></a>
+
+### stringView.toJSON() ⇒ <code>string</code>
+**Kind**: instance method of [<code>StringView</code>](#StringView)  
 <a name="StringView+trim"></a>
 
 ### stringView.trim() ⇒ [<code>StringView</code>](#StringView)
@@ -2993,7 +3092,8 @@ a.get(2, 1);
         * [.size](#TypedArrayView+size) : <code>number</code>
         * [.get(index)](#TypedArrayView+get) ⇒ <code>number</code>
         * [.set(index, value)](#TypedArrayView+set) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
-        * [.toObject()](#TypedArrayView+toObject) ⇒ <code>Array.&lt;number&gt;</code>
+        * ~~[.toObject()](#TypedArrayView+toObject) ⇒ <code>Array.&lt;number&gt;</code>~~
+        * [.toJSON()](#TypedArrayView+toJSON) ⇒ <code>Array.&lt;number&gt;</code>
     * _static_
         * [.getLength(size)](#TypedArrayView.getLength) ⇒ <code>number</code>
         * [.from(value, [array])](#TypedArrayView.from) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
@@ -3030,7 +3130,13 @@ Sets a number at a given index.
 
 <a name="TypedArrayView+toObject"></a>
 
-### typedArrayView.toObject() ⇒ <code>Array.&lt;number&gt;</code>
+### ~~typedArrayView.toObject() ⇒ <code>Array.&lt;number&gt;</code>~~
+***Deprecated***
+
+**Kind**: instance method of [<code>TypedArrayView</code>](#TypedArrayView)  
+<a name="TypedArrayView+toJSON"></a>
+
+### typedArrayView.toJSON() ⇒ <code>Array.&lt;number&gt;</code>
 Returns an array representation of the array view.
 
 **Kind**: instance method of [<code>TypedArrayView</code>](#TypedArrayView)  
@@ -4081,9 +4187,11 @@ Creates a WeightedAdjacencyMatrix class extending a given Array-like class.
 | type | [<code>ObjectViewFieldType</code>](#ObjectViewFieldType) |  |
 | [size] | <code>number</code> | the maximum size in bytes for a string type |
 | [littleEndian] | <code>boolean</code> |  |
-| [start] | <code>number</code> |  |
 | [length] | <code>number</code> |  |
-| [ctor] | [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView) \| [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView) \| [<code>Class.&lt;TypedArrayView&gt;</code>](#TypedArrayView) |  |
+| [start] | <code>number</code> |  |
+| [view] | [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView) \| [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView) \| [<code>Class.&lt;TypedArrayView&gt;</code>](#TypedArrayView) |  |
+| getter | <code>string</code> |  |
+| setter | <code>string</code> |  |
 
 <a name="RecordFieldType"></a>
 
