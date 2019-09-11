@@ -59,12 +59,20 @@ BooleanView.schema = {
 BooleanView.types = {
   ...ObjectView.types,
   boolean(field) {
-    field.view = DataView;
+    field.View = DataView;
     field.length = 1;
     field.getter = 'getBoolean';
     field.setter = 'setBoolean';
   },
 };
+BooleanView.initialize();
+
+class NestedBoolean extends ObjectView {}
+NestedBoolean.schema = {
+  a: { type: 'uint8' },
+  b: { type: BooleanView, size: 2 },
+};
+NestedBoolean.initialize();
 
 describe('ObjectView', () => {
   describe('constructor', () => {
@@ -144,8 +152,8 @@ describe('ObjectView', () => {
     });
 
     it('returns a view for a custom typed field', () => {
-      const boolean = BooleanView.from({ a: true });
-      expect(boolean.get('a') instanceof DataView).toBe(true);
+      const boolean = NestedBoolean.from({ a: 1, b: [{ a: true }, { a: false }] });
+      expect(boolean.get('b') instanceof DataView).toBe(true);
     });
   });
 
@@ -169,8 +177,9 @@ describe('ObjectView', () => {
     });
 
     it('returns a custom field value using its getter', () => {
-      const boolean = BooleanView.from({ a: true });
-      expect(boolean.getValue('a')).toBe(true);
+      const object = { a: 1, b: [{ a: true }, { a: false }] };
+      const view = NestedBoolean.from(object);
+      expect(view.getValue('b')).toEqual(object.b);
     });
   });
 
@@ -260,8 +269,9 @@ describe('ObjectView', () => {
     });
 
     it('sets custom type field value using its setter', () => {
-      const boolean = BooleanView.from({ a: true });
-      expect(boolean.set('a', false).getValue('a')).toBe(false);
+      const object = { a: 1, b: [{ a: true }, { a: false }] };
+      const view = NestedBoolean.from({});
+      expect(view.set('b', object.b).getValue('b')).toEqual(object.b);
     });
   });
 
@@ -297,8 +307,9 @@ describe('ObjectView', () => {
     });
 
     it('handles custom type fields', () => {
-      const boolean = BooleanView.from({ a: true });
-      expect(boolean.toJSON()).toEqual({ a: true });
+      const object = { a: 1, b: [{ a: true }, { a: false }] };
+      const view = NestedBoolean.from(object);
+      expect(view.toJSON()).toEqual(object);
     });
   });
 

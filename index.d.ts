@@ -208,20 +208,7 @@ export declare class RecordArray extends DataView {
     static getLength(fields: RecordField[], size: number): number;
 }
 
-declare class ExtendedDataView extends DataView {
-    protected getArray(position: number, field: ObjectViewField): ArrayLike<object>;
-    protected getTypedArray(position: number, field: ObjectViewField): ArrayLike<number>;
-    protected getObject(position: number, field: ObjectViewField): object;
-    protected getString(position: number, field: ObjectViewField): object;
-    protected setArray(position: number, value: ArrayLike<object>, field: ObjectViewField): void;
-    protected setObject(position: number, value: object, field: ObjectViewField): void;
-    protected setString(position: number, value: string, field: ObjectViewField): void;
-    protected setStringArray(position: number, value: string[], field: ObjectViewField): void;
-    protected setTypedArray(position: number, value: ArrayLike<number>, field: ObjectViewField): void;
-    protected setValue(field: string, value: any, schema: ObjectViewSchema, offset: number): this;
-}
-
-declare class ArrayView extends ExtendedDataView {
+declare class ArrayView extends DataView {
     size: number;
 
     get(index: number): ObjectView;
@@ -253,24 +240,35 @@ interface ObjectViewField {
     littleEndian?: boolean;
     start?: number;
     length?: number;
-    view?: ViewType;
+    View?: ViewType;
     getter?: string;
     setter?: string;
+    itemLength?: number;
 }
 
 interface ObjectViewSchema {
     [propName: string]: ObjectViewField;
 }
 
-export declare class ObjectView extends ExtendedDataView {
+export declare class ObjectView extends DataView {
     static fields: string[];
     static schema: ObjectViewSchema;
     static isInitialized: boolean;
     static objectLength: number;
 
     get(field: string): number | View;
+    private getArray(position: number, field: ObjectViewField): ArrayLike<object>;
+    private getObject(position: number, field: ObjectViewField): object;
+    private getString(position: number, field: ObjectViewField): string;
+    private getStringArray(position: number, field: ObjectViewField): string[];
+    private getTypedArray(position: number, field: ObjectViewField): ArrayLike<number>;
     getValue(field: string): any;
     set(field: string, value: any): this;
+    private setArray(position: number, value: ArrayLike<object>, field: ObjectViewField): void;
+    private setObject(position: number, value: object, field: ObjectViewField): void;
+    private setString(position: number, value: string, field: ObjectViewField): void;
+    private setStringArray(position: number, value: string[], field: ObjectViewField): void;
+    private setTypedArray(position: number, value: ArrayLike<number>, field: ObjectViewField): void;
     setView(field: string, value: View): this;
     toObject(): object;
     toJSON(): object;
