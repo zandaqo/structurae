@@ -215,7 +215,11 @@ describe('ObjectView', () => {
     it('sets a string for a string field', () => {
       const person = Person.from({});
       person.set('name', 'maga');
-      expect(person.get('name').toString()).toBe('maga');
+      expect(person.getValue('name')).toBe('maga');
+      person.set('name', null);
+      expect(person.getValue('name')).toBe('null');
+      person.set('name', undefined);
+      expect(person.getValue('name')).toBe('');
     });
 
     it('sets an array for an array field', () => {
@@ -244,7 +248,7 @@ describe('ObjectView', () => {
 
     it('zeros out non-existing fields', () => {
       const person = Person.from({ pet: { age: 10, name: 'tuzik' } });
-      const expected = { age: 5 };
+      const expected = { age: 5, name: undefined };
       person.set('pet', expected);
       expect(person.getValue('pet')).toEqual({ age: 5, name: '' });
     });
