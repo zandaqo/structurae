@@ -6,7 +6,7 @@
 
 A collection of data structures for high-performance JavaScript applications that includes:
 
-- [Binary Structures](https://github.com/zandaqo/structurae#Binary_Structures):
+- [Binary Structures](https://github.com/zandaqo/structurae#binary-structures):
     - [ArrayView](https://github.com/zandaqo/structurae#ArrayView) - an array of C-like structs, ObjectViews, implemented with DataView
     - [ObjectView](https://github.com/zandaqo/structurae#ObjectView) - extends DataView to implement C-like struct.
     - [StringView](https://github.com/zandaqo/structurae#StringView) - extends Uint8Array to handle C-like representation of UTF-8 encoded strings.

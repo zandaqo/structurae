@@ -1,12 +1,16 @@
 const ObjectView = require('../lib/object-view');
 const StringView = require('../lib/string-view');
-const StringArrayView = require('../lib/string-array-view');
 const TypedArrayViewMixin = require('../lib/typed-array-view');
 
 class Pet extends ObjectView {}
 Pet.schema = {
   age: { type: 'int8' },
   name: { type: 'string', length: 10 },
+};
+
+class House extends ObjectView {}
+House.schema = {
+  pets: { type: Pet, size: 3 },
 };
 
 class Person extends ObjectView {}
@@ -144,10 +148,10 @@ describe('ObjectView', () => {
       expect(actual.byteLength).toBe(11);
     });
 
-    it('returns a StringArrayView for a string array field', () => {
+    it('returns an ArrayView for a string array field', () => {
       const list = Lists.from({ items: ['a'] });
       const items = list.get('items');
-      expect(items instanceof StringArrayView).toBe(true);
+      expect(items instanceof DataView).toBe(true);
       expect(items.toJSON()).toEqual(['a', '', '']);
     });
 
@@ -208,28 +212,10 @@ describe('ObjectView', () => {
         .get('j')).toBe(BigInt(1));
     });
 
-    it('sets a buffer for a string field', () => {
-      const person = Person.from({});
-      const value = new StringView(10);
-      value[0] = 35;
-      value[9] = 33;
-      person.setView('name', value);
-      const actual = person.get('name');
-      expect(actual).toEqual(value);
-      expect(actual.buffer !== value.buffer).toBe(true);
-    });
-
     it('sets a string for a string field', () => {
       const person = Person.from({});
       person.set('name', 'maga');
       expect(person.get('name').toString()).toBe('maga');
-    });
-
-    it('sets a TypedArrayView for an array field', () => {
-      const person = Person.from({});
-      const scores = TypedArrayViewMixin('int16').from([10, 0, 0, 0, -10]);
-      person.setView('scores', scores);
-      expect(Array.from(person.get('scores'))).toEqual([10, 0, 0, 0, -10]);
     });
 
     it('sets an array for an array field', () => {
@@ -239,23 +225,39 @@ describe('ObjectView', () => {
       expect(Array.from(array)).toEqual([0, 0, 0, 0, 0]);
       person.set('scores', [1, 2, 3]);
       expect(Array.from(array)).toEqual([1, 2, 3, 0, 0]);
-      expect(Array.from(person.get('scores'))).toEqual([1, 2, 3, 0, 0]);
+      expect(person.getValue('scores')).toEqual([1, 2, 3, 0, 0]);
     });
 
-    it('sets an ObjectView for an object field', () => {
-      const person = Person.from({});
-      const pet = Pet.from({});
-      pet.set('age', 10);
-      pet.set('name', 'tuzik');
-      person.setView('pet', pet);
-      expect(person.get('pet').toJSON()).toEqual({ age: 10, name: 'tuzik' });
+    it('zeros out non-existing elements', () => {
+      const person = Person.from({ scores: [1, 2, 3, 4, 5] });
+      const expected = [1, 2];
+      person.set('scores', expected);
+      expect(person.getValue('scores')).toEqual([1, 2, 0, 0, 0]);
     });
 
     it('sets an object for an object field', () => {
       const person = Person.from({});
       const pet = { age: 10, name: 'tuzik' };
       person.set('pet', pet);
-      expect(person.get('pet').toJSON()).toEqual({ age: 10, name: 'tuzik' });
+      expect(person.get('pet').toJSON()).toEqual(pet);
+    });
+
+    it('zeros out non-existing fields', () => {
+      const person = Person.from({ pet: { age: 10, name: 'tuzik' } });
+      const expected = { age: 5 };
+      person.set('pet', expected);
+      expect(person.getValue('pet')).toEqual({ age: 5, name: '' });
+    });
+
+    it('sets an array of objects', () => {
+      const house = House.from({});
+      house.set('pets', [{ age: 5 }, { age: 6 }, { age: 7 }]);
+      house.set('pets', [{ age: 10, name: 'tuzik' }]);
+      expect(house.getValue('pets')).toEqual([
+        { age: 10, name: 'tuzik' },
+        { age: 0, name: '' },
+        { age: 0, name: '' },
+      ]);
     });
 
     it('sets an array of strings', () => {
@@ -272,6 +274,35 @@ describe('ObjectView', () => {
       const object = { a: 1, b: [{ a: true }, { a: false }] };
       const view = NestedBoolean.from({});
       expect(view.set('b', object.b).getValue('b')).toEqual(object.b);
+    });
+  });
+
+  describe('setView', () => {
+    it('sets a StringView for a string field', () => {
+      const person = Person.from({});
+      const value = new StringView(10);
+      value[0] = 35;
+      value[9] = 33;
+      person.setView('name', value);
+      const actual = person.get('name');
+      expect(actual).toEqual(value);
+      expect(actual.buffer !== value.buffer).toBe(true);
+    });
+
+    it('sets a TypedArrayView for an array field', () => {
+      const person = Person.from({});
+      const scores = TypedArrayViewMixin('int16').from([10, 0, 0, 0, -10]);
+      person.setView('scores', scores);
+      expect(Array.from(person.get('scores'))).toEqual([10, 0, 0, 0, -10]);
+    });
+
+    it('sets an ObjectView for an object field', () => {
+      const person = Person.from({});
+      const pet = Pet.from({});
+      pet.set('age', 10);
+      pet.set('name', 'tuzik');
+      person.setView('pet', pet);
+      expect(person.getValue('pet')).toEqual({ age: 10, name: 'tuzik' });
     });
   });
 

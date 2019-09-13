@@ -146,6 +146,14 @@ describe('ArrayView', () => {
       expect(pets.size).toBe(3);
       expect(pets.toJSON()).toEqual(expected);
     });
+
+    it('fills a given array view with objects', () => {
+      const PetArray = ArrayViewMixin(Pet);
+      const expected = [{ age: 1, name: 'a' }, { age: 2, name: 'b' }, { age: 3, name: 'c' }];
+      const pets = PetArray.from(expected, PetArray.of(4));
+      expect(pets.size).toBe(4);
+      expect(pets.toJSON()).toEqual([...expected, { age: 0, name: '' }]);
+    });
   });
 
   describe('getLength', () => {

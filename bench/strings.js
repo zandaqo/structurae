@@ -34,8 +34,8 @@ const arrayLength = 100;
 
 const strings = new Array(arrayLength).fill(0).map(() => getString(stringLength));
 const matches = new Array(arrayLength).fill(0).map(() => getString(matchLength));
-const views = strings.map(s => StringView.fromString(s));
-const viewMatches = matches.map(s => StringView.fromString(s));
+const views = strings.map(s => StringView.from(s));
+const viewMatches = matches.map(s => StringView.from(s));
 
 const suits = [
   new Benchmark.Suite('StringView Search:', benchmarkOptions)
@@ -77,7 +77,7 @@ const suits = [
     })
     .add('StringView String', () => {
       const string = strings[getIndex(arrayLength)];
-      const reversed = StringView.fromString(string).toString();
+      const reversed = StringView.from(string).toString();
     }),
   new Benchmark.Suite('StringView Size:', benchmarkOptions)
     .add('TextEncoder', () => {

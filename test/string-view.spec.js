@@ -125,6 +125,30 @@ describe('StringView', () => {
     });
   });
 
+  describe('from', () => {
+    it('creates a StringView from an array', () => {
+      const array = StringView.encoder.encode('asdf');
+      const string = StringView.from(array);
+      expect(string instanceof StringView).toBe(true);
+      expect(string.length).toBe(array.length);
+      expect(string.toString()).toBe('asdf');
+    });
+
+    it('creates a StringView from a string', () => {
+      const stringView = StringView.from('foo');
+      expect(stringView instanceof StringView).toBe(true);
+      expect(stringView.length).toBe(3);
+      expect(stringView.toString()).toBe('foo');
+    });
+
+    it('encodes a string into a given view', () => {
+      const container = new StringView(10);
+      const stringView = StringView.from('foo', container);
+      expect(stringView).toBe(container);
+      expect(container.toString()).toEqual('foo');
+    });
+  });
+
   describe('getByteSize', () => {
     it('returns the size in bytes of a given string', () => {
       expect(StringView.getByteSize('asdf')).toBe(4);

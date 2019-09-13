@@ -208,8 +208,14 @@ export declare class RecordArray extends DataView {
     static getLength(fields: RecordField[], size: number): number;
 }
 
+type ViewType = typeof ArrayView | typeof ObjectView | typeof TypedArrayView | typeof StringView | typeof StringArrayView;
+
+type View = ObjectView | ArrayView | TypedArrayView | StringView | StringArrayView;
+
 declare class ArrayView extends DataView {
     size: number;
+    static itemLength: number;
+    static View: typeof ObjectView | typeof StringView;
 
     get(index: number): ObjectView;
     getValue(index: number): object;
@@ -223,11 +229,8 @@ declare class ArrayView extends DataView {
     static getLength(size: number): number;
 }
 
-export declare function ArrayViewMixin<T extends ObjectView>(Base: Constructor<T>): Constructor<T & ArrayView>
-
-type ViewType = typeof ArrayView | typeof ObjectView | typeof TypedArrayView | typeof StringView | typeof StringArrayView;
-
-type View = ObjectView | ArrayView | TypedArrayView | StringView | StringArrayView;
+export declare function ArrayViewMixin(ObjectViewClass: typeof ObjectView | typeof StringView,
+                                       itemLength?: number): typeof ArrayView;
 
 type PrimitiveFieldType = 'int8' | 'uint8' | 'int16' | 'uint16'
     | 'int32' | 'uint32' | 'float32' | 'float64' | 'bigint64' | 'biguint64';
@@ -257,17 +260,11 @@ export declare class ObjectView extends DataView {
     static objectLength: number;
 
     get(field: string): number | View;
-    private getArray(position: number, field: ObjectViewField): ArrayLike<object>;
     private getObject(position: number, field: ObjectViewField): object;
-    private getString(position: number, field: ObjectViewField): string;
-    private getStringArray(position: number, field: ObjectViewField): string[];
     private getTypedArray(position: number, field: ObjectViewField): ArrayLike<number>;
     getValue(field: string): any;
     set(field: string, value: any): this;
-    private setArray(position: number, value: ArrayLike<object>, field: ObjectViewField): void;
     private setObject(position: number, value: object, field: ObjectViewField): void;
-    private setString(position: number, value: string, field: ObjectViewField): void;
-    private setStringArray(position: number, value: string[], field: ObjectViewField): void;
     private setTypedArray(position: number, value: ArrayLike<number>, field: ObjectViewField): void;
     setView(field: string, value: View): this;
     toObject(): object;
@@ -299,6 +296,7 @@ export declare class StringView extends Uint8Array {
     toJSON(): string;
     trim(): StringView;
     static fromString(string: string, size?: number): StringView;
+    static from(arrayLike: ArrayLike<number>|string, mapFn?: Function | StringView): StringView;
     static getByteSize(string: string): number;
 }
 
@@ -321,10 +319,10 @@ export declare class StringArrayView {
 
 declare class TypedArrayView extends DataView {
     size: number;
-    private static typeGetter: string;
-    private static typeSetter: string;
-    private static offset: number;
-    private static littleEndian: boolean;
+    static typeGetter: string;
+    static typeSetter: string;
+    static offset: number;
+    static littleEndian: boolean;
 
     get(index: number): number;
     set(index: number, value: number): this;
@@ -336,7 +334,7 @@ declare class TypedArrayView extends DataView {
     static of(size: number): TypedArrayView;
 }
 
-export declare function TypedArrayViewMixin(type: PrimitiveFieldType, littleEndian: boolean): TypedArrayView;
+export declare function TypedArrayViewMixin(type: PrimitiveFieldType, littleEndian: boolean): typeof TypedArrayView;
 
 export declare class CollectionView extends DataView {
     static schema: ViewType[];
