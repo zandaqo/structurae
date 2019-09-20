@@ -1,30 +1,26 @@
-const ObjectView = require('../lib/object-view');
+const { ObjectView, ObjectViewMixin } = require('../lib/object-view');
 const StringView = require('../lib/string-view');
 const TypedArrayViewMixin = require('../lib/typed-array-view');
 
-class Pet extends ObjectView {}
-Pet.schema = {
+const Pet = ObjectViewMixin({
   age: { type: 'int8' },
   name: { type: 'string', length: 10 },
-};
+});
 
-class House extends ObjectView {}
-House.schema = {
+const House = ObjectViewMixin({
   pets: { type: Pet, size: 3 },
-};
+});
 
-class Person extends ObjectView {}
-Person.schema = {
+const Person = ObjectViewMixin({
   age: { type: 'int8' },
   height: { type: 'float32' },
   scores: { type: 'int16', size: 5 },
   weight: { type: 'float32', littleEndian: true },
   name: { type: 'string', length: 10 },
   pet: { type: Pet },
-};
+});
 
-class Primitives extends ObjectView {}
-Primitives.schema = {
+const Primitives = ObjectViewMixin({
   a: { type: 'int8' },
   b: { type: 'uint8' },
   c: { type: 'int16', littleEndian: true },
@@ -35,13 +31,12 @@ Primitives.schema = {
   h: { type: 'float64' },
   i: { type: 'bigint64' },
   j: { type: 'biguint64' },
-};
+});
 
-class Lists extends ObjectView {}
-Lists.schema = {
+const Lists = ObjectViewMixin({
   id: { type: 'uint32' },
   items: { type: 'string', size: 3, length: 10 },
-};
+});
 
 class Invalid extends ObjectView {}
 Invalid.schema = {

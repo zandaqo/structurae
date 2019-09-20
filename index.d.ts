@@ -212,7 +212,7 @@ type ViewType = typeof ArrayView | typeof ObjectView | typeof TypedArrayView | t
 
 type View = ObjectView | ArrayView | TypedArrayView | StringView | StringArrayView;
 
-declare class ArrayView extends DataView {
+export declare class ArrayView extends DataView {
     size: number;
     static itemLength: number;
     static View: typeof ObjectView | typeof StringView;
@@ -274,6 +274,8 @@ export declare class ObjectView extends DataView {
     static initialize(): void;
     private static getFieldKind(field: ObjectViewField): string;
 }
+
+export declare function ObjectViewMixin(schema: ObjectViewSchema, ObjectViewClass?: typeof ObjectView): typeof ObjectView;
 
 export declare class StringView extends Uint8Array {
     size: number;

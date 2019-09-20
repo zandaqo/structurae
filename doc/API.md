@@ -74,12 +74,16 @@ using half the space required for a normal grid.</p>
 
 <dl>
 <dt><a href="#ArrayViewMixin">ArrayViewMixin(ObjectViewClass, [itemLength])</a> ⇒ <code><a href="#ArrayView">Class.&lt;ArrayView&gt;</a></code></dt>
-<dd></dd>
+<dd><p>Creates an ArrayView class for a given ObjectView class.</p>
+</dd>
 <dt><a href="#GraphMixin">GraphMixin(Base, [undirected])</a> ⇒ <code><a href="#Graph">Graph</a></code></dt>
 <dd><p>Creates a Graph class extending a given adjacency structure.</p>
 </dd>
 <dt><a href="#GridMixin">GridMixin(Base)</a> ⇒ <code><a href="#Grid">Grid</a></code></dt>
 <dd><p>Creates a Grid class extending a given Array-like class.</p>
+</dd>
+<dt><a href="#ObjectViewMixin">ObjectViewMixin(schema, [ObjectViewClass])</a> ⇒ <code><a href="#ObjectView">Class.&lt;ObjectView&gt;</a></code></dt>
+<dd><p>Creates an ObjectView class with a given schema.</p>
 </dd>
 <dt><a href="#Comparator">Comparator(a, b)</a> ⇒ <code>number</code></dt>
 <dd></dd>
@@ -2784,7 +2788,7 @@ Creates a StringView from a string or an array like object.
 | Param | Type |
 | --- | --- |
 | arrayLike | <code>ArrayLike.&lt;number&gt;</code> \| <code>string</code> | 
-| [mapFn] | <code>function</code> \| <code>Uint8Array</code> \| [<code>StringView</code>](#StringView) | 
+| [mapFn] | <code>function</code> \| <code>Uint8Array</code> | 
 | [thisArg] | <code>Object</code> | 
 
 <a name="StringView.getByteSize"></a>
@@ -3883,6 +3887,8 @@ Creates an adjacency matrix from a given adjacency list.
 <a name="ArrayViewMixin"></a>
 
 ## ArrayViewMixin(ObjectViewClass, [itemLength]) ⇒ [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
+Creates an ArrayView class for a given ObjectView class.
+
 **Kind**: global function  
 
 | Param | Type |
@@ -3917,6 +3923,18 @@ Creates a Grid class extending a given Array-like class.
 ```js
 const ArrayGrid = Grid(Array);
 ```
+<a name="ObjectViewMixin"></a>
+
+## ObjectViewMixin(schema, [ObjectViewClass]) ⇒ [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView)
+Creates an ObjectView class with a given schema.
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| schema | <code>object</code> | the schema to use for the class |
+| [ObjectViewClass] | [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView) | an optional ObjectView class to extend |
+
 <a name="Comparator"></a>
 
 ## Comparator(a, b) ⇒ <code>number</code>

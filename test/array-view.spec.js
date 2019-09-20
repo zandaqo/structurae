@@ -1,14 +1,12 @@
-const ArrayViewMixin = require('../lib/array-view');
-const ObjectView = require('../lib/object-view');
+const { ArrayViewMixin } = require('../lib/array-view');
+const { ObjectViewMixin } = require('../lib/object-view');
 
-class Pet extends ObjectView {}
-Pet.schema = {
+const Pet = ObjectViewMixin({
   age: { type: 'int8' },
   name: { type: 'string', length: 10 },
-};
+});
 
-class Person extends ObjectView {}
-Person.schema = {
+const Person = ObjectViewMixin({
   age: { type: 'int8' },
   height: { type: 'float32' },
   scores: { type: 'int16', size: 5 },
@@ -16,7 +14,7 @@ Person.schema = {
   name: { type: 'string', length: 10 },
   pets: { type: Pet, size: 2 },
   traits: { type: 'uint8', size: 10 },
-};
+});
 
 const PeopleView = ArrayViewMixin(Person);
 
