@@ -263,6 +263,7 @@ export declare class ObjectView extends DataView {
     private getObject(position: number, field: ObjectViewField): object;
     private getTypedArray(position: number, field: ObjectViewField): ArrayLike<number>;
     getValue(field: string): any;
+    getView(field: string): View;
     set(field: string, value: any): this;
     private setObject(position: number, value: object, field: ObjectViewField): void;
     private setTypedArray(position: number, value: ArrayLike<number>, field: ObjectViewField): void;

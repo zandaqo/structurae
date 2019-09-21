@@ -15,7 +15,7 @@ const benchmarkOptions = {
   },
 };
 
-const getIndex = size => (Math.random() * size) | 0;
+const getIndex = (size) => (Math.random() * size) | 0;
 
 class Person extends BitField {}
 Person.fields = [
@@ -44,7 +44,7 @@ const packedMatcher = Person.getMatcher({
   2: 2, 3: 3, 5: 5, 6: 6,
 });
 const peopleArray = new Array(1000).fill(0).map(() => createPersonArray());
-const packedPeopleArray = peopleArray.map(i => new Person(i).value);
+const packedPeopleArray = peopleArray.map((i) => new Person(i).value);
 
 const SIZE = 1000 * 16;
 class NaivePool {
@@ -76,10 +76,10 @@ const SAMPLES = 800;
 const suits = [
   new Benchmark.Suite('BitField Match:', benchmarkOptions)
     .add('Native', () => {
-      peopleArray.filter(i => matchArrays(i, matcher));
+      peopleArray.filter((i) => matchArrays(i, matcher));
     })
     .add('BitField', () => {
-      packedPeopleArray.filter(i => Person.match(i, packedMatcher));
+      packedPeopleArray.filter((i) => Person.match(i, packedMatcher));
     }),
   new Benchmark.Suite('Pool Get/Set:', benchmarkOptions)
     .add('Naive', () => {
@@ -101,7 +101,7 @@ const suits = [
 ];
 
 if (require.main === module) {
-  suits.forEach(suite => suite.run());
+  suits.forEach((suite) => suite.run());
 }
 
 module.exports = {

@@ -14,7 +14,7 @@ const benchmarkOptions = {
   },
 };
 
-const getIndex = size => (Math.random() * size) | 0;
+const getIndex = (size) => (Math.random() * size) | 0;
 
 const rows = 1500;
 const columns = 32;
@@ -56,7 +56,7 @@ const suits = [
 
 
 if (require.main === module) {
-  suits.forEach(suite => suite.run());
+  suits.forEach((suite) => suite.run());
 }
 
 module.exports = {

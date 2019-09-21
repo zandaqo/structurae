@@ -4,15 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.4] - 2019-09-21
+### Added
+- Add ObjectViewMixin and expose ArrayView
+- Add ObjectView#getView
+
 ## [1.7.3] - 2019-09-13
-## Fixed
+### Fixed
 - Handle non-string values in StringView.from
 
 ## [1.7.2] - 2019-09-13
-## Added
+### Added
 - Add StringView.from that uses TextEncoder#encodeInto
 
-## Changed
+### Changed
 - Support strings in ArrayView replacing StringArrayView
 
 ## [1.7.1] - 2019-09-11

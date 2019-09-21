@@ -66,12 +66,10 @@ BooleanView.types = {
 };
 BooleanView.initialize();
 
-class NestedBoolean extends ObjectView {}
-NestedBoolean.schema = {
+const NestedBoolean = ObjectViewMixin({
   a: { type: 'uint8' },
   b: { type: BooleanView, size: 2 },
-};
-NestedBoolean.initialize();
+});
 
 describe('ObjectView', () => {
   describe('constructor', () => {
@@ -104,17 +102,17 @@ describe('ObjectView', () => {
 
   describe('get', () => {
     it('returns the value of a given field', () => {
-      const person = Primitives.from({});
-      expect(person.get('a')).toBe(0);
-      expect(person.get('b')).toBe(0);
-      expect(person.get('c')).toBe(0);
-      expect(person.get('d')).toBe(0);
-      expect(person.get('e')).toBe(0);
-      expect(person.get('f')).toBe(0);
-      expect(person.get('g')).toBe(0);
-      expect(person.get('h')).toBe(0);
-      expect(person.get('i')).toBe(BigInt(0));
-      expect(person.get('j')).toBe(BigInt(0));
+      const primitives = Primitives.from({});
+      expect(primitives.get('a')).toBe(0);
+      expect(primitives.get('b')).toBe(0);
+      expect(primitives.get('c')).toBe(0);
+      expect(primitives.get('d')).toBe(0);
+      expect(primitives.get('e')).toBe(0);
+      expect(primitives.get('f')).toBe(0);
+      expect(primitives.get('g')).toBe(0);
+      expect(primitives.get('h')).toBe(0);
+      expect(primitives.get('i')).toBe(BigInt(0));
+      expect(primitives.get('j')).toBe(BigInt(0));
     });
 
     it('returns a StringView for a string field', () => {
@@ -179,6 +177,24 @@ describe('ObjectView', () => {
       const object = { a: 1, b: [{ a: true }, { a: false }] };
       const view = NestedBoolean.from(object);
       expect(view.getValue('b')).toEqual(object.b);
+    });
+  });
+
+  describe('getView', () => {
+    it('returns a view for number fields', () => {
+      const primitives = Primitives.from({ h: 4.0 });
+      const view = primitives.getView('h');
+      expect(view instanceof TypedArrayViewMixin('float64')).toBe(true);
+      expect(view.buffer === primitives.buffer).toBe(true);
+      expect(view.byteLength).toBe(8);
+      expect(view.get(0)).toBe(4.0);
+    });
+
+    it('returns a view for objects', () => {
+      const person = Person.from({});
+      const actual = person.getView('pet');
+      expect(actual instanceof Pet).toBe(true);
+      expect(actual.buffer === person.buffer).toBe(true);
     });
   });
 

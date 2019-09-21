@@ -1,7 +1,7 @@
+const zlib = require('zlib');
 const Benchmark = require('benchmark');
 const jsf = require('json-schema-faker');
-const ObjectView = require('../lib/object-view');
-const ArrayViewMixin = require('../lib/array-view');
+const { ObjectViewMixin, ArrayViewMixin, StringView } = require('../index');
 
 const benchmarkOptions = {
   onStart(event) {
@@ -16,29 +16,27 @@ const benchmarkOptions = {
   },
 };
 
-class Toy extends ObjectView {}
-Toy.schema = {
+const getIndex = (size) => (Math.random() * size) | 0;
+
+const Toy = ObjectViewMixin({
   id: { type: 'uint32' },
   name: { type: 'string', length: 10 },
-};
+});
 
-class Pet extends ObjectView {}
-Pet.schema = {
+const Pet = ObjectViewMixin({
   type: { type: 'uint8' },
   id: { type: 'uint32' },
   name: { type: 'string', length: 20 },
   toys: { type: Toy, size: 10 },
-};
+});
 
-class House extends ObjectView {}
-House.schema = {
+const House = ObjectViewMixin({
   type: { type: 'uint8' },
   id: { type: 'uint32' },
   size: { type: 'float64' },
-};
+});
 
-class Person extends ObjectView {}
-Person.schema = {
+const Person = ObjectViewMixin({
   type: { type: 'uint8' },
   id: { type: 'uint32' },
   name: { type: 'string', length: 50 },
@@ -48,7 +46,7 @@ Person.schema = {
   scores: { type: 'uint8', size: 50 },
   house: { type: House },
   parents: { type: 'string', size: 2, length: 10 },
-};
+});
 
 const People = ArrayViewMixin(Person);
 
@@ -123,18 +121,67 @@ for (let i = 0; i < 100; i++) {
   objects.push(jsf.generate(JSONSchema));
 }
 
+const people = People.from(objects);
+const views = [...people];
+const strings = objects.map((i) => JSON.stringify(i));
+
+const binarySize = people.byteLength;
+const binaryCompressedSize = zlib.deflateSync(people, { level: 1 }).byteLength;
+const stringSize = StringView.getByteSize(JSON.stringify(objects));
+const stringCompressedSize = zlib.deflateSync(JSON.stringify(objects), { level: 1 }).byteLength;
+console.log(`Sizes:
+ Binary: ${binarySize}
+ String: ${stringSize} (${Math.round((stringSize / binarySize) * 100)}%)
+ Binary Compressed: ${binaryCompressedSize}
+ String Compressed: ${stringCompressedSize} (${Math.round((stringCompressedSize / binaryCompressedSize) * 100)}%)`);
+
 const suits = [
-  new Benchmark.Suite('ObjectView Serialize/Deserialize:', benchmarkOptions)
+  new Benchmark.Suite('Get Value:', benchmarkOptions)
     .add('ObjectView', () => {
-      const result = People.from(objects).toJSON();
+      const view = views[getIndex(100)];
+      return view.getValue('type') + view.getValue('weight') + view.getValue('height');
     })
     .add('JSON', () => {
-      const result = JSON.parse(JSON.stringify(objects));
+      const string = strings[getIndex(100)];
+      const object = JSON.parse(string);
+      return object.house + object.weight + object.height;
+    }),
+  new Benchmark.Suite('Set Value:', benchmarkOptions)
+    .add('ObjectView', () => {
+      const view = views[getIndex(100)];
+      view.set('type', 20);
+      view.set('weight', 20);
+      view.set('height', 20);
+    })
+    .add('JSON', () => {
+      const string = strings[getIndex(100)];
+      const object = JSON.parse(string);
+      object.type = 20;
+      object.weight = 20;
+      object.height = 20;
+    }),
+  new Benchmark.Suite('Serialize:', benchmarkOptions)
+    .add('ObjectView', () => {
+      const object = objects[getIndex(100)];
+      Person.from(object);
+    })
+    .add('JSON', () => {
+      const object = objects[getIndex(100)];
+      JSON.stringify(object);
+    }),
+  new Benchmark.Suite('Deserialize:', benchmarkOptions)
+    .add('ObjectView', () => {
+      const view = views[getIndex(100)];
+      view.toJSON();
+    })
+    .add('JSON', () => {
+      const string = strings[getIndex(100)];
+      JSON.parse(string);
     }),
 ];
 
 if (require.main === module) {
-  suits.forEach(suite => suite.run());
+  suits.forEach((suite) => suite.run());
 }
 
 module.exports = {

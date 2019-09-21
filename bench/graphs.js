@@ -18,7 +18,7 @@ const benchmarkOptions = {
   },
 };
 
-const getIndex = size => (Math.random() * size) | 0;
+const getIndex = (size) => (Math.random() * size) | 0;
 
 const GraphListUnweighted = GraphMixin(UnweightedAdjacencyList, true);
 const GraphListUnweightedDirected = GraphMixin(UnweightedAdjacencyList);
@@ -95,34 +95,18 @@ const suits = [
     }),
 
   new Benchmark.Suite('Graphs Traverse BFS:', benchmarkOptions)
-    .add('Unweighted List', () => {
-      const bfs = [...listUnweighted.traverse(false, getIndex(SIZE))];
-    })
-    .add('Unweighted List Directed', () => {
-      const bfs = [...listUnweightedDirected.traverse(false, getIndex(SIZE))];
-    })
-    .add('Weighted List Undirected', () => {
-      const bfs = [...listWeighted.traverse(false, getIndex(SIZE))];
-    })
-    .add('Weighted List Directed', () => {
-      const bfs = [...listWeightedDirected.traverse(false, getIndex(SIZE))];
-    })
-    .add('Unweighted Matrix Undirected', () => {
-      const bfs = [...matrixUnweighted.traverse(false, getIndex(SIZE))];
-    })
-    .add('Unweighted Matrix Directed', () => {
-      const bfs = [...matrixUnweightedDirected.traverse(false, getIndex(SIZE))];
-    })
-    .add('Weighted Matrix Undirected', () => {
-      const bfs = [...matrixWeighted.traverse(false, getIndex(SIZE))];
-    })
-    .add('Weighted Matrix Directed', () => {
-      const bfs = [...matrixWeightedDirected.traverse(false, getIndex(SIZE))];
-    }),
+    .add('Unweighted List', () => [...listUnweighted.traverse(false, getIndex(SIZE))])
+    .add('Unweighted List Directed', () => [...listUnweightedDirected.traverse(false, getIndex(SIZE))])
+    .add('Weighted List Undirected', () => [...listWeighted.traverse(false, getIndex(SIZE))])
+    .add('Weighted List Directed', () => [...listWeightedDirected.traverse(false, getIndex(SIZE))])
+    .add('Unweighted Matrix Undirected', () => [...matrixUnweighted.traverse(false, getIndex(SIZE))])
+    .add('Unweighted Matrix Directed', () => [...matrixUnweightedDirected.traverse(false, getIndex(SIZE))])
+    .add('Weighted Matrix Undirected', () => [...matrixWeighted.traverse(false, getIndex(SIZE))])
+    .add('Weighted Matrix Directed', () => [...matrixWeightedDirected.traverse(false, getIndex(SIZE))]),
 ];
 
 if (require.main === module) {
-  suits.forEach(suite => suite.run());
+  suits.forEach((suite) => suite.run());
 }
 
 module.exports = {

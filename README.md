@@ -7,8 +7,9 @@
 A collection of data structures for high-performance JavaScript applications that includes:
 
 - [Binary Structures](https://github.com/zandaqo/structurae#binary-structures):
-    - [ArrayView](https://github.com/zandaqo/structurae#ArrayView) - an array of C-like structs, ObjectViews, implemented with DataView
     - [ObjectView](https://github.com/zandaqo/structurae#ObjectView) - extends DataView to implement C-like struct.
+    - [ArrayView](https://github.com/zandaqo/structurae#ArrayView) - an array of C-like structs, ObjectViews.
+    - [CollectionView](https://github.com/zandaqo/structurae#CollectionView) - an array of ObjectViews and ArrayViews of different types that support optional members.
     - [StringView](https://github.com/zandaqo/structurae#StringView) - extends Uint8Array to handle C-like representation of UTF-8 encoded strings.
     - [TypedArrayView](https://github.com/zandaqo/structurae#TypedArrayView) - a DataView based TypedArray that supports endianness and can be set at any offset.
 - Bit Structures:
@@ -47,19 +48,107 @@ npm i structurae
 Binary data in JavaScript is represented by ArrayBuffer and accessed through "view" objects--TypedArrays and DataView.
 However, both of those interfaces are limited to working with numbers. Structurae offers a set of classes that extend these interfaces to
 support using ArrayBuffers for strings, objects, and arrays of objects defined with schema akin to C-like structs.
-Useful on their own, when combined, these classes form the basis for a simple, zero-copy binary protocol that is smaller and faster than
-other binary formats used in JavaScript, such as BSON or MessagePack.
- 
-#### ArrayView
-DataView based array of ObjectViews (aka C-like structs):
-```javascript
-const { ObjectView, ArrayViewMixin } = require('structurae');
+Useful on their own, when combined, these classes form the basis for a simple binary protocol that is smaller and faster than
+schema-less binary formats (e.g. BSON, MessagePac) and supports zero-copy operations. Unlike other schema-based formats 
+(e.g. Flatbuffers), these interfaces are native to JavaScript, hence, supported in all modern browsers and Node.js,
+and do not require compilation.
 
-class Person extends ObjectView {}
-Person.schema = {
+#### ObjectView
+Extends DataView to store a JavaScript object in ArrayBuffer akin to C-like struct.
+The fields are defined in ObjectView.schema and can be of any primitive type supported by DataView, 
+their arrays, strings, or other objects and arrays of objects. The data is laid out sequentially with fixed sizes, hence,
+variable length arrays and optional fields are not supported (for those check out [CollectionView](https://github.com/zandaqo/structurae#CollectionView)).
+
+```javascript
+const { ObjectViewMixin } = require('structurae');
+
+const House = ObjectViewMixin({
+  size: { type: 'uint32' }, // a primitive type
+});
+
+const Pet = ObjectViewMixin({
+  type: { type: 'string', length: 10 }, // // string with max length of 10 bytes
+});
+
+const Person = ObjectViewMixin({
+  name: { type: 'string', length: 10 },
+  fullName: { type: 'string', size: 2, length: 10 }, // an array of 2 strings 10 bytes long each
+  scores: { type: 'uint32', size: 10 }, // a an array of 10 numbers
+  house: { type: House }, // nested object view
+  pets: { type: Pet, size: 3 }, // an array of 3 pet objects
+});
+
+const person = Person.from({
+  name: 'Zaphod',
+  fullName: ['Zaphod', 'Beeblebrox'],
+  scores: [1, 2, 3],
+  house: {
+    size: 1,
+  },
+  pets: [
+    { type: 'dog' }, { type: 'cat' }
+  ],
+});
+person.byteLength
+//=> 64
+person.get('scores').get(0)
+//=> 1
+person.get('name')
+//=> StringView [10]
+person.getValue('name');
+//=> Zaphod
+person.getValue('scores')
+//=> [1, 2, 3, 0, 0, 0, 0, 0, 0, 0,]
+person.set('house', { size: 5 });
+person.getValue('house');
+//=> { size: 5 }
+person.toJSON()
+//=> { name: 'Zaphod', fullName: ['Zaphod', 'Beeblebrox'], scores: [1, 2, 3, 0, 0, 0, 0, 0, 0, 0,],
+// house: { size: 5 }, pets: [{ type: 'dog' }, { type: 'cat' }, { type: '' }] }
+```
+
+You can add your own field types to ObjectView, for example an ObjectView that supports booleans:
+```javascript
+class BooleanView extends ObjectView {
+  getBoolean(position) {
+    return !!this.getUint8(position);
+  }
+
+  setBoolean(position, value) {
+    this.setUint8(position, value ? 1 : 0);
+  }
+}
+BooleanView.schema = {
+  a: { type: 'boolean' },
+};
+BooleanView.types = {
+  ...ObjectView.types,
+  boolean(field) {
+    field.View = DataView;
+    field.length = 1;
+    field.getter = 'getBoolean';
+    field.setter = 'setBoolean';
+  },
+};
+BooleanView.initialize();
+
+const bool = BooleanView.from({ a: true });
+bool.getValue('a')
+//=> true
+bool.set('a', false);
+bool.toJSON();
+//=> { a: false }
+```
+
+#### ArrayView
+DataView based array of objects or more precisely ObjectViews:
+```javascript
+const { ObjectViewMixin, ArrayViewMixin } = require('structurae');
+
+const Person = ObjectViewMixin({
   id: { type: 'uint32' },
   name: { type: 'string', length: 10 },
-};
+});
 
 // an array class for Person objects
 const PeopleArray = ArrayViewMixin(Person);
@@ -89,22 +178,20 @@ hitchhikers.toJSON();
 ```
 
 #### CollectionView
-Whereas ArrayView requires its contents to be of a specific ObjectView class, CollectionView allows holding objects and arrays
-of different types as well as being optional, i.e. it does not allocate space upon creation for missing members.
+Whereas a single ArrayView can only hold objects of a single ObjectView class, CollectionView allows holding objects and arrays
+of different types as well as them being optional, i.e. it does not allocate space upon creation for missing members.
 
 ```javascript
-const { ObjectView, ArrayViewMixin, CollectionView } = require('structurae');
+const { ObjectViewMixin, ArrayViewMixin, CollectionView } = require('structurae');
 
-class Person extends ObjectView {}
-Person.schema = {
+const Person = ObjectViewMixin({
   id: { type: 'uint32' },
   name: { type: 'string', length: 10 },
-};
+});
 
-class Pet extends ObjectView {}
-Pet.schema = {
-  type: { type: 'string', length: 10 }, // // string with max length of 10 bytes
-};
+const Pet = ObjectViewMixin({
+  type: { type: 'string', length: 10 }, // string with max length of 10 bytes
+});
 
 const Pets = ArrayViewMixin(Pet);
 
@@ -120,56 +207,6 @@ arthur.byteLength
 const arthur = PersonWithPets.from([{ id: 1, name: 'Artur'}, undefined]);
 arthur.byteLength
 //=> 14
-```
-
-#### ObjectView
-Extends DataView to implement C-like struct. The fields are defined in ObjectView.schema an can be of any primitive type supported by DataView, 
-their arrays, strings, or other objects and arrays of objects.
-```javascript
-class House extends ObjectView {}
-House.schema = {
-  size: { type: 'uint32' }, // a primitive type
-};
-
-class Pet extends ObjectView {}
-Pet.schema = {
-  type: { type: 'string', length: 10 }, // // string with max length of 10 bytes
-};
-
-
-class Person extends ObjectView {}
-Person.schema = {
-  name: { type: 'string', length: 10 },
-  scores: { type: 'uint32', size: 10 }, // a an array of 10 numbers
-  house: { type: House }, // another object view
-  pets: { type: Pet, size: 3 }, // an array of 3 pet objects
-};
-
-const person = Person.from({
-  name: 'Zaphod',
-  scores: [1, 2, 3],
-  house: {
-    size: 1,
-  },
-  pets: [
-    { type: 'dog' }, { type: 'cat' }
-  ],
-});
-person.byteLength
-//=> 44
-person.get('scores').get(0)
-//=> 1
-person.get('name')
-//=> StringView [10]
-person.getValue('name');
-//=> Zaphod
-person.getValue('scores')
-//=> [1, 2, 3, 0, 0, 0, 0, 0, 0, 0,]
-person.set('house', { size: 5 });
-person.getValue('house');
-//=> { size: 5 }
-person.toJSON()
-//=> { name: 'Zaphod', scores: [1, 2, 3, 0, 0, 0, 0, 0, 0, 0,], house: { size: 5 }, pets: [{ type: 'dog' }, { type: 'cat' }, { type: '' }] }
 ```
 
 #### StringView
@@ -220,37 +257,12 @@ stringView.reverse().toString();
 //=> 'adcba'
 ```
 
-#### StringArrayView
-An array of StringViews. Operates on an array of strings stored in an ArrayBuffer.
-```javascript
-const { StringArrayView } = require('structurae');
-
-// create a StringArrayView from a given array of strings with maximum string length of 4 bytes
-const list = StringArrayView.from(['a', 'bc', 'defg'], 4);
-list.get(0);
-//=> StringView [];
-list.getValue(0);
-//=> 'a'
-list.toJSON();
-//=> ['a', 'bc', 'defg']
-
-// create an empty array of 10 strings with maximum length of 5 bytes
-const emptyList = StringArrayView.of(3, 5);
-emptyList.getValue(0);
-//=> ''
-emptyList.set(0, 'ab').getValue(0);
-//=> 'ab'
-
-[...emptyList].map(i => i.toString());
-//=> ['ab', '', '']
-```
-
 #### TypedArrayView
 TypedArrays in JavaScript have two limitations that make them cumbersome to use in conjunction with DataView.
 First, there is no way to specify the endianness of numbers in TypedArrays unlike DataView,
 second, TypedArrays require their offset (byteOffset) to be a multiple of their element size (BYTES_PER_ELEMENT), 
-which means that they often cannot "view" into existing ArrayBuffer starting from cirtain positions.
-TypedArrayViews are essentially TypedArrays that circumvent both issues by using DataView.
+which means that they often cannot "view" into existing ArrayBuffer starting from certain positions.
+TypedArrayViews are essentially TypedArrays that circumvent both issues by using the DataView interface.
 You can specify endianness and instantiate them at any position in an existing ArrayBuffer.
 TypedArrayViews are internally used by ObjectView to handle arrays of numbers, although, they can be used on their own:
 ```javascript

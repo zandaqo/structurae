@@ -14,7 +14,7 @@ const benchmarkOptions = {
   },
 };
 
-const getIndex = size => (Math.random() * size) | 0;
+const getIndex = (size) => (Math.random() * size) | 0;
 
 function getString(size) {
   const text = new Array(size);
@@ -34,20 +34,20 @@ const arrayLength = 100;
 
 const strings = new Array(arrayLength).fill(0).map(() => getString(stringLength));
 const matches = new Array(arrayLength).fill(0).map(() => getString(matchLength));
-const views = strings.map(s => StringView.from(s));
-const viewMatches = matches.map(s => StringView.from(s));
+const views = strings.map((s) => StringView.from(s));
+const viewMatches = matches.map((s) => StringView.from(s));
 
 const suits = [
   new Benchmark.Suite('StringView Search:', benchmarkOptions)
     .add('Native', () => {
       const string = strings[getIndex(arrayLength)];
       const match = matches[getIndex(arrayLength)];
-      const index = string.indexOf(match);
+      return string.indexOf(match);
     })
     .add('StringView', () => {
       const view = views[getIndex(arrayLength)];
       const match = viewMatches[getIndex(arrayLength)];
-      const index = view.search(match);
+      return view.search(match);
     }),
   new Benchmark.Suite('StringView Replace:', benchmarkOptions)
     .add('Native', () => {
@@ -69,7 +69,7 @@ const suits = [
   new Benchmark.Suite('StringView Reverse:', benchmarkOptions)
     .add('Native', () => {
       const string = strings[getIndex(arrayLength)];
-      const reversed = string.split('').reverse().join('');
+      return string.split('').reverse().join('');
     })
     .add('StringView', () => {
       const view = views[getIndex(arrayLength)];
@@ -77,22 +77,22 @@ const suits = [
     })
     .add('StringView String', () => {
       const string = strings[getIndex(arrayLength)];
-      const reversed = StringView.from(string).toString();
+      return StringView.from(string).toString();
     }),
   new Benchmark.Suite('StringView Size:', benchmarkOptions)
     .add('TextEncoder', () => {
       const string = strings[getIndex(arrayLength)];
-      const size = Encoder.encode(string).length;
+      return Encoder.encode(string).length;
     })
     .add('StringView', () => {
       const string = strings[getIndex(arrayLength)];
-      const size = StringView.getByteSize(string);
+      return StringView.getByteSize(string);
     }),
 ];
 
 
 if (require.main === module) {
-  suits.forEach(suite => suite.run());
+  suits.forEach((suite) => suite.run());
 }
 
 module.exports = {

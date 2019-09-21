@@ -15,7 +15,7 @@ const benchmarkOptions = {
   },
 };
 
-const getIndex = size => (Math.random() * size) | 0;
+const getIndex = (size) => (Math.random() * size) | 0;
 
 const suits = [
   new Benchmark.Suite('Sorted Push One:', benchmarkOptions)
@@ -64,7 +64,7 @@ const suits = [
 ];
 
 if (require.main === module) {
-  suits.forEach(suite => suite.run());
+  suits.forEach((suite) => suite.run());
 }
 
 module.exports = {

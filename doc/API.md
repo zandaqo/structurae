@@ -1451,6 +1451,7 @@ A DataView based C-like struct to store JavaScript objects in ArrayBuffer.
     * _instance_
         * [.get(field)](#ObjectView+get) ⇒ <code>\*</code>
         * [.getValue(field)](#ObjectView+getValue) ⇒ <code>\*</code>
+        * [.getView(field)](#ObjectView+getView) ⇒ <code>\*</code>
         * [.set(field, value)](#ObjectView+set) ⇒ [<code>ObjectView</code>](#ObjectView)
         * [.setView(field, value)](#ObjectView+setView) ⇒ [<code>ObjectView</code>](#ObjectView)
         * ~~[.toObject()](#ObjectView+toObject) ⇒ <code>Object</code>~~
@@ -1464,7 +1465,7 @@ A DataView based C-like struct to store JavaScript objects in ArrayBuffer.
 <a name="ObjectView+get"></a>
 
 ### objectView.get(field) ⇒ <code>\*</code>
-Returns the value or view of a given field.
+Returns a number for primitive fields or a view for all other fields.
 
 **Kind**: instance method of [<code>ObjectView</code>](#ObjectView)  
 **Returns**: <code>\*</code> - value of the field  
@@ -1480,6 +1481,18 @@ Returns the JavaScript value of a given field.
 
 **Kind**: instance method of [<code>ObjectView</code>](#ObjectView)  
 **Returns**: <code>\*</code> - value of the field  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| field | <code>string</code> | the name of the field |
+
+<a name="ObjectView+getView"></a>
+
+### objectView.getView(field) ⇒ <code>\*</code>
+Returns a view of a given field.
+
+**Kind**: instance method of [<code>ObjectView</code>](#ObjectView)  
+**Returns**: <code>\*</code> - view of the field  
 
 | Param | Type | Description |
 | --- | --- | --- |
