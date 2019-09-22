@@ -1,17 +1,16 @@
-const BitField = require('../lib/bit-field');
+const { BitField, BitFieldMixin } = require('../lib/bit-field');
 
 describe('BitField', () => {
   class Field extends BitField {}
   Field.fields = [{ name: 'width', size: 16 }, { name: 'height', size: 15 }];
   class PersonFlags extends BitField {}
   PersonFlags.fields = ['human', 'gender', 'tall'];
-  class LargePerson extends BitField {}
-  LargePerson.fields = [
+  const LargePerson = BitFieldMixin([
     { name: 'age', size: 7 },
     { name: 'gender', size: 1 },
     { name: 'weight', size: 31 },
     { name: 'height', size: 15 },
-  ];
+  ]);
 
   describe('constructor', () => {
     it('initializes class on first invocation', () => {
@@ -190,10 +189,9 @@ describe('BitField', () => {
 
   describe('getMatcher', () => {
     it('returns matcher to partially match an instance', () => {
-      new Field(0);
+      Field.initialize();
       const matcher = Field.getMatcher({ width: 10 });
       expect(matcher).toEqual([10, -2147418113]);
-      new LargePerson(0);
       const bigMatcher = LargePerson.getMatcher({ age: 2, weight: 12 });
       expect(bigMatcher[0]).toBe(BigInt(3074));
       expect(bigMatcher[1]).toBe(BigInt('18014948265295743'));

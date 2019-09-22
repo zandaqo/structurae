@@ -114,6 +114,18 @@ interface Masks {
 
 export class BitField {
     value: AnyNumber;
+    static fields: (Field|FieldName)[];
+    static size: number;
+    static masks: Masks;
+    static offsets: Masks;
+    static isInitialized: boolean;
+    static isBigInt: boolean;
+    static isSafe: boolean;
+    static zero: 0 | 0n;
+    static one: 1 | 1n;
+    static two: 2 | 2n;
+    static mask: AnyNumber;
+
     constructor(data?: AnyNumber|number[]);
     get(field: FieldName): number;
     set(field: FieldName, value: number);
@@ -128,18 +140,9 @@ export class BitField {
     static isValid(data: number[]|UnpackedInt): boolean;
     static getMinSize(number: number): number;
     static getMatcher(matcher: UnpackedInt): Matcher;
-    static fields: (Field|FieldName)[];
-    static size: number;
-    static masks: Masks;
-    static offsets: Masks;
-    static isInitialized: boolean;
-    static isBigInt: boolean;
-    static isSafe: boolean;
-    static zero: 0 | 0n;
-    static one: 1 | 1n;
-    static two: 2 | 2n;
-    static mask: AnyNumber;
 }
+
+export declare function BitFieldMixin(fields: (Field|FieldName)[], BitFieldClass?: typeof BitField): typeof BitField;
 
 type CompareResult = 1 | -1 | 0;
 

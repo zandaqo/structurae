@@ -37,6 +37,13 @@ describe('StringViewArray', () => {
     });
   });
 
+  describe('toObject', () => {
+    it('is equivalent to toJSON', () => {
+      const strings = StringArrayView.from(['asdf'], 4);
+      expect(strings.toObject()).toEqual(strings.toJSON());
+    });
+  });
+
   describe('toJSON', () => {
     it('returns an array of strings in the array view', () => {
       const strings = ['abc', 'cbd', 'ab'];

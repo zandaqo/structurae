@@ -1,6 +1,6 @@
 {
   "name": "structurae",
-  "version": "1.7.4",
+  "version": "1.7.5",
   "description": "Data structures for performance-sensitive modern JavaScript applications.",
   "main": "index.js",
   "types": "index.d.ts",
@@ -21,7 +21,6 @@
   "scripts": {
     "test": "jest",
     "lint": "eslint ./lib/*.js ./test/*.js",
-    "coverage:report": "cat ./coverage/lcov.info | codecov",
     "doc:api": "jsdoc2md > doc/API.md",
     "benchmark": "node bench/index.js"
   },
@@ -47,7 +46,6 @@
   "devDependencies": {
     "@types/jest": "^24.0.18",
     "benchmark": "^2.1.4",
-    "codecov": "^3.6.1",
     "eslint": "^6.4.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
@@ -66,7 +64,15 @@
     "coverageDirectory": "<rootDir>/coverage",
     "coverageReporters": [
       "lcov"
-    ]
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 95,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    }
   },
   "engines": {
     "node": ">=11.0.0"

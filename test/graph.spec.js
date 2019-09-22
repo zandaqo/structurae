@@ -32,6 +32,7 @@ describe('Graph', () => {
           expect(graph.isBlack(0)).toBe(false);
           expect(graph.isBlack(5)).toBe(false);
           const bfs = [...graph.traverse()];
+          expect(bfs.length).toBe(6);
           expect(graph.isBlack(0)).toBe(true);
           expect(graph.isBlack(5)).toBe(true);
           graph.resetColors();

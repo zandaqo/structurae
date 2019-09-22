@@ -1,5 +1,5 @@
 const { ArrayViewMixin } = require('../lib/array-view');
-const { ObjectViewMixin } = require('../lib/object-view');
+const { ObjectView, ObjectViewMixin } = require('../lib/object-view');
 
 const Pet = ObjectViewMixin({
   age: { type: 'int8' },
@@ -24,6 +24,14 @@ describe('ArrayView', () => {
     it('creates an array class for a given object class', () => {
       const PetsView = ArrayViewMixin(Pet);
       expect(PetsView.getLength(10)).toBe(110);
+    });
+
+    it('initializes object view if not initialized', () => {
+      class Unintialized extends ObjectView {}
+      Unintialized.schema = { a: { type: 'uint8' } };
+      expect(Unintialized.isInitialized).toBe(false);
+      ArrayViewMixin(Unintialized);
+      expect(Unintialized.isInitialized).toBe(true);
     });
   });
 
@@ -124,6 +132,13 @@ describe('ArrayView', () => {
     });
   });
 
+  describe('toObject', () => {
+    it('is equivalent to toJSON', () => {
+      const people = PeopleView.from([{ age: 20 }]);
+      expect(people.toObject()).toEqual(people.toJSON());
+    });
+  });
+
   describe('toJSON', () => {
     it('returns an array of objects in the array', () => {
       const PetArray = ArrayViewMixin(Pet);
@@ -133,6 +148,20 @@ describe('ArrayView', () => {
         .set(1, expected[1])
         .set(2, expected[2]);
       expect(pets.toJSON()).toEqual(expected);
+    });
+  });
+
+  describe('of', () => {
+    it('creates an empty ArrayView of specified size', () => {
+      const people = PeopleView.of(10);
+      expect(people instanceof PeopleView).toBe(true);
+      expect(people.size).toBe(10);
+    });
+
+    it('creates an empty view of size 1 if no size is provided', () => {
+      const people = PeopleView.of();
+      expect(people instanceof PeopleView).toBe(true);
+      expect(people.size).toBe(1);
     });
   });
 

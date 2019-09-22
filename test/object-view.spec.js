@@ -321,6 +321,13 @@ describe('ObjectView', () => {
     });
   });
 
+  describe('toObject', () => {
+    it('is equivalent to toJSON', () => {
+      const person = Person.from({ age: 20 });
+      expect(person.toObject()).toEqual(person.toJSON());
+    });
+  });
+
   describe('toJSON', () => {
     it('returns an Object corresponding to the object view', () => {
       const person = Person.from({});

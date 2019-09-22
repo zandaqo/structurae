@@ -76,6 +76,9 @@ using half the space required for a normal grid.</p>
 <dt><a href="#ArrayViewMixin">ArrayViewMixin(ObjectViewClass, [itemLength])</a> ⇒ <code><a href="#ArrayView">Class.&lt;ArrayView&gt;</a></code></dt>
 <dd><p>Creates an ArrayView class for a given ObjectView class.</p>
 </dd>
+<dt><a href="#BitFieldMixin">BitFieldMixin(fields, [BitFieldClass])</a> ⇒ <code><a href="#BitField">Class.&lt;BitField&gt;</a></code></dt>
+<dd><p>Creates a BitField class with given fields.</p>
+</dd>
 <dt><a href="#GraphMixin">GraphMixin(Base, [undirected])</a> ⇒ <code><a href="#Graph">Graph</a></code></dt>
 <dd><p>Creates a Graph class extending a given adjacency structure.</p>
 </dd>
@@ -3908,6 +3911,18 @@ Creates an ArrayView class for a given ObjectView class.
 | --- | --- |
 | ObjectViewClass | [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView) \| [<code>Class.&lt;StringView&gt;</code>](#StringView) | 
 | [itemLength] | <code>number</code> | 
+
+<a name="BitFieldMixin"></a>
+
+## BitFieldMixin(fields, [BitFieldClass]) ⇒ [<code>Class.&lt;BitField&gt;</code>](#BitField)
+Creates a BitField class with given fields.
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| fields | <code>Array.&lt;(Field\|FieldName)&gt;</code> | the schema to use for the class |
+| [BitFieldClass] | [<code>Class.&lt;BitField&gt;</code>](#BitField) | an optional BitField class to extend |
 
 <a name="GraphMixin"></a>
 
