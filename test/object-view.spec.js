@@ -71,6 +71,16 @@ const NestedBoolean = ObjectViewMixin({
   b: { type: BooleanView, size: 2 },
 });
 
+const WithDefaults = ObjectViewMixin({
+  type: { type: 'uint8', default: 1 },
+  data: { type: 'int32', size: 3, default: [1, 2, 3] },
+});
+
+const NestedDefaults = ObjectViewMixin({
+  owndefault: { type: WithDefaults },
+  overridedefault: { type: WithDefaults, default: { data: [4, 5, 6] } },
+});
+
 describe('ObjectView', () => {
   describe('constructor', () => {
     it('creates an instance of ObjectView', () => {
@@ -95,7 +105,7 @@ describe('ObjectView', () => {
     });
 
     it('throws if invalid field type is used', () => {
-      expect(() => { Invalid.from({}); })
+      expect(() => { Invalid.initialize(); })
         .toThrowError('Type "Int128" is not a valid type.');
     });
   });
@@ -228,7 +238,7 @@ describe('ObjectView', () => {
       person.set('name', 'maga');
       expect(person.getValue('name')).toBe('maga');
       person.set('name', null);
-      expect(person.getValue('name')).toBe('null');
+      expect(person.getValue('name')).toBe('');
       person.set('name', undefined);
       expect(person.getValue('name')).toBe('');
     });
@@ -259,7 +269,7 @@ describe('ObjectView', () => {
 
     it('zeros out non-existing fields', () => {
       const person = Person.from({ pet: { age: 10, name: 'tuzik' } });
-      const expected = { age: 5, name: undefined };
+      const expected = { age: 5 };
       person.set('pet', expected);
       expect(person.getValue('pet')).toEqual({ age: 5, name: '' });
     });
@@ -398,6 +408,20 @@ describe('ObjectView', () => {
       const person = Person.from({});
       Person.from(object, person);
       expect(person.toJSON()).toEqual(object);
+    });
+
+    it('creates view with defaults', () => {
+      const actual = WithDefaults.from({});
+      expect(actual.getValue('type')).toBe(1);
+      expect(actual.getValue('data')).toEqual([1, 2, 3]);
+    });
+
+    it('creates a view with nested defaults', () => {
+      const actual = NestedDefaults.from({});
+      expect(actual.getValue('owndefault')).toEqual({ type: 1, data: [1, 2, 3] });
+      actual.set('owndefault', { type: 2 });
+      expect(actual.getValue('owndefault')).toEqual({ type: 2, data: [0, 0, 0] });
+      expect(actual.getValue('overridedefault')).toEqual({ type: 0, data: [4, 5, 6] });
     });
   });
 

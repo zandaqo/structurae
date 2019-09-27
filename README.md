@@ -62,7 +62,7 @@ variable length arrays and optional fields are not supported (for those check ou
 const { ObjectViewMixin } = require('structurae');
 
 const House = ObjectViewMixin({
-  size: { type: 'uint32' }, // a primitive type
+  size: { type: 'uint32', default: 100 }, // a primitive type (unsigned 32-bit integer) that defaults to 100
 });
 
 const Pet = ObjectViewMixin({
@@ -104,6 +104,31 @@ person.getValue('house');
 person.toJSON()
 //=> { name: 'Zaphod', fullName: ['Zaphod', 'Beeblebrox'], scores: [1, 2, 3, 0, 0, 0, 0, 0, 0, 0,],
 // house: { size: 5 }, pets: [{ type: 'dog' }, { type: 'cat' }, { type: '' }] }
+```
+
+ObjectView supports setting default values of fields. Default values are applied upon creation of a view:
+```javascript
+const House = ObjectViewMixin({
+  size: { type: 'uint32', default: 100 }
+});
+
+const house = House.from({});
+house.get('size');
+//=> 100
+```
+
+Default values of a ObjectView can be overridden when the view is used as a field inside other views:
+```javascript
+const Neighborhood = ObjectViewMixin({
+  house: { type: House },
+  biggerHouse: { type: House, default: { size: 200 } },
+});
+
+const neighborhood = Neighborhood.from({});
+neighborhood.get('house')
+//=> { size: 100 }
+neighborhood.get('biggerHouse')
+//=> { size: 200 }
 ```
 
 You can add your own field types to ObjectView, for example an ObjectView that supports booleans:
