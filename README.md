@@ -241,7 +241,7 @@ You can use `StringView.fromString` to create an encoded string, and `StringView
 ```javascript
 const { StringView } = require('structurae');
 
-const stringView = StringView.fromString('abc😀a');
+const stringView = StringView.from('abc😀a');
 //=> StringView [ 97, 98, 99, 240, 159, 152, 128, 97 ]
 stringView.toString();
 //=> 'abc😀a'
@@ -251,7 +251,7 @@ stringView == 'abc😀a';
 
 While the array itself holds code points, StringView provides methods to operate on characters of the underlying string:
 ```javascript
-const stringView = StringView.fromString('abc😀');
+const stringView = StringView.from('abc😀');
 stringView.length; // length of the view in bytes
 //=> 8
 stringView.size; // the amount of characters in the string
@@ -268,12 +268,12 @@ stringView.substring(0, 4);
 
 StringView also offers methods for searching and in-place changing the underlying string without decoding:
 ```javascript
-const stringView = StringView.fromString('abc😀a');
-const searchValue = StringView.fromString('😀');
+const stringView = StringView.from('abc😀a');
+const searchValue = StringView.from('😀');
 stringView.search(searchValue); // equivalent of String#indexOf
 //=> 3
 
-const replacement = StringView.fromString('d');
+const replacement = StringView.from('d');
 stringView.replace(searchValue, replacement).toString();
 //=> 'abcda'
 
