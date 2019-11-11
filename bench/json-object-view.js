@@ -129,11 +129,12 @@ const binarySize = people.byteLength;
 const binaryCompressedSize = zlib.deflateSync(people, { level: 1 }).byteLength;
 const stringSize = StringView.getByteSize(JSON.stringify(objects));
 const stringCompressedSize = zlib.deflateSync(JSON.stringify(objects), { level: 1 }).byteLength;
-console.log(`Sizes:
- Binary: ${binarySize}
- String: ${stringSize} (${Math.round((stringSize / binarySize) * 100)}%)
- Binary Compressed: ${binaryCompressedSize}
- String Compressed: ${stringCompressedSize} (${Math.round((stringCompressedSize / binaryCompressedSize) * 100)}%)`);
+
+console.log(`Encoded Sizes:
+ ObjectView: ${binarySize}
+ JSON String: ${stringSize} (${Math.round((stringSize / binarySize) * 100)}%)
+ ObjectView Compressed: ${binaryCompressedSize}
+ JSON Compressed: ${stringCompressedSize} (${Math.round((stringCompressedSize / binaryCompressedSize) * 100)}%)`);
 
 const suits = [
   new Benchmark.Suite('Get Value:', benchmarkOptions)

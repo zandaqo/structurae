@@ -1,9 +1,11 @@
 const Benchmark = require('benchmark');
-const UnweightedAdjacencyMatrix = require('../lib/unweighted-adjacency-matrix');
-const WeightedAdjacencyMatrixMixin = require('../lib/weighted-adjacency-matrix');
-const UnweightedAdjacencyList = require('../lib/unweighted-adjacency-list');
-const WeightedAdjacencyListMixin = require('../lib/weighted-adjacency-list');
-const GraphMixin = require('../lib/graph');
+const {
+  UnweightedAdjacencyMatrix,
+  WeightedAdjacencyMatrixMixin,
+  UnweightedAdjacencyList,
+  WeightedAdjacencyListMixin,
+  GraphMixin,
+} = require('../index');
 
 const benchmarkOptions = {
   onStart(event) {

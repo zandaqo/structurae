@@ -1,6 +1,5 @@
 const Benchmark = require('benchmark');
-const BitField = require('../lib/bit-field');
-const Pool = require('../lib/pool');
+const { BitFieldMixin, Pool } = require('../index');
 
 const benchmarkOptions = {
   onStart(event) {
@@ -17,8 +16,7 @@ const benchmarkOptions = {
 
 const getIndex = (size) => (Math.random() * size) | 0;
 
-class Person extends BitField {}
-Person.fields = [
+const Person = BitFieldMixin([
   { name: 1, size: 4 },
   { name: 2, size: 4 },
   { name: 3, size: 4 },
@@ -27,8 +25,7 @@ Person.fields = [
   { name: 6, size: 4 },
   { name: 7, size: 4 },
   { name: 8, size: 3 },
-];
-Person.initialize();
+]);
 const createPersonArray = () => [
   getIndex(16), getIndex(16), getIndex(16), getIndex(16),
   getIndex(16), getIndex(16), getIndex(16), getIndex(8),

@@ -1,6 +1,5 @@
 const Benchmark = require('benchmark');
-const SortedArray = require('../lib/sorted-array');
-const BinaryHeap = require('../lib/binary-heap');
+const { SortedArray, BinaryHeap } = require('../index');
 
 const benchmarkOptions = {
   onStart(event) {

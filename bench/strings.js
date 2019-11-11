@@ -1,5 +1,5 @@
 const Benchmark = require('benchmark');
-const StringView = require('../lib/string-view');
+const { StringView } = require('../index');
 
 const benchmarkOptions = {
   onStart(event) {

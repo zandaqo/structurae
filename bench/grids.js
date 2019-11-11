@@ -1,5 +1,5 @@
 const Benchmark = require('benchmark');
-const GridMixin = require('../lib/grid');
+const { GridMixin } = require('../index');
 
 const benchmarkOptions = {
   onStart(event) {
