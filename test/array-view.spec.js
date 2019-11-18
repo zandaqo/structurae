@@ -132,13 +132,6 @@ describe('ArrayView', () => {
     });
   });
 
-  describe('toObject', () => {
-    it('is equivalent to toJSON', () => {
-      const people = PeopleView.from([{ age: 20 }]);
-      expect(people.toObject()).toEqual(people.toJSON());
-    });
-  });
-
   describe('toJSON', () => {
     it('returns an array of objects in the array', () => {
       const PetArray = ArrayViewMixin(Pet);

@@ -176,44 +176,9 @@ export class SortedArray extends SortedMixin(Array) {
     uniquify(): this;
 }
 
-type RecordFieldType = 'Int8' | 'Uint8' | 'Int16' | 'Uint16' | 'Int32' | 'Uint32'
-    | 'Float32' | 'Float64' | 'BigInt64' | 'BigUint64' | 'String';
+type ViewType = typeof ArrayView | typeof ObjectView | typeof TypedArrayView | typeof StringView;
 
-interface RecordField {
-    name: string;
-    type: RecordFieldType;
-    size?: number;
-    littleEndian?: boolean;
-    start?: number;
-    end?: number;
-}
-
-interface RecordSchema {
-    [propName: string]: RecordField;
-}
-
-export declare class RecordArray extends DataView {
-    size: number;
-    byteView: StringView;
-    private fields: RecordField[];
-    private schema: RecordSchema;
-    private offset: number;
-
-    constructor(fields: RecordField[], size: number, buffer?: ArrayBuffer, byteOffset?: number, byteLength?: number);
-    get(index: number, field: string): any;
-    getArray(offset: number, size: number, type: string): Collection;
-    getString(offset: number, size: number): StringView;
-    set(index: number, field: string, value: any): this;
-    setArray(offset: number, value: Collection, size: number, type: string): void;
-    setString(offset: number, value: Collection, size: number): void;
-    toObject(index: number): object;
-    fromObject(index: number, object: object): this;
-    static getLength(fields: RecordField[], size: number): number;
-}
-
-type ViewType = typeof ArrayView | typeof ObjectView | typeof TypedArrayView | typeof StringView | typeof StringArrayView;
-
-type View = ObjectView | ArrayView | TypedArrayView | StringView | StringArrayView;
+type View = ObjectView | ArrayView | TypedArrayView | StringView;
 
 export declare class ArrayView extends DataView {
     size: number;
@@ -224,7 +189,6 @@ export declare class ArrayView extends DataView {
     getValue(index: number): object;
     set(index: number, value: object): this;
     setView(index: number, value: ObjectView): this;
-    toObject(): object[];
     toJSON(): object[];
     [Symbol.iterator](): IterableIterator<ObjectView>;
     static from(value: ArrayLike<object>, array?: ArrayView): ArrayView;
@@ -271,7 +235,6 @@ export declare class ObjectView extends DataView {
     private setObject(position: number, value: object, field: ObjectViewField): void;
     private setTypedArray(position: number, value: ArrayLike<number>, field: ObjectViewField): void;
     setView(field: string, value: View): this;
-    toObject(): object;
     toJSON(): object;
     static from(object: object, objectView?: ObjectView): ObjectView;
     static getLength(): number;
@@ -301,26 +264,8 @@ export declare class StringView extends Uint8Array {
     toString(): string;
     toJSON(): string;
     trim(): StringView;
-    static fromString(string: string, size?: number): StringView;
     static from(arrayLike: ArrayLike<number>|string, mapFn?: Function | StringView): StringView;
     static getByteSize(string: string): number;
-}
-
-export declare class StringArrayView {
-    size: number;
-    stringLength: number;
-    bytes: Uint8Array;
-
-    constructor(buffer: ArrayBuffer, byteOffset: number, byteLength: number, stringLength: number);
-    get(index: number): StringView;
-    getValue(index: number): string;
-    set(index: number, value: string): this;
-    setView(index: number, value: Uint8Array): this;
-    toObject(): Array<string>;
-    toJSON(): Array<string>;
-    static from(value: ArrayLike<string>, stringLength: number, array?: StringArrayView): StringArrayView;
-    static of(size: number, stringLength: number): StringArrayView;
-    static getLength(size: number, stringLength: number): number;
 }
 
 declare class TypedArrayView extends DataView {
@@ -332,7 +277,6 @@ declare class TypedArrayView extends DataView {
 
     get(index: number): number;
     set(index: number, value: number): this;
-    toObject(): Array<number>;
     toJSON(): Array<number>;
     [Symbol.iterator](): IterableIterator<number>;
     static getLength(size: number): number;
@@ -347,7 +291,6 @@ export declare class CollectionView extends DataView {
 
     get(index: number): View;
     set(index: number, value: object): this;
-    toObject(): object[];
     toJSON(): object[];
     [Symbol.iterator](): IterableIterator<View>;
     static from(value: object[], array?: CollectionView): CollectionView;

@@ -35,17 +35,12 @@ pathfinding (Dijkstra, Bellman-Ford), spanning tree construction (BFS, Prim), et
 <dt><a href="#RankedBitArray">RankedBitArray</a> ⇐ <code><a href="#BitArray">BitArray</a></code></dt>
 <dd><p>A bit array that supports constant time rank and O(logN) time select operations.</p>
 </dd>
-<dt><del><a href="#RecordArray">RecordArray</a> ⇐ <code>DataView</code></del></dt>
-<dd><p>Extends DataView to use ArrayBuffer as an array of records or C-like structs.</p>
-</dd>
 <dt><a href="#SortedArray">SortedArray</a> ⇐ <code><a href="#SortedCollection">SortedCollection</a></code></dt>
 <dd><p>Extends Array to handle sorted data.</p>
 </dd>
 <dt><a href="#SortedCollection">SortedCollection</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
 <dd><p>Extends TypedArrays  to handle sorted data.</p>
 </dd>
-<dt><del><a href="#StringArrayView">StringArrayView</a></del></dt>
-<dd></dd>
 <dt><a href="#StringView">StringView</a> ⇐ <code>Uint8Array</code></dt>
 <dd><p>Extends Uint8Array to handle C-like representation of UTF-8 encoded strings.</p>
 </dd>
@@ -104,9 +99,6 @@ using half the space required for a normal grid.</p>
 <dt><a href="#getLSBIndex">getLSBIndex(value)</a> ⇒ <code>number</code></dt>
 <dd><p>Returns the index of the Least Significant Bit in a number.</p>
 </dd>
-<dt><a href="#getGTEMultiple">getGTEMultiple(value, base)</a> ⇒ <code>number</code></dt>
-<dd><p>Returns a multiple of a base number that is greater or equal to a given value.</p>
-</dd>
 <dt><a href="#WeightedAdjacencyListMixin">WeightedAdjacencyListMixin(Base)</a> ⇒ <code><a href="#WeightedAdjacencyList">WeightedAdjacencyList</a></code></dt>
 <dd><p>Creates a WeightedAdjacencyList class extending a given TypedArray class.</p>
 </dd>
@@ -154,10 +146,6 @@ using half the space required for a normal grid.</p>
 <dd></dd>
 <dt><a href="#ObjectViewField">ObjectViewField</a> : <code>Object</code></dt>
 <dd></dd>
-<dt><a href="#RecordFieldType">RecordFieldType</a> : <code>&#x27;Int8&#x27;</code> | <code>&#x27;Uint8&#x27;</code> | <code>&#x27;Int16&#x27;</code> | <code>&#x27;Uint16&#x27;</code> | <code>&#x27;Int32&#x27;</code> | <code>&#x27;Uint32&#x27;</code> | <code>&#x27;Float32&#x27;</code> | <code>&#x27;Float64&#x27;</code> | <code>&#x27;BigInt64&#x27;</code> | <code>&#x27;BigUint64&#x27;</code> | <code>&#x27;String&#x27;</code></dt>
-<dd></dd>
-<dt><a href="#RecordField">RecordField</a> : <code>Object</code></dt>
-<dd></dd>
 </dl>
 
 <a name="ArrayView"></a>
@@ -176,7 +164,6 @@ stored in an ArrayBuffer.
         * [.getValue(index)](#ArrayView+getValue) ⇒ <code>Object</code>
         * [.set(index, value)](#ArrayView+set) ⇒ [<code>ArrayView</code>](#ArrayView)
         * [.setView(index, value)](#ArrayView+setView) ⇒ [<code>ArrayView</code>](#ArrayView)
-        * ~~[.toObject()](#ArrayView+toObject) ⇒ <code>Array.&lt;Object&gt;</code>~~
         * [.toJSON()](#ArrayView+toJSON) ⇒ <code>Array.&lt;Object&gt;</code>
     * _static_
         * [.itemLength](#ArrayView.itemLength) : <code>number</code>
@@ -237,12 +224,6 @@ Sets an object view at a given index.
 | index | <code>number</code> | 
 | value | [<code>ObjectView</code>](#ObjectView) | 
 
-<a name="ArrayView+toObject"></a>
-
-### ~~arrayView.toObject() ⇒ <code>Array.&lt;Object&gt;</code>~~
-***Deprecated***
-
-**Kind**: instance method of [<code>ArrayView</code>](#ArrayView)  
 <a name="ArrayView+toJSON"></a>
 
 ### arrayView.toJSON() ⇒ <code>Array.&lt;Object&gt;</code>
@@ -1015,7 +996,6 @@ The static version of `BitField#match`, matches a given value against a precompu
     * _instance_
         * [.get(index)](#CollectionView+get) ⇒ [<code>View</code>](#View)
         * [.set(index, value)](#CollectionView+set) ⇒ [<code>CollectionView</code>](#CollectionView)
-        * ~~[.toObject()](#CollectionView+toObject) ⇒ <code>Array.&lt;Object&gt;</code>~~
         * [.toJSON()](#CollectionView+toJSON) ⇒ <code>Array.&lt;Object&gt;</code>
     * _static_
         * [.schema](#CollectionView.schema) : [<code>Array.&lt;ViewType&gt;</code>](#ViewType)
@@ -1046,12 +1026,6 @@ Sets an object at a given index.
 | index | <code>number</code> | 
 | value | <code>Object</code> | 
 
-<a name="CollectionView+toObject"></a>
-
-### ~~collectionView.toObject() ⇒ <code>Array.&lt;Object&gt;</code>~~
-***Deprecated***
-
-**Kind**: instance method of [<code>CollectionView</code>](#CollectionView)  
 <a name="CollectionView+toJSON"></a>
 
 ### collectionView.toJSON() ⇒ <code>Array.&lt;Object&gt;</code>
@@ -1457,7 +1431,6 @@ A DataView based C-like struct to store JavaScript objects in ArrayBuffer.
         * [.getView(field)](#ObjectView+getView) ⇒ <code>\*</code>
         * [.set(field, value)](#ObjectView+set) ⇒ [<code>ObjectView</code>](#ObjectView)
         * [.setView(field, value)](#ObjectView+setView) ⇒ [<code>ObjectView</code>](#ObjectView)
-        * ~~[.toObject()](#ObjectView+toObject) ⇒ <code>Object</code>~~
         * [.toJSON()](#ObjectView+toJSON) ⇒ <code>Object</code>
     * _static_
         * [.isInitialized](#ObjectView.isInitialized) : <code>boolean</code>
@@ -1525,12 +1498,6 @@ Sets an View to a field.
 | field | <code>string</code> | the name of the field |
 | value | [<code>View</code>](#View) | the view to set |
 
-<a name="ObjectView+toObject"></a>
-
-### ~~objectView.toObject() ⇒ <code>Object</code>~~
-***Deprecated***
-
-**Kind**: instance method of [<code>ObjectView</code>](#ObjectView)  
 <a name="ObjectView+toJSON"></a>
 
 ### objectView.toJSON() ⇒ <code>Object</code>
@@ -1743,230 +1710,6 @@ Returns the length of underlying TypedArray required to hold the bit array.
 | Param | Type |
 | --- | --- |
 | size | <code>number</code> | 
-
-<a name="RecordArray"></a>
-
-## ~~RecordArray ⇐ <code>DataView</code>~~
-***Deprecated***
-
-Extends DataView to use ArrayBuffer as an array of records or C-like structs.
-
-**Kind**: global class  
-**Extends**: <code>DataView</code>  
-
-* ~~[RecordArray](#RecordArray) ⇐ <code>DataView</code>~~
-    * [new RecordArray(fields, [size], [buffer], [byteOffset], [byteLength])](#new_RecordArray_new)
-    * _instance_
-        * [.size](#RecordArray+size) : <code>number</code>
-        * [.get(index, field)](#RecordArray+get) ⇒ <code>\*</code>
-        * [.getArray(offset, size, type)](#RecordArray+getArray) ⇒ [<code>RecordArray</code>](#RecordArray)
-        * [.getString(offset, size)](#RecordArray+getString) ⇒ [<code>StringView</code>](#StringView)
-        * [.set(index, field, value)](#RecordArray+set) ⇒ <code>this</code>
-        * [.setArray(offset, value, size, type)](#RecordArray+setArray) ⇒ [<code>RecordArray</code>](#RecordArray)
-        * [.setString(offset, value, size)](#RecordArray+setString) ⇒ <code>void</code>
-        * [.getByteOffset(index, field)](#RecordArray+getByteOffset) ⇒ <code>number</code>
-        * [.toObject(index)](#RecordArray+toObject) ⇒ <code>Object</code>
-        * [.fromObject(index, object)](#RecordArray+fromObject) ⇒ [<code>RecordArray</code>](#RecordArray)
-    * _static_
-        * [.getLength(fields, [size])](#RecordArray.getLength) ⇒ <code>number</code>
-
-<a name="new_RecordArray_new"></a>
-
-### new RecordArray(fields, [size], [buffer], [byteOffset], [byteLength])
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| fields | [<code>Array.&lt;RecordField&gt;</code>](#RecordField) |  | an array field descriptions |
-| [size] | <code>number</code> | <code>1</code> | the amount of structs in the array,                        optional if an existing ArrayBuffer is used |
-| [buffer] | <code>ArrayBuffer</code> |  | an existing ArrayBuffer to use for structs |
-| [byteOffset] | <code>number</code> |  | the byteOffset in an existing ArrayBuffer |
-| [byteLength] | <code>number</code> |  | the byteLength in an existing ArrayBuffer |
-
-**Example**  
-```js
-const people = new RecordArray([
-  { name: 'age', type: 'Uint8' },
-  { name: 'score', type: 'Float32' },
-], 20);
-
-const cars = new RecordArray([
-  { name: 'name', type: 'String', size: 10 },
-  { name: 'speed', type: 'Float32' }
-], 100)
-```
-<a name="RecordArray+size"></a>
-
-### recordArray.size : <code>number</code>
-The amount of structs in the array.
-
-**Kind**: instance property of [<code>RecordArray</code>](#RecordArray)  
-**Example**  
-```js
-const people = new RecordArray([
-  { name: 'age', type: 'Uint8' },
-  { name: 'score', type: 'Float32' },
-], 20);
-
-people.size
-//=> 20
-```
-<a name="RecordArray+get"></a>
-
-### recordArray.get(index, field) ⇒ <code>\*</code>
-Returns the value of a given field of a record at the given index.
-
-**Kind**: instance method of [<code>RecordArray</code>](#RecordArray)  
-**Returns**: <code>\*</code> - value of the field  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| index | <code>number</code> | the index of a record |
-| field | <code>string</code> | the name of the field |
-
-**Example**  
-```js
-const people = new RecordArray([
-  { name: 'age', type: 'Uint8' },
-  { name: 'score', type: 'Float32' },
-], 20);
-
-person.get(0, 'age');
-```
-<a name="RecordArray+getArray"></a>
-
-### recordArray.getArray(offset, size, type) ⇒ [<code>RecordArray</code>](#RecordArray)
-**Kind**: instance method of [<code>RecordArray</code>](#RecordArray)  
-
-| Param | Type |
-| --- | --- |
-| offset | <code>number</code> | 
-| size | <code>number</code> | 
-| type | <code>string</code> | 
-
-<a name="RecordArray+getString"></a>
-
-### recordArray.getString(offset, size) ⇒ [<code>StringView</code>](#StringView)
-**Kind**: instance method of [<code>RecordArray</code>](#RecordArray)  
-
-| Param | Type |
-| --- | --- |
-| offset | <code>number</code> | 
-| size | <code>number</code> | 
-
-<a name="RecordArray+set"></a>
-
-### recordArray.set(index, field, value) ⇒ <code>this</code>
-Sets a value to a field of a record at a given index.
-
-**Kind**: instance method of [<code>RecordArray</code>](#RecordArray)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| index | <code>number</code> | the index of a record |
-| field | <code>string</code> | the name of the field |
-| value | <code>\*</code> | the value to be set |
-
-**Example**  
-```js
-const people = new RecordArray([
-  { name: 'age', type: 'Uint8' },
-  { name: 'score', type: 'Float32' },
-], 20);
-
-person.set(0, 'age', 10);
-person.get(0, 'age');
-//=> 10
-```
-<a name="RecordArray+setArray"></a>
-
-### recordArray.setArray(offset, value, size, type) ⇒ [<code>RecordArray</code>](#RecordArray)
-**Kind**: instance method of [<code>RecordArray</code>](#RecordArray)  
-
-| Param | Type |
-| --- | --- |
-| offset | <code>number</code> | 
-| value | <code>ArrayLike</code> | 
-| size | <code>number</code> | 
-| type | <code>string</code> | 
-
-<a name="RecordArray+setString"></a>
-
-### recordArray.setString(offset, value, size) ⇒ <code>void</code>
-**Kind**: instance method of [<code>RecordArray</code>](#RecordArray)  
-
-| Param | Type |
-| --- | --- |
-| offset | <code>number</code> | 
-| value | [<code>Collection</code>](#Collection) | 
-| size | <code>number</code> | 
-
-<a name="RecordArray+getByteOffset"></a>
-
-### recordArray.getByteOffset(index, field) ⇒ <code>number</code>
-Returns the byte offset in the ArrayBuffer of a given field.
-
-**Kind**: instance method of [<code>RecordArray</code>](#RecordArray)  
-**Returns**: <code>number</code> - the byte offset  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| index | <code>number</code> | the index of the record |
-| field | <code>string</code> | the name of the field |
-
-<a name="RecordArray+toObject"></a>
-
-### recordArray.toObject(index) ⇒ <code>Object</code>
-The object representation of a given record.
-
-**Kind**: instance method of [<code>RecordArray</code>](#RecordArray)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| index | <code>number</code> | the index of the record |
-
-**Example**  
-```js
-const people = new RecordArray([
-  { name: 'age', type: 'Uint8' },
-  { name: 'score', type: 'Float32' },
-], 20);
-
-person.set(0, 'age', 10).set(0, 'score', 5.0).toObject(0);
-//=> { age: 10, score: 5.0 }
-```
-<a name="RecordArray+fromObject"></a>
-
-### recordArray.fromObject(index, object) ⇒ [<code>RecordArray</code>](#RecordArray)
-Stores a given object as a record at a given index.
-
-**Kind**: instance method of [<code>RecordArray</code>](#RecordArray)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| index | <code>number</code> | the index of the record |
-| object | <code>Object</code> | the object to be stored |
-
-**Example**  
-```js
-const people = new RecordArray([
-  { name: 'age', type: 'Uint8' },
-  { name: 'score', type: 'Float32' },
-], 20);
-
-person.set(0, 'age', 10).set(0, 'score', 5.0).toObject(0);
-//=> { age: 10, score: 5.0 }
-```
-<a name="RecordArray.getLength"></a>
-
-### RecordArray.getLength(fields, [size]) ⇒ <code>number</code>
-Returns the length of underlying ArrayBuffer required to hold the given amount of records.
-
-**Kind**: static method of [<code>RecordArray</code>](#RecordArray)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| fields | [<code>Array.&lt;RecordField&gt;</code>](#RecordField) | an array field descriptions |
-| [size] | <code>number</code> | the amount of structs in the array |
 
 <a name="SortedArray"></a>
 
@@ -2431,140 +2174,6 @@ Checks whether an array has any duplicating elements.
 SortedCollection.isUnique([1, 2, 2, 3, 4]);
 //=> false
 ```
-<a name="StringArrayView"></a>
-
-## ~~StringArrayView~~
-***Deprecated***
-
-**Kind**: global class  
-
-* ~~[StringArrayView](#StringArrayView)~~
-    * [new StringArrayView(buffer, byteOffset, byteLength, stringLength)](#new_StringArrayView_new)
-    * _instance_
-        * [.size](#StringArrayView+size) : <code>number</code>
-        * [.get(index)](#StringArrayView+get) ⇒ [<code>StringView</code>](#StringView)
-        * [.getValue(index)](#StringArrayView+getValue) ⇒ <code>string</code>
-        * [.set(index, value)](#StringArrayView+set) ⇒ [<code>StringArrayView</code>](#StringArrayView)
-        * [.setView(index, value)](#StringArrayView+setView) ⇒ [<code>StringArrayView</code>](#StringArrayView)
-        * ~~[.toObject()](#StringArrayView+toObject) ⇒ <code>Array.&lt;string&gt;</code>~~
-        * [.toJSON()](#StringArrayView+toJSON) ⇒ <code>Array.&lt;string&gt;</code>
-    * _static_
-        * [.from(value, stringLength, [array])](#StringArrayView.from) ⇒ [<code>StringArrayView</code>](#StringArrayView)
-        * [.getLength(size, stringLength)](#StringArrayView.getLength) ⇒ <code>number</code>
-        * [.of(size, stringLength)](#StringArrayView.of) ⇒ [<code>StringArrayView</code>](#StringArrayView)
-
-<a name="new_StringArrayView_new"></a>
-
-### new StringArrayView(buffer, byteOffset, byteLength, stringLength)
-
-| Param | Type | Description |
-| --- | --- | --- |
-| buffer | <code>ArrayBuffer</code> | the buffer to use |
-| byteOffset | <code>number</code> | the byte offset into the buffer |
-| byteLength | <code>number</code> | the total length of the buffer to use |
-| stringLength | <code>number</code> | the maximum length of a string inside the array |
-
-<a name="StringArrayView+size"></a>
-
-### stringArrayView.size : <code>number</code>
-Returns the amount of available strings in the array.
-
-**Kind**: instance property of [<code>StringArrayView</code>](#StringArrayView)  
-<a name="StringArrayView+get"></a>
-
-### stringArrayView.get(index) ⇒ [<code>StringView</code>](#StringView)
-Returns a StringView at a given index.
-
-**Kind**: instance method of [<code>StringArrayView</code>](#StringArrayView)  
-
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
-
-<a name="StringArrayView+getValue"></a>
-
-### stringArrayView.getValue(index) ⇒ <code>string</code>
-Returns a string at a given index.
-
-**Kind**: instance method of [<code>StringArrayView</code>](#StringArrayView)  
-
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
-
-<a name="StringArrayView+set"></a>
-
-### stringArrayView.set(index, value) ⇒ [<code>StringArrayView</code>](#StringArrayView)
-Sets a string at a given index.
-
-**Kind**: instance method of [<code>StringArrayView</code>](#StringArrayView)  
-
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
-| value | <code>string</code> | 
-
-<a name="StringArrayView+setView"></a>
-
-### stringArrayView.setView(index, value) ⇒ [<code>StringArrayView</code>](#StringArrayView)
-Sets a StringView at a given index.
-
-**Kind**: instance method of [<code>StringArrayView</code>](#StringArrayView)  
-
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
-| value | <code>Uint8Array</code> | 
-
-<a name="StringArrayView+toObject"></a>
-
-### ~~stringArrayView.toObject() ⇒ <code>Array.&lt;string&gt;</code>~~
-***Deprecated***
-
-**Kind**: instance method of [<code>StringArrayView</code>](#StringArrayView)  
-<a name="StringArrayView+toJSON"></a>
-
-### stringArrayView.toJSON() ⇒ <code>Array.&lt;string&gt;</code>
-Returns an array of strings held inside the array view.
-
-**Kind**: instance method of [<code>StringArrayView</code>](#StringArrayView)  
-<a name="StringArrayView.from"></a>
-
-### StringArrayView.from(value, stringLength, [array]) ⇒ [<code>StringArrayView</code>](#StringArrayView)
-Creates an array view from a given array of strings.
-
-**Kind**: static method of [<code>StringArrayView</code>](#StringArrayView)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| value | <code>ArrayLike.&lt;string&gt;</code> | an array of strings to store in the new array view |
-| stringLength | <code>number</code> | the maximum length of a string |
-| [array] | [<code>StringArrayView</code>](#StringArrayView) | an existing StringArrayView to populate with given strings |
-
-<a name="StringArrayView.getLength"></a>
-
-### StringArrayView.getLength(size, stringLength) ⇒ <code>number</code>
-Returns the byte length of an array view to hold a given amount of strings.
-
-**Kind**: static method of [<code>StringArrayView</code>](#StringArrayView)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| size | <code>number</code> | the amount of strings |
-| stringLength | <code>number</code> | the maximum length of a string |
-
-<a name="StringArrayView.of"></a>
-
-### StringArrayView.of(size, stringLength) ⇒ [<code>StringArrayView</code>](#StringArrayView)
-Creates an empty array view of specified size.
-
-**Kind**: static method of [<code>StringArrayView</code>](#StringArrayView)  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| size | <code>number</code> | <code>1</code> | the amount of strings |
-| stringLength | <code>number</code> | <code>1</code> | the maximum length of a string |
-
 <a name="StringView"></a>
 
 ## StringView ⇐ <code>Uint8Array</code>
@@ -2589,7 +2198,6 @@ Extends Uint8Array to handle C-like representation of UTF-8 encoded strings.
         * [.encoder](#StringView.encoder) : <code>TextEncoder</code>
             * [.encodeInto(source, destination)](#StringView.encoder.encodeInto) ⇒ <code>Uint8Array</code>
         * [.decoder](#StringView.decoder) : <code>TextDecoder</code>
-        * ~~[.fromString(string, [size])](#StringView.fromString) ⇒ [<code>StringView</code>](#StringView)~~
         * [.from(arrayLike, [mapFn], [thisArg])](#StringView.from) ⇒ <code>Uint8Array</code> \| [<code>StringView</code>](#StringView)
         * [.getByteSize(string)](#StringView.getByteSize) ⇒ <code>number</code>
 
@@ -2769,31 +2377,6 @@ Polyfill for TextEncoder#encodeInto
 
 ### StringView.decoder : <code>TextDecoder</code>
 **Kind**: static property of [<code>StringView</code>](#StringView)  
-<a name="StringView.fromString"></a>
-
-### ~~StringView.fromString(string, [size]) ⇒ [<code>StringView</code>](#StringView)~~
-***Deprecated***
-
-Creates a StringView from a string.
-
-**Kind**: static method of [<code>StringView</code>](#StringView)  
-**Returns**: [<code>StringView</code>](#StringView) - a new StringView  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| string | <code>string</code> | the string to encode |
-| [size] | <code>number</code> | the size of the StringView in bytes |
-
-**Example**  
-```js
-const stringView = StringView.fromString('abc😀a');
-stringView
-//=> StringView [ 97, 98, 99, 240, 159, 152, 128, 97 ]
-
-const stringView = StringView.fromString('abc😀a', 10);
-stringView
-//=> StringView [ 97, 98, 99, 240, 159, 152, 128, 97, 0, 0 ]
-```
 <a name="StringView.from"></a>
 
 ### StringView.from(arrayLike, [mapFn], [thisArg]) ⇒ <code>Uint8Array</code> \| [<code>StringView</code>](#StringView)
@@ -3023,7 +2606,6 @@ A DataView based TypedArray that supports endianness and can be set at any offse
         * [.size](#TypedArrayView+size) : <code>number</code>
         * [.get(index)](#TypedArrayView+get) ⇒ <code>number</code>
         * [.set(index, value)](#TypedArrayView+set) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
-        * ~~[.toObject()](#TypedArrayView+toObject) ⇒ <code>Array.&lt;number&gt;</code>~~
         * [.toJSON()](#TypedArrayView+toJSON) ⇒ <code>Array.&lt;number&gt;</code>
     * _static_
         * [.typeGetter](#TypedArrayView.typeGetter) : <code>string</code>
@@ -3063,12 +2645,6 @@ Sets a number at a given index.
 | index | <code>number</code> | 
 | value | <code>number</code> | 
 
-<a name="TypedArrayView+toObject"></a>
-
-### ~~typedArrayView.toObject() ⇒ <code>Array.&lt;number&gt;</code>~~
-***Deprecated***
-
-**Kind**: instance method of [<code>TypedArrayView</code>](#TypedArrayView)  
 <a name="TypedArrayView+toJSON"></a>
 
 ### typedArrayView.toJSON() ⇒ <code>Array.&lt;number&gt;</code>
@@ -4035,18 +3611,6 @@ Returns the index of the Least Significant Bit in a number.
 | --- | --- |
 | value | <code>number</code> | 
 
-<a name="getGTEMultiple"></a>
-
-## getGTEMultiple(value, base) ⇒ <code>number</code>
-Returns a multiple of a base number that is greater or equal to a given value.
-
-**Kind**: global function  
-
-| Param | Type |
-| --- | --- |
-| value | <code>number</code> | 
-| base | <code>number</code> | 
-
 <a name="WeightedAdjacencyListMixin"></a>
 
 ## WeightedAdjacencyListMixin(Base) ⇒ [<code>WeightedAdjacencyList</code>](#WeightedAdjacencyList)
@@ -4183,21 +3747,4 @@ Creates a WeightedAdjacencyMatrix class extending a given Array-like class.
 | [getter] | <code>string</code> |  |
 | [setter] | <code>string</code> |  |
 | [itemLength] | <code>number</code> |  |
-
-<a name="RecordFieldType"></a>
-
-## RecordFieldType : <code>&#x27;Int8&#x27;</code> \| <code>&#x27;Uint8&#x27;</code> \| <code>&#x27;Int16&#x27;</code> \| <code>&#x27;Uint16&#x27;</code> \| <code>&#x27;Int32&#x27;</code> \| <code>&#x27;Uint32&#x27;</code> \| <code>&#x27;Float32&#x27;</code> \| <code>&#x27;Float64&#x27;</code> \| <code>&#x27;BigInt64&#x27;</code> \| <code>&#x27;BigUint64&#x27;</code> \| <code>&#x27;String&#x27;</code>
-**Kind**: global typedef  
-<a name="RecordField"></a>
-
-## RecordField : <code>Object</code>
-**Kind**: global typedef  
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| name | <code>string</code> |  |
-| type | [<code>RecordFieldType</code>](#RecordFieldType) |  |
-| [size] | <code>number</code> | the maximum size in bytes for a string type |
-| [littleEndian] | <code>boolean</code> |  |
 

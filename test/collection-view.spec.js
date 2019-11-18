@@ -57,13 +57,6 @@ describe('CollectionView', () => {
     });
   });
 
-  describe('toObject', () => {
-    it('is equivalent to toJSON', () => {
-      const people = PeopleAndPets.from([[{ age: 20 }], undefined]);
-      expect(people.toObject()).toEqual(people.toJSON());
-    });
-  });
-
   describe('toJSON', () => {
     it('returns an array representation of the collection view', () => {
       const expected = [

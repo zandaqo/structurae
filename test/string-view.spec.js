@@ -5,7 +5,7 @@ const Encoder = new TextEncoder();
 describe('StringView', () => {
   describe('characters', () => {
     it('iterates over the characters in the StringView', () => {
-      const stringView = StringView.fromString('asфы←😀');
+      const stringView = StringView.from('asфы←😀');
       const chars = [];
       for (const character of stringView.characters()) {
         chars.push(character);
@@ -16,7 +16,7 @@ describe('StringView', () => {
 
   describe('charAt', () => {
     it('returns a new string consisting of the single UTF character', () => {
-      const stringView = StringView.fromString('asфы←😀');
+      const stringView = StringView.from('asфы←😀');
       const chars = [];
       for (let i = 0; i < stringView.size; i++) {
         chars[i] = stringView.charAt(i);
@@ -34,7 +34,7 @@ describe('StringView', () => {
 
   describe('replace', () => {
     it('replaces a pattern with a replacement', () => {
-      const stringView = StringView.fromString('Vimessaid');
+      const stringView = StringView.from('Vimessaid');
       stringView.replace(Encoder.encode('s'), Encoder.encode('x'))
         .replace(Encoder.encode('d'), Encoder.encode('y'));
       expect(stringView.toString()).toBe('Vimexxaiy');
@@ -43,14 +43,14 @@ describe('StringView', () => {
 
   describe('reverse', () => {
     it('reverses the characters of the StringView in-place', () => {
-      const stringView = StringView.fromString('fooа😀←');
+      const stringView = StringView.from('fooа😀←');
       expect(stringView.reverse().toString()).toBe('←😀аoof');
     });
   });
 
   describe('search', () => {
     it('returns the index of the first occurrence of the specified value', () => {
-      const stringView = StringView.fromString('Vimesi');
+      const stringView = StringView.from('Vimesi');
       expect(stringView.search(Encoder.encode('im'))).toBe(1);
       expect(stringView.search(Encoder.encode('Vi'))).toBe(0);
       expect(stringView.search(Encoder.encode('Vimes'))).toBe(0);
@@ -71,15 +71,15 @@ describe('StringView', () => {
 
   describe('size', () => {
     it('', () => {
-      expect(StringView.fromString('asdf').size).toBe(4);
-      expect(StringView.fromString('фыва').size).toBe(4);
-      expect(StringView.fromString('😀😀fooа😀←').size).toBe(8);
+      expect(StringView.from('asdf').size).toBe(4);
+      expect(StringView.from('фыва').size).toBe(4);
+      expect(StringView.from('😀😀fooа😀←').size).toBe(8);
     });
   });
 
   describe('substring', () => {
     it('returns a new string containing the specified part of the given string', () => {
-      const stringView = StringView.fromString('qwertyasфы←😀ячсм');
+      const stringView = StringView.from('qwertyasфы←😀ячсм');
       expect(stringView.substring(0, 6)).toBe('qwerty');
       expect(stringView.substring(6, 11)).toBe('asфы←');
       expect(stringView.substring(6, 10)).toBe('asфы');
@@ -95,33 +95,22 @@ describe('StringView', () => {
 
   describe('toString', () => {
     it('returns a string representation of the StringView', () => {
-      const stringView = StringView.fromString('foo', 10);
+      const stringView = StringView.from('foo');
       expect(stringView.toString()).toBe('foo');
     });
   });
 
   describe('toJSON', () => {
     it('returns a string representation of the StringView', () => {
-      const stringView = StringView.fromString('foo', 10);
+      const stringView = StringView.from('foo');
       expect(JSON.stringify(stringView)).toBe('"foo"');
     });
   });
 
   describe('trim', () => {
     it('returns a StringView without trailing zeros', () => {
-      const stringView = StringView.fromString('foo', 10);
-      expect(stringView.length).toBe(10);
+      const stringView = StringView.from('foo');
       expect(stringView.trim().length).toBe(3);
-    });
-  });
-
-  describe('fromString', () => {
-    it('creates a StringView from a string', () => {
-      const stringView = StringView.fromString('foo');
-      expect(stringView.length).toBe(3);
-      const stringViewSized = StringView.fromString('foo', 10);
-      expect(stringViewSized.length).toBe(10);
-      expect(stringView.subarray(0, 3)).toEqual(stringViewSized.subarray(0, 3));
     });
   });
 

@@ -4,7 +4,6 @@ const GridMixin = require('./lib/grid');
 const BinaryHeap = require('./lib/binary-heap.js');
 const Pool = require('./lib/pool');
 const RankedBitArray = require('./lib/ranked-bit-array');
-const RecordArray = require('./lib/record-array');
 const SortedArray = require('./lib/sorted-array');
 const SortedMixin = require('./lib/sorted-collection');
 const SymmetricGridMixin = require('./lib/symmetric-grid');
@@ -16,7 +15,6 @@ const { ArrayView, ArrayViewMixin } = require('./lib/array-view');
 const CollectionView = require('./lib/collection-view');
 const { ObjectView, ObjectViewMixin } = require('./lib/object-view');
 const StringView = require('./lib/string-view');
-const StringArrayView = require('./lib/string-array-view');
 const TypedArrayViewMixin = require('./lib/typed-array-view');
 
 /**
@@ -42,7 +40,6 @@ module.exports = {
   BinaryHeap,
   Pool,
   RankedBitArray,
-  RecordArray,
   SortedArray,
   SortedMixin,
   SymmetricGridMixin,
@@ -56,6 +53,5 @@ module.exports = {
   ObjectView,
   ObjectViewMixin,
   StringView,
-  StringArrayView,
   TypedArrayViewMixin,
 };
