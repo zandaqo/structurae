@@ -16,16 +16,17 @@ const benchmarkOptions = {
 
 const getIndex = (size) => (Math.random() * size) | 0;
 
-const Person = BitFieldMixin([
-  { name: 1, size: 4 },
-  { name: 2, size: 4 },
-  { name: 3, size: 4 },
-  { name: 4, size: 4 },
-  { name: 5, size: 4 },
-  { name: 6, size: 4 },
-  { name: 7, size: 4 },
-  { name: 8, size: 3 },
-]);
+const Person = BitFieldMixin({
+  1: 4,
+  2: 4,
+  3: 4,
+  4: 4,
+  5: 4,
+  6: 4,
+  7: 4,
+  8: 3,
+});
+
 const createPersonArray = () => [
   getIndex(16), getIndex(16), getIndex(16), getIndex(16),
   getIndex(16), getIndex(16), getIndex(16), getIndex(8),

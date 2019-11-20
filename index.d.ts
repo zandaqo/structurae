@@ -95,54 +95,73 @@ export declare function SymmetricGridMixin<T extends Collection>(Base?: Construc
 type GridStructure = Grid | BinaryGrid | SymmetricGrid;
 
 
-type AnyNumber = number | bigint;
-type FieldName = number | string;
-type Matcher = [AnyNumber, AnyNumber];
+type Matcher = [number, number];
 
-interface UnpackedInt {
+interface NumberMap {
     [propName: string]: number;
 }
 
-interface Field {
-    name: FieldName;
-    size?: number;
-}
-
-interface Masks {
-    [propName: string]: AnyNumber;
-}
-
-export class BitField {
-    value: AnyNumber;
-    static fields: (Field|FieldName)[];
+export declare class BitField {
+    value: number;
+    static schema: NumberMap;
     static size: number;
-    static masks: Masks;
-    static offsets: Masks;
     static isInitialized: boolean;
-    static isBigInt: boolean;
-    static isSafe: boolean;
-    static zero: 0 | 0n;
-    static one: 1 | 1n;
-    static two: 2 | 2n;
-    static mask: AnyNumber;
+    private static fields: string[];
+    private static masks: NumberMap;
+    private static offsets: NumberMap;
+    private static mask: number;
 
-    constructor(data?: AnyNumber|number[]);
-    get(field: FieldName): number;
-    set(field: FieldName, value: number);
-    has(...fields: FieldName[]): boolean;
-    match(matcher: Matcher|UnpackedInt): boolean;
-    toObject(): UnpackedInt;
+    constructor(data?: number|number[]|NumberMap);
+    get(field: string): number;
+    set(field: string, value: number);
+    has(...fields: string[]): boolean;
+    match(matcher: Matcher|NumberMap): boolean;
+    toObject(): NumberMap;
     toString(): string;
-    valueOf(): AnyNumber;
+    valueOf(): number;
     static initialize(): void;
-    static encode(data: (AnyNumber)[]): AnyNumber;
-    static decode(data: AnyNumber): UnpackedInt;
-    static isValid(data: number[]|UnpackedInt): boolean;
+    static encode(data: number[]|NumberMap): number;
+    static decode(data: number): NumberMap;
+    static isValid(data: NumberMap): boolean;
     static getMinSize(number: number): number;
-    static getMatcher(matcher: UnpackedInt): Matcher;
+    static getMatcher(matcher: NumberMap): Matcher;
+    static match(value: number, matcher: Matcher): boolean;
 }
 
-export declare function BitFieldMixin(fields: (Field|FieldName)[], BitFieldClass?: typeof BitField): typeof BitField;
+type BigIntMatcher = [number, number];
+
+interface BigIntMap {
+    [propName: string]: bigint;
+}
+
+export declare class BigBitField {
+    value: bigint;
+    static schema: BigIntMap;
+    static size: bigint;
+    static isInitialized: boolean;
+    private static fields: string[];
+    private static masks: BigIntMap;
+    private static offsets: BigIntMap;
+    private static mask: bigint;
+
+    constructor(data?: bigint|number[]|NumberMap);
+    get(field: string): number;
+    set(field: string, value: number);
+    has(...fields: string[]): boolean;
+    match(matcher: BigIntMatcher|NumberMap): boolean;
+    toObject(): NumberMap;
+    toString(): string;
+    valueOf(): bigint;
+    static initialize(): void;
+    static encode(data: number[]|NumberMap): number;
+    static decode(data: number): NumberMap;
+    static isValid(data: NumberMap): boolean;
+    static getMinSize(number: number): number;
+    static getMatcher(matcher: NumberMap): BigIntMatcher;
+    static match(value: bigint, matcher: BigIntMatcher): boolean;
+}
+
+export declare function BitFieldMixin(schema: string[]|NumberMap, BitFieldClass?: typeof BitField | typeof BigBitField): typeof BitField | typeof BitFieldClass;
 
 type CompareResult = 1 | -1 | 0;
 

@@ -1,4 +1,6 @@
-const { BitField, BitFieldMixin } = require('./lib/bit-field');
+const BitField = require('./lib/bit-field');
+const BigBitField = require('./lib/big-bit-field');
+const BitFieldMixin = require('./lib/bit-field-mixin');
 const GraphMixin = require('./lib/graph');
 const GridMixin = require('./lib/grid');
 const BinaryHeap = require('./lib/binary-heap.js');
@@ -34,6 +36,7 @@ const TypedArrayViewMixin = require('./lib/typed-array-view');
 
 module.exports = {
   BitField,
+  BigBitField,
   BitFieldMixin,
   GraphMixin,
   GridMixin,

@@ -5,6 +5,19 @@
 <dd><p>An array of ObjectViews. Uses DataView to operate on an array of JavaScript objects
 stored in an ArrayBuffer.</p>
 </dd>
+<dt><a href="#BigBitField">BigBitField</a></dt>
+<dd><p>Stores and operates on data in BigInts treating them as bitfields.</p>
+<p>// a bitfield that holds three integers of 32, 16, and 8 bits
+class Field extends BigBitField {}
+Field.schema = {
+  area: 32,
+  width: 16,
+  height: 8,
+};
+Field.initialize();</p>
+<p>// same using BitFieldMixin
+const Field = BitFieldMixin({ area: 32, width: 16, height: 8 });</p>
+</dd>
 <dt><a href="#BinaryGrid">BinaryGrid</a> ⇐ <code>Uint16Array</code></dt>
 <dd><p>Implements a grid or 2D matrix of bits.</p>
 </dd>
@@ -15,7 +28,7 @@ stored in an ArrayBuffer.</p>
 <dd><p>Uses Uint32Array as a vector or array of bits.</p>
 </dd>
 <dt><a href="#BitField">BitField</a></dt>
-<dd><p>Stores and operates on data in Numbers and BigInts treating them as bitfields.</p>
+<dd><p>Stores and operates on data in Numbers treating them as bitfields.</p>
 </dd>
 <dt><a href="#CollectionView">CollectionView</a> ⇐ <code>DataView</code></dt>
 <dd></dd>
@@ -71,8 +84,8 @@ using half the space required for a normal grid.</p>
 <dt><a href="#ArrayViewMixin">ArrayViewMixin(ObjectViewClass, [itemLength])</a> ⇒ <code><a href="#ArrayView">Class.&lt;ArrayView&gt;</a></code></dt>
 <dd><p>Creates an ArrayView class for a given ObjectView class.</p>
 </dd>
-<dt><a href="#BitFieldMixin">BitFieldMixin(fields, [BitFieldClass])</a> ⇒ <code><a href="#BitField">Class.&lt;BitField&gt;</a></code></dt>
-<dd><p>Creates a BitField class with given fields.</p>
+<dt><a href="#BitFieldMixin">BitFieldMixin(schema, [BitFieldClass])</a> ⇒ <code><a href="#BitField">Class.&lt;BitField&gt;</a></code> | <code><a href="#BigBitField">Class.&lt;BigBitField&gt;</a></code></dt>
+<dd><p>Creates a BitField or BigBitField class with a given schema.</p>
 </dd>
 <dt><a href="#GraphMixin">GraphMixin(Base, [undirected])</a> ⇒ <code><a href="#Graph">Graph</a></code></dt>
 <dd><p>Creates a Graph class extending a given adjacency structure.</p>
@@ -99,6 +112,9 @@ using half the space required for a normal grid.</p>
 <dt><a href="#getLSBIndex">getLSBIndex(value)</a> ⇒ <code>number</code></dt>
 <dd><p>Returns the index of the Least Significant Bit in a number.</p>
 </dd>
+<dt><a href="#getBitSize">getBitSize(number)</a> ⇒ <code>number</code></dt>
+<dd><p>Returns the minimum amount of bits necessary to hold a given number.</p>
+</dd>
 <dt><a href="#WeightedAdjacencyListMixin">WeightedAdjacencyListMixin(Base)</a> ⇒ <code><a href="#WeightedAdjacencyList">WeightedAdjacencyList</a></code></dt>
 <dd><p>Creates a WeightedAdjacencyList class extending a given TypedArray class.</p>
 </dd>
@@ -111,18 +127,6 @@ using half the space required for a normal grid.</p>
 
 <dl>
 <dt><a href="#BitCoordinates">BitCoordinates</a> : <code>Object</code></dt>
-<dd></dd>
-<dt><a href="#AnyNumber">AnyNumber</a> : <code>number</code> | <code>BigInt</code></dt>
-<dd></dd>
-<dt><a href="#FieldName">FieldName</a> : <code>number</code> | <code>string</code></dt>
-<dd></dd>
-<dt><a href="#UnpackedInt">UnpackedInt</a> : <code>Object.&lt;string, number&gt;</code></dt>
-<dd></dd>
-<dt><a href="#Field">Field</a> : <code>Object</code></dt>
-<dd></dd>
-<dt><a href="#Matcher">Matcher</a> : <code>Array</code></dt>
-<dd></dd>
-<dt><a href="#Masks">Masks</a> : <code>Object.&lt;string, AnyNumber&gt;</code></dt>
 <dd></dd>
 <dt><a href="#AdjacencyStructure">AdjacencyStructure</a> : <code><a href="#UnweightedAdjacencyList">UnweightedAdjacencyList</a></code> | <code><a href="#UnweightedAdjacencyMatrix">UnweightedAdjacencyMatrix</a></code> | <code><a href="#WeightedAdjacencyList">WeightedAdjacencyList</a></code> | <code><a href="#WeightedAdjacencyMatrix">WeightedAdjacencyMatrix</a></code></dt>
 <dd></dd>
@@ -272,6 +276,316 @@ Creates an empty array view of specified size.
 | --- | --- | --- |
 | size | <code>number</code> | <code>1</code> | 
 
+<a name="BigBitField"></a>
+
+## BigBitField
+Stores and operates on data in BigInts treating them as bitfields.
+
+// a bitfield that holds three integers of 32, 16, and 8 bits
+class Field extends BigBitField {}
+Field.schema = {
+  area: 32,
+  width: 16,
+  height: 8,
+};
+Field.initialize();
+
+// same using BitFieldMixin
+const Field = BitFieldMixin({ area: 32, width: 16, height: 8 });
+
+**Kind**: global class  
+
+* [BigBitField](#BigBitField)
+    * [new BigBitField([data])](#new_BigBitField_new)
+    * _instance_
+        * [.get(field)](#BigBitField+get) ⇒ <code>number</code>
+        * [.set(field, value)](#BigBitField+set) ⇒ [<code>BigBitField</code>](#BigBitField)
+        * [.has(...fields)](#BigBitField+has) ⇒ <code>boolean</code>
+        * [.match(matcher)](#BigBitField+match) ⇒ <code>boolean</code>
+        * [.toObject()](#BigBitField+toObject) ⇒ <code>Object.&lt;string, number&gt;</code>
+        * [.toString()](#BigBitField+toString) ⇒ <code>string</code>
+        * [.valueOf()](#BigBitField+valueOf) ⇒ <code>bigint</code>
+    * _static_
+        * [.encode(data)](#BigBitField.encode) ⇒ <code>bigint</code>
+        * [.decode(data)](#BigBitField.decode) ⇒ <code>Object.&lt;string, number&gt;</code>
+        * [.isValid(data)](#BigBitField.isValid) ⇒ <code>boolean</code>
+        * [.getMinSize(number)](#BigBitField.getMinSize) ⇒ <code>number</code>
+        * [.initialize()](#BigBitField.initialize) ⇒ <code>void</code>
+        * [.getMatcher(matcher)](#BigBitField.getMatcher) ⇒ <code>Array.&lt;bigint&gt;</code>
+        * [.match(value, matcher)](#BigBitField.match) ⇒ <code>boolean</code>
+
+<a name="new_BigBitField_new"></a>
+
+### new BigBitField([data])
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [data] | <code>bigint</code> \| <code>Array.&lt;number&gt;</code> \| <code>Object.&lt;string, number&gt;</code> | <code>0</code> | 
+
+**Example**  
+```js
+const field = new Field({ area: 100, width: 10, height: 10 });
+//=> Field { value: 2814792716779620n }
+field.get('width');
+//=> 10;
+
+const copy = new Field(2814792716779620n);
+copy.get('width');
+//=> 10
+```
+<a name="BigBitField+get"></a>
+
+### bigBitField.get(field) ⇒ <code>number</code>
+Returns the value of a given field.
+
+**Kind**: instance method of [<code>BigBitField</code>](#BigBitField)  
+**Returns**: <code>number</code> - value value of the field  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| field | <code>string</code> | name of the field |
+
+**Example**  
+```js
+const field = new Field({ area: 100, width: 10, height: 10 });
+//=> Field { value: 2814792716779620n }
+field.get('width');
+//=> 10;
+field.get('area');
+//=> 100;
+```
+<a name="BigBitField+set"></a>
+
+### bigBitField.set(field, value) ⇒ [<code>BigBitField</code>](#BigBitField)
+Stores a given value in a field.
+
+**Kind**: instance method of [<code>BigBitField</code>](#BigBitField)  
+**Returns**: [<code>BigBitField</code>](#BigBitField) - the instance  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| field | <code>string</code> |  | name of the field |
+| value | <code>number</code> | <code>1</code> | value of the field |
+
+**Example**  
+```js
+const field = new Field({ area: 100, width: 10, height: 10 });
+//=> Field { value: 2814792716779620n }
+field.get('width');
+//=> 10;
+field.set('width', 100);
+field.get('width');
+//=> 100;
+```
+<a name="BigBitField+has"></a>
+
+### bigBitField.has(...fields) ⇒ <code>boolean</code>
+Checks if an instance has all the specified fields set to 1. Useful for bit flags.
+
+**Kind**: instance method of [<code>BigBitField</code>](#BigBitField)  
+**Returns**: <code>boolean</code> - whether all the specified fields are set in the instance  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| ...fields | <code>string</code> \| <code>number</code> | names of the fields to check |
+
+**Example**  
+```js
+const Flags = BitFieldMixin(['a', 'b', 'c']);
+const settings = new Flags({ 'a': 0, 'b': 1, 'c': 1 });
+settings.has('b', 'c');
+//=> true
+settings.has('a', 'b');
+//=> false
+```
+<a name="BigBitField+match"></a>
+
+### bigBitField.match(matcher) ⇒ <code>boolean</code>
+Checks if the instance contains all the key-value pairs listed in matcher.
+Use `BigBitField.getMatcher` to get an array of precomputed values
+that you can use to efficiently compare multiple instances
+to the same key-value pairs as shown in the examples below.
+
+**Kind**: instance method of [<code>BigBitField</code>](#BigBitField)  
+**Returns**: <code>boolean</code> - whether the instance matches with the provided fields  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| matcher | <code>Object.&lt;string, number&gt;</code> \| <code>Array.&lt;bigint&gt;</code> | an object with key-value pairs,                                                or an array of precomputed matcher values |
+
+**Example**  
+```js
+const field = new Field({ area: 200, width: 10, height: 20 });
+field.match({ height: 20 });
+//=> true
+field.match({ width: 10, height: 20 });
+//=> true
+field.match({ area: 10 });
+//=> false
+field.match({ width: 10, height: 10 });
+//=> false
+
+// use precomputed matcher
+const matcher = BitField.getMatcher({ height: 20});
+new Field({ width: 10, height: 20 }).match(matcher);
+//=> true
+new Field({ width: 10, height: 10 }).match(matcher);
+//=> false
+```
+<a name="BigBitField+toObject"></a>
+
+### bigBitField.toObject() ⇒ <code>Object.&lt;string, number&gt;</code>
+Returns the object representation of the instance,
+with field names as properties with corresponding values.
+
+**Kind**: instance method of [<code>BigBitField</code>](#BigBitField)  
+**Returns**: <code>Object.&lt;string, number&gt;</code> - the object representation of the instance  
+**Example**  
+```js
+const field = new Field({ area: 200, width: 10, height: 20 });
+field.toObject();
+//=> { area: 200, width: 10, height: 20 }
+```
+<a name="BigBitField+toString"></a>
+
+### bigBitField.toString() ⇒ <code>string</code>
+Returns a string representing the value of the instance.
+
+**Kind**: instance method of [<code>BigBitField</code>](#BigBitField)  
+**Returns**: <code>string</code> - a string representing the value of the instance  
+<a name="BigBitField+valueOf"></a>
+
+### bigBitField.valueOf() ⇒ <code>bigint</code>
+Returns the numerical value of an instance.
+
+**Kind**: instance method of [<code>BigBitField</code>](#BigBitField)  
+**Returns**: <code>bigint</code> - the numerical value of the instance  
+<a name="BigBitField.encode"></a>
+
+### BigBitField.encode(data) ⇒ <code>bigint</code>
+Encodes a given list of numbers into a single number according to the schema.
+
+**Kind**: static method of [<code>BigBitField</code>](#BigBitField)  
+**Returns**: <code>bigint</code> - encoded number  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| data | <code>Array.&lt;number&gt;</code> \| <code>Object.&lt;string, number&gt;</code> | the list of numbers to encode |
+
+**Example**  
+```js
+new Field({ area: 100, width: 10, height: 10 });
+//=> 2814792716779620n
+```
+<a name="BigBitField.decode"></a>
+
+### BigBitField.decode(data) ⇒ <code>Object.&lt;string, number&gt;</code>
+Decodes an encoded number into its object representation according to the schema.
+
+**Kind**: static method of [<code>BigBitField</code>](#BigBitField)  
+**Returns**: <code>Object.&lt;string, number&gt;</code> - object representation  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| data | <code>bigint</code> | encoded number |
+
+**Example**  
+```js
+new Field({ area: 100, width: 10, height: 10 });
+//=> 2814792716779620n
+Field.decode(2814792716779620n);
+//=> { area: 100, width: 10, height: 10 }
+```
+<a name="BigBitField.isValid"></a>
+
+### BigBitField.isValid(data) ⇒ <code>boolean</code>
+Checks if a given set of values or all given pairs of field name and value
+are valid according to the schema.
+
+**Kind**: static method of [<code>BigBitField</code>](#BigBitField)  
+**Returns**: <code>boolean</code> - whether all pairs are valid  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| data | <code>Object.&lt;string, number&gt;</code> | pairs of field name and value to check |
+
+**Example**  
+```js
+Field.isValid({ area: 100000, width: 20 })
+//=> true
+Field.isValid({ width: 10, height: 20 })
+//=> true
+Field.isValid({ width: -10, height: 20 })
+//=> false
+Field.isValid({ width: 1000000, height: 20 });
+//=> false
+```
+<a name="BigBitField.getMinSize"></a>
+
+### BigBitField.getMinSize(number) ⇒ <code>number</code>
+Returns the minimum amount of bits necessary to hold a given number.
+
+**Kind**: static method of [<code>BigBitField</code>](#BigBitField)  
+**Returns**: <code>number</code> - the amount of bits  
+
+| Param | Type |
+| --- | --- |
+| number | <code>number</code> | 
+
+**Example**  
+```js
+BigBitField.getMinSize(100)
+//=> 7
+
+BigBitField.getMinSize(2000)
+//=> 11
+
+BigBitField.getMinSize(Number.MAX_SAFE_INTEGER)
+//=> 53
+```
+<a name="BigBitField.initialize"></a>
+
+### BigBitField.initialize() ⇒ <code>void</code>
+Prepares the class to handle data according to its schema provided in `BigBitField.schema`.
+
+**Kind**: static method of [<code>BigBitField</code>](#BigBitField)  
+<a name="BigBitField.getMatcher"></a>
+
+### BigBitField.getMatcher(matcher) ⇒ <code>Array.&lt;bigint&gt;</code>
+Creates an array of values to be used as a matcher
+to efficiently match against multiple instances.
+
+**Kind**: static method of [<code>BigBitField</code>](#BigBitField)  
+**Returns**: <code>Array.&lt;bigint&gt;</code> - an array of precomputed values  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| matcher | <code>Object.&lt;string, number&gt;</code> | an object containing field names and their values |
+
+**Example**  
+```js
+Field.getMatcher({ area: 100 });
+//=> [ 100n, 72057598332895231n ]
+```
+<a name="BigBitField.match"></a>
+
+### BigBitField.match(value, matcher) ⇒ <code>boolean</code>
+The static version of `BigBitField#match`, matches a given value against a precomputed matcher.
+
+**Kind**: static method of [<code>BigBitField</code>](#BigBitField)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>bigint</code> | a value to check |
+| matcher | <code>Array.&lt;bigint&gt;</code> | a precomputed set of values |
+
+**Example**  
+```js
+Field.match(new Field({ area: 100 }), Field.getMatcher({ area: 100}));
+//=> true
+Field.match(new Field({ area: 1000 }), Field.getMatcher({ area: 100}));
+//=> false
+```
 <a name="BinaryGrid"></a>
 
 ## BinaryGrid ⇐ <code>Uint16Array</code>
@@ -610,65 +924,51 @@ Returns the length of underlying TypedArray required to hold the bit array.
 <a name="BitField"></a>
 
 ## BitField
-Stores and operates on data in Numbers and BigInts treating them as bitfields.
+Stores and operates on data in Numbers treating them as bitfields.
 
 **Kind**: global class  
 
 * [BitField](#BitField)
     * [new BitField([data])](#new_BitField_new)
     * _instance_
-        * [.value](#BitField+value) : <code>number</code> \| <code>BigInt</code>
         * [.get(field)](#BitField+get) ⇒ <code>number</code>
         * [.set(field, value)](#BitField+set) ⇒ [<code>BitField</code>](#BitField)
         * [.has(...fields)](#BitField+has) ⇒ <code>boolean</code>
         * [.match(matcher)](#BitField+match) ⇒ <code>boolean</code>
-        * [.toObject()](#BitField+toObject) ⇒ [<code>UnpackedInt</code>](#UnpackedInt)
+        * [.toObject()](#BitField+toObject) ⇒ <code>Object.&lt;string, number&gt;</code>
         * [.toString()](#BitField+toString) ⇒ <code>string</code>
-        * [.valueOf()](#BitField+valueOf) ⇒ [<code>AnyNumber</code>](#AnyNumber)
+        * [.valueOf()](#BitField+valueOf) ⇒ <code>number</code>
     * _static_
-        * [.fields](#BitField.fields) : [<code>Array.&lt;FieldName&gt;</code>](#FieldName) \| [<code>Array.&lt;Field&gt;</code>](#Field)
+        * [.schema](#BitField.schema) : <code>Object.&lt;string, number&gt;</code>
         * [.size](#BitField.size) : <code>number</code>
-        * [.zero](#BitField.zero) : [<code>AnyNumber</code>](#AnyNumber)
-        * [.one](#BitField.one) : [<code>AnyNumber</code>](#AnyNumber)
-        * [.two](#BitField.two) : [<code>AnyNumber</code>](#AnyNumber)
-        * [.masks](#BitField.masks) : [<code>Masks</code>](#Masks)
-        * [.mask](#BitField.mask) : [<code>AnyNumber</code>](#AnyNumber)
-        * [.offsets](#BitField.offsets) : [<code>Masks</code>](#Masks)
-        * [.isBigInt](#BitField.isBigInt) : <code>boolean</code>
-        * [.isSafe](#BitField.isSafe) : <code>boolean</code>
         * [.isInitialized](#BitField.isInitialized) : <code>boolean</code>
-        * [.encode(data)](#BitField.encode) ⇒ [<code>AnyNumber</code>](#AnyNumber)
-        * [.decode(data)](#BitField.decode) ⇒ [<code>UnpackedInt</code>](#UnpackedInt)
+        * [.encode(data)](#BitField.encode) ⇒ <code>number</code>
+        * [.decode(data)](#BitField.decode) ⇒ <code>Object.&lt;string, number&gt;</code>
         * [.isValid(data)](#BitField.isValid) ⇒ <code>boolean</code>
         * [.getMinSize(number)](#BitField.getMinSize) ⇒ <code>number</code>
         * [.initialize()](#BitField.initialize) ⇒ <code>void</code>
-        * [.getMatcher(matcher)](#BitField.getMatcher) ⇒ [<code>Matcher</code>](#Matcher)
+        * [.getMatcher(matcher)](#BitField.getMatcher) ⇒ <code>Array.&lt;number&gt;</code>
         * [.match(value, matcher)](#BitField.match) ⇒ <code>boolean</code>
 
 <a name="new_BitField_new"></a>
 
 ### new BitField([data])
 
-| Param | Type | Default |
-| --- | --- | --- |
-| [data] | [<code>AnyNumber</code>](#AnyNumber) \| <code>Array.&lt;number&gt;</code> | <code>0</code> | 
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [data] | <code>number</code> \| <code>Array.&lt;number&gt;</code> \| <code>Object.&lt;string, number&gt;</code> | <code>0</code> | a single number value of the field                                        or a map of field names with their respective values |
 
 **Example**  
 ```js
-class Person extends BitField {}
-Person.fields = [
- { name: 'age', size: 7 },
- { name: 'gender', size: 1 },
-];
-new Person([20, 1]).value
-//=> 41
-new Person(41).value
-//=> 41
-```
-<a name="BitField+value"></a>
+const field = new Field({ width: 100, height: 100 });
+//=> Field { value: 25700 }
+field.get('width');
+//=> 100;
 
-### bitField.value : <code>number</code> \| <code>BigInt</code>
-**Kind**: instance property of [<code>BitField</code>](#BitField)  
+const copy = new Field(25700);
+copy.get('width');
+//=> 100
+```
 <a name="BitField+get"></a>
 
 ### bitField.get(field) ⇒ <code>number</code>
@@ -679,20 +979,16 @@ Returns the value of a given field.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| field | [<code>Field</code>](#Field) | name of the field |
+| field | <code>string</code> \| <code>number</code> | name of the field |
 
 **Example**  
 ```js
-class Person extends BitField {}
-Person.fields = [
- { name: 'age', size: 7 },
- { name: 'gender', size: 1 },
-];
-const person = new Person([20, 1]);
-person.get('age');
-//=> 20
-person.get('gender');
-//=> 1
+const field = new Field({ width: 100, height: 200 });
+//=> Field { value: 51300 }
+field.get('width');
+//=> 100;
+field.get('height');
+//=> 200;
 ```
 <a name="BitField+set"></a>
 
@@ -702,23 +998,21 @@ Stores a given value in a field.
 **Kind**: instance method of [<code>BitField</code>](#BitField)  
 **Returns**: [<code>BitField</code>](#BitField) - the instance  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| field | [<code>Field</code>](#Field) | name of the field |
-| value | <code>number</code> | value of the field |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| field | <code>string</code> \| <code>number</code> |  | name of the field |
+| value | <code>number</code> | <code>1</code> | value of the field |
 
 **Example**  
 ```js
-class Person extends BitField {}
-Person.fields = [
- { name: 'age', size: 7 },
- { name: 'gender', size: 1 },
-];
-const person = new Person([20, 1]);
-person.get('age');
-//=> 20
-person.set('age', 30).get('age');
-//=> 30
+const field = new Field({ width: 100, height: 200 });
+//=> Field { value: 51300 }
+field.get('width');
+//=> 100;
+field.set('width', 50);
+//=> Field { value: 51250 }
+field.get('width');
+//=> 50
 ```
 <a name="BitField+has"></a>
 
@@ -730,22 +1024,22 @@ Checks if an instance has all the specified fields set to 1. Useful for bit flag
 
 | Param | Type | Description |
 | --- | --- | --- |
-| ...fields | [<code>Field</code>](#Field) | names of the fields to check |
+| ...fields | <code>string</code> \| <code>number</code> | names of the fields to check |
 
 **Example**  
 ```js
-const SettingsFlags = BinariusFactory(['notify', 'premium', 'moderator']);
-const settings = SettingsFlags([1, 0, 1]);
-settings.has('notify', 'moderator');
+const Flags = BitFieldMixin(['a', 'b', 'c']);
+const settings = new Flags({ 'a': 0, 'b': 1, 'c': 1 });
+settings.has('b', 'c');
 //=> true
-settings.has('notify', 'premium');
+settings.has('a', 'b');
 //=> false
 ```
 <a name="BitField+match"></a>
 
 ### bitField.match(matcher) ⇒ <code>boolean</code>
 Checks if the instance contains all the key-value pairs listed in matcher.
-Use `ParseInt.getMatcher` to get an array of precomputed values
+Use `BitField.getMatcher` to get an array of precomputed values
 that you can use to efficiently compare multiple instances
 to the same key-value pairs as shown in the examples below.
 
@@ -754,50 +1048,40 @@ to the same key-value pairs as shown in the examples below.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| matcher | [<code>UnpackedInt</code>](#UnpackedInt) \| [<code>Matcher</code>](#Matcher) | an object with key-value pairs,                                                or an array of precomputed matcher values |
+| matcher | <code>Object.&lt;string, number&gt;</code> \| <code>Matcher</code> | an object with key-value pairs,                                                or an array of precomputed matcher values |
 
 **Example**  
 ```js
-class Person extends BitField {}
-Person.fields = [
- { name: 'age', size: 7 },
- { name: 'gender', size: 1 },
-];
-const person = new Person([20, 1]);
-person.match({ age: 20 });
+const field = new Field({ width: 10, height: 20 });
+field.match({ height: 20 });
 //=> true
-person.match({ gender: 1 });
+field.match({ width: 10, height: 20 });
 //=> true
-person.match({ gender: 1, age: 20 });
+field.match({ width: 10 });
 //=> true
-person.match({ gender: 1, age: 19 });
+field.match({ width: 10, height: 10 });
 //=> false
 
 // use precomputed matcher
-const matcher = Person.getMatcher({ age: 20});
-new Person([20, 0]).match(matcher);
+const matcher = BitField.getMatcher({ height: 20});
+new Field({ width: 10, height: 20 }).match(matcher);
 //=> true
-new Person([19, 0]).match(matcher);
+new Field({ width: 10, height: 10 }).match(matcher);
 //=> false
 ```
 <a name="BitField+toObject"></a>
 
-### bitField.toObject() ⇒ [<code>UnpackedInt</code>](#UnpackedInt)
+### bitField.toObject() ⇒ <code>Object.&lt;string, number&gt;</code>
 Returns the object representation of the instance,
 with field names as properties with corresponding values.
 
 **Kind**: instance method of [<code>BitField</code>](#BitField)  
-**Returns**: [<code>UnpackedInt</code>](#UnpackedInt) - the object representation of the instance  
+**Returns**: <code>Object.&lt;string, number&gt;</code> - the object representation of the instance  
 **Example**  
 ```js
-class Person extends BitField {}
-Person.fields = [
- { name: 'age', size: 7 },
- { name: 'gender', size: 1 },
-];
-const person = new Person([20, 1]);
-person.toObject();
-//=> { age: 20, gender: 1 }
+const field = new Field({ width: 10, height: 20 });
+field.toObject();
+//=> { width: 10, height: 20 }
 ```
 <a name="BitField+toString"></a>
 
@@ -808,51 +1092,18 @@ Returns a string representing the value of the instance.
 **Returns**: <code>string</code> - a string representing the value of the instance  
 <a name="BitField+valueOf"></a>
 
-### bitField.valueOf() ⇒ [<code>AnyNumber</code>](#AnyNumber)
+### bitField.valueOf() ⇒ <code>number</code>
 Returns the numerical value of an instance.
-Returns a BigInt if the total size exceeds 53 bits.
 
 **Kind**: instance method of [<code>BitField</code>](#BitField)  
-**Returns**: [<code>AnyNumber</code>](#AnyNumber) - the numerical value of the instance  
-<a name="BitField.fields"></a>
+**Returns**: <code>number</code> - the numerical value of the instance  
+<a name="BitField.schema"></a>
 
-### BitField.fields : [<code>Array.&lt;FieldName&gt;</code>](#FieldName) \| [<code>Array.&lt;Field&gt;</code>](#Field)
+### BitField.schema : <code>Object.&lt;string, number&gt;</code>
 **Kind**: static property of [<code>BitField</code>](#BitField)  
 <a name="BitField.size"></a>
 
 ### BitField.size : <code>number</code>
-**Kind**: static property of [<code>BitField</code>](#BitField)  
-<a name="BitField.zero"></a>
-
-### BitField.zero : [<code>AnyNumber</code>](#AnyNumber)
-**Kind**: static property of [<code>BitField</code>](#BitField)  
-<a name="BitField.one"></a>
-
-### BitField.one : [<code>AnyNumber</code>](#AnyNumber)
-**Kind**: static property of [<code>BitField</code>](#BitField)  
-<a name="BitField.two"></a>
-
-### BitField.two : [<code>AnyNumber</code>](#AnyNumber)
-**Kind**: static property of [<code>BitField</code>](#BitField)  
-<a name="BitField.masks"></a>
-
-### BitField.masks : [<code>Masks</code>](#Masks)
-**Kind**: static property of [<code>BitField</code>](#BitField)  
-<a name="BitField.mask"></a>
-
-### BitField.mask : [<code>AnyNumber</code>](#AnyNumber)
-**Kind**: static property of [<code>BitField</code>](#BitField)  
-<a name="BitField.offsets"></a>
-
-### BitField.offsets : [<code>Masks</code>](#Masks)
-**Kind**: static property of [<code>BitField</code>](#BitField)  
-<a name="BitField.isBigInt"></a>
-
-### BitField.isBigInt : <code>boolean</code>
-**Kind**: static property of [<code>BitField</code>](#BitField)  
-<a name="BitField.isSafe"></a>
-
-### BitField.isSafe : <code>boolean</code>
 **Kind**: static property of [<code>BitField</code>](#BitField)  
 <a name="BitField.isInitialized"></a>
 
@@ -860,47 +1111,40 @@ Returns a BigInt if the total size exceeds 53 bits.
 **Kind**: static property of [<code>BitField</code>](#BitField)  
 <a name="BitField.encode"></a>
 
-### BitField.encode(data) ⇒ [<code>AnyNumber</code>](#AnyNumber)
-Encodes a given list of numbers into a single number according to the schema.
+### BitField.encode(data) ⇒ <code>number</code>
+Encodes a given list of numbers or map of fields and their respective values
+into a single number according to the schema.
 
 **Kind**: static method of [<code>BitField</code>](#BitField)  
-**Returns**: [<code>AnyNumber</code>](#AnyNumber) - encoded number  
+**Returns**: <code>number</code> - encoded number  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| data | [<code>Array.&lt;AnyNumber&gt;</code>](#AnyNumber) | the list of numbers to encode |
+| data | <code>Array.&lt;number&gt;</code> \| <code>Object.&lt;string, number&gt;</code> | the list of numbers to encode |
 
 **Example**  
 ```js
-class Person extends BitField {}
-Person.fields = [
- { name: 'age', size: 7 },
- { name: 'gender', size: 1 },
-];
-Person.encode([20, 1])
-//=> 41
+Field.encode({ width: 10, height: 20 })
+//=> 5130
 ```
 <a name="BitField.decode"></a>
 
-### BitField.decode(data) ⇒ [<code>UnpackedInt</code>](#UnpackedInt)
-Decodes an encoded number into it's object representation according to the schema.
+### BitField.decode(data) ⇒ <code>Object.&lt;string, number&gt;</code>
+Decodes an encoded number into its object representation according to the schema.
 
 **Kind**: static method of [<code>BitField</code>](#BitField)  
-**Returns**: [<code>UnpackedInt</code>](#UnpackedInt) - object representation  
+**Returns**: <code>Object.&lt;string, number&gt;</code> - object representation  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| data | [<code>AnyNumber</code>](#AnyNumber) | encoded number |
+| data | <code>number</code> | encoded number |
 
 **Example**  
 ```js
-class Person extends BitField {}
-Person.fields = [
- { name: 'age', size: 7 },
- { name: 'gender', size: 1 },
-];
-Person.decode(41);
-//=> { age: 20, gender: 1 }
+const data = Field.encode({ width: 10, height: 20 })
+//=> 5130
+Field.decode(5130);
+//=> { width: 10, height: 20 }
 ```
 <a name="BitField.isValid"></a>
 
@@ -913,22 +1157,17 @@ are valid according to the schema.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| data | [<code>AnyNumber</code>](#AnyNumber) \| [<code>UnpackedInt</code>](#UnpackedInt) | pairs of field name and value to check |
+| data | <code>Object.&lt;string, number&gt;</code> | pairs of field name and value to check |
 
 **Example**  
 ```js
-class Person extends BitField {}
-Person.fields = [
- { name: 'age', size: 7 },
- { name: 'gender', size: 1 },
-];
-Person.isValid({age: 100})
+Field.isValid({ width: 20 })
 //=> true
-Person.isValid({age: 100, gender: 3})
+Field.isValid({ width: 10, height: 20 })
+//=> true
+Field.isValid({ width: -10, height: 20 })
 //=> false
-Person.isValid([100, 1])
-//=> true
-Person.isValid([100, 3])
+Field.isValid({ width: 1000, height: 20 });
 //=> false
 ```
 <a name="BitField.getMinSize"></a>
@@ -957,22 +1196,21 @@ BitField.getMinSize(Number.MAX_SAFE_INTEGER)
 <a name="BitField.initialize"></a>
 
 ### BitField.initialize() ⇒ <code>void</code>
-Prepares the class to handle data according to it's schema provided in `BitField.fields`.
-The method is called automatically the first time the constructor is used.
+Prepares the class to handle data according to its schema provided in `BitField.schema`.
 
 **Kind**: static method of [<code>BitField</code>](#BitField)  
 <a name="BitField.getMatcher"></a>
 
-### BitField.getMatcher(matcher) ⇒ [<code>Matcher</code>](#Matcher)
+### BitField.getMatcher(matcher) ⇒ <code>Array.&lt;number&gt;</code>
 Creates an array of values to be used as a matcher
 to efficiently match against multiple instances.
 
 **Kind**: static method of [<code>BitField</code>](#BitField)  
-**Returns**: [<code>Matcher</code>](#Matcher) - an array of precomputed values  
+**Returns**: <code>Array.&lt;number&gt;</code> - an array of precomputed values  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| matcher | [<code>UnpackedInt</code>](#UnpackedInt) | an object containing field names and their values |
+| matcher | <code>Object.&lt;string, number&gt;</code> | an object containing field names and their values |
 
 <a name="BitField.match"></a>
 
@@ -983,9 +1221,16 @@ The static version of `BitField#match`, matches a given value against a precompu
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | [<code>AnyNumber</code>](#AnyNumber) | a value to check |
-| matcher | [<code>Matcher</code>](#Matcher) | a precomputed set of values |
+| value | <code>number</code> | a value to check |
+| matcher | <code>Matcher</code> | a precomputed set of values |
 
+**Example**  
+```js
+Field.match(new Field({ width: 10 }), Field.getMatcher({ width: 10 }));
+//=> true
+Field.match(new Field({ width: 100 }), Field.getMatcher({ width: 10}));
+//=> false
+```
 <a name="CollectionView"></a>
 
 ## CollectionView ⇐ <code>DataView</code>
@@ -3490,15 +3735,15 @@ Creates an ArrayView class for a given ObjectView class.
 
 <a name="BitFieldMixin"></a>
 
-## BitFieldMixin(fields, [BitFieldClass]) ⇒ [<code>Class.&lt;BitField&gt;</code>](#BitField)
-Creates a BitField class with given fields.
+## BitFieldMixin(schema, [BitFieldClass]) ⇒ [<code>Class.&lt;BitField&gt;</code>](#BitField) \| [<code>Class.&lt;BigBitField&gt;</code>](#BigBitField)
+Creates a BitField or BigBitField class with a given schema.
 
 **Kind**: global function  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| fields | <code>Array.&lt;(Field\|FieldName)&gt;</code> | the schema to use for the class |
-| [BitFieldClass] | [<code>Class.&lt;BitField&gt;</code>](#BitField) | an optional BitField class to extend |
+| schema | <code>Object.&lt;string, number&gt;</code> \| <code>Array.&lt;string&gt;</code> | the schema to use for the class |
+| [BitFieldClass] | [<code>Class.&lt;BitField&gt;</code>](#BitField) \| [<code>Class.&lt;BigBitField&gt;</code>](#BigBitField) | an optional BitField class to extend |
 
 <a name="GraphMixin"></a>
 
@@ -3611,6 +3856,18 @@ Returns the index of the Least Significant Bit in a number.
 | --- | --- |
 | value | <code>number</code> | 
 
+<a name="getBitSize"></a>
+
+## getBitSize(number) ⇒ <code>number</code>
+Returns the minimum amount of bits necessary to hold a given number.
+
+**Kind**: global function  
+**Returns**: <code>number</code> - the amount of bits  
+
+| Param | Type |
+| --- | --- |
+| number | <code>number</code> | 
+
 <a name="WeightedAdjacencyListMixin"></a>
 
 ## WeightedAdjacencyListMixin(Base) ⇒ [<code>WeightedAdjacencyList</code>](#WeightedAdjacencyList)
@@ -3645,44 +3902,6 @@ Creates a WeightedAdjacencyMatrix class extending a given Array-like class.
 | bucket | <code>number</code> | row index |
 | position | <code>number</code> | column index |
 
-<a name="AnyNumber"></a>
-
-## AnyNumber : <code>number</code> \| <code>BigInt</code>
-**Kind**: global typedef  
-<a name="FieldName"></a>
-
-## FieldName : <code>number</code> \| <code>string</code>
-**Kind**: global typedef  
-<a name="UnpackedInt"></a>
-
-## UnpackedInt : <code>Object.&lt;string, number&gt;</code>
-**Kind**: global typedef  
-<a name="Field"></a>
-
-## Field : <code>Object</code>
-**Kind**: global typedef  
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| name | [<code>FieldName</code>](#FieldName) | name of the field |
-| [size] | <code>number</code> | size in bits |
-
-<a name="Matcher"></a>
-
-## Matcher : <code>Array</code>
-**Kind**: global typedef  
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| 0 | [<code>AnyNumber</code>](#AnyNumber) | value |
-| 1 | [<code>AnyNumber</code>](#AnyNumber) | mask |
-
-<a name="Masks"></a>
-
-## Masks : <code>Object.&lt;string, AnyNumber&gt;</code>
-**Kind**: global typedef  
 <a name="AdjacencyStructure"></a>
 
 ## AdjacencyStructure : [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList) \| [<code>UnweightedAdjacencyMatrix</code>](#UnweightedAdjacencyMatrix) \| [<code>WeightedAdjacencyList</code>](#WeightedAdjacencyList) \| [<code>WeightedAdjacencyMatrix</code>](#WeightedAdjacencyMatrix)

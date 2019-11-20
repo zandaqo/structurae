@@ -12,7 +12,7 @@ A collection of data structures for high-performance JavaScript applications tha
     - [StringView](https://github.com/zandaqo/structurae#StringView) - extends Uint8Array to handle C-like representation of UTF-8 encoded strings.
     - [TypedArrayView](https://github.com/zandaqo/structurae#TypedArrayView) - a DataView based TypedArray that supports endianness and can be set at any offset.
 - Bit Structures:
-    - [BitField](https://github.com/zandaqo/structurae#BitField) - stores and operates on data in Numbers and BigInts treating them as bitfields.
+    - [BitField & BigBitField](https://github.com/zandaqo/structurae#BitField) - stores and operates on data in Numbers and BigInts treating them as bitfields.
     - [BitArray](https://github.com/zandaqo/structurae#BitArray) - an array of bits implemented with Uint32Array.
     - [Pool](https://github.com/zandaqo/structurae#Pool) - manages availability of objects in object pools.
     - [RankedBitArray](https://github.com/zandaqo/structurae#RankedBitArray) - extends BitArray with O(1) time rank and O(logN) select methods.
@@ -306,8 +306,8 @@ doubles.set(0, 5).set(1, 10);
 ```
 
 ### Bit Structures
-#### BitField
-BitField uses JavaScript Numbers and BigInts as bitfields to store and operate on data using bitwise operations.
+#### BitField & BigBitField
+BitField and BigBitField use JavaScript Numbers and BigInts respectively as bitfields to store and operate on data using bitwise operations.
 By default, BitField operates on 31 bit long bitfield where bits are indexed from least significant to most:
 ```javascript
 const { BitField } = require('structurae');
@@ -321,30 +321,24 @@ bitfield.has(2, 3, 4);
 //=> true
 ```
 
-You can extend BitField and use your own schema by specifying field names and their respective sizes in bits:
+You can extend BitField or BigBitField directly or use BitFieldMixin with your own schema by specifying field names and their respective sizes in bits:
 ```javascript
-class Person extends BitField {}
-Person.fields = [
-  { name: 'age', size: 7 },
-  { name: 'gender', size: 1 },
-];
-const person = new Person([20, 1]);
-person.get('age');
-//=> 20
-person.get('gender');
-//=> 1
-person.set('age', 18);
-person.value
-//=> 41
-person.toObject();
-//=> { age: 18, gender: 1 }
+const Field = BitFieldMixin({ width: 8, height: 8 });
+const field = new Field({ width: 100, height: 200 });
+field.get('width');
+//=> 100;
+field.get('height');
+//=> 200
+field.set('width', 18);
+field.get('width');
+//=> 18
+field.toObject();
+//=> { width: 18, height: 200 }
 ```
 
 You can forgo specifying sizes if your field size is 1 bit:
 ```javascript
-class Privileges extends BitField {}
-Privileges.fields = ['user', 'moderator', 'administrator'];
-
+const Privileges = BitFieldMixin(['user', 'moderator', 'administrator']);
 const privileges = new Privileges(0);
 privileges.set('user').set('moderator');
 privileges.has('user', 'moderator');
@@ -353,15 +347,11 @@ privileges.set('moderator', 0).has('moderator');
 //=> false
 ```
 
-If the total size of your fields exceeds 31 bits, BitField will internally use a BigInt to represent the resulting number,
-however, you can still use normal numbers to set each field and get their value as a number as well:
+If the total size of your fields exceeds 31 bits, BitFieldMixin will switch to BigBitField that internally uses
+a BigInt to represent the resulting number, however, you can still use normal numbers to set each field
+and get their value as a number as well:
 ```javascript
-class LargeField extends BitField {}
-LargeField.fields = [
-  { name: 'width', size: 20 },
-  { name: 'height', size: 20 },
-];
-
+const LargeField = BitFieldMixin({ width: 20, height: 20 });
 const largeField = new LargeField([1048576, 1048576]);
 largeField.value
 //=> 1099512676352n
@@ -373,44 +363,33 @@ If you have to add more fields to your schema later on, you do not have to re-en
 at the end of your new schema:
 
 ```javascript
-class OldPerson extends BitField {}
-OldPerson.fields = [
-  { name: 'age', size: 7 },
-  { name: 'gender', size: 1 },
-];
+const OldField = BitFieldMixin({ width: 8, height: 8 });
+const oldField = OldField.encode([20, 1]);
+//=> oldField === 276
 
-const oldPerson = OldPerson.encode([20, 1]);
-//=> oldPerson === 41
-
-class Person extends BitField {}
-Person.fields = [
-  { name: 'age', size: 7 },
-  { name: 'gender', size: 1 },
-  { name: 'weight', size: 8 },
-];
-const newPerson = new Person(oldPerson);
-newPerson.get('age');
+const NewField = BitFieldMixin({ width: 8, height: 8, area: 10 });
+const newField = new NewField(oldField);
+newField.get('width');
 //=> 20
-newPerson.get('weight');
-//=> 0
-newPerson.set('weight', 100).get('weight');
+newField.get('height');
+//=> 1
+newField.set('weight', 100).get('weight');
 //=> 100
 ```
 
-If you only want to encode or decode a set of field values without creating an instance, you can do so by use static methods
+If you only want to encode or decode a set of field values without creating an instance, you can do so by using static methods
 `BitField.encode` and `BitField.decode` respectively:
 ```javascript
-class Person extends BitField {}
-Person.fields = [
-  { name: 'age', size: 7 },
-  { name: 'gender', size: 1 },
-];
+const Field = BitFieldMixin({ width: 7, height: 1 })
 
-Person.encode([20, 1]);
+Field.encode([20, 1]);
 //=> 41
 
-Person.decode(41);
-//=> { age: 20, gender: 1 }
+Field.encode({ height: 1, width: 20 });
+//=> 41
+
+Field.decode(41);
+//=> { width: 20, height: 1 }
 ```
 
 If you don't know beforehand how many bits you need for your field, you can call `BitField.getMinSize` with the maximum
@@ -418,53 +397,42 @@ possible value of your field to find out:
 ```javascript
 BitField.getMinSize(100);
 //=> 7
-
-class Person extends BitField {}
-Person.fields = [
-  { name: 'age', size: BitField.getMinSize(100) },
-  { name: 'gender', size: 1 },
-];
+const Field = BitFieldMixin({ width: BitField.getMinSize(250), height: 8 });
 ```
 
 For performance sake, BitField doesn't check the size of values being set and setting values that exceed the specified
 field size will lead to undefined behavior. If you want to check whether values fit their respective fields, you can use `BitField.isValid`:
 ```javascript
-class Person extends BitField {}
-Person.fields = [
-  { name: 'age', size: 7 },
-  { name: 'gender', size: 1 },
-];
+const Field = BitFieldMixin({ width: 7, height: 1 });
 
-Person.isValid({age: 100});
+Field.isValid({ width: 100 });
 //=> true
-Person.isValid({age: 100, gender: 3});
-//=> false
-Person.isValid([100, 1]);
-//=> true
-Person.isValid([100, 3]);
+Field.isValid({ width: 100, height: 3 });
 //=> false
 ```
 
 `BitField#match` (and its static variation `BitField.match`) can be used to check values of multiple fields at once:
 ```javascript
-const person = new Person([20, 1]);
-person.match({ age: 20 });
+const Field = BitFieldMixin({ width: 7, height: 1 });
+const field = new Field([20, 1]);
+field.match({ width: 20 });
 //=> true
-person.match({ gender: 1, age: 20 });
+field.match({ height: 1, width: 20 });
 //=> true
-person.match({ gender: 1, age: 19 });
+field.match({ height: 1, width: 19 });
 //=> false
-Person.match(person.valueOf(), { gender: 1, age: 20 });
+Field.match(field.valueOf(), { height: 1, width: 20 });
 //=> true
 ```
 
 If you have to check multiple BitField instances for the same values, create a special matcher with `BitField.getMatcher`
 and use it in the match method, that way each check will require only one bitwise operation and a comparison:
 ```javascript
-const matcher = Person.getMatcher({ gender: 1, age: 20 });
-Person.match(new Person([20, 1]).valueOf(), matcher);
+const Field = BitFieldMixin({ width: 7, height: 1 });
+const matcher = Field.getMatcher({ height: 1, width: 20 });
+Field.match(new Field([20, 1]).valueOf(), matcher);
 //=> true
-Person.match(new Person([19, 1]).valueOf(), matcher);
+Field.match(new Field([19, 1]).valueOf(), matcher);
 //=> false
 ```
 
