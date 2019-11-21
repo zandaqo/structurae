@@ -22,6 +22,11 @@ describe('BigBitField', () => {
       }).value).toBe(BigInt('2748779965588'));
       expect(new LargeField([20, 1, 3500, 5]).value).toBe(BigInt('2748779965588'));
     });
+
+    it('creates an instance from another BigBitField', () => {
+      expect(new LargeField(new LargeField()).value).toBe(BigInt(0));
+      expect(new LargeField(new LargeField(BigInt(1375759717))).value).toBe(BigInt(1375759717));
+    });
   });
 
   describe('get', () => {
@@ -63,6 +68,12 @@ describe('BigBitField', () => {
       expect(largeField.match({ location: 20, height: 7 })).toBe(false);
       expect(largeField.match({ location: 20, height: 5, open: 1 })).toBe(true);
       expect(largeField.match(LargeField.getMatcher({ width: 3500 }))).toBe(true);
+    });
+  });
+
+  describe('toJSON', () => {
+    it('returns the value of an instance as a number for JSON', () => {
+      expect(new LargeField([20, 1, 3500, 5]).toJSON()).toBe(BigInt('2748779965588'));
     });
   });
 

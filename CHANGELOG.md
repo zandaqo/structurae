@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2019-11-21
+### Removed
+Deprecated classes and methods:
+- Remove RecordArray (consider using ObjectView instead)
+- Remove StringArrayView (use ArrayView instead)
+- Remove `toObject` methods of *View classes (use `toJSON` methods instead)
+
+### Changed
+- Rename `BitField.fields` to `BitField.schema`, simplify the schema definition
+- BitField no longer implicitly switches to using BigInts
+- Add BigBitField that uses BigInts for bitfields longer than 31 bits.
+- BitFieldMixin automatically switches to BigBitField if the size of the bitfield exceeds 31 bits.
+- BitField no longer auto-initializes upon first call,
+use `BitField.initialize()` or BitFieldMixin to initialize the class after creation.
+
 ## [1.8.0] - 2019-09-27
 ### Added
 - Support default field values in ObjectView

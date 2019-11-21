@@ -44,14 +44,14 @@
     "url": "https://github.com/zandaqo/structurae/issues"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.18",
+    "@types/jest": "^24.0.23",
     "benchmark": "^2.1.4",
-    "eslint": "^6.4.0",
+    "eslint": "^6.6.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
     "jest": "^24.9.0",
-    "jsdoc-to-markdown": "^5.0.1",
-    "json-schema-faker": "^0.5.0-rc19"
+    "jsdoc-to-markdown": "^5.0.3",
+    "json-schema-faker": "^0.5.0-rc23"
   },
   "jest": {
     "testEnvironment": "node",

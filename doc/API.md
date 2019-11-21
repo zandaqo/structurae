@@ -302,6 +302,7 @@ const Field = BitFieldMixin({ area: 32, width: 16, height: 8 });
         * [.set(field, value)](#BigBitField+set) ⇒ [<code>BigBitField</code>](#BigBitField)
         * [.has(...fields)](#BigBitField+has) ⇒ <code>boolean</code>
         * [.match(matcher)](#BigBitField+match) ⇒ <code>boolean</code>
+        * [.toJSON()](#BigBitField+toJSON) ⇒ <code>bigint</code>
         * [.toObject()](#BigBitField+toObject) ⇒ <code>Object.&lt;string, number&gt;</code>
         * [.toString()](#BigBitField+toString) ⇒ <code>string</code>
         * [.valueOf()](#BigBitField+valueOf) ⇒ <code>bigint</code>
@@ -320,7 +321,7 @@ const Field = BitFieldMixin({ area: 32, width: 16, height: 8 });
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [data] | <code>bigint</code> \| <code>Array.&lt;number&gt;</code> \| <code>Object.&lt;string, number&gt;</code> | <code>0</code> | 
+| [data] | <code>bigint</code> \| [<code>BigBitField</code>](#BigBitField) \| <code>Array.&lt;number&gt;</code> \| <code>Object.&lt;string, number&gt;</code> | <code>0</code> | 
 
 **Example**  
 ```js
@@ -432,6 +433,12 @@ new Field({ width: 10, height: 20 }).match(matcher);
 new Field({ width: 10, height: 10 }).match(matcher);
 //=> false
 ```
+<a name="BigBitField+toJSON"></a>
+
+### bigBitField.toJSON() ⇒ <code>bigint</code>
+Returns the bigint value of an instance.
+
+**Kind**: instance method of [<code>BigBitField</code>](#BigBitField)  
 <a name="BigBitField+toObject"></a>
 
 ### bigBitField.toObject() ⇒ <code>Object.&lt;string, number&gt;</code>
@@ -456,7 +463,7 @@ Returns a string representing the value of the instance.
 <a name="BigBitField+valueOf"></a>
 
 ### bigBitField.valueOf() ⇒ <code>bigint</code>
-Returns the numerical value of an instance.
+Returns the bigint value of an instance.
 
 **Kind**: instance method of [<code>BigBitField</code>](#BigBitField)  
 **Returns**: <code>bigint</code> - the numerical value of the instance  
@@ -935,6 +942,7 @@ Stores and operates on data in Numbers treating them as bitfields.
         * [.set(field, value)](#BitField+set) ⇒ [<code>BitField</code>](#BitField)
         * [.has(...fields)](#BitField+has) ⇒ <code>boolean</code>
         * [.match(matcher)](#BitField+match) ⇒ <code>boolean</code>
+        * [.toJSON()](#BitField+toJSON) ⇒ <code>number</code>
         * [.toObject()](#BitField+toObject) ⇒ <code>Object.&lt;string, number&gt;</code>
         * [.toString()](#BitField+toString) ⇒ <code>string</code>
         * [.valueOf()](#BitField+valueOf) ⇒ <code>number</code>
@@ -956,7 +964,7 @@ Stores and operates on data in Numbers treating them as bitfields.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| [data] | <code>number</code> \| <code>Array.&lt;number&gt;</code> \| <code>Object.&lt;string, number&gt;</code> | <code>0</code> | a single number value of the field                                        or a map of field names with their respective values |
+| [data] | <code>number</code> \| [<code>BitField</code>](#BitField) \| <code>Array.&lt;number&gt;</code> \| <code>Object.&lt;string, number&gt;</code> | <code>0</code> | a single number value of the field                                        or a map of field names with their respective values |
 
 **Example**  
 ```js
@@ -1069,6 +1077,12 @@ new Field({ width: 10, height: 20 }).match(matcher);
 new Field({ width: 10, height: 10 }).match(matcher);
 //=> false
 ```
+<a name="BitField+toJSON"></a>
+
+### bitField.toJSON() ⇒ <code>number</code>
+Returns the numerical value of an instance.
+
+**Kind**: instance method of [<code>BitField</code>](#BitField)  
 <a name="BitField+toObject"></a>
 
 ### bitField.toObject() ⇒ <code>Object.&lt;string, number&gt;</code>

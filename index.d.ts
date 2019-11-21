@@ -111,11 +111,12 @@ export declare class BitField {
     private static offsets: NumberMap;
     private static mask: number;
 
-    constructor(data?: number|number[]|NumberMap);
+    constructor(data?: number|BitField|number[]|NumberMap);
     get(field: string): number;
     set(field: string, value: number);
     has(...fields: string[]): boolean;
     match(matcher: Matcher|NumberMap): boolean;
+    toJSON(): number;
     toObject(): NumberMap;
     toString(): string;
     valueOf(): number;
@@ -144,11 +145,12 @@ export declare class BigBitField {
     private static offsets: BigIntMap;
     private static mask: bigint;
 
-    constructor(data?: bigint|number[]|NumberMap);
+    constructor(data?: bigint|BigBitField|number[]|NumberMap);
     get(field: string): number;
     set(field: string, value: number);
     has(...fields: string[]): boolean;
     match(matcher: BigIntMatcher|NumberMap): boolean;
+    toJSON(): bigint;
     toObject(): NumberMap;
     toString(): string;
     valueOf(): bigint;

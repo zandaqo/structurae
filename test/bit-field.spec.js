@@ -24,6 +24,11 @@ describe('BitField', () => {
       expect(new Field([65535, 32767]).value).toBe(2147483647);
       expect(new PersonFlags({ human: 1, gender: 0, tall: 1 }).value).toBe(5);
     });
+
+    it('creates an instance from another bitfield', () => {
+      expect(new Field(new Field({ width: 65535, height: 32767 })).value).toBe(2147483647);
+      expect(new PersonFlags(new PersonFlags({ human: 1, gender: 0, tall: 1 })).value).toBe(5);
+    });
   });
 
   describe('get', () => {
@@ -65,6 +70,12 @@ describe('BitField', () => {
       expect(field.match({ height: 7 })).toBe(false);
       expect(field.match({ width: 8, height: 9 })).toBe(true);
       expect(field.match({ width: 8, height: 7 })).toBe(false);
+    });
+  });
+
+  describe('toJSON', () => {
+    it('returns the value of an instance as a number for JSON', () => {
+      expect(JSON.parse(JSON.stringify(new Field({ width: 20, height: 1 })))).toBe(65556);
     });
   });
 
