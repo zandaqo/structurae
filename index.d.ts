@@ -235,17 +235,24 @@ interface ObjectViewField {
     getter?: string;
     setter?: string;
     itemLength?: number;
+    default?: any;
 }
 
 interface ObjectViewSchema {
     [propName: string]: ObjectViewField;
 }
 
+interface ObjectViewTypeDefs {
+    [propName: string]: (field: ObjectViewField) => void;
+}
+
 export declare class ObjectView extends DataView {
-    static fields: string[];
+    static types: ObjectViewTypeDefs;
     static schema: ObjectViewSchema;
     static isInitialized: boolean;
-    static objectLength: number;
+    private static fields: string[];
+    private static objectLength: number;
+    private static defaultBuffer: ArrayBuffer;
 
     get(field: string): number | View;
     private getObject(position: number, field: ObjectViewField): object;

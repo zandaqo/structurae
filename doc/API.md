@@ -150,6 +150,10 @@ using half the space required for a normal grid.</p>
 <dd></dd>
 <dt><a href="#ObjectViewField">ObjectViewField</a> : <code>Object</code></dt>
 <dd></dd>
+<dt><a href="#ObjectViewSchema">ObjectViewSchema</a> : <code>Object.&lt;string, ObjectViewField&gt;</code></dt>
+<dd></dd>
+<dt><a href="#ObjectViewTypeDefs">ObjectViewTypeDefs</a> : <code>Object.&lt;string, function()&gt;</code></dt>
+<dd></dd>
 </dl>
 
 <a name="ArrayView"></a>
@@ -1692,6 +1696,13 @@ A DataView based C-like struct to store JavaScript objects in ArrayBuffer.
         * [.setView(field, value)](#ObjectView+setView) ⇒ [<code>ObjectView</code>](#ObjectView)
         * [.toJSON()](#ObjectView+toJSON) ⇒ <code>Object</code>
     * _static_
+        * [.types](#ObjectView.types) : [<code>ObjectViewTypeDefs</code>](#ObjectViewTypeDefs)
+            * [.number(field)](#ObjectView.types.number) ⇒ <code>void</code>
+            * [.typedarray(field)](#ObjectView.types.typedarray) ⇒ <code>void</code>
+            * [.string(field)](#ObjectView.types.string) ⇒ <code>void</code>
+            * [.object(field)](#ObjectView.types.object) ⇒ <code>void</code>
+            * [.array(field)](#ObjectView.types.array) ⇒ <code>void</code>
+        * [.schema](#ObjectView.schema) : [<code>ObjectViewSchema</code>](#ObjectViewSchema)
         * [.isInitialized](#ObjectView.isInitialized) : <code>boolean</code>
         * [.from(object, [view])](#ObjectView.from) ⇒ [<code>ObjectView</code>](#ObjectView)
         * [.getLength()](#ObjectView.getLength) ⇒ <code>number</code>
@@ -1763,6 +1774,67 @@ Sets an View to a field.
 Returns an Object corresponding to the view.
 
 **Kind**: instance method of [<code>ObjectView</code>](#ObjectView)  
+<a name="ObjectView.types"></a>
+
+### ObjectView.types : [<code>ObjectViewTypeDefs</code>](#ObjectViewTypeDefs)
+**Kind**: static property of [<code>ObjectView</code>](#ObjectView)  
+
+* [.types](#ObjectView.types) : [<code>ObjectViewTypeDefs</code>](#ObjectViewTypeDefs)
+    * [.number(field)](#ObjectView.types.number) ⇒ <code>void</code>
+    * [.typedarray(field)](#ObjectView.types.typedarray) ⇒ <code>void</code>
+    * [.string(field)](#ObjectView.types.string) ⇒ <code>void</code>
+    * [.object(field)](#ObjectView.types.object) ⇒ <code>void</code>
+    * [.array(field)](#ObjectView.types.array) ⇒ <code>void</code>
+
+<a name="ObjectView.types.number"></a>
+
+#### types.number(field) ⇒ <code>void</code>
+**Kind**: static method of [<code>types</code>](#ObjectView.types)  
+
+| Param | Type |
+| --- | --- |
+| field | [<code>ObjectViewField</code>](#ObjectViewField) | 
+
+<a name="ObjectView.types.typedarray"></a>
+
+#### types.typedarray(field) ⇒ <code>void</code>
+**Kind**: static method of [<code>types</code>](#ObjectView.types)  
+
+| Param | Type |
+| --- | --- |
+| field | [<code>ObjectViewField</code>](#ObjectViewField) | 
+
+<a name="ObjectView.types.string"></a>
+
+#### types.string(field) ⇒ <code>void</code>
+**Kind**: static method of [<code>types</code>](#ObjectView.types)  
+
+| Param | Type |
+| --- | --- |
+| field | [<code>ObjectViewField</code>](#ObjectViewField) | 
+
+<a name="ObjectView.types.object"></a>
+
+#### types.object(field) ⇒ <code>void</code>
+**Kind**: static method of [<code>types</code>](#ObjectView.types)  
+
+| Param | Type |
+| --- | --- |
+| field | [<code>ObjectViewField</code>](#ObjectViewField) | 
+
+<a name="ObjectView.types.array"></a>
+
+#### types.array(field) ⇒ <code>void</code>
+**Kind**: static method of [<code>types</code>](#ObjectView.types)  
+
+| Param | Type |
+| --- | --- |
+| field | [<code>ObjectViewField</code>](#ObjectViewField) | 
+
+<a name="ObjectView.schema"></a>
+
+### ObjectView.schema : [<code>ObjectViewSchema</code>](#ObjectViewSchema)
+**Kind**: static property of [<code>ObjectView</code>](#ObjectView)  
 <a name="ObjectView.isInitialized"></a>
 
 ### ObjectView.isInitialized : <code>boolean</code>
@@ -3980,4 +4052,13 @@ Creates a WeightedAdjacencyMatrix class extending a given Array-like class.
 | [getter] | <code>string</code> |  |
 | [setter] | <code>string</code> |  |
 | [itemLength] | <code>number</code> |  |
+| [default] | <code>\*</code> |  |
 
+<a name="ObjectViewSchema"></a>
+
+## ObjectViewSchema : <code>Object.&lt;string, ObjectViewField&gt;</code>
+**Kind**: global typedef  
+<a name="ObjectViewTypeDefs"></a>
+
+## ObjectViewTypeDefs : <code>Object.&lt;string, function()&gt;</code>
+**Kind**: global typedef  
