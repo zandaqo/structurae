@@ -326,6 +326,21 @@ export declare class CollectionView extends DataView {
     static of(sizes: number[]): CollectionView;
 }
 
+interface BinaryProtocolSchema {
+    [propName: number]: object|typeof ObjectView;
+}
+
+export declare class BinaryProtocol {
+    Views: BinaryProtocolSchema;
+    private tagName: string;
+    private tagType: PrimitiveFieldType;
+
+    constructor(views: BinaryProtocolSchema, tagName?: string, tagType?: string);
+    view(buffer: ArrayBuffer, offset?: number): ObjectView;
+    encode(object: object, arrayBuffer?: ArrayBuffer, offset?: number): ObjectView;
+    decode(buffer: ArrayBuffer, offset?: number): object;
+}
+
 export declare class BitArray extends Uint32Array {
     size: number;
     private lastPosition: BitPosition;

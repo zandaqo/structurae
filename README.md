@@ -11,6 +11,7 @@ A collection of data structures for high-performance JavaScript applications tha
     - [CollectionView](https://github.com/zandaqo/structurae#CollectionView) - an array of ObjectViews and ArrayViews of different types that support optional members.
     - [StringView](https://github.com/zandaqo/structurae#StringView) - extends Uint8Array to handle C-like representation of UTF-8 encoded strings.
     - [TypedArrayView](https://github.com/zandaqo/structurae#TypedArrayView) - a DataView based TypedArray that supports endianness and can be set at any offset.
+    - [BinaryProtocol](https://github.com/zandaqo/structurae#BinaryProtocol) - a helper class that simplifies defining and operating on multiple tagged ObjectViews.
 - Bit Structures:
     - [BitField & BigBitField](https://github.com/zandaqo/structurae#BitField) - stores and operates on data in Numbers and BigInts treating them as bitfields.
     - [BitArray](https://github.com/zandaqo/structurae#BitArray) - an array of bits implemented with Uint32Array.
@@ -303,6 +304,77 @@ doubles.byteOffset
 doubles.set(0, 5).set(1, 10);
 [...doubles]
 //=> [5, 10]
+```
+
+#### BinaryProtocol
+When transferring our buffers encoded with views we can often rely on meta information to know what kind of ObjectView
+to use in order to decode a received buffer, e.g. let's say we have a `HouseView` class to encode/decode all buffers
+that go through `/houses` route. However, sometimes we need our ObjectViews to carry within themselves an information
+as to what kind of ObjectView was used to encode them. To do that, we can prepend or tag each view with a value indicating its
+class, i.e. add a field that defaults to a certain value for each view class. Now upon receiving a buffer we can read that field
+using the DataView and convert it into an appropriate view. The `BinaryProtocol` does all that under the hood serving as a helper class
+to remove boilerplate, plus it creates the necessary ObjectView classes from schemas for when we are not concerned too much about individual
+classes:
+
+```javascript
+const { BinaryProtocol } = require('structurae');
+
+const protocol = new BinaryProtocol({
+  0: {
+    age: { type: 'int8' },
+    name: { type: 'string', length: 10 },
+  },
+  1: {
+    id: { type: 'uint32' },
+    items: { type: 'string', size: 3, length: 10 },
+  },
+});
+
+const person = protocol.encode({ tag: 0, age: 100, name: 'abc' });
+//=> ObjectView (12)
+protocol.decode(person.buffer)
+//=> { tag: 0, age: 100, name: 'abc' }
+const personView = protocol.view(person.buffer);
+personView.get('age');
+//=> 100
+const item = protocol.encode({ tag: 1, id: 10, items: ['a', 'b', 'c'] });
+//=> ObjectView (35)
+protocol.decode(item.buffer)
+//=> { tag: 1, id: 10, items: ['a', 'b', 'c'] }
+```
+
+We can of course define ObjectViews separately, however we will have to specify that tag field by ourselves in that case.
+```javascript
+const View = ObjectViewMixin({
+  tag: { type: 'uint8', default: 1 },
+  id: { type: 'uint32' },
+  items: { type: 'string', size: 3, length: 10 },
+});
+
+const protocol = new BinaryProtocol({
+  0: {
+   age: { type: 'int8' },
+   name: { type: 'string', length: 10 },
+  },
+  1: View,
+});
+```
+
+By default, the tag field is named `tag` and has the type of `uint8`, both can be changed and provided as second and third parameters to protocol constructor.
+```javascript
+const View = ObjectViewMixin({
+  tagId: { type: 'uint32', default: 1 },
+  id: { type: 'uint32' },
+  items: { type: 'string', size: 3, length: 10 },
+});
+
+const protocol = new BinaryProtocol({
+  0: {
+   age: { type: 'int8' },
+   name: { type: 'string', length: 10 },
+  },
+  1: View,
+}, 'tagId', 'uint32');
 ```
 
 ### Bit Structures

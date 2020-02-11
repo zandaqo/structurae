@@ -24,6 +24,11 @@ const Field = BitFieldMixin({ area: 32, width: 16, height: 8 });</p>
 <dt><a href="#BinaryHeap">BinaryHeap</a> ⇐ <code>Array</code></dt>
 <dd><p>Extends Array to implement the Binary Heap data structure.</p>
 </dd>
+<dt><a href="#BinaryProtocol">BinaryProtocol</a></dt>
+<dd><p>A helper class that simplifies defining and operating on multiple tagged ObjectViews.
+The protocol instance tags each of its views with a numerical value (by default Uint8) as the first field
+and uses it to convert data from objects to views and back.</p>
+</dd>
 <dt><a href="#BitArray">BitArray</a> ⇐ <code>Uint32Array</code></dt>
 <dd><p>Uses Uint32Array as a vector or array of bits.</p>
 </dd>
@@ -854,6 +859,90 @@ regardless of number or type of the arguments.
 | Param | Type | Description |
 | --- | --- | --- |
 | ...elements | <code>\*</code> | the elements of which to create the heap |
+
+<a name="BinaryProtocol"></a>
+
+## BinaryProtocol
+A helper class that simplifies defining and operating on multiple tagged ObjectViews.
+The protocol instance tags each of its views with a numerical value (by default Uint8) as the first field
+and uses it to convert data from objects to views and back.
+
+**Kind**: global class  
+
+* [BinaryProtocol](#BinaryProtocol)
+    * [new BinaryProtocol(views, [tagName], [tagType])](#new_BinaryProtocol_new)
+    * [.view(buffer, [offset])](#BinaryProtocol+view) ⇒ [<code>ObjectView</code>](#ObjectView)
+    * [.encode(object, [arrayBuffer], [offset])](#BinaryProtocol+encode) ⇒ [<code>ObjectView</code>](#ObjectView)
+    * [.decode(buffer, [offset])](#BinaryProtocol+decode) ⇒ <code>Object</code>
+
+<a name="new_BinaryProtocol_new"></a>
+
+### new BinaryProtocol(views, [tagName], [tagType])
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| views | <code>Object.&lt;number, (object\|ObjectView)&gt;</code> |  | a hash of tag values and corresponding views or schemas |
+| [tagName] | <code>string</code> | <code>&quot;tag&quot;</code> | a custom name for the tag field |
+| [tagType] | <code>string</code> | <code>&quot;uint8&quot;</code> | a custom type for the tag field |
+
+**Example**  
+```js
+const protocol = new BinaryProtocol({
+  0: {
+    age: { type: 'int8' },
+    name: { type: 'string', length: 10 },
+  },
+  1: {
+    id: { type: 'uint32' },
+    items: { type: 'string', size: 3, length: 10 },
+  },
+});
+const person = protocol.encode({ tag: 0, age: 100, name: 'abc' });
+//=> ObjectView (12)
+protocol.decode(person.buffer)
+//=> { tag: 0, age: 100, name: 'abc' }
+const item = protocol.encode({ tag: 1, id: 10, items: ['a', 'b', 'c'] });
+//=> ObjectView (35)
+protocol.decode(item.buffer)
+//=> { tag: 1, id: 10, items: ['a', 'b', 'c'] }
+```
+<a name="BinaryProtocol+view"></a>
+
+### binaryProtocol.view(buffer, [offset]) ⇒ [<code>ObjectView</code>](#ObjectView)
+Creates a View instance corresponding from a given ArrayBuffer
+according to its tag field information.
+
+**Kind**: instance method of [<code>BinaryProtocol</code>](#BinaryProtocol)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| buffer | <code>ArrayBuffer</code> |  | 
+| [offset] | <code>number</code> | <code>0</code> | 
+
+<a name="BinaryProtocol+encode"></a>
+
+### binaryProtocol.encode(object, [arrayBuffer], [offset]) ⇒ [<code>ObjectView</code>](#ObjectView)
+Encodes a given object into a View according to the tag information.
+
+**Kind**: instance method of [<code>BinaryProtocol</code>](#BinaryProtocol)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| object | <code>Object</code> |  | 
+| [arrayBuffer] | <code>ArrayBuffer</code> |  | 
+| [offset] | <code>number</code> | <code>0</code> | 
+
+<a name="BinaryProtocol+decode"></a>
+
+### binaryProtocol.decode(buffer, [offset]) ⇒ <code>Object</code>
+Decodes a given ArrayBuffer into an object according to the tag information.
+
+**Kind**: instance method of [<code>BinaryProtocol</code>](#BinaryProtocol)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| buffer | <code>ArrayBuffer</code> |  | 
+| [offset] | <code>number</code> | <code>0</code> | 
 
 <a name="BitArray"></a>
 

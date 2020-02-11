@@ -18,6 +18,7 @@ const CollectionView = require('./lib/collection-view');
 const { ObjectView, ObjectViewMixin } = require('./lib/object-view');
 const StringView = require('./lib/string-view');
 const TypedArrayViewMixin = require('./lib/typed-array-view');
+const BinaryProtocol = require('./lib/binary-protocol');
 
 /**
  * @external ArrayBuffer
@@ -57,4 +58,5 @@ module.exports = {
   ObjectViewMixin,
   StringView,
   TypedArrayViewMixin,
+  BinaryProtocol,
 };
