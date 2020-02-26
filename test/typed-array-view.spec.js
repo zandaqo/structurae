@@ -1,4 +1,4 @@
-const TypedArrayViewMixin = require('../lib/typed-array-view');
+const { TypedArrayViewMixin } = require('../index');
 
 const TypedArrays = {
   int8: TypedArrayViewMixin('int8'),
@@ -51,10 +51,33 @@ describe('TypedArrayView', () => {
         });
       });
 
+      describe('from', () => {
+        it('creates a typed array from an array of numbers', () => {
+          const expected = isBigInt ? sampleBigIntArray : sampleArray;
+          const array = Ctor.from(expected);
+          expect(array.size).toBe(4);
+          expect(array.get(0)).toBe(expected[0]);
+          expect(array.get(1)).toBe(expected[1]);
+          expect(array.get(2)).toBe(expected[2]);
+          expect(array.get(3)).toBe(expected[3]);
+        });
+
+        it('fills an existing typed array with an array of numbers', () => {
+          const expected = isBigInt ? sampleBigIntArray : sampleArray;
+          const array = Ctor.from(expected, Ctor.of(4));
+          expect(array.get(0)).toBe(expected[0]);
+          expect(array.get(1)).toBe(expected[1]);
+          expect(array.get(2)).toBe(expected[2]);
+          expect(array.get(3)).toBe(expected[3]);
+        });
+      });
+
       describe('toJSON', () => {
-        const expected = isBigInt ? sampleBigIntArray : sampleArray;
-        const array = Ctor.from(expected);
-        expect(array.toJSON()).toEqual(expected);
+        it('converts a view into an array of numbers', () => {
+          const expected = isBigInt ? sampleBigIntArray : sampleArray;
+          const array = Ctor.from(expected);
+          expect(array.toJSON()).toEqual(expected);
+        });
       });
     });
   }

@@ -197,9 +197,27 @@ export class SortedArray extends SortedMixin(Array) {
     uniquify(): this;
 }
 
-type ViewType = typeof ArrayView | typeof ObjectView | typeof TypedArrayView | typeof StringView;
+type ViewType = typeof ArrayView | typeof ObjectView | typeof TypedArrayView | typeof StringView | typeof TypeView;
 
-type View = ObjectView | ArrayView | TypedArrayView | StringView;
+type View = ObjectView | ArrayView | TypedArrayView | StringView | TypeView;
+
+declare class TypeView extends DataView {
+    static isPrimitive: true;
+    private static offset: number;
+    private static littleEndian: true;
+    private static objectLength: number;
+
+    get(): number;
+    set(value: number): this;
+    toJSON(): number;
+    static getLength(): number;
+    static from(value: number, view?: TypeView): TypeView;
+    static of(): TypeView;
+    static get(position: number, view: View): number;
+    static set(position: number, value: number, view: View): void;
+}
+
+export declare function TypeViewMixin(type: PrimitiveFieldType, littleEndian?: boolean): typeof TypeView;
 
 export declare class ArrayView extends DataView {
     size: number;
@@ -232,9 +250,6 @@ interface ObjectViewField {
     start?: number;
     length?: number;
     View?: ViewType;
-    getter?: string;
-    setter?: string;
-    itemLength?: number;
     default?: any;
 }
 
@@ -250,24 +265,24 @@ export declare class ObjectView extends DataView {
     static types: ObjectViewTypeDefs;
     static schema: ObjectViewSchema;
     static isInitialized: boolean;
+    static isPrimitive: false;
     private static fields: string[];
     private static objectLength: number;
     private static defaultBuffer: ArrayBuffer;
 
     get(field: string): number | View;
-    private getObject(position: number, field: ObjectViewField): object;
-    private getTypedArray(position: number, field: ObjectViewField): ArrayLike<number>;
+    private getPrimitive(position: number, View: ViewType): object;
+    private getObject(position: number, View: ViewType, length: number): object;
     getValue(field: string): any;
     getView(field: string): View;
     set(field: string, value: any): this;
-    private setObject(position: number, value: object, field: ObjectViewField): void;
-    private setTypedArray(position: number, value: ArrayLike<number>, field: ObjectViewField): void;
+    private setPrimitive(position: number, value: number, View: ViewType): void;
+    private setObject(position: number, value: object, View: ViewType, length: number): void;
     setView(field: string, value: View): this;
     toJSON(): object;
     static from(object: object, objectView?: ObjectView): ObjectView;
     static getLength(): number;
     static initialize(): void;
-    private static getFieldKind(field: ObjectViewField): string;
 }
 
 export declare function ObjectViewMixin(schema: ObjectViewSchema, ObjectViewClass?: typeof ObjectView): typeof ObjectView;
@@ -298,10 +313,8 @@ export declare class StringView extends Uint8Array {
 
 declare class TypedArrayView extends DataView {
     size: number;
-    static typeGetter: string;
-    static typeSetter: string;
-    static offset: number;
-    static littleEndian: boolean;
+    static View: TypeView;
+    static itemLength: number;
 
     get(index: number): number;
     set(index: number, value: number): this;

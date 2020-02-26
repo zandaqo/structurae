@@ -13,12 +13,14 @@ const UnweightedAdjacencyList = require('./lib/unweighted-adjacency-list');
 const UnweightedAdjacencyMatrix = require('./lib/unweighted-adjacency-matrix');
 const WeightedAdjacencyListMixin = require('./lib/weighted-adjacency-list');
 const WeightedAdjacencyMatrixMixin = require('./lib/weighted-adjacency-matrix');
-const { ArrayView, ArrayViewMixin } = require('./lib/array-view');
+const ArrayView = require('./lib/array-view');
+const { ArrayViewMixin, TypedArrayViewMixin } = require('./lib/array-view-mixin');
 const CollectionView = require('./lib/collection-view');
 const { ObjectView, ObjectViewMixin } = require('./lib/object-view');
 const StringView = require('./lib/string-view');
-const TypedArrayViewMixin = require('./lib/typed-array-view');
 const BinaryProtocol = require('./lib/binary-protocol');
+const TypeViewMixin = require('./lib/type-view');
+const BooleanView = require('./lib/boolean-view');
 
 /**
  * @external ArrayBuffer
@@ -59,4 +61,6 @@ module.exports = {
   StringView,
   TypedArrayViewMixin,
   BinaryProtocol,
+  TypeViewMixin,
+  BooleanView,
 };

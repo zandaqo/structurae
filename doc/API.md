@@ -26,7 +26,8 @@ const Field = BitFieldMixin({ area: 32, width: 16, height: 8 });</p>
 </dd>
 <dt><a href="#BinaryProtocol">BinaryProtocol</a></dt>
 <dd><p>A helper class that simplifies defining and operating on multiple tagged ObjectViews.
-The protocol instance tags each of its views with a numerical value (by default Uint8) as the first field
+The protocol instance tags each of its views with a numerical value
+(by default Uint8) as the first field
 and uses it to convert data from objects to views and back.</p>
 </dd>
 <dt><a href="#BitArray">BitArray</a> ⇐ <code>Uint32Array</code></dt>
@@ -89,6 +90,9 @@ using half the space required for a normal grid.</p>
 <dt><a href="#ArrayViewMixin">ArrayViewMixin(ObjectViewClass, [itemLength])</a> ⇒ <code><a href="#ArrayView">Class.&lt;ArrayView&gt;</a></code></dt>
 <dd><p>Creates an ArrayView class for a given ObjectView class.</p>
 </dd>
+<dt><a href="#TypedArrayViewMixin">TypedArrayViewMixin(type, [littleEndian])</a> ⇒ <code><a href="#TypedArrayView">Class.&lt;TypedArrayView&gt;</a></code></dt>
+<dd><p>Creates a TypedArrayView class for a given TypeView class.</p>
+</dd>
 <dt><a href="#BitFieldMixin">BitFieldMixin(schema, [BitFieldClass])</a> ⇒ <code><a href="#BitField">Class.&lt;BitField&gt;</a></code> | <code><a href="#BigBitField">Class.&lt;BigBitField&gt;</a></code></dt>
 <dd><p>Creates a BitField or BigBitField class with a given schema.</p>
 </dd>
@@ -109,7 +113,7 @@ using half the space required for a normal grid.</p>
 <dt><a href="#SymmetricGridMixin">SymmetricGridMixin(Base)</a> ⇒ <code><a href="#SymmetricGrid">SymmetricGrid</a></code></dt>
 <dd><p>Creates a SymmetricGrid class extending a given Array-like class.</p>
 </dd>
-<dt><a href="#TypedArrayViewMixin">TypedArrayViewMixin(type, [littleEndian])</a> ⇒ <code>Class.&lt;Base&gt;</code></dt>
+<dt><a href="#TypeViewMixin">TypeViewMixin(type, [littleEndian])</a> ⇒ <code>Class.&lt;TypeView&gt;</code></dt>
 <dd></dd>
 <dt><a href="#popCount32">popCount32(value)</a> ⇒ <code>number</code></dt>
 <dd><p>Counts set bits in a given number.</p>
@@ -145,7 +149,7 @@ using half the space required for a normal grid.</p>
 <dd></dd>
 <dt><a href="#Coordinates">Coordinates</a> : <code>Object</code></dt>
 <dd></dd>
-<dt><a href="#ViewType">ViewType</a> : <code><a href="#ArrayView">Class.&lt;ArrayView&gt;</a></code> | <code><a href="#ObjectView">Class.&lt;ObjectView&gt;</a></code> | <code><a href="#TypedArrayView">Class.&lt;TypedArrayView&gt;</a></code> | <code><a href="#StringView">Class.&lt;StringView&gt;</a></code></dt>
+<dt><a href="#ViewType">ViewType</a> : <code><a href="#ArrayView">Class.&lt;ArrayView&gt;</a></code> | <code><a href="#ObjectView">Class.&lt;ObjectView&gt;</a></code> | <code><a href="#TypedArrayView">Class.&lt;TypedArrayView&gt;</a></code> | <code><a href="#StringView">Class.&lt;StringView&gt;</a></code> | <code>Class.&lt;TypeView&gt;</code></dt>
 <dd></dd>
 <dt><a href="#View">View</a> : <code><a href="#ArrayView">ArrayView</a></code> | <code><a href="#ObjectView">ObjectView</a></code> | <code><a href="#TypedArrayView">TypedArrayView</a></code> | <code><a href="#StringView">StringView</a></code></dt>
 <dd></dd>
@@ -864,7 +868,8 @@ regardless of number or type of the arguments.
 
 ## BinaryProtocol
 A helper class that simplifies defining and operating on multiple tagged ObjectViews.
-The protocol instance tags each of its views with a numerical value (by default Uint8) as the first field
+The protocol instance tags each of its views with a numerical value
+(by default Uint8) as the first field
 and uses it to convert data from objects to views and back.
 
 **Kind**: global class  
@@ -881,7 +886,7 @@ and uses it to convert data from objects to views and back.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| views | <code>Object.&lt;number, (object\|ObjectView)&gt;</code> |  | a hash of tag values and corresponding views or schemas |
+| views | <code>Object.&lt;number, (object\|ObjectView)&gt;</code> |  | a hash of tag values                                            and corresponding views or schemas |
 | [tagName] | <code>string</code> | <code>&quot;tag&quot;</code> | a custom name for the tag field |
 | [tagType] | <code>string</code> | <code>&quot;uint8&quot;</code> | a custom type for the tag field |
 
@@ -1786,13 +1791,13 @@ A DataView based C-like struct to store JavaScript objects in ArrayBuffer.
         * [.toJSON()](#ObjectView+toJSON) ⇒ <code>Object</code>
     * _static_
         * [.types](#ObjectView.types) : [<code>ObjectViewTypeDefs</code>](#ObjectViewTypeDefs)
+            * [.boolean(field)](#ObjectView.types.boolean) ⇒ <code>void</code>
             * [.number(field)](#ObjectView.types.number) ⇒ <code>void</code>
-            * [.typedarray(field)](#ObjectView.types.typedarray) ⇒ <code>void</code>
             * [.string(field)](#ObjectView.types.string) ⇒ <code>void</code>
             * [.object(field)](#ObjectView.types.object) ⇒ <code>void</code>
-            * [.array(field)](#ObjectView.types.array) ⇒ <code>void</code>
         * [.schema](#ObjectView.schema) : [<code>ObjectViewSchema</code>](#ObjectViewSchema)
         * [.isInitialized](#ObjectView.isInitialized) : <code>boolean</code>
+        * [.isPrimitive](#ObjectView.isPrimitive) : <code>boolean</code>
         * [.from(object, [view])](#ObjectView.from) ⇒ [<code>ObjectView</code>](#ObjectView)
         * [.getLength()](#ObjectView.getLength) ⇒ <code>number</code>
         * [.initialize()](#ObjectView.initialize) ⇒ <code>void</code>
@@ -1869,24 +1874,23 @@ Returns an Object corresponding to the view.
 **Kind**: static property of [<code>ObjectView</code>](#ObjectView)  
 
 * [.types](#ObjectView.types) : [<code>ObjectViewTypeDefs</code>](#ObjectViewTypeDefs)
+    * [.boolean(field)](#ObjectView.types.boolean) ⇒ <code>void</code>
     * [.number(field)](#ObjectView.types.number) ⇒ <code>void</code>
-    * [.typedarray(field)](#ObjectView.types.typedarray) ⇒ <code>void</code>
     * [.string(field)](#ObjectView.types.string) ⇒ <code>void</code>
     * [.object(field)](#ObjectView.types.object) ⇒ <code>void</code>
-    * [.array(field)](#ObjectView.types.array) ⇒ <code>void</code>
 
-<a name="ObjectView.types.number"></a>
+<a name="ObjectView.types.boolean"></a>
 
-#### types.number(field) ⇒ <code>void</code>
+#### types.boolean(field) ⇒ <code>void</code>
 **Kind**: static method of [<code>types</code>](#ObjectView.types)  
 
 | Param | Type |
 | --- | --- |
 | field | [<code>ObjectViewField</code>](#ObjectViewField) | 
 
-<a name="ObjectView.types.typedarray"></a>
+<a name="ObjectView.types.number"></a>
 
-#### types.typedarray(field) ⇒ <code>void</code>
+#### types.number(field) ⇒ <code>void</code>
 **Kind**: static method of [<code>types</code>](#ObjectView.types)  
 
 | Param | Type |
@@ -1911,15 +1915,6 @@ Returns an Object corresponding to the view.
 | --- | --- |
 | field | [<code>ObjectViewField</code>](#ObjectViewField) | 
 
-<a name="ObjectView.types.array"></a>
-
-#### types.array(field) ⇒ <code>void</code>
-**Kind**: static method of [<code>types</code>](#ObjectView.types)  
-
-| Param | Type |
-| --- | --- |
-| field | [<code>ObjectViewField</code>](#ObjectViewField) | 
-
 <a name="ObjectView.schema"></a>
 
 ### ObjectView.schema : [<code>ObjectViewSchema</code>](#ObjectViewSchema)
@@ -1927,6 +1922,10 @@ Returns an Object corresponding to the view.
 <a name="ObjectView.isInitialized"></a>
 
 ### ObjectView.isInitialized : <code>boolean</code>
+**Kind**: static property of [<code>ObjectView</code>](#ObjectView)  
+<a name="ObjectView.isPrimitive"></a>
+
+### ObjectView.isPrimitive : <code>boolean</code>
 **Kind**: static property of [<code>ObjectView</code>](#ObjectView)  
 <a name="ObjectView.from"></a>
 
@@ -3028,10 +3027,8 @@ A DataView based TypedArray that supports endianness and can be set at any offse
         * [.set(index, value)](#TypedArrayView+set) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
         * [.toJSON()](#TypedArrayView+toJSON) ⇒ <code>Array.&lt;number&gt;</code>
     * _static_
-        * [.typeGetter](#TypedArrayView.typeGetter) : <code>string</code>
-        * [.typeSetter](#TypedArrayView.typeSetter) : <code>string</code>
-        * [.offset](#TypedArrayView.offset) : <code>number</code>
-        * [.littleEndian](#TypedArrayView.littleEndian) : <code>boolean</code>
+        * [.View](#TypedArrayView.View) : <code>Class.&lt;TypeView&gt;</code>
+        * [.itemLength](#TypedArrayView.itemLength) : <code>number</code>
         * [.getLength(size)](#TypedArrayView.getLength) ⇒ <code>number</code>
         * [.from(value, [array])](#TypedArrayView.from) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
         * [.of(size)](#TypedArrayView.of) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
@@ -3071,21 +3068,13 @@ Sets a number at a given index.
 Returns an array representation of the array view.
 
 **Kind**: instance method of [<code>TypedArrayView</code>](#TypedArrayView)  
-<a name="TypedArrayView.typeGetter"></a>
+<a name="TypedArrayView.View"></a>
 
-### TypedArrayView.typeGetter : <code>string</code>
+### TypedArrayView.View : <code>Class.&lt;TypeView&gt;</code>
 **Kind**: static property of [<code>TypedArrayView</code>](#TypedArrayView)  
-<a name="TypedArrayView.typeSetter"></a>
+<a name="TypedArrayView.itemLength"></a>
 
-### TypedArrayView.typeSetter : <code>string</code>
-**Kind**: static property of [<code>TypedArrayView</code>](#TypedArrayView)  
-<a name="TypedArrayView.offset"></a>
-
-### TypedArrayView.offset : <code>number</code>
-**Kind**: static property of [<code>TypedArrayView</code>](#TypedArrayView)  
-<a name="TypedArrayView.littleEndian"></a>
-
-### TypedArrayView.littleEndian : <code>boolean</code>
+### TypedArrayView.itemLength : <code>number</code>
 **Kind**: static property of [<code>TypedArrayView</code>](#TypedArrayView)  
 <a name="TypedArrayView.getLength"></a>
 
@@ -3905,8 +3894,20 @@ Creates an ArrayView class for a given ObjectView class.
 
 | Param | Type |
 | --- | --- |
-| ObjectViewClass | [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView) \| [<code>Class.&lt;StringView&gt;</code>](#StringView) | 
+| ObjectViewClass | [<code>ViewType</code>](#ViewType) | 
 | [itemLength] | <code>number</code> | 
+
+<a name="TypedArrayViewMixin"></a>
+
+## TypedArrayViewMixin(type, [littleEndian]) ⇒ [<code>Class.&lt;TypedArrayView&gt;</code>](#TypedArrayView)
+Creates a TypedArrayView class for a given TypeView class.
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| type | [<code>PrimitiveFieldType</code>](#PrimitiveFieldType) | 
+| [littleEndian] | <code>boolean</code> | 
 
 <a name="BitFieldMixin"></a>
 
@@ -3999,14 +4000,14 @@ Creates a SymmetricGrid class extending a given Array-like class.
 ```js
 const SymmetricGrid = SymmetricGridMixin(Array);
 ```
-<a name="TypedArrayViewMixin"></a>
+<a name="TypeViewMixin"></a>
 
-## TypedArrayViewMixin(type, [littleEndian]) ⇒ <code>Class.&lt;Base&gt;</code>
+## TypeViewMixin(type, [littleEndian]) ⇒ <code>Class.&lt;TypeView&gt;</code>
 **Kind**: global function  
 
 | Param | Type |
 | --- | --- |
-| type | <code>string</code> | 
+| type | [<code>PrimitiveFieldType</code>](#PrimitiveFieldType) | 
 | [littleEndian] | <code>boolean</code> | 
 
 <a name="popCount32"></a>
@@ -4110,7 +4111,7 @@ Creates a WeightedAdjacencyMatrix class extending a given Array-like class.
 
 <a name="ViewType"></a>
 
-## ViewType : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView) \| [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView) \| [<code>Class.&lt;TypedArrayView&gt;</code>](#TypedArrayView) \| [<code>Class.&lt;StringView&gt;</code>](#StringView)
+## ViewType : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView) \| [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView) \| [<code>Class.&lt;TypedArrayView&gt;</code>](#TypedArrayView) \| [<code>Class.&lt;StringView&gt;</code>](#StringView) \| <code>Class.&lt;TypeView&gt;</code>
 **Kind**: global typedef  
 <a name="View"></a>
 
@@ -4138,9 +4139,6 @@ Creates a WeightedAdjacencyMatrix class extending a given Array-like class.
 | [length] | <code>number</code> |  |
 | [start] | <code>number</code> |  |
 | [View] | [<code>ViewType</code>](#ViewType) |  |
-| [getter] | <code>string</code> |  |
-| [setter] | <code>string</code> |  |
-| [itemLength] | <code>number</code> |  |
 | [default] | <code>\*</code> |  |
 
 <a name="ObjectViewSchema"></a>

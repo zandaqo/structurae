@@ -4,24 +4,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2020-02-26
+### Added
+- Support boolean type in ObjectView.
+- Support type aliases in ObjectView.
+- Cache ArrayView & TypedArrayView classes to avoid duplications.
+- TypeView class to simplify creation of custom types for ObjectView.
+
+### Changed
+- (potentially breaking) Adding custom types to ObjectView is reworked.
+Custom types are now expected to be extensions of existing *View classes.
+A special TypeView class is added for types that extend number types. 
+
 ## [2.1.0] - 2020-02-11
 ### Added
-- BinaryProtocol class to simplify operating on tagged ObjectView
+- BinaryProtocol class to simplify operating on tagged ObjectView.
 
 ## [2.0.1] - 2020-01-09
 ### Fixed
-- TypeScript type declarations for ObjectView
+- TypeScript type declarations for ObjectView.
 
 ## [2.0.0] - 2019-11-21
 ### Removed
 Deprecated classes and methods:
-- Remove RecordArray (consider using ObjectView instead)
-- Remove StringArrayView (use ArrayView instead)
-- Remove `toObject` methods of *View classes (use `toJSON` methods instead)
+- Remove RecordArray (consider using ObjectView instead).
+- Remove StringArrayView (use ArrayView instead).
+- Remove `toObject` methods of *View classes (use `toJSON` methods instead).
 
 ### Changed
-- Rename `BitField.fields` to `BitField.schema`, simplify the schema definition
-- BitField no longer implicitly switches to using BigInts
+- Rename `BitField.fields` to `BitField.schema`, simplify the schema definition.
+- BitField no longer implicitly switches to using BigInts.
 - Add BigBitField that uses BigInts for bitfields longer than 31 bits.
 - BitFieldMixin automatically switches to BigBitField if the size of the bitfield exceeds 31 bits.
 - BitField no longer auto-initializes upon first call,
@@ -29,7 +41,7 @@ use `BitField.initialize()` or BitFieldMixin to initialize the class after creat
 
 ## [1.8.0] - 2019-09-27
 ### Added
-- Support default field values in ObjectView
+- Support default field values in ObjectView.
 
 ### Changed
 - (potentially breaking) `ObjectView.from` no longer initializes ObjectView upon the first call.
@@ -37,15 +49,15 @@ Call `ObjectView.intialize()` upon setting the schema (`ObjectView.schema`) for 
 
 ## [1.7.5] - 2019-09-22
 ### Added
-- Add BitFieldMixin
+- Add BitFieldMixin.
 
 ### Fixed
-- Avoid BigInts in RecordArray if not supported
+- Avoid BigInts in RecordArray if not supported.
 
 ## [1.7.4] - 2019-09-21
 ### Added
-- Add ObjectViewMixin and expose ArrayView
-- Add ObjectView#getView
+- Add ObjectViewMixin and expose ArrayView.
+- Add ObjectView#getView.
 
 ## [1.7.3] - 2019-09-13
 ### Fixed

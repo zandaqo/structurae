@@ -1,6 +1,4 @@
-const { ArrayViewMixin } = require('../lib/array-view');
-const { ObjectViewMixin } = require('../lib/object-view');
-const CollectionView = require('../lib/collection-view');
+const { ArrayViewMixin, ObjectViewMixin, CollectionView } = require('../index');
 
 const Pet = ObjectViewMixin({
   age: { type: 'int8' },

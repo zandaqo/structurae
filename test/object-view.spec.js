@@ -1,6 +1,7 @@
-const { ObjectView, ObjectViewMixin } = require('../lib/object-view');
-const StringView = require('../lib/string-view');
-const TypedArrayViewMixin = require('../lib/typed-array-view');
+const {
+  ObjectView, ObjectViewMixin,
+  StringView, TypedArrayViewMixin, TypeViewMixin,
+} = require('../index');
 
 const Pet = ObjectViewMixin({
   age: { type: 'int8' },
@@ -43,32 +44,13 @@ Invalid.schema = {
   a: { type: 'Int128' },
 };
 
-class BooleanView extends ObjectView {
-  getBoolean(position) {
-    return !!this.getUint8(position);
-  }
-
-  setBoolean(position, value) {
-    this.setUint8(position, value ? 1 : 0);
-  }
-}
-BooleanView.schema = {
+const BooleanView = ObjectViewMixin({
   a: { type: 'boolean' },
-};
-BooleanView.types = {
-  ...ObjectView.types,
-  boolean(field) {
-    field.View = DataView;
-    field.length = 1;
-    field.getter = 'getBoolean';
-    field.setter = 'setBoolean';
-  },
-};
-BooleanView.initialize();
+});
 
 const NestedBoolean = ObjectViewMixin({
   a: { type: 'uint8' },
-  b: { type: BooleanView, size: 2 },
+  b: { type: 'boolean', size: 2 },
 });
 
 const WithDefaults = ObjectViewMixin({
@@ -184,7 +166,7 @@ describe('ObjectView', () => {
     });
 
     it('returns a custom field value using its getter', () => {
-      const object = { a: 1, b: [{ a: true }, { a: false }] };
+      const object = { a: 1, b: [true, false] };
       const view = NestedBoolean.from(object);
       expect(view.getValue('b')).toEqual(object.b);
     });
@@ -194,7 +176,7 @@ describe('ObjectView', () => {
     it('returns a view for number fields', () => {
       const primitives = Primitives.from({ h: 4.0 });
       const view = primitives.getView('h');
-      expect(view instanceof TypedArrayViewMixin('float64')).toBe(true);
+      expect(view instanceof TypeViewMixin('float64')).toBe(true);
       expect(view.buffer === primitives.buffer).toBe(true);
       expect(view.byteLength).toBe(8);
       expect(view.get(0)).toBe(4.0);
@@ -296,7 +278,7 @@ describe('ObjectView', () => {
     });
 
     it('sets custom type field value using its setter', () => {
-      const object = { a: 1, b: [{ a: true }, { a: false }] };
+      const object = { a: 1, b: [true, false] };
       const view = NestedBoolean.from({});
       expect(view.set('b', object.b).getValue('b')).toEqual(object.b);
     });
@@ -363,7 +345,7 @@ describe('ObjectView', () => {
     });
 
     it('handles custom type fields', () => {
-      const object = { a: 1, b: [{ a: true }, { a: false }] };
+      const object = { a: 1, b: [true, false] };
       const view = NestedBoolean.from(object);
       expect(view.toJSON()).toEqual(object);
     });

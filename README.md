@@ -56,7 +56,7 @@ and do not require compilation.
 #### ObjectView
 Extends DataView to store a JavaScript object in ArrayBuffer akin to C-like struct.
 The fields are defined in ObjectView.schema and can be of any primitive type supported by DataView, 
-their arrays, strings, or other objects and arrays of objects. The data is laid out sequentially with fixed sizes, hence,
+their arrays, booleans, strings, or other objects and arrays of objects. The data is laid out sequentially with fixed sizes, hence,
 variable length arrays and optional fields are not supported (for those check out [CollectionView](https://github.com/zandaqo/structurae#CollectionView)).
 
 ```javascript
@@ -132,37 +132,37 @@ neighborhood.get('biggerHouse')
 //=> { size: 200 }
 ```
 
-You can add your own field types to ObjectView, for example an ObjectView that supports booleans:
+You can add your own field types to ObjectView, for example an ObjectView that supports Date:
 ```javascript
-class BooleanView extends ObjectView {
-  getBoolean(position) {
-    return !!this.getUint8(position);
+const { TypeViewMixin } = require('structurae');
+class DateView extends TypeViewMixin('float64', true) {
+  static get(position, view) {
+    return new Date(super.get(position, view));  
   }
-
-  setBoolean(position, value) {
-    this.setUint8(position, value ? 1 : 0);
+  static set(position, value, view) {
+    super.set(position, +value, view);
   }
 }
-BooleanView.schema = {
-  a: { type: 'boolean' },
+
+class View extends ObjectView {}
+View.schema = {
+  a: { type: 'date' },
 };
-BooleanView.types = {
+View.types = {
   ...ObjectView.types,
-  boolean(field) {
-    field.View = DataView;
-    field.length = 1;
-    field.getter = 'getBoolean';
-    field.setter = 'setBoolean';
+  date(field) {
+    field.View = DateView;
+    field.length = 8;
   },
 };
-BooleanView.initialize();
+View.initialize();
 
-const bool = BooleanView.from({ a: true });
-bool.getValue('a')
-//=> true
-bool.set('a', false);
-bool.toJSON();
-//=> { a: false }
+const date = View.from({ a: new Date(0) });
+date.getValue('a')
+//=> Thu Jan 01 1970 00:00:00 GMT+0000
+date.set('a', new Date(1e8));
+date.toJSON();
+//=> { a: Fri Jan 02 1970 03:46:40 GMT+0000 }
 ```
 
 #### ArrayView
@@ -343,7 +343,7 @@ protocol.decode(item.buffer)
 //=> { tag: 1, id: 10, items: ['a', 'b', 'c'] }
 ```
 
-We can of course define ObjectViews separately, however we will have to specify that tag field by ourselves in that case.
+We can define ObjectViews separately, however, we will have to specify the tag field by ourselves in that case.
 ```javascript
 const View = ObjectViewMixin({
   tag: { type: 'uint8', default: 1 },
