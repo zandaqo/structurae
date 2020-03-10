@@ -211,10 +211,14 @@ declare class TypeView extends DataView {
     set(value: number): this;
     toJSON(): number;
     static getLength(): number;
-    static from(value: number, view?: TypeView): TypeView;
+    static from(value: number, view?: View, start?: number): View;
+    static toJSON(view: View, start: number): number;
     static of(): TypeView;
-    static get(position: number, view: View): number;
-    static set(position: number, value: number, view: View): void;
+}
+
+export declare class BooleanView extends TypeView {
+    static from(value: boolean, view?: View, start?: number): View;
+    static toJSON(view: View, start: number): boolean;
 }
 
 export declare function TypeViewMixin(type: PrimitiveFieldType, littleEndian?: boolean): typeof TypeView;
@@ -230,7 +234,8 @@ export declare class ArrayView extends DataView {
     setView(index: number, value: ObjectView): this;
     toJSON(): object[];
     [Symbol.iterator](): IterableIterator<ObjectView>;
-    static from(value: ArrayLike<object>, array?: ArrayView): ArrayView;
+    static from(value: ArrayLike<object>, array?: View, start?: number, length?: number): View;
+    static toJSON(view: View, start: number, length: number): any[];
     static of(size: number): ArrayView;
     static getLength(size: number): number;
 }
@@ -271,16 +276,13 @@ export declare class ObjectView extends DataView {
     private static defaultBuffer: ArrayBuffer;
 
     get(field: string): number | View;
-    private getPrimitive(position: number, View: ViewType): object;
-    private getObject(position: number, View: ViewType, length: number): object;
     getValue(field: string): any;
     getView(field: string): View;
     set(field: string, value: any): this;
-    private setPrimitive(position: number, value: number, View: ViewType): void;
-    private setObject(position: number, value: object, View: ViewType, length: number): void;
     setView(field: string, value: View): this;
     toJSON(): object;
-    static from(object: object, objectView?: ObjectView): ObjectView;
+    static from(object: object, view?: View, start?: number, length?: number): View;
+    static toJSON(view: View, start: number): any[];
     static getLength(): number;
     static initialize(): void;
 }
@@ -307,7 +309,8 @@ export declare class StringView extends Uint8Array {
     toString(): string;
     toJSON(): string;
     trim(): StringView;
-    static from(arrayLike: ArrayLike<number>|string, mapFn?: Function | StringView): StringView;
+    static from(arrayLike: ArrayLike<number>|string, mapFn?: Function | View, thisArg?: any, length?: number): View;
+    static toJSON(view: View, start?: number, length?: number): string;
     static getByteSize(string: string): number;
 }
 
@@ -321,7 +324,8 @@ declare class TypedArrayView extends DataView {
     toJSON(): Array<number>;
     [Symbol.iterator](): IterableIterator<number>;
     static getLength(size: number): number;
-    static from(value: ArrayLike<number>, array?: TypedArrayView): TypedArrayView;
+    static from(value: ArrayLike<number>, array?: View, start?: number, length?: number): View;
+    static toJSON(view: View, start: number, length: number): number[];
     static of(size: number): TypedArrayView;
 }
 
