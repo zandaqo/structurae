@@ -136,11 +136,12 @@ You can add your own field types to ObjectView, for example an ObjectView that s
 ```javascript
 const { TypeViewMixin } = require('structurae');
 class DateView extends TypeViewMixin('float64', true) {
-  static get(position, view) {
-    return new Date(super.get(position, view));  
+  static from(value, view, start) {
+    super.from(+value, view, start);
   }
-  static set(position, value, view) {
-    super.set(position, +value, view);
+  
+  static toJSON(view, start) {
+    return new Date(super.toJSON(view, start));  
   }
 }
 
