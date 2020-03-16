@@ -88,6 +88,15 @@ const suits = [
       const string = strings[getIndex(arrayLength)];
       return StringView.getByteSize(string);
     }),
+  new Benchmark.Suite('Serialization:', benchmarkOptions)
+    .add('Serialize', () => {
+      const string = strings[getIndex(arrayLength)];
+      return StringView.from(string);
+    })
+    .add('Deserialize', () => {
+      const view = views[getIndex(arrayLength)];
+      return view.toString();
+    }),
 ];
 
 
