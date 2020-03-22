@@ -188,6 +188,7 @@ stored in an ArrayBuffer.
         * [.from(value, [array], [start], [length])](#ArrayView.from) ⇒ [<code>ArrayView</code>](#ArrayView)
         * [.toJSON(view, [start], [length])](#ArrayView.toJSON) ⇒ <code>Object</code>
         * [.getLength(size)](#ArrayView.getLength) ⇒ <code>number</code>
+        * [.getSize(length)](#ArrayView.getSize) ⇒ <code>number</code>
         * [.of(size)](#ArrayView.of) ⇒ [<code>ArrayView</code>](#ArrayView)
 
 <a name="ArrayView+size"></a>
@@ -281,7 +282,7 @@ Returns an array representation of a given array view.
 | --- | --- | --- |
 | view | [<code>View</code>](#View) |  | 
 | [start] | <code>number</code> | <code>0</code> | 
-| [length] | <code>length</code> |  | 
+| [length] | <code>number</code> |  | 
 
 <a name="ArrayView.getLength"></a>
 
@@ -293,6 +294,17 @@ Returns the byte length of an array view to hold a given amount of objects.
 | Param | Type |
 | --- | --- |
 | size | <code>number</code> | 
+
+<a name="ArrayView.getSize"></a>
+
+### ArrayView.getSize(length) ⇒ <code>number</code>
+Calculates the size of an array from it's byte length.
+
+**Kind**: static method of [<code>ArrayView</code>](#ArrayView)  
+
+| Param | Type |
+| --- | --- |
+| length | <code>number</code> | 
 
 <a name="ArrayView.of"></a>
 
@@ -3068,24 +3080,13 @@ A DataView based TypedArray that supports endianness and can be set at any offse
 
 * [TypedArrayView](#TypedArrayView) ⇐ <code>DataView</code>
     * _instance_
-        * [.size](#TypedArrayView+size) : <code>number</code>
         * [.get(index)](#TypedArrayView+get) ⇒ <code>number</code>
-        * [.set(index, value)](#TypedArrayView+set) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
-        * [.toJSON()](#TypedArrayView+toJSON) ⇒ <code>Array.&lt;number&gt;</code>
     * _static_
         * [.View](#TypedArrayView.View) : <code>Class.&lt;TypeView&gt;</code>
         * [.itemLength](#TypedArrayView.itemLength) : <code>number</code>
         * [.getLength(size)](#TypedArrayView.getLength) ⇒ <code>number</code>
-        * [.from(value, [array], [start], [length])](#TypedArrayView.from) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
-        * [.toJSON(view, [start], [length])](#TypedArrayView.toJSON) ⇒ <code>Array.&lt;number&gt;</code>
-        * [.of(size)](#TypedArrayView.of) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
+        * [.getSize(length)](#TypedArrayView.getSize) ⇒ <code>number</code>
 
-<a name="TypedArrayView+size"></a>
-
-### typedArrayView.size : <code>number</code>
-Returns the amount of available numbers in the array.
-
-**Kind**: instance property of [<code>TypedArrayView</code>](#TypedArrayView)  
 <a name="TypedArrayView+get"></a>
 
 ### typedArrayView.get(index) ⇒ <code>number</code>
@@ -3097,24 +3098,6 @@ Returns a number at a given index.
 | --- | --- |
 | index | <code>number</code> | 
 
-<a name="TypedArrayView+set"></a>
-
-### typedArrayView.set(index, value) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
-Sets a number at a given index.
-
-**Kind**: instance method of [<code>TypedArrayView</code>](#TypedArrayView)  
-
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
-| value | <code>number</code> | 
-
-<a name="TypedArrayView+toJSON"></a>
-
-### typedArrayView.toJSON() ⇒ <code>Array.&lt;number&gt;</code>
-Returns an array representation of the array view.
-
-**Kind**: instance method of [<code>TypedArrayView</code>](#TypedArrayView)  
 <a name="TypedArrayView.View"></a>
 
 ### TypedArrayView.View : <code>Class.&lt;TypeView&gt;</code>
@@ -3134,43 +3117,16 @@ Returns the byte length of an array view to hold a given amount of numbers.
 | --- | --- |
 | size | <code>number</code> | 
 
-<a name="TypedArrayView.from"></a>
+<a name="TypedArrayView.getSize"></a>
 
-### TypedArrayView.from(value, [array], [start], [length]) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
-Creates an array view from a given array of numbers.
-
-**Kind**: static method of [<code>TypedArrayView</code>](#TypedArrayView)  
-
-| Param | Type | Default |
-| --- | --- | --- |
-| value | <code>ArrayLike.&lt;number&gt;</code> |  | 
-| [array] | [<code>View</code>](#View) |  | 
-| [start] | <code>number</code> | <code>0</code> | 
-| [length] | <code>number</code> |  | 
-
-<a name="TypedArrayView.toJSON"></a>
-
-### TypedArrayView.toJSON(view, [start], [length]) ⇒ <code>Array.&lt;number&gt;</code>
-Returns an array representation of a given view.
+### TypedArrayView.getSize(length) ⇒ <code>number</code>
+Calculates the size of an array from it's byte length.
 
 **Kind**: static method of [<code>TypedArrayView</code>](#TypedArrayView)  
 
-| Param | Type | Default |
-| --- | --- | --- |
-| view | [<code>View</code>](#View) |  | 
-| [start] | <code>number</code> | <code>0</code> | 
-| [length] | <code>length</code> |  | 
-
-<a name="TypedArrayView.of"></a>
-
-### TypedArrayView.of(size) ⇒ [<code>TypedArrayView</code>](#TypedArrayView)
-Creates an empty array view of specified size.
-
-**Kind**: static method of [<code>TypedArrayView</code>](#TypedArrayView)  
-
-| Param | Type | Default |
-| --- | --- | --- |
-| size | <code>number</code> | <code>1</code> | 
+| Param | Type |
+| --- | --- |
+| length | <code>number</code> | 
 
 <a name="UnweightedAdjacencyList"></a>
 
