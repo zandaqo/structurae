@@ -18,43 +18,14 @@ const benchmarkOptions = {
 
 const getIndex = (size) => (Math.random() * size) | 0;
 
-const Toy = ObjectViewMixin({
-  id: { type: 'uint32' },
-  name: { type: 'string', length: 10 },
-});
-
-const Pet = ObjectViewMixin({
-  type: { type: 'uint8' },
-  id: { type: 'uint32' },
-  name: { type: 'string', length: 20 },
-  toys: { type: Toy, size: 10 },
-});
-
-const House = ObjectViewMixin({
-  type: { type: 'uint8' },
-  id: { type: 'uint32' },
-  size: { type: 'float64' },
-});
-
-const Person = ObjectViewMixin({
-  type: { type: 'uint8' },
-  id: { type: 'uint32' },
-  name: { type: 'string', length: 50 },
-  weight: { type: 'float64' },
-  height: { type: 'float64' },
-  pets: { type: Pet, size: 3 },
-  scores: { type: 'uint8', size: 50 },
-  house: { type: House },
-  parents: { type: 'string', size: 2, length: 10 },
-});
-
-const People = ArrayViewMixin(Person);
-
 const JSONSchema = {
   type: 'object',
+  $id: 'Person',
   properties: {
-    type: { type: 'integer', minimum: 0, maximum: 255 },
-    id: { type: 'integer', minimum: 0 },
+    type: {
+      type: 'integer', btype: 'uint8', minimum: 0, maximum: 255,
+    },
+    id: { type: 'integer', btype: 'uint32', minimum: 0 },
     name: { type: 'string', minLength: 3, maxLength: 50 },
     weight: { type: 'number', minimum: 0 },
     height: { type: 'number' },
@@ -62,6 +33,7 @@ const JSONSchema = {
       type: 'array',
       items: {
         type: 'integer',
+        btype: 'uint8',
         minimum: 0,
         maximum: 255,
       },
@@ -72,16 +44,20 @@ const JSONSchema = {
       type: 'array',
       items: {
         type: 'object',
+        $id: 'Pet',
         properties: {
-          type: { type: 'integer', minimum: 0, maximum: 255 },
-          id: { type: 'integer', minimum: 0 },
+          type: {
+            type: 'integer', btype: 'uint8', minimum: 0, maximum: 255,
+          },
+          id: { type: 'integer', btype: 'uint32', minimum: 0 },
           name: { type: 'string', minLength: 3, maxLength: 20 },
           toys: {
             type: 'array',
             items: {
               type: 'object',
+              $id: 'Toy',
               properties: {
-                id: { type: 'integer', minimum: 0 },
+                id: { type: 'integer', btype: 'uint32', minimum: 0 },
                 name: { type: 'string', minLength: 3, maxLength: 10 },
               },
               required: ['id', 'name'],
@@ -97,23 +73,28 @@ const JSONSchema = {
     },
     house: {
       type: 'object',
+      $id: 'House',
       properties: {
-        type: { type: 'integer', minimum: 0, maximum: 255 },
-        id: { type: 'integer', minimum: 0 },
+        type: {
+          type: 'integer', btype: 'uint8', minimum: 0, maximum: 255,
+        },
+        id: { type: 'integer', btype: 'uint32', minimum: 0 },
         size: { type: 'number', minimum: 0 },
       },
       required: ['type', 'id', 'size'],
     },
     parents: {
       type: 'array',
-      items: [
-        { type: 'string', minLength: 5, maxLength: 10 },
-        { type: 'string', minLength: 5, maxLength: 10 },
-      ],
+      items: { type: 'string', minLength: 5, maxLength: 10 },
+      maxItems: 2,
+      minItems: 2,
     },
   },
   required: ['type', 'id', 'name', 'weight', 'height', 'scores', 'pets', 'house', 'parents'],
 };
+
+const Person = ObjectViewMixin(JSONSchema);
+const People = ArrayViewMixin(Person);
 
 const objects = [];
 
@@ -140,7 +121,7 @@ const suits = [
   new Benchmark.Suite('Get Value:', benchmarkOptions)
     .add('ObjectView', () => {
       const view = views[getIndex(100)];
-      return view.getValue('type') + view.getValue('weight') + view.getValue('height');
+      return view.get('type') + view.get('weight') + view.get('height');
     })
     .add('JSON', () => {
       const string = strings[getIndex(100)];

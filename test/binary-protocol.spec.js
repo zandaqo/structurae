@@ -1,17 +1,32 @@
-const { ObjectViewMixin } = require('../lib/object-view');
-const BinaryProtocol = require('../lib/binary-protocol');
+const { BinaryProtocol, ObjectViewMixin, ObjectView } = require('../index');
+
+const aSchema = {
+  age: { type: 'number', btype: 'int8' },
+  name: { type: 'string', maxLength: 10 },
+};
+
+const bSchema = {
+  id: { type: 'number', btype: 'uint32' },
+  items: {
+    type: 'array',
+    items: { type: 'string', maxLength: 10 },
+    maxItems: 3,
+  },
+};
 
 describe('BinaryProtocol', () => {
   describe('constructor', () => {
     it('creates a protocol instance from given schemas', () => {
       const protocol = new BinaryProtocol({
         0: {
-          age: { type: 'int8' },
-          name: { type: 'string', length: 10 },
+          $id: 'protocolA',
+          type: 'object',
+          properties: { ...aSchema },
         },
         1: {
-          id: { type: 'uint32' },
-          items: { type: 'string', size: 3, length: 10 },
+          $id: 'protocolB',
+          type: 'object',
+          properties: { ...bSchema },
         },
       });
       expect(protocol instanceof BinaryProtocol).toBe(true);
@@ -21,104 +36,116 @@ describe('BinaryProtocol', () => {
 
     it('creates a protocol using an existing View class', () => {
       const View = ObjectViewMixin({
-        tag: { type: 'uint8', default: 1 },
-        id: { type: 'uint32' },
-        items: { type: 'string', size: 3, length: 10 },
+        $id: 'protocolD',
+        type: 'object',
+        properties: {
+          tag: { type: 'number', btype: 'uint8', default: 1 },
+          ...bSchema,
+        },
       });
       const protocol = new BinaryProtocol({
         0: {
-          age: { type: 'int8' },
-          name: { type: 'string', length: 10 },
+          $id: 'protocolC',
+          type: 'object',
+          properties: { ...aSchema },
         },
-        1: View,
+        1: 'protocolD',
       });
       expect(protocol.Views[0].objectLength).toBe(12);
-      expect(protocol.Views[1].objectLength).toBe(35);
+      expect(protocol.Views[1]).toBe(View);
     });
 
     it('creates a protocol with custom tag field', () => {
       const View = ObjectViewMixin({
-        typeId: { type: 'uint32', default: 1 },
-        id: { type: 'uint32' },
-        items: { type: 'string', size: 3, length: 10 },
+        $id: 'protocolF',
+        type: 'object',
+        properties: {
+          typeId: { type: 'number', btype: 'uint32', default: 1 },
+          ...bSchema,
+        },
       });
       const protocol = new BinaryProtocol({
         0: {
-          age: { type: 'int8' },
-          name: { type: 'string', length: 10 },
+          $id: 'protocolE',
+          type: 'object',
+          properties: { ...aSchema },
         },
-        1: View,
+        1: 'protocolF',
       }, 'typeId', 'uint32');
       expect(protocol.Views[0].objectLength).toBe(15);
-      expect(protocol.Views[1].objectLength).toBe(38);
+      expect(protocol.Views[1]).toBe(View);
     });
 
     it('throws if invalid View class is provided', () => {
-      const View = ObjectViewMixin({
-        id: { type: 'uint32' },
-        items: { type: 'string', size: 3, length: 10 },
+      ObjectViewMixin({
+        $id: 'protocolH',
+        type: 'object',
+        properties: { ...bSchema },
       });
       expect(() => new BinaryProtocol({
         0: {
-          age: { type: 'int8' },
-          name: { type: 'string', length: 10 },
+          $id: 'protocolG',
+          type: 'object',
+          properties: { ...aSchema },
         },
-        1: View,
+        1: 'protocolH',
       })).toThrow('The tag definition in the View is incorrect.');
+    });
+
+    it('throws if non-existent View class is referenced', () => {
+      expect(() => new BinaryProtocol({
+        0: {
+          $id: 'protocolI',
+          type: 'object',
+          properties: { ...aSchema },
+        },
+        1: 'protocolJ',
+      })).toThrow('View "protocolJ" is not found.');
     });
   });
 
   describe('view', () => {
+    const protocol = new BinaryProtocol({
+      0: {
+        $id: 'protocolA',
+        type: 'object',
+        properties: { ...aSchema },
+      },
+      1: {
+        $id: 'protocolB',
+        type: 'object',
+        properties: { ...bSchema },
+      },
+    });
     it('returns an appropriate View for a given ArrayBuffer', () => {
-      const View = ObjectViewMixin({
-        tag: { type: 'uint8', default: 1 },
-        id: { type: 'uint32' },
-        items: { type: 'string', size: 3, length: 10 },
-      });
-      const protocol = new BinaryProtocol({
-        0: {
-          age: { type: 'int8' },
-          name: { type: 'string', length: 10 },
-        },
-        1: View,
-      });
+      const View = ObjectView.Views.protocolB;
       const data = { id: 10, items: ['a', 'b', 'c'] };
       const view = View.from(data);
       expect(protocol.view(view.buffer).toJSON()).toEqual({ tag: 1, ...data });
     });
 
     it('throws if the tag is not found in the protocol', () => {
-      const View = ObjectViewMixin({
-        tag: { type: 'uint8', default: 1 },
-        age: { type: 'int8' },
-        name: { type: 'string', length: 10 },
-      });
-      const protocol = new BinaryProtocol({
-        0: {
-          age: { type: 'int8' },
-          name: { type: 'string', length: 10 },
-        },
-      });
-      const view = View.from({});
+      const View = ObjectView.Views.protocolA;
+      const view = View.from({ tag: 2 });
       expect(() => protocol.view(view.buffer)).toThrow('No tag information is found.');
     });
   });
 
   describe('encode', () => {
-    it('encodes a given object into a View according to the tag information', () => {
-      const View = ObjectViewMixin({
-        tag: { type: 'uint8', default: 1 },
-        id: { type: 'uint32' },
-        items: { type: 'string', size: 3, length: 10 },
-      });
-      const protocol = new BinaryProtocol({
-        0: {
-          age: { type: 'int8' },
-          name: { type: 'string', length: 10 },
-        },
-        1: View,
-      });
+    const protocol = new BinaryProtocol({
+      0: {
+        $id: 'protocolA',
+        type: 'object',
+        properties: { ...aSchema },
+      },
+      1: {
+        $id: 'protocolB',
+        type: 'object',
+        properties: { ...bSchema },
+      },
+    });
 
+    it('encodes a given object into a View according to the tag information', () => {
       const a = { tag: 1, id: 1, items: ['a', 'b', 'c'] };
       const b = { tag: 0, age: 100, name: 'abc' };
       expect(protocol.encode(a).toJSON()).toEqual({ tag: 1, ...a });
@@ -126,28 +153,26 @@ describe('BinaryProtocol', () => {
     });
 
     it('throws if incorrect tag information is provided', () => {
-      const protocol = new BinaryProtocol({
-        0: {
-          age: { type: 'int8' },
-          name: { type: 'string', length: 10 },
-        },
-      });
-
-      const a = { tag: 1, id: 1, items: ['a', 'b', 'c'] };
+      const a = { tag: 2, id: 1, items: ['a', 'b', 'c'] };
       expect(() => protocol.encode(a)).toThrow('No tag information is found.');
     });
   });
 
   describe('decode', () => {
     it('decodes a given ArrayBuffer into an object according to the tag information', () => {
-      const View = ObjectViewMixin({
-        tag: { type: 'uint8', default: 1 },
-        id: { type: 'uint32' },
-        items: { type: 'string', size: 3, length: 10 },
-      });
       const protocol = new BinaryProtocol({
-        1: View,
+        0: {
+          $id: 'protocolA',
+          type: 'object',
+          properties: { ...aSchema },
+        },
+        1: {
+          $id: 'protocolB',
+          type: 'object',
+          properties: { ...bSchema },
+        },
       });
+      const View = ObjectView.Views.protocolB;
       const data = { id: 10, items: ['a', 'b', 'c'] };
       const view = View.from(data);
       expect(protocol.decode(view.buffer)).toEqual({ tag: 1, ...data });

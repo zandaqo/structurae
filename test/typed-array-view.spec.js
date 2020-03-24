@@ -1,24 +1,24 @@
-const { TypedArrayViewMixin } = require('../index');
+const { ArrayViewMixin } = require('../index');
 
 const TypedArrays = {
-  int8: TypedArrayViewMixin('int8'),
-  uint8: TypedArrayViewMixin('uint8'),
-  int16: TypedArrayViewMixin('int16'),
-  uint16: TypedArrayViewMixin('uint16'),
-  int32: TypedArrayViewMixin('int32'),
-  uint32: TypedArrayViewMixin('uint32'),
-  float32: TypedArrayViewMixin('float32'),
-  float64: TypedArrayViewMixin('float64'),
-  bigint64: TypedArrayViewMixin('bigint64'),
-  biguint64: TypedArrayViewMixin('biguint64'),
-  int16_le: TypedArrayViewMixin('int16', true),
-  uint16_le: TypedArrayViewMixin('uint16', true),
-  int32_le: TypedArrayViewMixin('int32', true),
-  uint32_le: TypedArrayViewMixin('uint32', true),
-  float32_le: TypedArrayViewMixin('float32', true),
-  float64_le: TypedArrayViewMixin('float64', true),
-  bigint64_le: TypedArrayViewMixin('bigint64', true),
-  biguint64_le: TypedArrayViewMixin('biguint64', true),
+  int8: ArrayViewMixin('int8'),
+  uint8: ArrayViewMixin('uint8'),
+  int16: ArrayViewMixin('int16'),
+  uint16: ArrayViewMixin('uint16'),
+  int32: ArrayViewMixin('int32'),
+  uint32: ArrayViewMixin('uint32'),
+  float32: ArrayViewMixin('float32'),
+  float64: ArrayViewMixin('float64'),
+  bigint64: ArrayViewMixin('bigint64'),
+  biguint64: ArrayViewMixin('biguint64'),
+  int16_le: ArrayViewMixin('int16', true),
+  uint16_le: ArrayViewMixin('uint16', true),
+  int32_le: ArrayViewMixin('int32', true),
+  uint32_le: ArrayViewMixin('uint32', true),
+  float32_le: ArrayViewMixin('float32', true),
+  float64_le: ArrayViewMixin('float64', true),
+  bigint64_le: ArrayViewMixin('bigint64', true),
+  biguint64_le: ArrayViewMixin('biguint64', true),
 };
 
 const sampleArray = [0, 1, 3, 120];
@@ -77,6 +77,14 @@ describe('TypedArrayView', () => {
           const expected = isBigInt ? sampleBigIntArray : sampleArray;
           const array = Ctor.from(expected);
           expect(array.toJSON()).toEqual(expected);
+        });
+      });
+
+      describe('iterator', () => {
+        it('iterates over elements of the array', () => {
+          const expected = isBigInt ? sampleBigIntArray : sampleArray;
+          const array = Ctor.from(expected);
+          expect([...array]).toEqual(expected);
         });
       });
     });
