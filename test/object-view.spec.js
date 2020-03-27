@@ -124,11 +124,30 @@ describe('ObjectViewMixin', () => {
     expect(Person.prototype instanceof ObjectView).toBe(true);
     expect(Person.objectLength).toBe(121);
   });
+
   it('creates an ObjectView with references to existing View classes', () => {
     const House = ObjectViewMixin(HouseSchema);
     expect(House.layout.owner.View).toBe(ObjectView.Views.person);
     expect(House.layout.mainroom.View).toBe(ObjectView.Views.room);
   });
+
+  it('does not initialize the same schema twice', () => {
+    const Thing = ObjectViewMixin({
+      $id: 'thing',
+      type: 'object',
+      properties: {
+        a: {
+          $id: 'person',
+          type: 'object',
+          properties: {
+            a: { type: 'number' },
+          },
+        },
+      },
+    });
+    expect(Thing.layout.a.View.objectLength).toBe(121);
+  });
+
   it('throws if invalid field type is used', () => {
     expect(() => { ObjectViewMixin(InvalidType); })
       .toThrowError('Type "float512" is not supported.');
