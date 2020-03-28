@@ -168,11 +168,4 @@ describe('CollectionView', () => {
       expect(collection.toJSON()).toEqual(expected);
     });
   });
-
-  describe('iterator', () => {
-    it('iterates over elements of the view', () => {
-      const collection = CollectionA.from({ a: 42, b: [1] });
-      expect([...collection].length).toBe(5);
-    });
-  });
 });

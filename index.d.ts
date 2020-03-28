@@ -197,28 +197,30 @@ export class SortedArray extends SortedMixin(Array) {
     uniquify(): this;
 }
 
-type ViewType = typeof ArrayView | typeof ObjectView | typeof TypedArrayView | typeof StringView | typeof TypeView;
+type PrimitiveFieldType = 'int8' | 'uint8' | 'int16' | 'uint16'
+    | 'int32' | 'uint32' | 'float32' | 'float64' | 'bigint64' | 'biguint64';
 
-type View = ObjectView | ArrayView | TypedArrayView | StringView | TypeView;
+type ViewType = typeof ArrayView | typeof ObjectView | typeof StringView | typeof TypeView;
+
+type View = ObjectView | ArrayView | StringView | TypeView;
 
 declare class TypeView extends DataView {
-    static isPrimitive: true;
-    private static offset: number;
-    private static littleEndian: true;
-    private static objectLength: number;
+    static offset: number;
+    static littleEndian: true;
+    static objectLength: number;
 
     get(): number;
     set(value: number): this;
     toJSON(): number;
     static getLength(): number;
     static from(value: number, view?: View, start?: number): View;
-    static toJSON(view: View, start: number): number;
+    static toJSON(view: View, start?: number): number;
     static of(): TypeView;
 }
 
 export declare class BooleanView extends TypeView {
-    static from(value: boolean, view?: View, start?: number): View;
-    static toJSON(view: View, start: number): boolean;
+    static from(value: number|boolean, view?: View, start?: number): View;
+    static toJSON(view: View, start?: number): boolean;
 }
 
 export declare function TypeViewMixin(type: PrimitiveFieldType, littleEndian?: boolean): typeof TypeView;
@@ -226,68 +228,80 @@ export declare function TypeViewMixin(type: PrimitiveFieldType, littleEndian?: b
 export declare class ArrayView extends DataView {
     size: number;
     static itemLength: number;
-    static View: typeof ObjectView | typeof StringView;
+    static View: ViewType;
 
-    get(index: number): ObjectView;
-    getValue(index: number): object;
-    set(index: number, value: object): this;
-    setView(index: number, value: ObjectView): this;
-    toJSON(): object[];
-    [Symbol.iterator](): IterableIterator<ObjectView>;
-    static from(value: ArrayLike<object>, array?: View, start?: number, length?: number): View;
+    get(index: number): any;
+    getView(index: number): View;
+    set(index: number, value: any): this;
+    setView(index: number, value: View): this;
+    toJSON(): any[];
+    [Symbol.iterator](): IterableIterator<View | number>;
+    static from(value: ArrayLike<any>, array?: View, start?: number, length?: number): View;
     static toJSON(view: View, start: number, length: number): any[];
-    static of(size: number): ArrayView;
+    static of(size?: number): ArrayView;
     static getLength(size: number): number;
+    static getSize(length: number): number;
 }
 
-export declare function ArrayViewMixin(ObjectViewClass: typeof ObjectView | typeof StringView,
-                                       itemLength?: number): typeof ArrayView;
+declare class TypedArrayView extends ArrayView {
+    static View: typeof TypeView;
 
-type PrimitiveFieldType = 'int8' | 'uint8' | 'int16' | 'uint16'
-    | 'int32' | 'uint32' | 'float32' | 'float64' | 'bigint64' | 'biguint64';
+    get(index: number): number;
+    set(index: number, value: number): this;
+    toJSON(): Array<number>;
+    [Symbol.iterator](): IterableIterator<number>;
+    static from(value: ArrayLike<number>, array?: View, start?: number, length?: number): View;
+    static toJSON(view: View, start: number, length: number): number[];
+    static of(size?: number): TypedArrayView;
+}
 
-type ObjectViewFieldType = PrimitiveFieldType| string | ViewType;
+export declare function ArrayViewMixin(ObjectViewClass: ViewType | PrimitiveFieldType,
+                                       itemLength?: number | boolean): typeof ArrayView;
 
-interface ObjectViewField {
-    type: ObjectViewFieldType;
-    size?: number;
-    littleEndian?: boolean;
+interface ViewLayoutField {
+    View: ViewType;
     start?: number;
     length?: number;
-    View?: ViewType;
     default?: any;
 }
 
-interface ObjectViewSchema {
-    [propName: string]: ObjectViewField;
+interface ViewLayout {
+    [propName: string]: ViewLayoutField;
+}
+
+interface ViewTypes {
+    [propName: string]: ViewType;
 }
 
 interface ObjectViewTypeDefs {
-    [propName: string]: (field: ObjectViewField) => void;
+    [propName: string]: (field: ViewLayoutField) => void;
 }
 
 export declare class ObjectView extends DataView {
+    static schema: object;
+    static layout: ViewLayout;
+    static fields: string[];
+    static Views: ViewTypes;
     static types: ObjectViewTypeDefs;
-    static schema: ObjectViewSchema;
-    static isInitialized: boolean;
-    static isPrimitive: false;
-    private static fields: string[];
-    private static objectLength: number;
+    static objectLength: number;
     private static defaultBuffer: ArrayBuffer;
 
-    get(field: string): number | View;
-    getValue(field: string): any;
+    get(field: string): any;
     getView(field: string): View;
     set(field: string, value: any): this;
     setView(field: string, value: View): this;
     toJSON(): object;
     static from(object: object, view?: View, start?: number, length?: number): View;
-    static toJSON(view: View, start: number): any[];
+    static toJSON(view: View, start?: number): object;
     static getLength(): number;
     static initialize(): void;
+    private static setDefaultBuffer(): void;
+    static getSchemaOrdering(schema: object): object[];
+    static getLayoutFromSchema(schema: object): [ViewLayout, number, string[]];
+    static getViewFromSchema(schema: object): ViewType;
 }
 
-export declare function ObjectViewMixin(schema: ObjectViewSchema, ObjectViewClass?: typeof ObjectView): typeof ObjectView;
+export declare function ObjectViewMixin(schema: object, ObjectViewClass?: typeof ObjectView): typeof ObjectView;
 
 export declare class StringView extends Uint8Array {
     size: number;
@@ -314,37 +328,26 @@ export declare class StringView extends Uint8Array {
     static getByteSize(string: string): number;
 }
 
-declare class TypedArrayView extends DataView {
-    size: number;
-    static View: TypeView;
-    static itemLength: number;
-
-    get(index: number): number;
-    set(index: number, value: number): this;
-    toJSON(): Array<number>;
-    [Symbol.iterator](): IterableIterator<number>;
-    static getLength(size: number): number;
-    static from(value: ArrayLike<number>, array?: View, start?: number, length?: number): View;
-    static toJSON(view: View, start: number, length: number): number[];
-    static of(size: number): TypedArrayView;
-}
-
-export declare function TypedArrayViewMixin(type: PrimitiveFieldType, littleEndian: boolean): typeof TypedArrayView;
-
 export declare class CollectionView extends DataView {
-    static schema: ViewType[];
+    static schema: object;
+    static layout: ViewLayout;
+    static fields: string[];
+    static Views: ViewTypes;
 
-    get(index: number): View;
-    set(index: number, value: object): this;
-    toJSON(): object[];
-    [Symbol.iterator](): IterableIterator<View>;
-    static from(value: object[], array?: CollectionView): CollectionView;
-    static getLength(sizes: number[]): number;
-    static of(sizes: number[]): CollectionView;
+    get(field: string): any;
+    getView(field: string): View;
+    private getLayout(field: string): [ViewType, number, number];
+    set(field: string, value: any): this;
+    setView(field: string, value: View): this;
+    toJSON(): object;
+    static from(value: object): CollectionView;
+    static toJSON(view: View, start?: number): object;
+    static getLength(value: any, getOffsets?: boolean): number | [number, number[]];
+    static initialize(): void;
 }
 
 interface BinaryProtocolSchema {
-    [propName: number]: object|typeof ObjectView;
+    [propName: number]: typeof ObjectView;
 }
 
 export declare class BinaryProtocol {
@@ -352,7 +355,7 @@ export declare class BinaryProtocol {
     private tagName: string;
     private tagType: PrimitiveFieldType;
 
-    constructor(views: BinaryProtocolSchema, tagName?: string, tagType?: string);
+    constructor(views: object, tagName?: string, tagType?: string);
     view(buffer: ArrayBuffer, offset?: number): ObjectView;
     encode(object: object, arrayBuffer?: ArrayBuffer, offset?: number): ObjectView;
     decode(buffer: ArrayBuffer, offset?: number): object;
