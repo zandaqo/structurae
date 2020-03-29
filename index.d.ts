@@ -213,8 +213,8 @@ declare class TypeView extends DataView {
     set(value: number): this;
     toJSON(): number;
     static getLength(): number;
-    static from(value: number, view?: View, start?: number): View;
-    static toJSON(view: View, start?: number): number;
+    static from(value: any, view?: View, start?: number): View;
+    static toJSON(view: View, start?: number): any;
     static of(): TypeView;
 }
 
@@ -328,7 +328,7 @@ export declare class StringView extends Uint8Array {
     static getByteSize(string: string): number;
 }
 
-export declare class CollectionView extends DataView {
+export declare class MapView extends DataView {
     static schema: object;
     static layout: ViewLayout;
     static fields: string[];
@@ -340,11 +340,13 @@ export declare class CollectionView extends DataView {
     set(field: string, value: any): this;
     setView(field: string, value: View): this;
     toJSON(): object;
-    static from(value: object): CollectionView;
+    static from(value: object): MapView;
     static toJSON(view: View, start?: number): object;
     static getLength(value: any, getOffsets?: boolean): number | [number, number[]];
     static initialize(): void;
 }
+
+export declare function MapViewMixin(schema: object, MapViewClass?: typeof MapView): typeof MapView;
 
 interface BinaryProtocolSchema {
     [propName: number]: typeof ObjectView;
