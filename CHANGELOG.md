@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2020-03-30
+### Changed
+(breaking changes)
+- ObjectView and all related *View classes use JSON Schema for schema definition.
+- All *View classes use little endian encoding default.
+- `ObjectView#get`, `ArrayView#get`, `MapView#get` return JavaScript values, use `*View.getView` methods to get views.
+- CollectionView is replaced by MapView
+- TypedArrayView extends ArrayView, and TypedArrayViewMixin is replaced with ArrayViewMixin
+
 ## [2.3.0] - 2020-03-10
 ### Added
 - Add static `toJSON` methods to View classes

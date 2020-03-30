@@ -7,10 +7,9 @@ A collection of data structures for high-performance JavaScript applications tha
 
 - [Binary Structures](https://github.com/zandaqo/structurae#binary-structures):
     - [ObjectView](https://github.com/zandaqo/structurae#ObjectView) - extends DataView to implement C-like struct.
-    - [ArrayView](https://github.com/zandaqo/structurae#ArrayView) - an array of C-like structs, ObjectViews.
-    - [CollectionView](https://github.com/zandaqo/structurae#CollectionView) - an array of ObjectViews and ArrayViews of different types that support optional members.
+    - [ArrayView](https://github.com/zandaqo/structurae#ArrayView) - DataView based array of ObjectViews, strings, numbers, etc.
+    - [MapView](https://github.com/zandaqo/structurae#MapView) - ObjectView with optional fields and fields of varying sizes.
     - [StringView](https://github.com/zandaqo/structurae#StringView) - extends Uint8Array to handle C-like representation of UTF-8 encoded strings.
-    - [TypedArrayView](https://github.com/zandaqo/structurae#TypedArrayView) - a DataView based TypedArray that supports endianness and can be set at any offset.
     - [BinaryProtocol](https://github.com/zandaqo/structurae#BinaryProtocol) - a helper class that simplifies defining and operating on multiple tagged ObjectViews.
 - Bit Structures:
     - [BitField & BigBitField](https://github.com/zandaqo/structurae#BitField) - stores and operates on data in Numbers and BigInts treating them as bitfields.
@@ -49,33 +48,65 @@ Binary data in JavaScript is represented by ArrayBuffer and accessed through "vi
 However, both of those interfaces are limited to working with numbers. Structurae offers a set of classes that extend these interfaces to
 support using ArrayBuffers for strings, objects, and arrays of objects defined with schema akin to C-like structs.
 Useful on their own, when combined, these classes form the basis for a simple binary protocol that is smaller and faster than
-schema-less binary formats (e.g. BSON, MessagePac) and supports zero-copy operations. Unlike other schema-based formats 
+schema-less binary formats (e.g. BSON, MessagePack) and supports zero-copy operations. Unlike other schema-based formats 
 (e.g. Flatbuffers), these interfaces are native to JavaScript, hence, supported in all modern browsers and Node.js,
 and do not require compilation.
 
 #### ObjectView
-Extends DataView to store a JavaScript object in ArrayBuffer akin to C-like struct.
-The fields are defined in ObjectView.schema and can be of any primitive type supported by DataView, 
-their arrays, booleans, strings, or other objects and arrays of objects. The data is laid out sequentially with fixed sizes, hence,
-variable length arrays and optional fields are not supported (for those check out [CollectionView](https://github.com/zandaqo/structurae#CollectionView)).
+ObjectView extends DataView to store a JavaScript object in an ArrayBuffer akin to C-like struct.
+Fields of an ObjectView are defined using a subset of JSON Schema. ObjectView supports all JavaScript values, that is, numbers, strings,
+booleans, objects, and arrays. Internally, the data is laid out sequentially with fixed sizes, hence,
+variable length arrays and optional fields are not supported (for those check out [MapView](https://github.com/zandaqo/structurae#MapView)).
 
 ```javascript
 const { ObjectViewMixin } = require('structurae');
 
-const House = ObjectViewMixin({
-  size: { type: 'uint32', default: 100 }, // a primitive type (unsigned 32-bit integer) that defaults to 100
-});
-
-const Pet = ObjectViewMixin({
-  type: { type: 'string', length: 10 }, // // string with max length of 10 bytes
-});
-
 const Person = ObjectViewMixin({
-  name: { type: 'string', length: 10 },
-  fullName: { type: 'string', size: 2, length: 10 }, // an array of 2 strings 10 bytes long each
-  scores: { type: 'uint32', size: 10 }, // a an array of 10 numbers
-  house: { type: House }, // nested object view
-  pets: { type: Pet, size: 3 }, // an array of 3 pet objects
+  $id: 'Person', // each object requires a unique id
+  type: 'object',
+  properties: {
+    name: { type: 'string', maxLength: 10 }, // the size of a string field is required and defined by maxLength
+    fullName: {
+      type: 'array',
+      maxItems: 2, // the size of an array is required and defined by maxItems
+      items: { type: 'string', maxLength: 10 }, // all items have to be the same type
+    },
+    bestFriend: { $ref: '#Friend' }, // objects can be referenced with $ref using their $id
+    friends: {
+      type: 'array',
+      maxItems: 3,
+      items: {
+        $id: 'Friend',
+        type: 'object',
+        properties: {
+          name: { type: 'string', maxLength: 10 },
+        },
+      },
+    },
+    scores: {
+      type: 'array',
+      maxItems: 10,
+      items: { type: 'integer', btype: 'int16' },
+    },
+    house: {
+      $id: 'House',
+      type: 'object',
+      properties: {
+        size: { type: 'number', btype: 'float32', default: 100 }, // default values are applied upon creation of a view
+      },
+    },
+    pets: {
+      type: 'array',
+      maxItems: 3,
+      items: {
+        $id: 'Pet',
+        type: 'object',
+        properties: {
+          type: { type: 'string', maxLength: 10 },
+        }
+      },
+    },
+  },
 });
 
 const person = Person.from({
@@ -91,26 +122,39 @@ const person = Person.from({
 });
 person.byteLength
 //=> 64
-person.get('scores').get(0)
+person.get('scores');
 //=> 1
-person.get('name')
-//=> StringView [10]
-person.getValue('name');
+person.get('name');
 //=> Zaphod
-person.getValue('scores')
+person.getView('name')
+//=> StringView [10]
+person.get('scores')
 //=> [1, 2, 3, 0, 0, 0, 0, 0, 0, 0,]
 person.set('house', { size: 5 });
-person.getValue('house');
+person.get('house');
 //=> { size: 5 }
 person.toJSON()
 //=> { name: 'Zaphod', fullName: ['Zaphod', 'Beeblebrox'], scores: [1, 2, 3, 0, 0, 0, 0, 0, 0, 0,],
 // house: { size: 5 }, pets: [{ type: 'dog' }, { type: 'cat' }, { type: '' }] }
 ```
 
+There are certain requirements for a JSON Schema used for ObjectViews:
+- Each object should have a unique id defined with `$id` field. Upon initialization, the view class is stored in `ObjectView.Views`
+ and accessed with the id used as the key. References made with `$ref` are also resolved against the id.
+- Sizes of strings and arrays should be defined using `maxLength` and `maxItems` properties respectfully.
+- `$ref` can be used to reference objects and only objects by their `$id`. The referenced object should be defined either in the
+same schema or in a schema of an ObjectView class initialized previously.
+- Type `number` by default resolves to `float64` and type `integer` to `int32`, you can use any other type by specifying it in
+`btype` property.
+
 ObjectView supports setting default values of fields. Default values are applied upon creation of a view:
 ```javascript
 const House = ObjectViewMixin({
-  size: { type: 'uint32', default: 100 }
+  $id: 'House',
+  type: 'object',
+  properties: {
+    size: { type: 'integer', btype: 'uint32', default: 100 }
+  },
 });
 
 const house = House.from({});
@@ -118,11 +162,15 @@ house.get('size');
 //=> 100
 ```
 
-Default values of a ObjectView can be overridden when the view is used as a field inside other views:
+Default values of an ObjectView can be overridden when the view is used as a field inside other views:
 ```javascript
 const Neighborhood = ObjectViewMixin({
-  house: { type: House },
-  biggerHouse: { type: House, default: { size: 200 } },
+  $id: 'Neighborhood',
+  type: 'object',
+  properties: {
+    house: { $ref: '#House' },
+    biggerHouse: { $ref: '#House', default: { size: 200 } },
+  },
 });
 
 const neighborhood = Neighborhood.from({});
@@ -146,20 +194,22 @@ class DateView extends TypeViewMixin('float64', true) {
 }
 
 class View extends ObjectView {}
-View.schema = {
-  a: { type: 'date' },
-};
 View.types = {
   ...ObjectView.types,
   date(field) {
-    field.View = DateView;
-    field.length = 8;
+    return DateView;
   },
 };
-View.initialize();
 
-const date = View.from({ a: new Date(0) });
-date.getValue('a')
+const ViewWithDate = ObjectViewMixin({
+  $id: 'ViewWithDate',
+  type: 'object',
+  properties: {
+    a: { type: 'date' },
+  },
+}, View);
+const date = ViewWithDate.from({ a: new Date(0) });
+date.get('a')
 //=> Thu Jan 01 1970 00:00:00 GMT+0000
 date.set('a', new Date(1e8));
 date.toJSON();
@@ -167,13 +217,21 @@ date.toJSON();
 ```
 
 #### ArrayView
-DataView based array of objects or more precisely ObjectViews:
+DataView based array of "views": objects, number, strings, etc:
 ```javascript
-const { ObjectViewMixin, ArrayViewMixin } = require('structurae');
+const { ObjectViewMixin, ArrayViewMixin, StringView } = require('structurae');
+
+const Int32ArrayView = ArrayViewMixin('int32', true); // create an ArrayView class for int32 values with little endian encoding
+const Int32ArrayViewBE = ArrayViewMixin('int32', false); // big endian int32 values
+const StringsView = ArrayViewMixin(StringView, 20); // an ArrayView class for strings with maximum length of 20 bytes each
 
 const Person = ObjectViewMixin({
-  id: { type: 'uint32' },
-  name: { type: 'string', length: 10 },
+  $id: 'Person', // each object requires a unique id
+  type: 'object',
+  properties: {
+    id: { type: 'integer', btype: 'uint32' },
+    name: { type: 'string', maxLength: 10 },
+  },
 });
 
 // an array class for Person objects
@@ -188,51 +246,89 @@ const hitchhikers = PeopleArray.from([
   { id: 2, name: 'Ford' },
 ]);
 // get a view of the first object
-hitchhikers.get(0);
+hitchhikers.getView(0);
 //=> Person [14]
 // get the value of the first object
-hitchhikers.getValue(0);
+hitchhikers.get(0);
 //=> { id: 1, name: 'Arthur' }
 
 // set the first object data
 hitchhikers.set(0, { id: 3, name: 'Trillian' });
-hitchhikers.get(0).toJSON();
+hitchhikers.get(0);
 //=> { id: 3, name: 'Trillian' }
 
 hitchhikers.toJSON();
 //=> [{ id: 1, name: 'Arthur' }, { id: 2, name: 'Ford' }]
 ```
 
-#### CollectionView
-Whereas a single ArrayView can only hold objects of a single ObjectView class, CollectionView allows holding objects and arrays
-of different types as well as them being optional, i.e. it does not allocate space upon creation for missing members.
+TypedArrays in JavaScript have two limitations that make them cumbersome to use in conjunction with DataView.
+First, there is no way to specify the endianness of numbers in TypedArrays unlike DataView.
+Second, TypedArrays require their offset (byteOffset) to be a multiple of their element size (BYTES_PER_ELEMENT), 
+which means that they often cannot "view" into existing ArrayBuffer starting from certain positions.
+ArrayViews for numbers are essentially TypedArrays that circumvent both issues by using the DataView interface.
+You can specify endianness and instantiate them at any position in an existing ArrayBuffer.
 
 ```javascript
-const { ObjectViewMixin, ArrayViewMixin, CollectionView } = require('structurae');
+const { ArrayViewMixin } = require('structurae');
 
-const Person = ObjectViewMixin({
-  id: { type: 'uint32' },
-  name: { type: 'string', length: 10 },
+// create a class for little endian doubles
+const Float64View = ArrayViewMixin('float64', true);
+const buffer = new ArrayBuffer(11);
+const doubles = new Float64View(buffer, 3, 8);
+doubles.byteLength
+//=> 20
+doubles.byteOffset
+//=> 3
+doubles.set(0, 5).set(1, 10);
+[...doubles]
+//=> [5, 10]
+```
+
+
+#### MapView
+MapView is an ObjectView that supports optional fields and fields of variable size. The size and layout of each MapView instance 
+is calculated upon creation and stored within the instance (unlike ObjectViews, where each instance have the same size and layout).
+MapViews are useful for densely packing objects and arrays whose size my vary greatly.
+There are certain limitations involved: MapViews cannot be nested, and fields that were missing during instantiation cannot be set later.
+
+```javascript
+const { MapViewMixin } = require('structurae');
+
+const Person = MapViewMixin({
+  $id: 'Person',
+  type: 'object',
+  properties: {
+    id: { type: 'integer', btype: 'uint32' },
+    name: { type: 'string' }, // notice that maxLength is not required in MapView
+    pets: {
+      type: 'array',
+      // maxItems is also not required for MapView
+      items: {
+        $id: 'Pet',
+        type: 'object',
+        properties: {
+          // however both maxLengh and maxItems are required in nested objects and arrays
+          type: { type: 'string', maxLength: 10 } 
+        },
+      },
+    },
+  },
 });
-
-const Pet = ObjectViewMixin({
-  type: { type: 'string', length: 10 }, // string with max length of 10 bytes
-});
-
-const Pets = ArrayViewMixin(Pet);
-
-class PersonWithPets extends CollectionView {}
-PersonWithPets.schema = [Person, Pets];
 
 // create a person with one pet
-const arthur = PersonWithPets.from([{ id: 1, name: 'Artur'}, [{ type: 'dog'}]]);
-arthur.byteLength
-//=> 24
+const person1 = Person.from({ id: 1, name: 'Artur', pets: [{ type: 'dog'}] });
+person1.byteLength;
+//=> 31
 
 // create a person with no pets
-const arthur = PersonWithPets.from([{ id: 1, name: 'Artur'}, undefined]);
-arthur.byteLength
-//=> 14
+const person0 = PersonWithPets.from({ id: 1, name: 'Artur'});
+person0.byteLength;
+//=> 18
+person0.get('pets');
+//=> undefined
+person0.set('pets', [{ type: 'dog'}]);
+person0.get('pets');
+//=> undefined
 ```
 
 #### StringView
@@ -283,30 +379,6 @@ stringView.reverse().toString();
 //=> 'adcba'
 ```
 
-#### TypedArrayView
-TypedArrays in JavaScript have two limitations that make them cumbersome to use in conjunction with DataView.
-First, there is no way to specify the endianness of numbers in TypedArrays unlike DataView,
-second, TypedArrays require their offset (byteOffset) to be a multiple of their element size (BYTES_PER_ELEMENT), 
-which means that they often cannot "view" into existing ArrayBuffer starting from certain positions.
-TypedArrayViews are essentially TypedArrays that circumvent both issues by using the DataView interface.
-You can specify endianness and instantiate them at any position in an existing ArrayBuffer.
-TypedArrayViews are internally used by ObjectView to handle arrays of numbers, although, they can be used on their own:
-```javascript
-const { TypedArrayViewMixin } = require('structurae');
-
-// create a class for little endian doubles
-const Float64View = TypedArrayViewMixin('float64', true);
-const buffer = new ArrayBuffer(11);
-const doubles = new Float64View(buffer, 3, 8);
-doubles.byteLength
-//=> 20
-doubles.byteOffset
-//=> 3
-doubles.set(0, 5).set(1, 10);
-[...doubles]
-//=> [5, 10]
-```
-
 #### BinaryProtocol
 When transferring our buffers encoded with views we can often rely on meta information to know what kind of ObjectView
 to use in order to decode a received buffer, e.g. let's say we have a `HouseView` class to encode/decode all buffers
@@ -322,12 +394,24 @@ const { BinaryProtocol } = require('structurae');
 
 const protocol = new BinaryProtocol({
   0: {
-    age: { type: 'int8' },
-    name: { type: 'string', length: 10 },
+    $id: 'Person',
+    type: 'object',
+    properties: {
+      age: { type: 'integer', btype: 'int8' },
+      name: { type: 'string', length: 10 },
+    }
   },
   1: {
-    id: { type: 'uint32' },
-    items: { type: 'string', size: 3, length: 10 },
+    $id: 'Items',
+    type: 'object',
+    properties: {
+      id: { type: 'integer', btype: 'uint32' },
+      items: {
+        type: 'array',
+        maxItems: 3,
+        items: { type: 'string', maxLength: 10 },
+      },
+    },
   },
 });
 
@@ -344,37 +428,61 @@ protocol.decode(item.buffer)
 //=> { tag: 1, id: 10, items: ['a', 'b', 'c'] }
 ```
 
-We can define ObjectViews separately, however, we will have to specify the tag field by ourselves in that case.
+We can use references to existing ObjectViews, however, those views should have a tag field and appropriate default value specified.
 ```javascript
 const View = ObjectViewMixin({
-  tag: { type: 'uint8', default: 1 },
-  id: { type: 'uint32' },
-  items: { type: 'string', size: 3, length: 10 },
+    $id: 'Items',
+    type: 'object',
+    properties: {
+      tag: { type: 'integer', btype: 'uint8', default: 1 },
+      id: { type: 'integer', btype: 'uint32' },
+      items: {
+        type: 'array',
+        maxItems: 3,
+        items: { type: 'string', maxLength: 10 },
+      },
+    },
 });
 
 const protocol = new BinaryProtocol({
   0: {
-   age: { type: 'int8' },
-   name: { type: 'string', length: 10 },
+    $id: 'Person',
+    type: 'object',
+    properties: {
+      age: { type: 'integer', btype: 'int8' },
+      name: { type: 'string', length: 10 },
+    }
   },
-  1: View,
+  1: { $ref: '#Items' },
 });
 ```
 
 By default, the tag field is named `tag` and has the type of `uint8`, both can be changed and provided as second and third parameters to protocol constructor.
 ```javascript
 const View = ObjectViewMixin({
-  tagId: { type: 'uint32', default: 1 },
-  id: { type: 'uint32' },
-  items: { type: 'string', size: 3, length: 10 },
+    $id: 'Items',
+    type: 'object',
+    properties: {
+      tagId: { type: 'integer', btype: 'uint32', default: 1 },
+      id: { type: 'integer', btype: 'uint32' },
+      items: {
+        type: 'array',
+        maxItems: 3,
+        items: { type: 'string', maxLength: 10 },
+      },
+    },
 });
 
 const protocol = new BinaryProtocol({
   0: {
-   age: { type: 'int8' },
-   name: { type: 'string', length: 10 },
+    $id: 'Person',
+    type: 'object',
+    properties: {
+      age: { type: 'integer', btype: 'int8' },
+      name: { type: 'string', length: 10 },
+    }
   },
-  1: View,
+  1: { $ref: '#Items' },
 }, 'tagId', 'uint32');
 ```
 

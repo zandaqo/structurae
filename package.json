@@ -1,12 +1,13 @@
 {
   "name": "structurae",
-  "version": "2.3.0",
+  "version": "3.0.0",
   "description": "Data structures for performance-sensitive modern JavaScript applications.",
   "main": "index.js",
   "types": "index.d.ts",
   "keywords": [
     "optimization",
     "binary",
+    "binary protocol",
     "data structures",
     "sorted",
     "array",
@@ -48,10 +49,10 @@
     "benchmark": "^2.1.4",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
-    "eslint-plugin-import": "^2.20.1",
-    "jest": "^25.1.0",
+    "eslint-plugin-import": "^2.20.2",
+    "jest": "^25.2.4",
     "jsdoc-to-markdown": "^5.0.3",
-    "json-schema-faker": "^0.5.0-rc23"
+    "json-schema-faker": "^0.5.0-rcv.24"
   },
   "jest": {
     "testEnvironment": "node",
