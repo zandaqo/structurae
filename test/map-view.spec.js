@@ -167,5 +167,18 @@ describe('MapView', () => {
       const map = MapA.from(expected);
       expect(map.toJSON()).toEqual(expected);
     });
+
+    it('treats undefined and null fields as missing', () => {
+      const object = {
+        a: undefined,
+        b: null,
+        c: [{ id: 10, name: 'abc' }, { id: 5, name: 'def' }],
+        d: 'abc',
+        e: [[3, 4], [5, 7], [6, 8]],
+      };
+      const { a, b, ...expected } = object;
+      const map = MapA.from(object);
+      expect(map.toJSON()).toEqual(expected);
+    });
   });
 });
