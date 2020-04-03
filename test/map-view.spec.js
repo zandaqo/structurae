@@ -160,16 +160,30 @@ describe('MapView', () => {
       const map = MapA.from(expected);
       expect(map.toJSON()).toEqual(expected);
     });
+
+    it('handles map views within larger buffers', () => {
+      const expected = {
+        a: 42,
+        b: [20, 30, 10],
+        c: [{ id: 10, name: 'abc' }, { id: 5, name: 'def' }],
+      };
+      const buffer = new ArrayBuffer(1000);
+      const temp = MapA.from(expected);
+      const view = new DataView(buffer);
+      new Uint8Array(view.buffer, view.byteOffset, view.byteLength)
+        .set(new Uint8Array(temp.buffer, temp.byteOffset, temp.byteLength), 100);
+      expect(MapA.toJSON(view, 100)).toEqual(expected);
+    });
   });
 
   describe('getLength', () => {
     it('returns the byte length of a map view to hold a given object', () => {
       expect(MapA.getLength({ a: 42, b: [1], c: [1, 2] }))
-        .toBe(1 * 8 + 1 * 4 + 2 * 14 + 5 * 4);
-      expect(MapA.getLength({ b: [1] })).toBe(0 * 8 + 1 * 4 + 5 * 4);
-      expect(MapA.getLength({})).toBe(0 * 0 + 0 * 0 + 5 * 4);
+        .toBe(1 * 8 + 1 * 4 + 2 * 14 + 6 * 4);
+      expect(MapA.getLength({ b: [1] })).toBe(0 * 8 + 1 * 4 + 6 * 4);
+      expect(MapA.getLength({})).toBe(0 * 0 + 0 * 0 + 6 * 4);
       expect(MapA.getLength({ b: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] }))
-        .toBe(0 * 0 + 10 * 4 + 5 * 4);
+        .toBe(0 * 0 + 10 * 4 + 6 * 4);
     });
   });
 
