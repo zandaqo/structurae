@@ -103,7 +103,7 @@ using half the space required for a normal grid.</p>
 <dt><a href="#GridMixin">GridMixin(Base)</a> ⇒ <code><a href="#Grid">Grid</a></code></dt>
 <dd><p>Creates a Grid class extending a given Array-like class.</p>
 </dd>
-<dt><a href="#MapViewMixin">MapViewMixin(schema, [MapViewClass])</a> ⇒ <code><a href="#MapView">Class.&lt;MapView&gt;</a></code></dt>
+<dt><a href="#MapViewMixin">MapViewMixin(schema, [MapViewClass], [ObjectViewClass])</a> ⇒ <code><a href="#MapView">Class.&lt;MapView&gt;</a></code></dt>
 <dd><p>Creates a MapView class with a given schema.</p>
 </dd>
 <dt><a href="#ObjectViewMixin">ObjectViewMixin(schema, [ObjectViewClass])</a> ⇒ <code><a href="#ObjectView">Class.&lt;ObjectView&gt;</a></code></dt>
@@ -1793,6 +1793,7 @@ a.get(2, 1);
         * [.schema](#MapView.schema) : <code>Object</code>
         * [.layout](#MapView.layout) : <code>Object.&lt;string, Object&gt;</code>
         * [.fields](#MapView.fields) : <code>Array.&lt;string&gt;</code>
+        * [.ObjectViewClass](#MapView.ObjectViewClass) : [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView)
         * [.Views](#MapView.Views) : <code>Object.&lt;string, Class.&lt;MapView&gt;&gt;</code>
         * [.from(value)](#MapView.from) ⇒ [<code>MapView</code>](#MapView)
         * [.getLength(value, [getOffsets])](#MapView.getLength) ⇒ <code>number</code>
@@ -1864,6 +1865,10 @@ Returns an object corresponding to the view.
 <a name="MapView.fields"></a>
 
 ### MapView.fields : <code>Array.&lt;string&gt;</code>
+**Kind**: static property of [<code>MapView</code>](#MapView)  
+<a name="MapView.ObjectViewClass"></a>
+
+### MapView.ObjectViewClass : [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView)
 **Kind**: static property of [<code>MapView</code>](#MapView)  
 <a name="MapView.Views"></a>
 
@@ -4139,7 +4144,7 @@ const ArrayGrid = Grid(Array);
 ```
 <a name="MapViewMixin"></a>
 
-## MapViewMixin(schema, [MapViewClass]) ⇒ [<code>Class.&lt;MapView&gt;</code>](#MapView)
+## MapViewMixin(schema, [MapViewClass], [ObjectViewClass]) ⇒ [<code>Class.&lt;MapView&gt;</code>](#MapView)
 Creates a MapView class with a given schema.
 
 **Kind**: global function  
@@ -4147,7 +4152,8 @@ Creates a MapView class with a given schema.
 | Param | Type | Description |
 | --- | --- | --- |
 | schema | <code>object</code> | the schema to use for the class |
-| [MapViewClass] | [<code>Class.&lt;MapView&gt;</code>](#MapView) | an optional ObjectView class to extend |
+| [MapViewClass] | [<code>Class.&lt;MapView&gt;</code>](#MapView) | an optional MapView class to extend |
+| [ObjectViewClass] | [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView) | an optional ObjectView class to use for nested objects |
 
 <a name="ObjectViewMixin"></a>
 

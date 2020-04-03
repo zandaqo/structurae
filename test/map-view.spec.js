@@ -1,5 +1,5 @@
 const {
-  ArrayViewMixin, TypeViewMixin, MapViewMixin, MapView,
+  ArrayViewMixin, TypeViewMixin, MapViewMixin, MapView, ObjectView,
 } = require('../index');
 
 const Int32ArrayView = ArrayViewMixin('int32');
@@ -55,6 +55,24 @@ describe('MapViewMixin', () => {
     MapViewMixin(PersonSchema);
     const Person = MapView.Views.PersonMap;
     expect(MapViewMixin(PersonSchema)).toBe(Person);
+  });
+
+  it('uses custom ObjectView class to initialize nested objects', () => {
+    class CustomObjectView extends ObjectView {}
+    const Person = MapViewMixin({
+      $id: 'CustomMap',
+      type: 'object',
+      properties: {
+        a: {
+          $id: 'CustomNestedObject',
+          type: 'object',
+          properties: {
+            b: { type: 'number' },
+          },
+        },
+      },
+    }, undefined, CustomObjectView);
+    expect(Person.layout.a.View.prototype instanceof CustomObjectView).toBe(true);
   });
 });
 

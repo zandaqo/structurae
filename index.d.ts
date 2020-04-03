@@ -332,6 +332,7 @@ export declare class MapView extends DataView {
     static schema: object;
     static layout: ViewLayout;
     static fields: string[];
+    static ObjectViewClass: typeof ObjectView;
     static Views: ViewTypes;
 
     get(field: string): any;
@@ -346,7 +347,7 @@ export declare class MapView extends DataView {
     static initialize(): void;
 }
 
-export declare function MapViewMixin(schema: object, MapViewClass?: typeof MapView): typeof MapView;
+export declare function MapViewMixin(schema: object, MapViewClass?: typeof MapView, ObjectViewClass?: typeof ObjectView): typeof MapView;
 
 interface BinaryProtocolSchema {
     [propName: number]: typeof ObjectView;
