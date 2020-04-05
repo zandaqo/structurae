@@ -117,7 +117,7 @@ using half the space required for a normal grid.</p>
 <dt><a href="#SymmetricGridMixin">SymmetricGridMixin(Base)</a> ⇒ <code><a href="#SymmetricGrid">SymmetricGrid</a></code></dt>
 <dd><p>Creates a SymmetricGrid class extending a given Array-like class.</p>
 </dd>
-<dt><a href="#TypeViewMixin">TypeViewMixin(type, [littleEndian])</a> ⇒ <code><a href="#TypeView">Class.&lt;TypeView&gt;</a></code></dt>
+<dt><a href="#TypeViewMixin">TypeViewMixin(type, [littleEndian], [TypeViewClass])</a> ⇒ <code><a href="#TypeView">Class.&lt;TypeView&gt;</a></code></dt>
 <dd></dd>
 <dt><a href="#popCount32">popCount32(value)</a> ⇒ <code>number</code></dt>
 <dd><p>Counts set bits in a given number.</p>
@@ -181,6 +181,8 @@ stored in an ArrayBuffer.
     * _static_
         * [.itemLength](#ArrayView.itemLength) : <code>number</code>
         * [.View](#ArrayView.View) : [<code>ObjectView</code>](#ObjectView)
+        * [.Views](#ArrayView.Views) : <code>WeakMap.&lt;Class.&lt;View&gt;, Class.&lt;ArrayView&gt;&gt;</code>
+        * [.Array](#ArrayView.Array) : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
         * [.from(value, [array], [start], [length])](#ArrayView.from) ⇒ [<code>ArrayView</code>](#ArrayView)
         * [.toJSON(view, [start], [length])](#ArrayView.toJSON) ⇒ <code>Object</code>
         * [.getLength(size)](#ArrayView.getLength) ⇒ <code>number</code>
@@ -252,6 +254,14 @@ Returns an array representation of the array view.
 <a name="ArrayView.View"></a>
 
 ### ArrayView.View : [<code>ObjectView</code>](#ObjectView)
+**Kind**: static property of [<code>ArrayView</code>](#ArrayView)  
+<a name="ArrayView.Views"></a>
+
+### ArrayView.Views : <code>WeakMap.&lt;Class.&lt;View&gt;, Class.&lt;ArrayView&gt;&gt;</code>
+**Kind**: static property of [<code>ArrayView</code>](#ArrayView)  
+<a name="ArrayView.Array"></a>
+
+### ArrayView.Array : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
 **Kind**: static property of [<code>ArrayView</code>](#ArrayView)  
 <a name="ArrayView.from"></a>
 
@@ -1938,6 +1948,7 @@ A DataView based C-like struct to store JavaScript objects in ArrayBuffer.
             * [.string()](#ObjectView.types.string) ⇒ [<code>Class.&lt;StringView&gt;</code>](#StringView)
         * [.schema](#ObjectView.schema) : <code>object</code>
         * [.Views](#ObjectView.Views) : <code>Object.&lt;string, Class.&lt;View&gt;&gt;</code>
+        * [.Array](#ObjectView.Array) : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
         * [.from(object, [view], [start], [length])](#ObjectView.from) ⇒ [<code>View</code>](#View)
         * [.toJSON(view, [start])](#ObjectView.toJSON) ⇒ <code>Object</code>
         * [.getLength()](#ObjectView.getLength) ⇒ <code>number</code>
@@ -2043,6 +2054,10 @@ Returns an Object corresponding to the view.
 <a name="ObjectView.Views"></a>
 
 ### ObjectView.Views : <code>Object.&lt;string, Class.&lt;View&gt;&gt;</code>
+**Kind**: static property of [<code>ObjectView</code>](#ObjectView)  
+<a name="ObjectView.Array"></a>
+
+### ObjectView.Array : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
 **Kind**: static property of [<code>ObjectView</code>](#ObjectView)  
 <a name="ObjectView.from"></a>
 
@@ -2771,6 +2786,7 @@ Extends Uint8Array to handle C-like representation of UTF-8 encoded strings.
         * [.encoder](#StringView.encoder) : <code>TextEncoder</code>
             * [.encodeInto(source, destination)](#StringView.encoder.encodeInto) ⇒ <code>Uint8Array</code>
         * [.decoder](#StringView.decoder) : <code>TextDecoder</code>
+        * [.Array](#StringView.Array) : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
         * [.from(arrayLike, [mapFn], [thisArg], [length])](#StringView.from) ⇒ <code>Uint8Array</code> \| [<code>StringView</code>](#StringView)
         * [.toJSON(view, [start], [length])](#StringView.toJSON) ⇒ <code>Array.&lt;number&gt;</code>
         * [.getByteSize(string)](#StringView.getByteSize) ⇒ <code>number</code>
@@ -2950,6 +2966,10 @@ Polyfill for TextEncoder#encodeInto
 <a name="StringView.decoder"></a>
 
 ### StringView.decoder : <code>TextDecoder</code>
+**Kind**: static property of [<code>StringView</code>](#StringView)  
+<a name="StringView.Array"></a>
+
+### StringView.Array : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
 **Kind**: static property of [<code>StringView</code>](#StringView)  
 <a name="StringView.from"></a>
 
@@ -3193,6 +3213,11 @@ a.get(2, 1);
         * [.set(value)](#TypeView+set) ⇒ [<code>TypeView</code>](#TypeView)
         * [.toJSON()](#TypeView+toJSON) ⇒ <code>number</code>
     * _static_
+        * [.offset](#TypeView.offset) : <code>number</code>
+        * [.littleEndian](#TypeView.littleEndian) : <code>boolean</code>
+        * [.objectLength](#TypeView.objectLength) : <code>number</code>
+        * [.Views](#TypeView.Views) : <code>Map.&lt;string, Class.&lt;TypeView&gt;&gt;</code>
+        * [.Array](#TypeView.Array) : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
         * [.getLength()](#TypeView.getLength) ⇒ <code>number</code>
         * [.from(value, [view], [start])](#TypeView.from) ⇒ [<code>View</code>](#View)
         * [.of()](#TypeView.of) ⇒ [<code>TypeView</code>](#TypeView)
@@ -3221,6 +3246,26 @@ Sets the numerical value of the view.
 Returns the numerical value of the view.
 
 **Kind**: instance method of [<code>TypeView</code>](#TypeView)  
+<a name="TypeView.offset"></a>
+
+### TypeView.offset : <code>number</code>
+**Kind**: static property of [<code>TypeView</code>](#TypeView)  
+<a name="TypeView.littleEndian"></a>
+
+### TypeView.littleEndian : <code>boolean</code>
+**Kind**: static property of [<code>TypeView</code>](#TypeView)  
+<a name="TypeView.objectLength"></a>
+
+### TypeView.objectLength : <code>number</code>
+**Kind**: static property of [<code>TypeView</code>](#TypeView)  
+<a name="TypeView.Views"></a>
+
+### TypeView.Views : <code>Map.&lt;string, Class.&lt;TypeView&gt;&gt;</code>
+**Kind**: static property of [<code>TypeView</code>](#TypeView)  
+<a name="TypeView.Array"></a>
+
+### TypeView.Array : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
+**Kind**: static property of [<code>TypeView</code>](#TypeView)  
 <a name="TypeView.getLength"></a>
 
 ### TypeView.getLength() ⇒ <code>number</code>
@@ -4153,7 +4198,7 @@ Creates a MapView class with a given schema.
 | --- | --- | --- |
 | schema | <code>object</code> | the schema to use for the class |
 | [MapViewClass] | [<code>Class.&lt;MapView&gt;</code>](#MapView) | an optional MapView class to extend |
-| [ObjectViewClass] | [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView) | an optional ObjectView class to use for nested objects |
+| [ObjectViewClass] | [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView) | an optional ObjectView class                                              to use for nested objects |
 
 <a name="ObjectViewMixin"></a>
 
@@ -4209,13 +4254,14 @@ const SymmetricGrid = SymmetricGridMixin(Array);
 ```
 <a name="TypeViewMixin"></a>
 
-## TypeViewMixin(type, [littleEndian]) ⇒ [<code>Class.&lt;TypeView&gt;</code>](#TypeView)
+## TypeViewMixin(type, [littleEndian], [TypeViewClass]) ⇒ [<code>Class.&lt;TypeView&gt;</code>](#TypeView)
 **Kind**: global function  
 
 | Param | Type | Default |
 | --- | --- | --- |
 | type | [<code>PrimitiveFieldType</code>](#PrimitiveFieldType) |  | 
 | [littleEndian] | <code>boolean</code> | <code>true</code> | 
+| [TypeViewClass] | [<code>Class.&lt;TypeView&gt;</code>](#TypeView) |  | 
 
 <a name="popCount32"></a>
 

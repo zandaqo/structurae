@@ -19,7 +19,7 @@ const { MapView, MapViewMixin } = require('./lib/map-view');
 const { ObjectView, ObjectViewMixin } = require('./lib/object-view');
 const StringView = require('./lib/string-view');
 const BinaryProtocol = require('./lib/binary-protocol');
-const TypeViewMixin = require('./lib/type-view');
+const { TypeView, TypeViewMixin } = require('./lib/type-view');
 const BooleanView = require('./lib/boolean-view');
 
 /**
@@ -61,6 +61,7 @@ module.exports = {
   ObjectViewMixin,
   StringView,
   BinaryProtocol,
+  TypeView,
   TypeViewMixin,
   BooleanView,
 };

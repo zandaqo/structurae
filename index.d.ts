@@ -204,10 +204,12 @@ type ViewType = typeof ArrayView | typeof ObjectView | typeof StringView | typeo
 
 type View = ObjectView | ArrayView | StringView | TypeView;
 
-declare class TypeView extends DataView {
+export declare class TypeView extends DataView {
     static offset: number;
     static littleEndian: true;
     static objectLength: number;
+    static Views: Map<string, typeof TypeView>;
+    static Array: typeof ArrayView;
 
     get(): number;
     set(value: number): this;
@@ -223,12 +225,14 @@ export declare class BooleanView extends TypeView {
     static toJSON(view: View, start?: number): boolean;
 }
 
-export declare function TypeViewMixin(type: PrimitiveFieldType, littleEndian?: boolean): typeof TypeView;
+export declare function TypeViewMixin(type: PrimitiveFieldType, littleEndian?: boolean,
+                                      TypeViewClass?: typeof TypeView): typeof TypeView;
 
 export declare class ArrayView extends DataView {
     size: number;
     static itemLength: number;
     static View: ViewType;
+    static Array: typeof ArrayView;
 
     get(index: number): any;
     getView(index: number): View;
@@ -282,6 +286,7 @@ export declare class ObjectView extends DataView {
     static layout: ViewLayout;
     static fields: string[];
     static Views: ViewTypes;
+    static Array: typeof ArrayView;
     static types: ObjectViewTypeDefs;
     static objectLength: number;
     private static defaultBuffer: ArrayBuffer;
@@ -308,6 +313,7 @@ export declare class StringView extends Uint8Array {
     static masks: Int8Array;
     static encoder: TextEncoder;
     static decoder: TextDecoder;
+    static Array: typeof ArrayView;
 
     characters(): Iterable<string>;
     charAt(index?: number): string;
