@@ -209,7 +209,7 @@ export declare class TypeView extends DataView {
     static littleEndian: true;
     static objectLength: number;
     static Views: Map<string, typeof TypeView>;
-    static Array: typeof ArrayView;
+    static ArrayClass: typeof ArrayView;
 
     get(): number;
     set(value: number): this;
@@ -232,7 +232,7 @@ export declare class ArrayView extends DataView {
     size: number;
     static itemLength: number;
     static View: ViewType;
-    static Array: typeof ArrayView;
+    static ArrayClass: typeof ArrayView;
 
     get(index: number): any;
     getView(index: number): View;
@@ -247,7 +247,7 @@ export declare class ArrayView extends DataView {
     static getSize(length: number): number;
 }
 
-declare class TypedArrayView extends ArrayView {
+export declare class TypedArrayView extends ArrayView {
     static View: typeof TypeView;
 
     get(index: number): number;
@@ -286,7 +286,7 @@ export declare class ObjectView extends DataView {
     static layout: ViewLayout;
     static fields: string[];
     static Views: ViewTypes;
-    static Array: typeof ArrayView;
+    static ArrayClass: typeof ArrayView;
     static types: ObjectViewTypeDefs;
     static objectLength: number;
     private static defaultBuffer: ArrayBuffer;
@@ -313,7 +313,7 @@ export declare class StringView extends Uint8Array {
     static masks: Int8Array;
     static encoder: TextEncoder;
     static decoder: TextDecoder;
-    static Array: typeof ArrayView;
+    static ArrayClass: typeof ArrayView;
 
     characters(): Iterable<string>;
     charAt(index?: number): string;

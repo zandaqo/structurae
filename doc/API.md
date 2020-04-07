@@ -182,7 +182,7 @@ stored in an ArrayBuffer.
         * [.itemLength](#ArrayView.itemLength) : <code>number</code>
         * [.View](#ArrayView.View) : [<code>ObjectView</code>](#ObjectView)
         * [.Views](#ArrayView.Views) : <code>WeakMap.&lt;Class.&lt;View&gt;, Class.&lt;ArrayView&gt;&gt;</code>
-        * [.Array](#ArrayView.Array) : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
+        * [.ArrayClass](#ArrayView.ArrayClass) : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
         * [.from(value, [array], [start], [length])](#ArrayView.from) ⇒ [<code>ArrayView</code>](#ArrayView)
         * [.toJSON(view, [start], [length])](#ArrayView.toJSON) ⇒ <code>Object</code>
         * [.getLength(size)](#ArrayView.getLength) ⇒ <code>number</code>
@@ -259,9 +259,9 @@ Returns an array representation of the array view.
 
 ### ArrayView.Views : <code>WeakMap.&lt;Class.&lt;View&gt;, Class.&lt;ArrayView&gt;&gt;</code>
 **Kind**: static property of [<code>ArrayView</code>](#ArrayView)  
-<a name="ArrayView.Array"></a>
+<a name="ArrayView.ArrayClass"></a>
 
-### ArrayView.Array : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
+### ArrayView.ArrayClass : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
 **Kind**: static property of [<code>ArrayView</code>](#ArrayView)  
 <a name="ArrayView.from"></a>
 
@@ -1948,7 +1948,7 @@ A DataView based C-like struct to store JavaScript objects in ArrayBuffer.
             * [.string()](#ObjectView.types.string) ⇒ [<code>Class.&lt;StringView&gt;</code>](#StringView)
         * [.schema](#ObjectView.schema) : <code>object</code>
         * [.Views](#ObjectView.Views) : <code>Object.&lt;string, Class.&lt;View&gt;&gt;</code>
-        * [.Array](#ObjectView.Array) : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
+        * [.ArrayClass](#ObjectView.ArrayClass) : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
         * [.from(object, [view], [start], [length])](#ObjectView.from) ⇒ [<code>View</code>](#View)
         * [.toJSON(view, [start])](#ObjectView.toJSON) ⇒ <code>Object</code>
         * [.getLength()](#ObjectView.getLength) ⇒ <code>number</code>
@@ -2055,9 +2055,9 @@ Returns an Object corresponding to the view.
 
 ### ObjectView.Views : <code>Object.&lt;string, Class.&lt;View&gt;&gt;</code>
 **Kind**: static property of [<code>ObjectView</code>](#ObjectView)  
-<a name="ObjectView.Array"></a>
+<a name="ObjectView.ArrayClass"></a>
 
-### ObjectView.Array : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
+### ObjectView.ArrayClass : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
 **Kind**: static property of [<code>ObjectView</code>](#ObjectView)  
 <a name="ObjectView.from"></a>
 
@@ -2786,7 +2786,7 @@ Extends Uint8Array to handle C-like representation of UTF-8 encoded strings.
         * [.encoder](#StringView.encoder) : <code>TextEncoder</code>
             * [.encodeInto(source, destination)](#StringView.encoder.encodeInto) ⇒ <code>Uint8Array</code>
         * [.decoder](#StringView.decoder) : <code>TextDecoder</code>
-        * [.Array](#StringView.Array) : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
+        * [.ArrayClass](#StringView.ArrayClass) : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
         * [.from(arrayLike, [mapFn], [thisArg], [length])](#StringView.from) ⇒ <code>Uint8Array</code> \| [<code>StringView</code>](#StringView)
         * [.toJSON(view, [start], [length])](#StringView.toJSON) ⇒ <code>Array.&lt;number&gt;</code>
         * [.getByteSize(string)](#StringView.getByteSize) ⇒ <code>number</code>
@@ -2967,9 +2967,9 @@ Polyfill for TextEncoder#encodeInto
 
 ### StringView.decoder : <code>TextDecoder</code>
 **Kind**: static property of [<code>StringView</code>](#StringView)  
-<a name="StringView.Array"></a>
+<a name="StringView.ArrayClass"></a>
 
-### StringView.Array : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
+### StringView.ArrayClass : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
 **Kind**: static property of [<code>StringView</code>](#StringView)  
 <a name="StringView.from"></a>
 
@@ -3217,7 +3217,7 @@ a.get(2, 1);
         * [.littleEndian](#TypeView.littleEndian) : <code>boolean</code>
         * [.objectLength](#TypeView.objectLength) : <code>number</code>
         * [.Views](#TypeView.Views) : <code>Map.&lt;string, Class.&lt;TypeView&gt;&gt;</code>
-        * [.Array](#TypeView.Array) : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
+        * [.ArrayClass](#TypeView.ArrayClass) : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
         * [.getLength()](#TypeView.getLength) ⇒ <code>number</code>
         * [.from(value, [view], [start])](#TypeView.from) ⇒ [<code>View</code>](#View)
         * [.of()](#TypeView.of) ⇒ [<code>TypeView</code>](#TypeView)
@@ -3262,9 +3262,9 @@ Returns the numerical value of the view.
 
 ### TypeView.Views : <code>Map.&lt;string, Class.&lt;TypeView&gt;&gt;</code>
 **Kind**: static property of [<code>TypeView</code>](#TypeView)  
-<a name="TypeView.Array"></a>
+<a name="TypeView.ArrayClass"></a>
 
-### TypeView.Array : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
+### TypeView.ArrayClass : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
 **Kind**: static property of [<code>TypeView</code>](#TypeView)  
 <a name="TypeView.getLength"></a>
 
