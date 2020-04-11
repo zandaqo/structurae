@@ -124,14 +124,17 @@ describe('Graph', () => {
         it('returns a spanning tree of the graph', () => {
           expect(graph.tree()).toEqual([-1, 0, 0, 0, 2, 2]);
           graph.addEdge(0, 5, 1);
-          expect(graph.tree())
-            .toEqual(GraphClass.weighted ? [-1, 0, 0, 0, 2, 0] : [-1, 0, 0, 0, 2, 2]);
+          expect(graph.tree()).toEqual(
+            GraphClass.weighted ? [-1, 0, 0, 0, 2, 0] : [-1, 0, 0, 0, 2, 2],
+          );
           graph.addEdge(3, 4, 1);
-          expect(graph.tree())
-            .toEqual(GraphClass.weighted ? [-1, 0, 0, 0, 3, 0] : [-1, 0, 0, 0, 3, 2]);
+          expect(graph.tree()).toEqual(
+            GraphClass.weighted ? [-1, 0, 0, 0, 3, 0] : [-1, 0, 0, 0, 3, 2],
+          );
           graph.addEdge(5, 2, 2);
-          expect(graph.tree())
-            .toEqual(GraphClass.weighted ? [-1, 0, 5, 0, 3, 0] : [-1, 0, 0, 0, 3, 2]);
+          expect(graph.tree()).toEqual(
+            GraphClass.weighted ? [-1, 0, 5, 0, 3, 0] : [-1, 0, 0, 0, 3, 2],
+          );
         });
       });
     });

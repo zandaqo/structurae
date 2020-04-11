@@ -95,21 +95,27 @@ describe('SymmetricGrid', () => {
 
   describe('toArrays', () => {
     it('', () => {
-      const arrays = [[1, 2, 4], [2, 3, 5], [4, 5, 6]];
+      const arrays = [
+        [1, 2, 4],
+        [2, 3, 5],
+        [4, 5, 6],
+      ];
       const grid = SymmetricGrid.fromArrays(arrays);
       expect(grid.toArrays()).toEqual(arrays);
     });
   });
 
-
   describe('fromArrays', () => {
     it('creates a grid from an array of arrays', () => {
-      const grid = SymmetricGrid.fromArrays([[1, 2, 4], [2, 3, 5], [4, 5, 6]]);
+      const grid = SymmetricGrid.fromArrays([
+        [1, 2, 4],
+        [2, 3, 5],
+        [4, 5, 6],
+      ]);
       expect(grid instanceof SymmetricGrid).toBe(true);
       expect(Array.from(grid)).toEqual([1, 2, 3, 4, 5, 6]);
     });
   });
-
 
   describe('getIndex', () => {
     it('returns an array index of an element at given coordinates', () => {

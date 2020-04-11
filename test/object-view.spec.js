@@ -1,6 +1,9 @@
 const {
-  ObjectView, ObjectViewMixin,
-  StringView, ArrayViewMixin, TypeViewMixin,
+  ObjectView,
+  ObjectViewMixin,
+  StringView,
+  ArrayViewMixin,
+  TypeViewMixin,
 } = require('../index');
 
 const PersonSchema = {
@@ -76,7 +79,11 @@ const HouseSchema = {
           type: 'integer',
         },
       },
-      default: [[1, 5], [3, 2], [4, 5]],
+      default: [
+        [1, 5],
+        [3, 2],
+        [4, 5],
+      ],
     },
   },
 };
@@ -149,21 +156,23 @@ describe('ObjectViewMixin', () => {
   });
 
   it('throws if invalid field type is used', () => {
-    expect(() => { ObjectViewMixin(InvalidType); })
-      .toThrowError('Type "float512" is not supported.');
+    expect(() => {
+      ObjectViewMixin(InvalidType);
+    }).toThrowError('Type "float512" is not supported.');
   });
 
   it('throws if non existant view is referenced', () => {
-    expect(() => { ObjectViewMixin(IvalidRef); })
-      .toThrowError('View "none" is not found.');
+    expect(() => {
+      ObjectViewMixin(IvalidRef);
+    }).toThrowError('View "none" is not found.');
   });
 
   it('throws if the schema has recursive references', () => {
-    expect(() => { ObjectViewMixin(InvalidRecursive); })
-      .toThrowError('The schema has recursive references.');
+    expect(() => {
+      ObjectViewMixin(InvalidRecursive);
+    }).toThrowError('The schema has recursive references.');
   });
 });
-
 
 describe('ObjectView', () => {
   const Person = ObjectViewMixin(PersonSchema);
@@ -177,7 +186,11 @@ describe('ObjectView', () => {
     friends: ['', '', ''],
     house: true,
     car: { color: 0, model: 0 },
-    pets: [{ age: 0, name: '' }, { age: 0, name: '' }, { age: 0, name: '' }],
+    pets: [
+      { age: 0, name: '' },
+      { age: 0, name: '' },
+      { age: 0, name: '' },
+    ],
   };
 
   describe('get', () => {
@@ -188,23 +201,22 @@ describe('ObjectView', () => {
       expect(person.get('scores')).toEqual([0, 0, 0, 0, 0]);
       expect(person.get('car')).toEqual({ color: 0, model: 0 });
       expect(person.get('house')).toBe(true);
-      expect(House.from({}).get('sizes')).toEqual([[1, 5], [3, 2], [4, 5]]);
+      expect(House.from({}).get('sizes')).toEqual([
+        [1, 5],
+        [3, 2],
+        [4, 5],
+      ]);
     });
   });
 
   describe('getView', () => {
     it('returns a view of a given field', () => {
       const person = Person.from({});
-      expect(person.getView('age') instanceof TypeViewMixin('int8', true))
-        .toBe(true);
-      expect(person.getView('weight') instanceof TypeViewMixin('float32', false))
-        .toBe(true);
-      expect(person.getView('name') instanceof StringView)
-        .toBe(true);
-      expect(person.getView('scores') instanceof ArrayViewMixin('int32', true))
-        .toBe(true);
-      expect(person.getView('car') instanceof ObjectView)
-        .toBe(true);
+      expect(person.getView('age') instanceof TypeViewMixin('int8', true)).toBe(true);
+      expect(person.getView('weight') instanceof TypeViewMixin('float32', false)).toBe(true);
+      expect(person.getView('name') instanceof StringView).toBe(true);
+      expect(person.getView('scores') instanceof ArrayViewMixin('int32', true)).toBe(true);
+      expect(person.getView('car') instanceof ObjectView).toBe(true);
     });
   });
 
@@ -217,8 +229,18 @@ describe('ObjectView', () => {
       expect(person.set('friends', ['a', 'b', 'c']).get('friends')).toEqual(['a', 'b', 'c']);
       expect(person.set('scores', [5, 3, 4, 5, 7]).get('scores')).toEqual([5, 3, 4, 5, 7]);
       expect(person.set('car', { color: 1 }).get('car')).toEqual({ color: 1, model: 0 });
-      expect(person.set('pets', [{ age: 1, name: 'a' }, { age: 2, name: 'b' }])
-        .get('pets')).toEqual([{ age: 1, name: 'a' }, { age: 2, name: 'b' }, { age: 0, name: '' }]);
+      expect(
+        person
+          .set('pets', [
+            { age: 1, name: 'a' },
+            { age: 2, name: 'b' },
+          ])
+          .get('pets'),
+      ).toEqual([
+        { age: 1, name: 'a' },
+        { age: 2, name: 'b' },
+        { age: 0, name: '' },
+      ]);
     });
 
     it('zeros out non-existing elements', () => {
@@ -256,7 +278,11 @@ describe('ObjectView', () => {
         friends: ['Ford', 'Zaphod', 'Marvin'],
         house: false,
         car: { color: 0, model: 0 },
-        pets: [{ age: 1, name: 'a' }, { age: 3, name: 'b' }, { age: 6, name: 'c' }],
+        pets: [
+          { age: 1, name: 'a' },
+          { age: 3, name: 'b' },
+          { age: 6, name: 'c' },
+        ],
       };
       const person = Person.from(expected);
       expect(person.toJSON()).toEqual(expected);
@@ -291,7 +317,11 @@ describe('ObjectView', () => {
         friends: ['', '', ''],
         house: false,
         car: { color: 0, model: 0 },
-        pets: [{ age: 0, name: '' }, { age: 0, name: '' }, { age: 0, name: '' }],
+        pets: [
+          { age: 0, name: '' },
+          { age: 0, name: '' },
+          { age: 0, name: '' },
+        ],
       });
     });
   });

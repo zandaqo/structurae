@@ -1,5 +1,7 @@
 const BigBitField = require('../lib/big-bit-field');
 
+const BigInt = globalThis.BigInt || Number;
+
 describe('BigBitField', () => {
   class LargeField extends BigBitField {}
   LargeField.schema = {
@@ -17,9 +19,14 @@ describe('BigBitField', () => {
     });
 
     it('creates an instance from a list of values', () => {
-      expect(new LargeField({
-        location: 20, open: 1, width: 3500, height: 5,
-      }).value).toBe(BigInt('2748779965588'));
+      expect(
+        new LargeField({
+          location: 20,
+          open: 1,
+          width: 3500,
+          height: 5,
+        }).value,
+      ).toBe(BigInt('2748779965588'));
       expect(new LargeField([20, 1, 3500, 5]).value).toBe(BigInt('2748779965588'));
     });
 
@@ -31,18 +38,30 @@ describe('BigBitField', () => {
 
   describe('get', () => {
     it('returns a value of a given field', () => {
-      expect(new LargeField({
-        location: 20, open: 1, width: 3500, height: 5,
-      }).get('width')).toBe(3500);
+      expect(
+        new LargeField({
+          location: 20,
+          open: 1,
+          width: 3500,
+          height: 5,
+        }).get('width'),
+      ).toBe(3500);
       expect(new LargeField(BigInt('2748779965588')).get('width')).toBe(3500);
     });
   });
 
   describe('set', () => {
     it('sets a given value to a given field', () => {
-      expect(new LargeField({
-        location: 20, open: 1, width: 3500, height: 5,
-      }).set('width', 3000).get('width')).toBe(3000);
+      expect(
+        new LargeField({
+          location: 20,
+          open: 1,
+          width: 3500,
+          height: 5,
+        })
+          .set('width', 3000)
+          .get('width'),
+      ).toBe(3000);
       expect(new LargeField(BigInt(1375759717)).set('location', 21).get('location')).toBe(21);
     });
   });
@@ -50,7 +69,10 @@ describe('BigBitField', () => {
   describe('has', () => {
     it('checks if all specified fields are set in a given bitfield instance', () => {
       const largeField = new LargeField({
-        location: 20, open: 0, width: 3500, height: 0,
+        location: 20,
+        open: 0,
+        width: 3500,
+        height: 0,
       });
       expect(largeField.has('open')).toBe(false);
       expect(largeField.set('open').has('open')).toBe(true);
@@ -60,7 +82,10 @@ describe('BigBitField', () => {
   describe('match', () => {
     it('partially matches instance', () => {
       const largeField = new LargeField({
-        location: 20, open: 1, width: 3500, height: 5,
+        location: 20,
+        open: 1,
+        width: 3500,
+        height: 5,
       });
       expect(largeField.match({ width: 3500 })).toBe(true);
       expect(largeField.match({ width: 3400 })).toBe(false);
@@ -79,9 +104,14 @@ describe('BigBitField', () => {
 
   describe('toObject', () => {
     it('returns a plain object representation of an instance', () => {
-      expect(new LargeField({
-        location: 20, open: 1, width: 3500, height: 5,
-      }).toObject()).toEqual({
+      expect(
+        new LargeField({
+          location: 20,
+          open: 1,
+          width: 3500,
+          height: 5,
+        }).toObject(),
+      ).toEqual({
         location: 20,
         open: 1,
         width: 3500,
@@ -92,17 +122,28 @@ describe('BigBitField', () => {
 
   describe('toString', () => {
     it('returns a string representing the value of the instance', () => {
-      expect(`${new LargeField({
-        location: 20, open: 1, width: 3500, height: 5,
-      })}`).toBe('2748779965588');
+      expect(
+        `${new LargeField({
+          location: 20,
+          open: 1,
+          width: 3500,
+          height: 5,
+        })}`,
+      ).toBe('2748779965588');
     });
   });
 
   describe('valueOf', () => {
     it('returns the value of an instance as a number', () => {
-      expect(BigInt(1) + new LargeField({
-        location: 20, open: 1, width: 3500, height: 5,
-      })).toBe(BigInt('2748779965589'));
+      expect(
+        BigInt(1) +
+          new LargeField({
+            location: 20,
+            open: 1,
+            width: 3500,
+            height: 5,
+          }),
+      ).toBe(BigInt('2748779965589'));
     });
   });
 
@@ -139,7 +180,10 @@ describe('BigBitField', () => {
   describe('iterator', () => {
     it('iterates over numbers stored in the instance', () => {
       const data = {
-        location: 20, open: 1, width: 3500, height: 5,
+        location: 20,
+        open: 1,
+        width: 3500,
+        height: 5,
       };
       const largeField = new LargeField(data);
       expect(Array.from(largeField)).toEqual([20, 1, 3500, 5]);

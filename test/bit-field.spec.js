@@ -42,10 +42,16 @@ describe('BitField', () => {
 
   describe('set', () => {
     it('sets a given value to a given field', () => {
-      expect(new Field({ width: 65535, height: 32760 }).set('height', 32767).get('height')).toBe(32767);
-      expect(new PersonFlags({ human: 1, gender: 0, tall: 1 }).set('gender', 1).get('gender')).toBe(1);
+      expect(new Field({ width: 65535, height: 32760 }).set('height', 32767).get('height')).toBe(
+        32767,
+      );
+      expect(new PersonFlags({ human: 1, gender: 0, tall: 1 }).set('gender', 1).get('gender')).toBe(
+        1,
+      );
       expect(new PersonFlags({ human: 1, gender: 0, tall: 1 }).set('gender').get('gender')).toBe(1);
-      expect(new PersonFlags({ human: 1, gender: 0, tall: 1 }).set('human', 0).get('human')).toBe(0);
+      expect(new PersonFlags({ human: 1, gender: 0, tall: 1 }).set('human', 0).get('human')).toBe(
+        0,
+      );
     });
   });
 
@@ -82,8 +88,11 @@ describe('BitField', () => {
   describe('toObject', () => {
     it('returns a plain object representation of an instance', () => {
       expect(new Field({ width: 20, height: 1 }).toObject()).toEqual({ width: 20, height: 1 });
-      expect(new PersonFlags({ human: 1, gender: 0, tall: 1 }).toObject())
-        .toEqual({ human: 1, gender: 0, tall: 1 });
+      expect(new PersonFlags({ human: 1, gender: 0, tall: 1 }).toObject()).toEqual({
+        human: 1,
+        gender: 0,
+        tall: 1,
+      });
     });
   });
 

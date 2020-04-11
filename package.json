@@ -1,6 +1,6 @@
 {
   "name": "structurae",
-  "version": "3.0.4",
+  "version": "3.0.5",
   "description": "Data structures for performance-sensitive modern JavaScript applications.",
   "main": "index.js",
   "types": "index.d.ts",
@@ -49,6 +49,7 @@
     "benchmark": "^2.1.4",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-config-prettier": "^6.10.1",
     "eslint-plugin-import": "^2.20.2",
     "jest": "^25.2.7",
     "jsdoc-to-markdown": "^5.0.3",
@@ -77,5 +78,48 @@
   },
   "engines": {
     "node": ">=11.0.0"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "trailingComma": "all"
+  },
+  "eslintConfig": {
+    "extends": [
+      "airbnb-base",
+      "prettier"
+    ],
+    "env": {
+      "node": true,
+      "jest": true
+    },
+    "globals": {
+      "globalThis": false
+    },
+    "rules": {
+      "max-classes-per-file": 1,
+      "no-bitwise": 0,
+      "no-plusplus": 0,
+      "no-continue": 0,
+      "no-restricted-syntax": 1,
+      "no-nested-ternary": 1,
+      "no-labels": 1,
+      "no-param-reassign": [
+        2,
+        {
+          "props": false
+        }
+      ],
+      "valid-jsdoc": [
+        2,
+        {
+          "prefer": {
+            "return": "returns"
+          },
+          "requireReturnDescription": false,
+          "requireParamDescription": false
+        }
+      ]
+    }
   }
 }

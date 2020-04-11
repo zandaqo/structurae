@@ -35,7 +35,8 @@ describe('StringView', () => {
   describe('replace', () => {
     it('replaces a pattern with a replacement', () => {
       const stringView = StringView.from('Vimessaid');
-      stringView.replace(Encoder.encode('s'), Encoder.encode('x'))
+      stringView
+        .replace(Encoder.encode('s'), Encoder.encode('x'))
         .replace(Encoder.encode('d'), Encoder.encode('y'));
       expect(stringView.toString()).toBe('Vimexxaiy');
     });
@@ -60,8 +61,9 @@ describe('StringView', () => {
       expect(stringView.search(Encoder.encode('i'))).toBe(1);
       expect(stringView.search(Encoder.encode('i'), 2)).toBe(5);
 
-      const longString = StringView.from(new Array(300).fill(0)
-        .map(() => (Math.random() * 128) | 0));
+      const longString = StringView.from(
+        new Array(300).fill(0).map(() => (Math.random() * 128) | 0),
+      );
       longString[0] = 97;
       expect(longString.length).toBe(300);
       expect(longString.search(Encoder.encode('ё'))).toBe(-1);

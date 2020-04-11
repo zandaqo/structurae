@@ -1,6 +1,4 @@
-const {
-  ArrayViewMixin, TypeViewMixin, MapViewMixin, MapView, ObjectView,
-} = require('../index');
+const { ArrayViewMixin, TypeViewMixin, MapViewMixin, MapView, ObjectView } = require('../index');
 
 const Int32ArrayView = ArrayViewMixin('int32');
 const Float64View = TypeViewMixin('float64');
@@ -59,19 +57,23 @@ describe('MapViewMixin', () => {
 
   it('uses custom ObjectView class to initialize nested objects', () => {
     class CustomObjectView extends ObjectView {}
-    const Person = MapViewMixin({
-      $id: 'CustomMap',
-      type: 'object',
-      properties: {
-        a: {
-          $id: 'CustomNestedObject',
-          type: 'object',
-          properties: {
-            b: { type: 'number' },
+    const Person = MapViewMixin(
+      {
+        $id: 'CustomMap',
+        type: 'object',
+        properties: {
+          a: {
+            $id: 'CustomNestedObject',
+            type: 'object',
+            properties: {
+              b: { type: 'number' },
+            },
           },
         },
       },
-    }, undefined, CustomObjectView);
+      undefined,
+      CustomObjectView,
+    );
     expect(Person.layout.a.View.prototype instanceof CustomObjectView).toBe(true);
   });
 });
@@ -91,8 +93,9 @@ describe('MapView', () => {
 
     it('throws if the view does not have the field', () => {
       const map = MapA.from({});
-      expect(() => { map.get('abc'); })
-        .toThrow('Field "abc" is not found.');
+      expect(() => {
+        map.get('abc');
+      }).toThrow('Field "abc" is not found.');
     });
   });
 
@@ -110,8 +113,9 @@ describe('MapView', () => {
 
     it('throws if the view does not have the field', () => {
       const map = MapA.from({});
-      expect(() => { map.getView('abc'); })
-        .toThrow('Field "abc" is not found.');
+      expect(() => {
+        map.getView('abc');
+      }).toThrow('Field "abc" is not found.');
     });
   });
 
@@ -130,8 +134,9 @@ describe('MapView', () => {
 
     it('throws if the view does not have the field', () => {
       const map = MapA.from({});
-      expect(() => { map.set('abc', 1); })
-        .toThrow('Field "abc" is not found.');
+      expect(() => {
+        map.set('abc', 1);
+      }).toThrow('Field "abc" is not found.');
     });
   });
 
@@ -145,8 +150,9 @@ describe('MapView', () => {
 
     it('throws if the view does not have the field', () => {
       const map = MapA.from({});
-      expect(() => { map.setView('abc', 1); })
-        .toThrow('Field "abc" is not found.');
+      expect(() => {
+        map.setView('abc', 1);
+      }).toThrow('Field "abc" is not found.');
     });
   });
 
@@ -155,7 +161,10 @@ describe('MapView', () => {
       const expected = {
         a: 42,
         b: [20, 30, 10],
-        c: [{ id: 10, name: 'abc' }, { id: 5, name: 'def' }],
+        c: [
+          { id: 10, name: 'abc' },
+          { id: 5, name: 'def' },
+        ],
       };
       const map = MapA.from(expected);
       expect(map.toJSON()).toEqual(expected);
@@ -165,25 +174,28 @@ describe('MapView', () => {
       const expected = {
         a: 42,
         b: [20, 30, 10],
-        c: [{ id: 10, name: 'abc' }, { id: 5, name: 'def' }],
+        c: [
+          { id: 10, name: 'abc' },
+          { id: 5, name: 'def' },
+        ],
       };
       const buffer = new ArrayBuffer(1000);
       const temp = MapA.from(expected);
       const view = new DataView(buffer);
-      new Uint8Array(view.buffer, view.byteOffset, view.byteLength)
-        .set(new Uint8Array(temp.buffer, temp.byteOffset, temp.byteLength), 100);
+      new Uint8Array(view.buffer, view.byteOffset, view.byteLength).set(
+        new Uint8Array(temp.buffer, temp.byteOffset, temp.byteLength),
+        100,
+      );
       expect(MapA.toJSON(view, 100)).toEqual(expected);
     });
   });
 
   describe('getLength', () => {
     it('returns the byte length of a map view to hold a given object', () => {
-      expect(MapA.getLength({ a: 42, b: [1], c: [1, 2] }))
-        .toBe(1 * 8 + 1 * 4 + 2 * 14 + 6 * 4);
+      expect(MapA.getLength({ a: 42, b: [1], c: [1, 2] })).toBe(1 * 8 + 1 * 4 + 2 * 14 + 6 * 4);
       expect(MapA.getLength({ b: [1] })).toBe(0 * 8 + 1 * 4 + 6 * 4);
       expect(MapA.getLength({})).toBe(0 * 0 + 0 * 0 + 6 * 4);
-      expect(MapA.getLength({ b: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] }))
-        .toBe(0 * 0 + 10 * 4 + 6 * 4);
+      expect(MapA.getLength({ b: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] })).toBe(0 * 0 + 10 * 4 + 6 * 4);
     });
   });
 
@@ -192,9 +204,16 @@ describe('MapView', () => {
       const expected = {
         a: 42,
         b: [20, 30, 10],
-        c: [{ id: 10, name: 'abc' }, { id: 5, name: 'def' }],
+        c: [
+          { id: 10, name: 'abc' },
+          { id: 5, name: 'def' },
+        ],
         d: 'abc',
-        e: [[3, 4], [5, 7], [6, 8]],
+        e: [
+          [3, 4],
+          [5, 7],
+          [6, 8],
+        ],
       };
       const map = MapA.from(expected);
       expect(map.toJSON()).toEqual(expected);
@@ -204,9 +223,16 @@ describe('MapView', () => {
       const object = {
         a: undefined,
         b: null,
-        c: [{ id: 10, name: 'abc' }, { id: 5, name: 'def' }],
+        c: [
+          { id: 10, name: 'abc' },
+          { id: 5, name: 'def' },
+        ],
         d: 'abc',
-        e: [[3, 4], [5, 7], [6, 8]],
+        e: [
+          [3, 4],
+          [5, 7],
+          [6, 8],
+        ],
       };
       const { a, b, ...expected } = object;
       const map = MapA.from(object);

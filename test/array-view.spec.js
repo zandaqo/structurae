@@ -1,6 +1,4 @@
-const {
-  ObjectView, ObjectViewMixin, ArrayViewMixin, ArrayView,
-} = require('../index');
+const { ObjectView, ObjectViewMixin, ArrayViewMixin, ArrayView } = require('../index');
 
 const Plane = ObjectViewMixin({
   $id: 'plane',
@@ -89,7 +87,11 @@ describe('ArrayView', () => {
 
   describe('toJSON', () => {
     it('returns an array of objects in the array', () => {
-      const expected = [{ id: 1, name: 'a' }, { id: 2, name: 'b' }, { id: 3, name: 'c' }];
+      const expected = [
+        { id: 1, name: 'a' },
+        { id: 2, name: 'b' },
+        { id: 3, name: 'c' },
+      ];
       const planes = Planes.from(expected);
       expect(planes.toJSON()).toEqual(expected);
     });
@@ -111,13 +113,21 @@ describe('ArrayView', () => {
 
   describe('from', () => {
     it('creates an empty array view', () => {
-      const expected = [{ id: 0, name: '' }, { id: 0, name: '' }, { id: 0, name: '' }];
+      const expected = [
+        { id: 0, name: '' },
+        { id: 0, name: '' },
+        { id: 0, name: '' },
+      ];
       const planes = Planes.from(expected);
       expect(planes.toJSON()).toEqual(expected);
     });
 
     it('fills a given array view with objects', () => {
-      const expected = [{ id: 1, name: 'a' }, { id: 2, name: 'b' }, { id: 3, name: 'c' }];
+      const expected = [
+        { id: 1, name: 'a' },
+        { id: 2, name: 'b' },
+        { id: 3, name: 'c' },
+      ];
       const planes = Planes.from(expected, Planes.of(3));
       expect(planes.size).toBe(3);
       expect(planes.toJSON()).toEqual(expected);

@@ -64,14 +64,18 @@ describe('BinaryProtocol', () => {
           ...bSchema,
         },
       });
-      const protocol = new BinaryProtocol({
-        0: {
-          $id: 'protocolE',
-          type: 'object',
-          properties: { ...aSchema },
+      const protocol = new BinaryProtocol(
+        {
+          0: {
+            $id: 'protocolE',
+            type: 'object',
+            properties: { ...aSchema },
+          },
+          1: 'protocolF',
         },
-        1: 'protocolF',
-      }, 'typeId', 'uint32');
+        'typeId',
+        'uint32',
+      );
       expect(protocol.Views[0].objectLength).toBe(15);
       expect(protocol.Views[1]).toBe(View);
     });
@@ -82,25 +86,31 @@ describe('BinaryProtocol', () => {
         type: 'object',
         properties: { ...bSchema },
       });
-      expect(() => new BinaryProtocol({
-        0: {
-          $id: 'protocolG',
-          type: 'object',
-          properties: { ...aSchema },
-        },
-        1: 'protocolH',
-      })).toThrow('The tag definition in the View is incorrect.');
+      expect(
+        () =>
+          new BinaryProtocol({
+            0: {
+              $id: 'protocolG',
+              type: 'object',
+              properties: { ...aSchema },
+            },
+            1: 'protocolH',
+          }),
+      ).toThrow('The tag definition in the View is incorrect.');
     });
 
     it('throws if non-existent View class is referenced', () => {
-      expect(() => new BinaryProtocol({
-        0: {
-          $id: 'protocolI',
-          type: 'object',
-          properties: { ...aSchema },
-        },
-        1: 'protocolJ',
-      })).toThrow('View "protocolJ" is not found.');
+      expect(
+        () =>
+          new BinaryProtocol({
+            0: {
+              $id: 'protocolI',
+              type: 'object',
+              properties: { ...aSchema },
+            },
+            1: 'protocolJ',
+          }),
+      ).toThrow('View "protocolJ" is not found.');
     });
   });
 

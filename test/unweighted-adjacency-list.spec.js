@@ -149,8 +149,9 @@ describe('UnweightedAdjacencyList', () => {
   describe('getVertexCount', () => {
     it('derives the vertex count of an adjacency list stored as an array-like object', () => {
       expect(UnweightedAdjacencyList.getVertexCount(graph)).toBe(6);
-      expect(UnweightedAdjacencyList.getVertexCount(new UnweightedAdjacencyList({ vertices: 4 })))
-        .toBe(4);
+      expect(
+        UnweightedAdjacencyList.getVertexCount(new UnweightedAdjacencyList({ vertices: 4 })),
+      ).toBe(4);
       expect(UnweightedAdjacencyList.getVertexCount(new UnweightedAdjacencyList())).toBe(2);
     });
   });

@@ -11,7 +11,6 @@ describe('Grid', () => {
     });
   });
 
-
   describe('constructor', () => {
     it('creates an instance of grid with default dimensions if no options or data are provided', () => {
       const grid = new Int8Grid();
@@ -136,7 +135,11 @@ describe('Grid', () => {
     });
 
     it('removes padding from each row if `withPadding` option is falsy', () => {
-      const arrays = [[1, 2, 3], [4, 5], [6, 7, 8, 9]];
+      const arrays = [
+        [1, 2, 3],
+        [4, 5],
+        [6, 7, 8, 9],
+      ];
       const grid = Uint32Grid.fromArrays(arrays);
       const arraysFromGrid = grid.toArrays();
       expect(arraysFromGrid.length).toBe(3);
@@ -154,7 +157,11 @@ describe('Grid', () => {
   });
 
   describe('fromArrays', () => {
-    const arrays = [[1, 2, 3], [4, 5], [6, 7, 8, 9]];
+    const arrays = [
+      [1, 2, 3],
+      [4, 5],
+      [6, 7, 8, 9],
+    ];
     it('creates a grid from an array of arrays', () => {
       const grid = Uint32Grid.fromArrays(arrays);
       expect(grid.length).toBe(12);

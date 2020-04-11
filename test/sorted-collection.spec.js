@@ -21,7 +21,9 @@ describe('Sorted', () => {
     });
 
     it('throws if comparison fails', () => {
-      expect(() => { SortedArray.compare('a', 1); }).toThrowError('Unstable comparison.');
+      expect(() => {
+        SortedArray.compare('a', 1);
+      }).toThrowError('Unstable comparison.');
     });
   });
 
@@ -89,17 +91,25 @@ describe('Sorted', () => {
     });
 
     it('returns the difference using a custom comparator', () => {
-      expect(SortedArray.getDifference(inversedFirst, inversedSecond, false, customComparator))
-        .toEqual([8, 3, 1]);
+      expect(
+        SortedArray.getDifference(inversedFirst, inversedSecond, false, customComparator),
+      ).toEqual([8, 3, 1]);
     });
 
     it('returns the difference in a given container', () => {
-      expect(SortedArray.getDifference(
-        inversedFirst, inversedSecond, false, customComparator,
-      ) instanceof SortedArray).toBe(false);
-      expect(SortedArray.getDifference(
-        inversedFirst, inversedSecond, false, customComparator, new SortedArray(),
-      ) instanceof SortedArray).toBe(true);
+      expect(
+        SortedArray.getDifference(inversedFirst, inversedSecond, false, customComparator) instanceof
+          SortedArray,
+      ).toBe(false);
+      expect(
+        SortedArray.getDifference(
+          inversedFirst,
+          inversedSecond,
+          false,
+          customComparator,
+          new SortedArray(),
+        ) instanceof SortedArray,
+      ).toBe(true);
     });
   });
 
@@ -113,8 +123,9 @@ describe('Sorted', () => {
     });
 
     it('returns the difference score using a custom comparator', () => {
-      expect(SortedArray.getDifferenceScore(inversedFirst, inversedSecond, false, customComparator))
-        .toEqual(3);
+      expect(
+        SortedArray.getDifferenceScore(inversedFirst, inversedSecond, false, customComparator),
+      ).toEqual(3);
     });
   });
 
@@ -138,16 +149,24 @@ describe('Sorted', () => {
     });
 
     it('returns the intersection using a custom comparator', () => {
-      expect(SortedArray.getIntersection(inversedFirst, inversedSecond, customComparator))
-        .toEqual([4, 2]);
+      expect(SortedArray.getIntersection(inversedFirst, inversedSecond, customComparator)).toEqual([
+        4,
+        2,
+      ]);
     });
     it('returns the intersection in a given container', () => {
-      expect(SortedArray.getIntersection(
-        inversedFirst, inversedSecond, customComparator,
-      ) instanceof SortedArray).toBe(false);
-      expect(SortedArray.getIntersection(
-        inversedFirst, inversedSecond, customComparator, new SortedArray(),
-      ) instanceof SortedArray).toBe(true);
+      expect(
+        SortedArray.getIntersection(inversedFirst, inversedSecond, customComparator) instanceof
+          SortedArray,
+      ).toBe(false);
+      expect(
+        SortedArray.getIntersection(
+          inversedFirst,
+          inversedSecond,
+          customComparator,
+          new SortedArray(),
+        ) instanceof SortedArray,
+      ).toBe(true);
     });
   });
 
@@ -157,8 +176,9 @@ describe('Sorted', () => {
     });
 
     it('returns the intersection score using a custom comparator', () => {
-      expect(SortedArray.getIntersectionScore(inversedFirst, inversedSecond, customComparator))
-        .toEqual(2);
+      expect(
+        SortedArray.getIntersectionScore(inversedFirst, inversedSecond, customComparator),
+      ).toEqual(2);
     });
   });
 
@@ -171,10 +191,18 @@ describe('Sorted', () => {
 
     it('uses custom comparator if provided', () => {
       expect(SortedArray.getRange(inversedFirst, 8, 3, customComparator)).toEqual([8, 4, 3]);
-      expect(SortedArray.getRange(inversedFirst, 4, undefined, customComparator))
-        .toEqual([4, 3, 2, 1]);
-      expect(SortedArray.getRange(inversedFirst, undefined, 2, customComparator))
-        .toEqual([8, 4, 3, 2]);
+      expect(SortedArray.getRange(inversedFirst, 4, undefined, customComparator)).toEqual([
+        4,
+        3,
+        2,
+        1,
+      ]);
+      expect(SortedArray.getRange(inversedFirst, undefined, 2, customComparator)).toEqual([
+        8,
+        4,
+        3,
+        2,
+      ]);
     });
 
     it('returns a range as a subarray if `subarray` true', () => {
@@ -196,17 +224,32 @@ describe('Sorted', () => {
     });
 
     it('returns the union using a custom comparator', () => {
-      expect(SortedArray.getUnion(inversedFirst, inversedSecond, true, customComparator))
-        .toEqual([9, 8, 7, 6, 4, 3, 2, 1]);
+      expect(SortedArray.getUnion(inversedFirst, inversedSecond, true, customComparator)).toEqual([
+        9,
+        8,
+        7,
+        6,
+        4,
+        3,
+        2,
+        1,
+      ]);
     });
 
     it('returns the union in a given container', () => {
-      expect(SortedArray.getUnion(
-        inversedFirst, inversedSecond, true, customComparator,
-      ) instanceof SortedArray).toBe(false);
-      expect(SortedArray.getUnion(
-        inversedFirst, inversedSecond, true, customComparator, new SortedArray(),
-      ) instanceof SortedArray).toBe(true);
+      expect(
+        SortedArray.getUnion(inversedFirst, inversedSecond, true, customComparator) instanceof
+          SortedArray,
+      ).toBe(false);
+      expect(
+        SortedArray.getUnion(
+          inversedFirst,
+          inversedSecond,
+          true,
+          customComparator,
+          new SortedArray(),
+        ) instanceof SortedArray,
+      ).toBe(true);
     });
   });
 
@@ -222,9 +265,10 @@ describe('Sorted', () => {
     it('returns the unique values in a given container', () => {
       expect(SortedArray.getUnique([1, 1, 2, 3, 3, 4]) instanceof SortedArray).toBe(false);
       expect(SortedArray.getUnique([1, 1, 2, 3, 3, 4], undefined, [])).toEqual([1, 2, 3, 4]);
-      expect(SortedArray.getUnique(
-        [1, 1, 2, 3, 3, 4], undefined, new SortedArray(),
-      ) instanceof SortedArray).toBe(true);
+      expect(
+        SortedArray.getUnique([1, 1, 2, 3, 3, 4], undefined, new SortedArray()) instanceof
+          SortedArray,
+      ).toBe(true);
     });
   });
 

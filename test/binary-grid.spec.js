@@ -53,7 +53,6 @@ describe('BinaryGrid', () => {
     });
   });
 
-
   describe('species', () => {
     it('returns Uint16Array when sliced', () => {
       const grid = new BinaryGrid();

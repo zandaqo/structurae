@@ -2,6 +2,8 @@ const BitField = require('../lib/bit-field');
 const BigBitField = require('../lib/big-bit-field');
 const BitFieldMixin = require('../lib/bit-field-mixin');
 
+const BigInt = globalThis.BigInt || Number;
+
 describe('BitFieldMixin', () => {
   it('creates a BitField class with a given schema', () => {
     const A = BitFieldMixin({ a: 1, b: 3, c: 10 });

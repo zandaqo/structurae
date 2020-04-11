@@ -1,5 +1,7 @@
 const { ArrayViewMixin } = require('../index');
 
+const BigInt = globalThis.BigInt || Number;
+
 const TypedArrays = {
   int8: ArrayViewMixin('int8'),
   uint8: ArrayViewMixin('uint8'),
