@@ -23,7 +23,10 @@ const JSONSchema = {
   $id: 'Person',
   properties: {
     type: {
-      type: 'integer', btype: 'uint8', minimum: 0, maximum: 255,
+      type: 'integer',
+      btype: 'uint8',
+      minimum: 0,
+      maximum: 255,
     },
     id: { type: 'integer', btype: 'uint32', minimum: 0 },
     name: { type: 'string', minLength: 3, maxLength: 50 },
@@ -47,7 +50,10 @@ const JSONSchema = {
         $id: 'Pet',
         properties: {
           type: {
-            type: 'integer', btype: 'uint8', minimum: 0, maximum: 255,
+            type: 'integer',
+            btype: 'uint8',
+            minimum: 0,
+            maximum: 255,
           },
           id: { type: 'integer', btype: 'uint32', minimum: 0 },
           name: { type: 'string', minLength: 3, maxLength: 20 },
@@ -76,7 +82,10 @@ const JSONSchema = {
       $id: 'House',
       properties: {
         type: {
-          type: 'integer', btype: 'uint8', minimum: 0, maximum: 255,
+          type: 'integer',
+          btype: 'uint8',
+          minimum: 0,
+          maximum: 255,
         },
         id: { type: 'integer', btype: 'uint32', minimum: 0 },
         size: { type: 'number', minimum: 0 },
@@ -115,7 +124,9 @@ console.log(`Encoded Sizes:
  ObjectView: ${binarySize}
  JSON String: ${stringSize} (${Math.round((stringSize / binarySize) * 100)}%)
  ObjectView Compressed: ${binaryCompressedSize}
- JSON Compressed: ${stringCompressedSize} (${Math.round((stringCompressedSize / binaryCompressedSize) * 100)}%)`);
+ JSON Compressed: ${stringCompressedSize} (${Math.round(
+  (stringCompressedSize / binaryCompressedSize) * 100,
+)}%)`);
 
 const suits = [
   new Benchmark.Suite('Get Value:', benchmarkOptions)
