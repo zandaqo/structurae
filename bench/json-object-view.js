@@ -1,7 +1,7 @@
 const zlib = require('zlib');
 const Benchmark = require('benchmark');
 const jsf = require('json-schema-faker');
-const { ObjectViewMixin, ArrayViewMixin, StringView } = require('../index');
+const { ObjectViewMixin, ArrayViewMixin, StringView, MapViewMixin } = require('../index');
 
 const benchmarkOptions = {
   onStart(event) {
@@ -103,6 +103,7 @@ const JSONSchema = {
 };
 
 const Person = ObjectViewMixin(JSONSchema);
+const PersonMap = MapViewMixin(JSONSchema);
 const People = ArrayViewMixin(Person);
 
 const objects = [];
@@ -113,6 +114,7 @@ for (let i = 0; i < 100; i++) {
 
 const people = People.from(objects);
 const views = [...people];
+const maps = objects.map((i) => PersonMap.from(i));
 const strings = objects.map((i) => JSON.stringify(i));
 
 const binarySize = people.byteLength;
@@ -123,15 +125,21 @@ const stringCompressedSize = zlib.deflateSync(JSON.stringify(objects), { level: 
 console.log(`Encoded Sizes:
  ObjectView: ${binarySize}
  JSON String: ${stringSize} (${Math.round((stringSize / binarySize) * 100)}%)
- ObjectView Compressed: ${binaryCompressedSize}
+ ObjectView Compressed: ${binaryCompressedSize} (${Math.round(
+  (binaryCompressedSize / binarySize) * 100,
+)}%)
  JSON Compressed: ${stringCompressedSize} (${Math.round(
-  (stringCompressedSize / binaryCompressedSize) * 100,
+  (stringCompressedSize / binarySize) * 100,
 )}%)`);
 
 const suits = [
   new Benchmark.Suite('Get Value:', benchmarkOptions)
     .add('ObjectView', () => {
       const view = views[getIndex(100)];
+      return view.get('type') + view.get('weight') + view.get('height');
+    })
+    .add('MapView', () => {
+      const view = maps[getIndex(100)];
       return view.get('type') + view.get('weight') + view.get('height');
     })
     .add('JSON', () => {
@@ -142,6 +150,12 @@ const suits = [
   new Benchmark.Suite('Set Value:', benchmarkOptions)
     .add('ObjectView', () => {
       const view = views[getIndex(100)];
+      view.set('type', 20);
+      view.set('weight', 20);
+      view.set('height', 20);
+    })
+    .add('MapView', () => {
+      const view = maps[getIndex(100)];
       view.set('type', 20);
       view.set('weight', 20);
       view.set('height', 20);
@@ -158,6 +172,10 @@ const suits = [
       const object = objects[getIndex(100)];
       Person.from(object);
     })
+    .add('MapView', () => {
+      const object = objects[getIndex(100)];
+      PersonMap.from(object);
+    })
     .add('JSON', () => {
       const object = objects[getIndex(100)];
       JSON.stringify(object);
@@ -165,6 +183,10 @@ const suits = [
   new Benchmark.Suite('Deserialize:', benchmarkOptions)
     .add('ObjectView', () => {
       const view = views[getIndex(100)];
+      view.toJSON();
+    })
+    .add('MapView', () => {
+      const view = maps[getIndex(100)];
       view.toJSON();
     })
     .add('JSON', () => {

@@ -128,6 +128,19 @@ using half the space required for a normal grid.</p>
 <dt><a href="#getBitSize">getBitSize(number)</a> ⇒ <code>number</code></dt>
 <dd><p>Returns the minimum amount of bits necessary to hold a given number.</p>
 </dd>
+<dt><a href="#stringToUTF8">stringToUTF8(string, [bytes])</a> ⇒ <code>Uint8Array</code></dt>
+<dd><p>Converts a JS string into a UTF8 byte array.
+Shamelessly stolen from Google Closure:
+<a href="https://github.com/google/closure-library/blob/master/closure/goog/crypt/crypt.js">https://github.com/google/closure-library/blob/master/closure/goog/crypt/crypt.js</a></p>
+<p>TODO: use TextEncoder#encode/encodeInto when the following issues are resolved:</p>
+<ul>
+<li><a href="https://bugs.chromium.org/p/v8/issues/detail?id=4383">https://bugs.chromium.org/p/v8/issues/detail?id=4383</a></li>
+<li><a href="https://bugs.webkit.org/show_bug.cgi?id=193274">https://bugs.webkit.org/show_bug.cgi?id=193274</a></li>
+</ul>
+</dd>
+<dt><a href="#UTF8ToString">UTF8ToString(bytes)</a> ⇒ <code>string</code></dt>
+<dd><p>Converts a UTF8 byte array into a JS string.</p>
+</dd>
 <dt><a href="#WeightedAdjacencyListMixin">WeightedAdjacencyListMixin(Base)</a> ⇒ <code><a href="#WeightedAdjacencyList">WeightedAdjacencyList</a></code></dt>
 <dd><p>Creates a WeightedAdjacencyList class extending a given TypedArray class.</p>
 </dd>
@@ -1805,8 +1818,10 @@ a.get(2, 1);
         * [.fields](#MapView.fields) : <code>Array.&lt;string&gt;</code>
         * [.ObjectViewClass](#MapView.ObjectViewClass) : [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView)
         * [.Views](#MapView.Views) : <code>Object.&lt;string, Class.&lt;MapView&gt;&gt;</code>
+        * [.maxLength](#MapView.maxLength) : <code>number</code>
+        * [.maxView](#MapView.maxView) : <code>DataView</code>
         * [.from(value)](#MapView.from) ⇒ [<code>MapView</code>](#MapView)
-        * [.getLength(value, [getOffsets])](#MapView.getLength) ⇒ <code>number</code>
+        * [.getLength(value)](#MapView.getLength) ⇒ <code>number</code>
         * [.toJSON(view, [start])](#MapView.toJSON) ⇒ <code>Object</code>
         * [.initialize()](#MapView.initialize) ⇒ <code>void</code>
 
@@ -1884,6 +1899,15 @@ Returns an object corresponding to the view.
 
 ### MapView.Views : <code>Object.&lt;string, Class.&lt;MapView&gt;&gt;</code>
 **Kind**: static property of [<code>MapView</code>](#MapView)  
+<a name="MapView.maxLength"></a>
+
+### MapView.maxLength : <code>number</code>
+**Kind**: static property of [<code>MapView</code>](#MapView)  
+<a name="MapView.maxView"></a>
+
+### MapView.maxView : <code>DataView</code>
+**Kind**: static property of [<code>MapView</code>](#MapView)  
+**Access**: protected  
 <a name="MapView.from"></a>
 
 ### MapView.from(value) ⇒ [<code>MapView</code>](#MapView)
@@ -1897,7 +1921,7 @@ Creates a map view from a given object.
 
 <a name="MapView.getLength"></a>
 
-### MapView.getLength(value, [getOffsets]) ⇒ <code>number</code>
+### MapView.getLength(value) ⇒ <code>number</code>
 Returns the byte length of a map view necessary to hold a given object.
 
 **Kind**: static method of [<code>MapView</code>](#MapView)  
@@ -1905,7 +1929,6 @@ Returns the byte length of a map view necessary to hold a given object.
 | Param | Type |
 | --- | --- |
 | value | <code>Object</code> | 
-| [getOffsets] | <code>boolean</code> | 
 
 <a name="MapView.toJSON"></a>
 
@@ -2784,10 +2807,9 @@ Extends Uint8Array to handle C-like representation of UTF-8 encoded strings.
         * [.trim()](#StringView+trim) ⇒ [<code>StringView</code>](#StringView)
     * _static_
         * [.encoder](#StringView.encoder) : <code>TextEncoder</code>
-            * [.encodeInto(source, destination)](#StringView.encoder.encodeInto) ⇒ <code>Uint8Array</code>
         * [.decoder](#StringView.decoder) : <code>TextDecoder</code>
         * [.ArrayClass](#StringView.ArrayClass) : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
-        * [.from(arrayLike, [mapFn], [thisArg], [length])](#StringView.from) ⇒ <code>Uint8Array</code> \| [<code>StringView</code>](#StringView)
+        * [.from(...args)](#StringView.from) ⇒ <code>Uint8Array</code> \| [<code>StringView</code>](#StringView)
         * [.toJSON(view, [start], [length])](#StringView.toJSON) ⇒ <code>Array.&lt;number&gt;</code>
         * [.getByteSize(string)](#StringView.getByteSize) ⇒ <code>number</code>
 
@@ -2951,18 +2973,6 @@ stringView.trim();
 
 ### StringView.encoder : <code>TextEncoder</code>
 **Kind**: static property of [<code>StringView</code>](#StringView)  
-<a name="StringView.encoder.encodeInto"></a>
-
-#### encoder.encodeInto(source, destination) ⇒ <code>Uint8Array</code>
-Polyfill for TextEncoder#encodeInto
-
-**Kind**: static method of [<code>encoder</code>](#StringView.encoder)  
-
-| Param | Type |
-| --- | --- |
-| source | <code>string</code> | 
-| destination | <code>Uint8Array</code> | 
-
 <a name="StringView.decoder"></a>
 
 ### StringView.decoder : <code>TextDecoder</code>
@@ -2973,17 +2983,14 @@ Polyfill for TextEncoder#encodeInto
 **Kind**: static property of [<code>StringView</code>](#StringView)  
 <a name="StringView.from"></a>
 
-### StringView.from(arrayLike, [mapFn], [thisArg], [length]) ⇒ <code>Uint8Array</code> \| [<code>StringView</code>](#StringView)
+### StringView.from(...args) ⇒ <code>Uint8Array</code> \| [<code>StringView</code>](#StringView)
 Creates a StringView from a string or an array like object.
 
 **Kind**: static method of [<code>StringView</code>](#StringView)  
 
 | Param | Type |
 | --- | --- |
-| arrayLike | <code>ArrayLike.&lt;number&gt;</code> \| <code>string</code> | 
-| [mapFn] | <code>function</code> \| <code>Uint8Array</code> \| [<code>View</code>](#View) | 
-| [thisArg] | <code>Object</code> \| <code>number</code> | 
-| [length] | <code>number</code> | 
+| ...args | <code>\*</code> | 
 
 <a name="StringView.toJSON"></a>
 
@@ -4296,6 +4303,35 @@ Returns the minimum amount of bits necessary to hold a given number.
 | Param | Type |
 | --- | --- |
 | number | <code>number</code> | 
+
+<a name="stringToUTF8"></a>
+
+## stringToUTF8(string, [bytes]) ⇒ <code>Uint8Array</code>
+Converts a JS string into a UTF8 byte array.
+Shamelessly stolen from Google Closure:
+https://github.com/google/closure-library/blob/master/closure/goog/crypt/crypt.js
+
+TODO: use TextEncoder#encode/encodeInto when the following issues are resolved:
+- https://bugs.chromium.org/p/v8/issues/detail?id=4383
+- https://bugs.webkit.org/show_bug.cgi?id=193274
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| string | <code>string</code> | 
+| [bytes] | <code>Uint8Array</code> | 
+
+<a name="UTF8ToString"></a>
+
+## UTF8ToString(bytes) ⇒ <code>string</code>
+Converts a UTF8 byte array into a JS string.
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| bytes | <code>Uint8Array</code> | 
 
 <a name="WeightedAdjacencyListMixin"></a>
 

@@ -408,12 +408,7 @@ export declare class StringView extends Uint8Array {
   toString(): string;
   toJSON(): string;
   trim(): StringView;
-  static from(
-    arrayLike: ArrayLike<number> | string,
-    mapFn?: Function | View,
-    thisArg?: any,
-    length?: number,
-  ): View;
+  static from(...args: any[]): View;
   static toJSON(view: View, start?: number, length?: number): string;
   static getByteSize(string: string): number;
 }
@@ -424,6 +419,8 @@ export declare class MapView extends DataView {
   static fields: string[];
   static ObjectViewClass: typeof ObjectView;
   static Views: ViewTypes;
+  static maxLength: number;
+  static maxView: DataView;
 
   get(field: string): any;
   getView(field: string): View;
@@ -433,7 +430,7 @@ export declare class MapView extends DataView {
   toJSON(): object;
   static from(value: object): MapView;
   static toJSON(view: View, start?: number): object;
-  static getLength(value: any, getOffsets?: boolean): number | [number, number[]];
+  static getLength(value: any): number;
   static initialize(): void;
 }
 

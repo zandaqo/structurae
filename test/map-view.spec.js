@@ -238,5 +238,26 @@ describe('MapView', () => {
       const map = MapA.from(object);
       expect(map.toJSON()).toEqual(expected);
     });
+
+    it('truncates strings and arrays longer than set max sizes', () => {
+      const MaxMap = MapViewMixin({
+        $id: 'MaxMap',
+        type: 'object',
+        properties: {
+          a: { type: 'number' },
+          b: { type: 'string', maxLength: 2 },
+          c: { type: 'array', items: { type: 'integer' }, maxItems: 3 },
+        },
+      });
+      const object = {
+        b: 'abcd',
+        c: [6, 7, 8, 9, 10],
+      };
+      const map = MaxMap.from(object);
+      expect(map.toJSON()).toEqual({
+        b: 'ab',
+        c: [6, 7, 8],
+      });
+    });
   });
 });

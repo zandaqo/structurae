@@ -299,10 +299,13 @@ const Person = MapViewMixin({
   type: 'object',
   properties: {
     id: { type: 'integer', btype: 'uint32' },
-    name: { type: 'string' }, // notice that maxLength is not required in MapView
+    // notice that maxLength is not required in MapView
+    // however, if set, MapView with truncate longer strings to fit the maxLength
+    name: { type: 'string' },
     pets: {
       type: 'array',
       // maxItems is also not required for MapView
+      // if set, MapView truncate arrays exceeding the specified maximum
       items: {
         $id: 'Pet',
         type: 'object',
@@ -330,6 +333,9 @@ person0.set('pets', [{ type: 'dog'}]);
 person0.get('pets');
 //=> undefined
 ```
+
+For performance reasons, MapView uses a single buffer for serialization, thus, limiting the maximum size of a view.
+By default the size is 8192 bytes, if you expect bigger views, please set the desired size in `MapView.maxLength`.
 
 #### StringView
 Encoding API (available both in modern browsers and Node.js) allows us to convert JavaScript strings to 
