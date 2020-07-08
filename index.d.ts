@@ -416,7 +416,10 @@ export declare class StringView extends Uint8Array {
 export declare class MapView extends DataView {
   static schema: object;
   static layout: ViewLayout;
-  static fields: string[];
+  static optionalFields: string[];
+  static requiredFields: string[];
+  static optionalOffset: number;
+  static defaultBuffer: Uint8Array;
   static ObjectViewClass: typeof ObjectView;
   static Views: ViewTypes;
   static maxLength: number;
@@ -428,10 +431,16 @@ export declare class MapView extends DataView {
   set(field: string, value: any): this;
   setView(field: string, value: View): this;
   toJSON(): object;
-  static from(value: object): MapView;
+  static from(value: object, view?: View, start?: number): View;
   static toJSON(view: View, start?: number): object;
   static getLength(value: any): number;
   static initialize(): void;
+  private static getFieldLayout(
+    field: ViewLayoutField,
+    start: number,
+    required: boolean,
+  ): ViewLayoutField;
+  private static setDefaultBuffer(): void;
 }
 
 export declare function MapViewMixin(

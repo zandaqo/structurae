@@ -36,6 +36,8 @@ and uses it to convert data from objects to views and back.</p>
 <dt><a href="#BitField">BitField</a></dt>
 <dd><p>Stores and operates on data in Numbers treating them as bitfields.</p>
 </dd>
+<dt><a href="#BitPair">BitPair</a></dt>
+<dd></dd>
 <dt><a href="#BooleanView">BooleanView</a> ⇐ <code><a href="#TypeView">TypeView</a></code></dt>
 <dd></dd>
 <dt><a href="#Graph">Graph</a> ⇐ <code><a href="#AdjacencyStructure">AdjacencyStructure</a></code></dt>
@@ -1390,6 +1392,29 @@ Field.match(new Field({ width: 10 }), Field.getMatcher({ width: 10 }));
 Field.match(new Field({ width: 100 }), Field.getMatcher({ width: 10}));
 //=> false
 ```
+<a name="BitPair"></a>
+
+## BitPair
+**Kind**: global class  
+<a name="new_BitPair_new"></a>
+
+### new BitPair([data])
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [data] | <code>number</code> \| [<code>BitPair</code>](#BitPair) \| <code>Array.&lt;number&gt;</code> | <code>0</code> | a single number value of the field                                        or a map of field names with their respective values |
+
+**Example**  
+```js
+const field = new Field({ width: 100, height: 100 });
+//=> Field { value: 25700 }
+field.get('width');
+//=> 100;
+
+const copy = new Field(25700);
+copy.get('width');
+//=> 100
+```
 <a name="BooleanView"></a>
 
 ## BooleanView ⇐ [<code>TypeView</code>](#TypeView)
@@ -1813,14 +1838,18 @@ a.get(2, 1);
         * [.setView(field, value)](#MapView+setView) ⇒ [<code>MapView</code>](#MapView)
         * [.toJSON()](#MapView+toJSON) ⇒ <code>Object</code>
     * _static_
+        * [.bufferView](#MapView.bufferView) : <code>DataView</code>
         * [.schema](#MapView.schema) : <code>Object</code>
         * [.layout](#MapView.layout) : <code>Object.&lt;string, Object&gt;</code>
-        * [.fields](#MapView.fields) : <code>Array.&lt;string&gt;</code>
+        * [.optionalFields](#MapView.optionalFields) : <code>Array.&lt;string&gt;</code>
+        * [.requiredFields](#MapView.requiredFields) : <code>Array.&lt;string&gt;</code>
+        * [.optionalOffset](#MapView.optionalOffset) : <code>number</code>
+        * [.defaultBuffer](#MapView.defaultBuffer) : <code>Uint8Array</code>
         * [.ObjectViewClass](#MapView.ObjectViewClass) : [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView)
         * [.Views](#MapView.Views) : <code>Object.&lt;string, Class.&lt;MapView&gt;&gt;</code>
         * [.maxLength](#MapView.maxLength) : <code>number</code>
         * [.maxView](#MapView.maxView) : <code>DataView</code>
-        * [.from(value)](#MapView.from) ⇒ [<code>MapView</code>](#MapView)
+        * [.from(value, [view], [start])](#MapView.from) ⇒ [<code>View</code>](#View)
         * [.getLength(value)](#MapView.getLength) ⇒ <code>number</code>
         * [.toJSON(view, [start])](#MapView.toJSON) ⇒ <code>Object</code>
         * [.initialize()](#MapView.initialize) ⇒ <code>void</code>
@@ -1879,6 +1908,10 @@ Copies a given view into a field.
 Returns an object corresponding to the view.
 
 **Kind**: instance method of [<code>MapView</code>](#MapView)  
+<a name="MapView.bufferView"></a>
+
+### MapView.bufferView : <code>DataView</code>
+**Kind**: static property of [<code>MapView</code>](#MapView)  
 <a name="MapView.schema"></a>
 
 ### MapView.schema : <code>Object</code>
@@ -1887,9 +1920,21 @@ Returns an object corresponding to the view.
 
 ### MapView.layout : <code>Object.&lt;string, Object&gt;</code>
 **Kind**: static property of [<code>MapView</code>](#MapView)  
-<a name="MapView.fields"></a>
+<a name="MapView.optionalFields"></a>
 
-### MapView.fields : <code>Array.&lt;string&gt;</code>
+### MapView.optionalFields : <code>Array.&lt;string&gt;</code>
+**Kind**: static property of [<code>MapView</code>](#MapView)  
+<a name="MapView.requiredFields"></a>
+
+### MapView.requiredFields : <code>Array.&lt;string&gt;</code>
+**Kind**: static property of [<code>MapView</code>](#MapView)  
+<a name="MapView.optionalOffset"></a>
+
+### MapView.optionalOffset : <code>number</code>
+**Kind**: static property of [<code>MapView</code>](#MapView)  
+<a name="MapView.defaultBuffer"></a>
+
+### MapView.defaultBuffer : <code>Uint8Array</code>
 **Kind**: static property of [<code>MapView</code>](#MapView)  
 <a name="MapView.ObjectViewClass"></a>
 
@@ -1902,6 +1947,8 @@ Returns an object corresponding to the view.
 <a name="MapView.maxLength"></a>
 
 ### MapView.maxLength : <code>number</code>
+Maximum possible size of a map.
+
 **Kind**: static property of [<code>MapView</code>](#MapView)  
 <a name="MapView.maxView"></a>
 
@@ -1910,14 +1957,16 @@ Returns an object corresponding to the view.
 **Access**: protected  
 <a name="MapView.from"></a>
 
-### MapView.from(value) ⇒ [<code>MapView</code>](#MapView)
+### MapView.from(value, [view], [start]) ⇒ [<code>View</code>](#View)
 Creates a map view from a given object.
 
 **Kind**: static method of [<code>MapView</code>](#MapView)  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| value | <code>Object</code> | the object to take data from |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| value | <code>Object</code> |  | the object to take data from |
+| [view] | [<code>View</code>](#View) |  | the view to assign fields to |
+| [start] | <code>number</code> | <code>0</code> |  |
 
 <a name="MapView.getLength"></a>
 

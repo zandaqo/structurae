@@ -41,7 +41,11 @@ describe('MapViewMixin', () => {
     type: 'object',
     properties: {
       a: { type: 'number' },
+      b: { type: 'string' },
+      c: { type: 'number' },
+      d: { type: 'string' },
     },
+    required: ['a', 'c'],
   };
 
   it('creates a MapView class from a given JSON Schema', () => {
@@ -76,13 +80,24 @@ describe('MapViewMixin', () => {
     );
     expect(Person.layout.a.View.prototype instanceof CustomObjectView).toBe(true);
   });
+
+  it('throws a TypeError if a required field has undefined length', () => {
+    expect(() => {
+      MapViewMixin({
+        $id: 'InvalidMap',
+        properties: { a: { type: 'string' } },
+        required: ['a'],
+      });
+    }).toThrow('The length of a required field is undefined.');
+  });
 });
 
 describe('MapView', () => {
   describe('get', () => {
     it('returns the JavaScript value at a given field', () => {
-      const map = MapA.from({ a: 42 });
+      const map = MapA.from({ a: 42, d: 'abc' });
       expect(map.get('a')).toBe(42);
+      expect(map.get('d')).toBe('abc');
     });
 
     it('returns undefined if the value is not set', () => {
@@ -91,11 +106,9 @@ describe('MapView', () => {
       expect(map.get('b')).toEqual([1]);
     });
 
-    it('throws if the view does not have the field', () => {
-      const map = MapA.from({});
-      expect(() => {
-        map.get('abc');
-      }).toThrow('Field "abc" is not found.');
+    it('returns undefined if the field is not found', () => {
+      const map = MapA.from({ b: [1] });
+      expect(map.get('z')).toBe(undefined);
     });
   });
 
@@ -111,11 +124,9 @@ describe('MapView', () => {
       expect(map.getView('b') instanceof Int32ArrayView).toBe(true);
     });
 
-    it('throws if the view does not have the field', () => {
-      const map = MapA.from({});
-      expect(() => {
-        map.getView('abc');
-      }).toThrow('Field "abc" is not found.');
+    it('returns undefined if the field is not found', () => {
+      const map = MapA.from({ b: [1] });
+      expect(map.getView('z')).toBe(undefined);
     });
   });
 
@@ -132,11 +143,9 @@ describe('MapView', () => {
       expect(map.get('a')).toBe(undefined);
     });
 
-    it('throws if the view does not have the field', () => {
-      const map = MapA.from({});
-      expect(() => {
-        map.set('abc', 1);
-      }).toThrow('Field "abc" is not found.');
+    it('does not set a value for an undefined field', () => {
+      const map = MapA.from({ b: [1] });
+      expect(map.set('z', 10)).toBe(undefined);
     });
   });
 
@@ -148,11 +157,9 @@ describe('MapView', () => {
       expect(map.get('a')).toBe(42);
     });
 
-    it('throws if the view does not have the field', () => {
-      const map = MapA.from({});
-      expect(() => {
-        map.setView('abc', 1);
-      }).toThrow('Field "abc" is not found.');
+    it('does not set view if the field is not found', () => {
+      const map = MapA.from({ a: 1 });
+      expect(map.setView('z', new Uint8Array(10))).toBe(undefined);
     });
   });
 
@@ -194,7 +201,7 @@ describe('MapView', () => {
     it('returns the byte length of a map view to hold a given object', () => {
       expect(MapA.getLength({ a: 42, b: [1], c: [1, 2] })).toBe(1 * 8 + 1 * 4 + 2 * 14 + 6 * 4);
       expect(MapA.getLength({ b: [1] })).toBe(0 * 8 + 1 * 4 + 6 * 4);
-      expect(MapA.getLength({})).toBe(0 * 0 + 0 * 0 + 6 * 4);
+      expect(MapA.getLength({ d: 'abc' })).toBe(0 * 0 + 1 * 3 + 6 * 4);
       expect(MapA.getLength({ b: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] })).toBe(0 * 0 + 10 * 4 + 6 * 4);
     });
   });
@@ -258,6 +265,69 @@ describe('MapView', () => {
         b: 'ab',
         c: [6, 7, 8],
       });
+    });
+
+    it('supports required fields', () => {
+      const RequiredMap = MapViewMixin({
+        $id: 'RequiredMap',
+        type: 'object',
+        properties: {
+          a: { type: 'number' },
+          b: { type: 'string', maxLength: 2 },
+          c: { type: 'array', items: { type: 'integer' }, maxItems: 3 },
+        },
+        required: ['a', 'b', 'c'],
+      });
+      const object = {
+        b: 'abcd',
+        c: [6, 7, 8, 9, 10],
+      };
+      const map = RequiredMap.from(object);
+      expect(map.toJSON()).toEqual({
+        a: 0,
+        b: 'ab',
+        c: [6, 7, 8],
+      });
+    });
+
+    it('sets default values for required fields', () => {
+      const DefaultMap = MapViewMixin({
+        $id: 'DefaultMap',
+        type: 'object',
+        properties: {
+          a: { type: 'number', default: 10 },
+          b: { type: 'string', maxLength: 2 },
+          c: { type: 'array', items: { type: 'integer' }, maxItems: 3 },
+        },
+        required: ['a'],
+      });
+      const object = {
+        b: 'abcd',
+        c: [6, 7, 8, 9, 10],
+      };
+      const map = DefaultMap.from(object);
+      expect(map.toJSON()).toEqual({
+        a: 10,
+        b: 'ab',
+        c: [6, 7, 8],
+      });
+    });
+
+    it('writes a map view within a larger view', () => {
+      const expected = {
+        a: 42,
+        b: [20, 30, 10],
+        c: [
+          { id: 10, name: 'abc' },
+          { id: 5, name: 'def' },
+        ],
+      };
+      const buffer = new ArrayBuffer(1000);
+      const view = new DataView(buffer);
+      MapA.from(expected, view, 100);
+      const map = new MapA(view.buffer, view.byteOffset + 100);
+      expect(map.toJSON()).toEqual(expected);
+      expect(map.get('a')).toEqual(42);
     });
   });
 });
