@@ -289,7 +289,7 @@ doubles.set(0, 5).set(1, 10);
 MapView is an ObjectView that supports optional fields and fields of variable size. The size and layout of each MapView instance 
 is calculated upon creation and stored within the instance (unlike ObjectViews, where each instance have the same size and layout).
 MapViews are useful for densely packing objects and arrays whose size my vary greatly.
-There are certain limitations involved: MapViews cannot be nested, and fields that were missing during instantiation cannot be set later.
+There is a limitation, though, since ArrayBuffers cannot be resized, optional fields that were absent upon creation of a map view cannot be set later, and those set cannot be resized.
 
 ```javascript
 const { MapViewMixin } = require('structurae');
@@ -298,8 +298,8 @@ const Person = MapViewMixin({
   $id: 'Person',
   type: 'object',
   properties: {
-    id: { type: 'integer', btype: 'uint32' },
-    // notice that maxLength is not required in MapView
+    id: { type: 'integer', btype: 'uint32', default: 10 },
+    // notice that maxLength is not required for optional fields in MapView
     // however, if set, MapView with truncate longer strings to fit the maxLength
     name: { type: 'string' },
     pets: {
@@ -316,7 +316,15 @@ const Person = MapViewMixin({
       },
     },
   },
+  // required fields are always present and can have default values
+  required: ['id'],  
 });
+
+const person0 = Person.from({});
+person.get('id')
+//=> 10
+person.get('name')
+//=> name
 
 // create a person with one pet
 const person1 = Person.from({ id: 1, name: 'Artur', pets: [{ type: 'dog'}] });

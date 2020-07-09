@@ -4,18 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.0] - 2020-07-09
+- Support required fields and default values in MapView.
+- Support nested MapViews.
+
 ## [3.1.1] - 2020-06-25
 ### Changed
-- Optimize StringView encoding and decoding
+- Optimize StringView encoding and decoding.
 
 ## [3.1.0] - 2020-05-28
 ### Added
-- Support setting maximum size for strings and arrays in MapView
+- Support setting maximum size for strings and arrays in MapView.
 
 ## [3.0.6] - 2020-04-28
 ### Changed
 - Use custom UTF8 encoding for StringView
- as a workaround to solve performance issues in V8
+ as a workaround to solve performance issues in V8.
 
 ## [3.0.5] - 2020-04-07
 ### Fixed

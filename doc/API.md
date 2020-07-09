@@ -36,8 +36,6 @@ and uses it to convert data from objects to views and back.</p>
 <dt><a href="#BitField">BitField</a></dt>
 <dd><p>Stores and operates on data in Numbers treating them as bitfields.</p>
 </dd>
-<dt><a href="#BitPair">BitPair</a></dt>
-<dd></dd>
 <dt><a href="#BooleanView">BooleanView</a> ⇐ <code><a href="#TypeView">TypeView</a></code></dt>
 <dd></dd>
 <dt><a href="#Graph">Graph</a> ⇐ <code><a href="#AdjacencyStructure">AdjacencyStructure</a></code></dt>
@@ -130,7 +128,7 @@ using half the space required for a normal grid.</p>
 <dt><a href="#getBitSize">getBitSize(number)</a> ⇒ <code>number</code></dt>
 <dd><p>Returns the minimum amount of bits necessary to hold a given number.</p>
 </dd>
-<dt><a href="#stringToUTF8">stringToUTF8(string, [bytes])</a> ⇒ <code>Uint8Array</code></dt>
+<dt><a href="#writeUTF8">writeUTF8(string, bytes, start)</a> ⇒ <code>number</code></dt>
 <dd><p>Converts a JS string into a UTF8 byte array.
 Shamelessly stolen from Google Closure:
 <a href="https://github.com/google/closure-library/blob/master/closure/goog/crypt/crypt.js">https://github.com/google/closure-library/blob/master/closure/goog/crypt/crypt.js</a></p>
@@ -140,6 +138,8 @@ Shamelessly stolen from Google Closure:
 <li><a href="https://bugs.webkit.org/show_bug.cgi?id=193274">https://bugs.webkit.org/show_bug.cgi?id=193274</a></li>
 </ul>
 </dd>
+<dt><a href="#stringToUTF8">stringToUTF8(string, bytes)</a> ⇒ <code>Array</code> | <code>Uint8Array</code></dt>
+<dd></dd>
 <dt><a href="#UTF8ToString">UTF8ToString(bytes)</a> ⇒ <code>string</code></dt>
 <dd><p>Converts a UTF8 byte array into a JS string.</p>
 </dd>
@@ -1392,29 +1392,6 @@ Field.match(new Field({ width: 10 }), Field.getMatcher({ width: 10 }));
 Field.match(new Field({ width: 100 }), Field.getMatcher({ width: 10}));
 //=> false
 ```
-<a name="BitPair"></a>
-
-## BitPair
-**Kind**: global class  
-<a name="new_BitPair_new"></a>
-
-### new BitPair([data])
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| [data] | <code>number</code> \| [<code>BitPair</code>](#BitPair) \| <code>Array.&lt;number&gt;</code> | <code>0</code> | a single number value of the field                                        or a map of field names with their respective values |
-
-**Example**  
-```js
-const field = new Field({ width: 100, height: 100 });
-//=> Field { value: 25700 }
-field.get('width');
-//=> 100;
-
-const copy = new Field(25700);
-copy.get('width');
-//=> 100
-```
 <a name="BooleanView"></a>
 
 ## BooleanView ⇐ [<code>TypeView</code>](#TypeView)
@@ -1844,6 +1821,7 @@ a.get(2, 1);
         * [.optionalFields](#MapView.optionalFields) : <code>Array.&lt;string&gt;</code>
         * [.requiredFields](#MapView.requiredFields) : <code>Array.&lt;string&gt;</code>
         * [.optionalOffset](#MapView.optionalOffset) : <code>number</code>
+        * [.lengthOffset](#MapView.lengthOffset) : <code>number</code>
         * [.defaultBuffer](#MapView.defaultBuffer) : <code>Uint8Array</code>
         * [.ObjectViewClass](#MapView.ObjectViewClass) : [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView)
         * [.Views](#MapView.Views) : <code>Object.&lt;string, Class.&lt;MapView&gt;&gt;</code>
@@ -1931,6 +1909,10 @@ Returns an object corresponding to the view.
 <a name="MapView.optionalOffset"></a>
 
 ### MapView.optionalOffset : <code>number</code>
+**Kind**: static property of [<code>MapView</code>](#MapView)  
+<a name="MapView.lengthOffset"></a>
+
+### MapView.lengthOffset : <code>number</code>
 **Kind**: static property of [<code>MapView</code>](#MapView)  
 <a name="MapView.defaultBuffer"></a>
 
@@ -4353,9 +4335,9 @@ Returns the minimum amount of bits necessary to hold a given number.
 | --- | --- |
 | number | <code>number</code> | 
 
-<a name="stringToUTF8"></a>
+<a name="writeUTF8"></a>
 
-## stringToUTF8(string, [bytes]) ⇒ <code>Uint8Array</code>
+## writeUTF8(string, bytes, start) ⇒ <code>number</code>
 Converts a JS string into a UTF8 byte array.
 Shamelessly stolen from Google Closure:
 https://github.com/google/closure-library/blob/master/closure/goog/crypt/crypt.js
@@ -4366,10 +4348,21 @@ TODO: use TextEncoder#encode/encodeInto when the following issues are resolved:
 
 **Kind**: global function  
 
+| Param | Type | Default |
+| --- | --- | --- |
+| string | <code>string</code> |  | 
+| bytes | <code>Array</code> \| <code>Uint8Array</code> |  | 
+| start | <code>number</code> | <code>0</code> | 
+
+<a name="stringToUTF8"></a>
+
+## stringToUTF8(string, bytes) ⇒ <code>Array</code> \| <code>Uint8Array</code>
+**Kind**: global function  
+
 | Param | Type |
 | --- | --- |
 | string | <code>string</code> | 
-| [bytes] | <code>Uint8Array</code> | 
+| bytes | <code>Array</code> \| <code>Uint8Array</code> | 
 
 <a name="UTF8ToString"></a>
 

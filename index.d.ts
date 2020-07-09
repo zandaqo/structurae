@@ -419,6 +419,7 @@ export declare class MapView extends DataView {
   static optionalFields: string[];
   static requiredFields: string[];
   static optionalOffset: number;
+  static lengthOffset: number;
   static defaultBuffer: Uint8Array;
   static ObjectViewClass: typeof ObjectView;
   static Views: ViewTypes;

@@ -3,6 +3,32 @@ const { ArrayViewMixin, TypeViewMixin, MapViewMixin, MapView, ObjectView } = req
 const Int32ArrayView = ArrayViewMixin('int32');
 const Float64View = TypeViewMixin('float64');
 
+const nestedSchema = {
+  $id: 'WithNestedMap',
+  type: 'object',
+  properties: {
+    a: {
+      $id: 'NestedMap',
+      type: 'object',
+      btype: 'map',
+      properties: {
+        b: { type: 'number' },
+        z: {
+          $id: 'DeeplyNestedMap',
+          btype: 'map',
+          type: 'object',
+          properties: {
+            x: { type: 'number' },
+          },
+        },
+      },
+      required: ['b'],
+    },
+    b: { type: 'number' },
+  },
+  required: ['b'],
+};
+
 const MapA = MapViewMixin({
   $id: 'MapViewA',
   type: 'object',
@@ -79,6 +105,12 @@ describe('MapViewMixin', () => {
       CustomObjectView,
     );
     expect(Person.layout.a.View.prototype instanceof CustomObjectView).toBe(true);
+  });
+
+  it('supports nested maps', () => {
+    const Person = MapViewMixin(nestedSchema);
+    expect(Person.layout.a.View.prototype instanceof MapView).toBe(true);
+    expect(Person.layout.a.View.layout.z.View.prototype instanceof MapView).toBe(true);
   });
 
   it('throws a TypeError if a required field has undefined length', () => {
@@ -203,6 +235,7 @@ describe('MapView', () => {
       expect(MapA.getLength({ b: [1] })).toBe(0 * 8 + 1 * 4 + 6 * 4);
       expect(MapA.getLength({ d: 'abc' })).toBe(0 * 0 + 1 * 3 + 6 * 4);
       expect(MapA.getLength({ b: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] })).toBe(0 * 0 + 10 * 4 + 6 * 4);
+      expect(MapViewMixin(nestedSchema).getLength({ b: 10, a: { z: {}, b: 10 } })).toBe(40);
     });
   });
 
@@ -298,8 +331,13 @@ describe('MapView', () => {
           a: { type: 'number', default: 10 },
           b: { type: 'string', maxLength: 2 },
           c: { type: 'array', items: { type: 'integer' }, maxItems: 3 },
+          d: {
+            $id: 'RequiredObjectMap',
+            type: 'object',
+            properties: { a: { type: 'number', default: 10 } },
+          },
         },
-        required: ['a'],
+        required: ['a', 'd'],
       });
       const object = {
         b: 'abcd',
@@ -310,6 +348,7 @@ describe('MapView', () => {
         a: 10,
         b: 'ab',
         c: [6, 7, 8],
+        d: { a: 10 },
       });
     });
 
@@ -328,6 +367,12 @@ describe('MapView', () => {
       const map = new MapA(view.buffer, view.byteOffset + 100);
       expect(map.toJSON()).toEqual(expected);
       expect(map.get('a')).toEqual(42);
+    });
+
+    it('supports nested maps', () => {
+      const Nested = MapViewMixin(nestedSchema);
+      const data = { a: { b: 10, z: {} }, b: 10 };
+      expect(Nested.from(data).toJSON()).toEqual(data);
     });
   });
 });
