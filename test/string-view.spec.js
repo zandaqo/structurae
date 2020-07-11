@@ -140,11 +140,11 @@ describe('StringView', () => {
     });
   });
 
-  describe('getByteSize', () => {
+  describe('getLength', () => {
     it('returns the size in bytes of a given string', () => {
-      expect(StringView.getByteSize('asdf')).toBe(4);
-      expect(StringView.getByteSize('фыва')).toBe(8);
-      expect(StringView.getByteSize('😀😀fooа😀←')).toBe(20);
+      expect(StringView.getLength('asdf')).toBe(4);
+      expect(StringView.getLength('фыва')).toBe(8);
+      expect(StringView.getLength('😀😀fooа😀←')).toBe(20);
     });
   });
 });

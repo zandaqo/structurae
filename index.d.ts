@@ -278,7 +278,7 @@ type View = ObjectView | ArrayView | StringView | TypeView;
 export declare class TypeView extends DataView {
   static offset: number;
   static littleEndian: true;
-  static objectLength: number;
+  static viewLength: number;
   static Views: Map<string, typeof TypeView>;
   static ArrayClass: typeof ArrayView;
 
@@ -364,7 +364,7 @@ export declare class ObjectView extends DataView {
   static Views: ViewTypes;
   static ArrayClass: typeof ArrayView;
   static types: ObjectViewTypeDefs;
-  static objectLength: number;
+  static viewLength: number;
   private static defaultBuffer: ArrayBuffer;
 
   get(field: string): any;
@@ -390,8 +390,6 @@ export declare function ObjectViewMixin(
 export declare class StringView extends Uint8Array {
   size: number;
   static masks: Int8Array;
-  static encoder: TextEncoder;
-  static decoder: TextDecoder;
   static ArrayClass: typeof ArrayView;
 
   characters(): Iterable<string>;
@@ -408,9 +406,16 @@ export declare class StringView extends Uint8Array {
   toString(): string;
   toJSON(): string;
   trim(): StringView;
+  static decode(bytes: Uint8Array): string;
+  static encode(
+    string: string,
+    bytes: number[] | Uint8Array,
+    start?: number,
+    length?: number,
+  ): number[] | Uint8Array;
   static from(...args: any[]): View;
   static toJSON(view: View, start?: number, length?: number): string;
-  static getByteSize(string: string): number;
+  static getLength(string: string): number;
 }
 
 export declare class MapView extends DataView {
@@ -432,6 +437,7 @@ export declare class MapView extends DataView {
   set(field: string, value: any): this;
   setView(field: string, value: View): this;
   toJSON(): object;
+  static encode(value: object, view: View, start?: number): number;
   static from(value: object, view?: View, start?: number): View;
   static toJSON(view: View, start?: number): object;
   static getLength(value: any): number;

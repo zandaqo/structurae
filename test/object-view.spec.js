@@ -129,7 +129,7 @@ describe('ObjectViewMixin', () => {
   it('creates an ObjectView class from a given JSON Schema', () => {
     const Person = ObjectViewMixin(PersonSchema);
     expect(Person.prototype instanceof ObjectView).toBe(true);
-    expect(Person.objectLength).toBe(121);
+    expect(Person.viewLength).toBe(121);
   });
 
   it('creates an ObjectView with references to existing View classes', () => {
@@ -152,7 +152,7 @@ describe('ObjectViewMixin', () => {
         },
       },
     });
-    expect(Thing.layout.a.View.objectLength).toBe(121);
+    expect(Thing.layout.a.View.viewLength).toBe(121);
   });
 
   it('throws if invalid field type is used', () => {

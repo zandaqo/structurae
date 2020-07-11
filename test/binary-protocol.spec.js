@@ -30,8 +30,8 @@ describe('BinaryProtocol', () => {
         },
       });
       expect(protocol instanceof BinaryProtocol).toBe(true);
-      expect(protocol.Views[0].objectLength).toBe(12);
-      expect(protocol.Views[1].objectLength).toBe(35);
+      expect(protocol.Views[0].viewLength).toBe(12);
+      expect(protocol.Views[1].viewLength).toBe(35);
     });
 
     it('creates a protocol using an existing View class', () => {
@@ -51,7 +51,7 @@ describe('BinaryProtocol', () => {
         },
         1: 'protocolD',
       });
-      expect(protocol.Views[0].objectLength).toBe(12);
+      expect(protocol.Views[0].viewLength).toBe(12);
       expect(protocol.Views[1]).toBe(View);
     });
 
@@ -76,7 +76,7 @@ describe('BinaryProtocol', () => {
         'typeId',
         'uint32',
       );
-      expect(protocol.Views[0].objectLength).toBe(15);
+      expect(protocol.Views[0].viewLength).toBe(15);
       expect(protocol.Views[1]).toBe(View);
     });
 
