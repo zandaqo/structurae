@@ -9,6 +9,7 @@ A collection of data structures for high-performance JavaScript applications tha
     - [ObjectView](https://github.com/zandaqo/structurae#ObjectView) - extends DataView to implement C-like struct.
     - [ArrayView](https://github.com/zandaqo/structurae#ArrayView) - DataView based array of ObjectViews, strings, numbers, etc.
     - [MapView](https://github.com/zandaqo/structurae#MapView) - ObjectView with optional fields and fields of varying sizes.
+    - [VectorView](https://github.com/zandaqo/structurae#VectorView) - ArrayView that supports optional and variable length elements, including MapViews.
     - [StringView](https://github.com/zandaqo/structurae#StringView) - extends Uint8Array to handle C-like representation of UTF-8 encoded strings.
     - [BinaryProtocol](https://github.com/zandaqo/structurae#BinaryProtocol) - a helper class that simplifies defining and operating on multiple tagged ObjectViews.
 - Bit Structures:
@@ -315,6 +316,13 @@ const Person = MapViewMixin({
         },
       },
     },
+    names: {
+      type: 'array',
+      // uses VectorView for an array of variable length elements
+      // if btype is set to vector
+      btype: 'vector', 
+      items: { type: 'string' },
+    },
   },
   // required fields are always present and can have default values
   required: ['id'],  
@@ -332,7 +340,7 @@ person1.byteLength;
 //=> 31
 
 // create a person with no pets
-const person0 = PersonWithPets.from({ id: 1, name: 'Artur'});
+const person0 = Person.from({ id: 1, name: 'Artur'});
 person0.byteLength;
 //=> 18
 person0.get('pets');
@@ -340,10 +348,46 @@ person0.get('pets');
 person0.set('pets', [{ type: 'dog'}]);
 person0.get('pets');
 //=> undefined
+
+const person2 = Person.from({ names: ['Arthur', 'Dent', '', 'Arthur Dent']})
+person2.toJSON();
+//=> { id: 10, names: ['Arthur', 'Dent', undefined, 'Arthur Dent']}
 ```
 
 For performance reasons, MapView uses a single buffer for serialization, thus, limiting the maximum size of a view.
-By default the size is 8192 bytes, if you expect bigger views, please set the desired size in `MapView.maxLength`.
+The buffer is inherited from `VariableView` class and the default is 8192 bytes, if you expect bigger views, please set the desired size in `VariableView.maxLength`.
+
+#### VectorView
+VectorView is an ArrayView that supports optional elements (i.e. `undefined`) and elements of variable length, such as MapView or StringView.
+VectorView stores offsets inside the view itself resulting in an overhead of 4 * (_n_ + 2) bytes where _n_ is the number of elements in the view.
+Like MapView, VectorView has limited editablity: the layout of an instance is calculated once upon creation,
+ hence, setting absent elements or resizing existing elements is not possible.
+ 
+```javascript
+const { MapViewMixin, VectorViewMixin, TypeViewMixin } = require('structurae');
+const SparseArrayView = VectorViewMixin(TypeViewMixin('uint8'));
+SparseArrayView.from([1, , 2, null]).toJSON();
+//=> [1, undefined, 2, undefined]
+
+const MapVector = VectorViewMixin(MapViewMixin({
+  $id: 'SomeMap',
+  btype: 'map',
+  properties: {
+    id: { type: 'integer' },
+    name: { type: 'string' },
+  },
+}));
+const mapVector = MapVector.from([{ id: 1 }, null, { name: 'abc'}]);
+mapVector.size;
+//=> 3
+mapVector.get(0);
+//=> { id: 1 };
+mapVector.toJSON();
+//=> [{ id: 1 }, undefined, { name: 'abc'}]
+```
+
+Like MapView, VectorView uses for serialization the default buffer inherited from `VariableView`, if you expect your
+vectors to exceed the default 8192 bytes in length, please set the desired maximum length in `VariableView.maxLength`. 
 
 #### StringView
 Encoding API (available both in modern browsers and Node.js) allows us to convert JavaScript strings to 

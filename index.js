@@ -22,6 +22,8 @@ const StringView = require('./lib/string-view');
 const BinaryProtocol = require('./lib/binary-protocol');
 const { TypeView, TypeViewMixin } = require('./lib/type-view');
 const BooleanView = require('./lib/boolean-view');
+const VariableView = require('./lib/variable-view');
+const { VectorView, VectorViewMixin } = require('./lib/vector-view');
 
 /**
  * @external ArrayBuffer
@@ -66,4 +68,7 @@ module.exports = {
   TypeView,
   TypeViewMixin,
   BooleanView,
+  VariableView,
+  VectorView,
+  VectorViewMixin,
 };

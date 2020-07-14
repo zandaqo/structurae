@@ -29,6 +29,38 @@ const nestedSchema = {
   required: ['b'],
 };
 
+const vectorSchema = {
+  $id: 'MapWithVectors',
+  type: 'object',
+  properties: {
+    a: {
+      // single layer deep vector
+      type: 'array',
+      btype: 'vector',
+      items: { type: 'number' },
+    },
+    b: {
+      // array nested in vector
+      type: 'array',
+      btype: 'vector',
+      items: {
+        type: 'array',
+        items: { type: 'number' },
+      },
+    },
+    e: {
+      // vector nested in vector
+      type: 'array',
+      btype: 'vector',
+      items: {
+        type: 'array',
+        btype: 'vector',
+        items: { type: 'number' },
+      },
+    },
+  },
+};
+
 const MapA = MapViewMixin({
   $id: 'MapViewA',
   type: 'object',
@@ -120,7 +152,7 @@ describe('MapViewMixin', () => {
         properties: { a: { type: 'string' } },
         required: ['a'],
       });
-    }).toThrow('The length of a required field is undefined.');
+    }).toThrow('The length of a required field "a" is undefined.');
   });
 });
 
@@ -373,6 +405,22 @@ describe('MapView', () => {
       const Nested = MapViewMixin(nestedSchema);
       const data = { a: { b: 10, z: {} }, b: 10 };
       expect(Nested.from(data).toJSON()).toEqual(data);
+    });
+
+    it('supports vectors', () => {
+      const Vectored = MapViewMixin(vectorSchema);
+      const data = {
+        a: [1, undefined, 3],
+        b: [
+          [4, 5],
+          [6, 7],
+        ],
+        e: [
+          [1, undefined, 2],
+          [undefined, 3],
+        ],
+      };
+      expect(Vectored.from(data).toJSON()).toEqual(data);
     });
   });
 });

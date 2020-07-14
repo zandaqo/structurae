@@ -318,6 +318,7 @@ export declare class ArrayView extends DataView {
   static toJSON(view: View, start: number, length: number): any[];
   static of(size?: number): ArrayView;
   static getLength(size: number): number;
+  static getOffset(size: number): number;
   static getSize(length: number): number;
 }
 
@@ -409,16 +410,24 @@ export declare class StringView extends Uint8Array {
   static decode(bytes: Uint8Array): string;
   static encode(
     string: string,
-    bytes: number[] | Uint8Array,
+    view: number[] | Uint8Array | DataView,
     start?: number,
     length?: number,
-  ): number[] | Uint8Array;
+  ): number;
   static from(...args: any[]): View;
   static toJSON(view: View, start?: number, length?: number): string;
   static getLength(string: string): number;
 }
 
-export declare class MapView extends DataView {
+export declare class VariableView extends DataView {
+  static maxLength: number;
+  static maxView: DataView;
+  static bufferView: DataView;
+}
+
+type AnyView = View | VariableView;
+
+export declare class MapView extends VariableView {
   static schema: object;
   static layout: ViewLayout;
   static optionalFields: string[];
@@ -428,18 +437,16 @@ export declare class MapView extends DataView {
   static defaultBuffer: Uint8Array;
   static ObjectViewClass: typeof ObjectView;
   static Views: ViewTypes;
-  static maxLength: number;
-  static maxView: DataView;
 
   get(field: string): any;
-  getView(field: string): View;
+  getView(field: string): AnyView;
   private getLayout(field: string): [ViewType, number, number];
   set(field: string, value: any): this;
   setView(field: string, value: View): this;
   toJSON(): object;
-  static encode(value: object, view: View, start?: number): number;
-  static from(value: object, view?: View, start?: number): View;
-  static toJSON(view: View, start?: number): object;
+  static encode(value: object, view: AnyView, start?: number): number;
+  static from(value: object, view?: AnyView, start?: number): View;
+  static toJSON(view: AnyView, start?: number): object;
   static getLength(value: any): number;
   static initialize(): void;
   private static getFieldLayout(
@@ -455,6 +462,29 @@ export declare function MapViewMixin(
   MapViewClass?: typeof MapView,
   ObjectViewClass?: typeof ObjectView,
 ): typeof MapView;
+
+export declare class VectorView extends VariableView {
+  static View: ViewType | typeof VariableView;
+  static Views: WeakMap<ViewType | typeof VariableView, typeof VectorView>;
+
+  get(index: number): any;
+  getView(index: number): AnyView;
+  private getLayout(index: number): [number, number];
+  set(index: number, value: any): this;
+  setView(index: number, value: AnyView): this;
+  toJSON(): any[];
+  [Symbol.iterator](): IterableIterator<AnyView>;
+  static encode(value: ArrayLike<any>, view: AnyView, start?: number): number;
+  static from(value: ArrayLike<any>, view?: AnyView, start?: number): AnyView;
+  static toJSON(view: AnyView, start?: number, length?: number): any[];
+  static getLength(value: any[]): number;
+  static getSize(view: AnyView): number;
+}
+
+export declare function VectorViewMixin(
+  ViewClass: ViewType | typeof VariableView,
+  VectorViewClass?: typeof VectorView,
+): typeof VectorView;
 
 interface BinaryProtocolSchema {
   [propName: number]: typeof ObjectView;

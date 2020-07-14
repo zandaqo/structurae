@@ -45,7 +45,7 @@ pathfinding (Dijkstra, Bellman-Ford), spanning tree construction (BFS, Prim), et
 <dt><a href="#Grid">Grid</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
 <dd><p>Extends built-in indexed collections to handle 2 dimensional data.</p>
 </dd>
-<dt><a href="#MapView">MapView</a> ⇐ <code>DataView</code></dt>
+<dt><a href="#MapView">MapView</a> ⇐ <code><a href="#VariableView">VariableView</a></code></dt>
 <dd></dd>
 <dt><a href="#ObjectView">ObjectView</a> ⇐ <code>DataView</code></dt>
 <dd><p>A DataView based C-like struct to store JavaScript objects in ArrayBuffer.</p>
@@ -80,6 +80,10 @@ using half the space required for a normal grid.</p>
 <dt><a href="#UnweightedAdjacencyMatrix">UnweightedAdjacencyMatrix</a> ⇐ <code><a href="#BinaryGrid">BinaryGrid</a></code></dt>
 <dd><p>Implements Adjacency Matrix for unweighted graphs.</p>
 </dd>
+<dt><a href="#VariableView">VariableView</a> ⇐ <code>DataView</code></dt>
+<dd></dd>
+<dt><a href="#VectorView">VectorView</a> ⇐ <code><a href="#VariableView">VariableView</a></code></dt>
+<dd></dd>
 <dt><a href="#WeightedAdjacencyList">WeightedAdjacencyList</a> ⇐ <code><a href="#CollectionConstructor">CollectionConstructor</a></code></dt>
 <dd><p>Implements Adjacency List data structure for weighted graphs.</p>
 </dd>
@@ -128,21 +132,8 @@ using half the space required for a normal grid.</p>
 <dt><a href="#getBitSize">getBitSize(number)</a> ⇒ <code>number</code></dt>
 <dd><p>Returns the minimum amount of bits necessary to hold a given number.</p>
 </dd>
-<dt><a href="#writeUTF8">writeUTF8(string, bytes, start)</a> ⇒ <code>number</code></dt>
-<dd><p>Converts a JS string into a UTF8 byte array.
-Shamelessly stolen from Google Closure:
-<a href="https://github.com/google/closure-library/blob/master/closure/goog/crypt/crypt.js">https://github.com/google/closure-library/blob/master/closure/goog/crypt/crypt.js</a></p>
-<p>TODO: use TextEncoder#encode/encodeInto when the following issues are resolved:</p>
-<ul>
-<li><a href="https://bugs.chromium.org/p/v8/issues/detail?id=4383">https://bugs.chromium.org/p/v8/issues/detail?id=4383</a></li>
-<li><a href="https://bugs.webkit.org/show_bug.cgi?id=193274">https://bugs.webkit.org/show_bug.cgi?id=193274</a></li>
-</ul>
-</dd>
-<dt><a href="#stringToUTF8">stringToUTF8(string, bytes)</a> ⇒ <code>Array</code> | <code>Uint8Array</code></dt>
+<dt><a href="#VectorViewMixin">VectorViewMixin(ViewClass, [VectorViewClass])</a> ⇒ <code><a href="#VectorView">Class.&lt;VectorView&gt;</a></code></dt>
 <dd></dd>
-<dt><a href="#UTF8ToString">UTF8ToString(bytes)</a> ⇒ <code>string</code></dt>
-<dd><p>Converts a UTF8 byte array into a JS string.</p>
-</dd>
 <dt><a href="#WeightedAdjacencyListMixin">WeightedAdjacencyListMixin(Base)</a> ⇒ <code><a href="#WeightedAdjacencyList">WeightedAdjacencyList</a></code></dt>
 <dd><p>Creates a WeightedAdjacencyList class extending a given TypedArray class.</p>
 </dd>
@@ -199,9 +190,10 @@ stored in an ArrayBuffer.
         * [.Views](#ArrayView.Views) : <code>WeakMap.&lt;Class.&lt;View&gt;, Class.&lt;ArrayView&gt;&gt;</code>
         * [.ArrayClass](#ArrayView.ArrayClass) : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
         * [.from(value, [array], [start], [length])](#ArrayView.from) ⇒ [<code>ArrayView</code>](#ArrayView)
-        * [.toJSON(view, [start], [length])](#ArrayView.toJSON) ⇒ <code>Object</code>
         * [.getLength(size)](#ArrayView.getLength) ⇒ <code>number</code>
+        * [.getOffset(index)](#ArrayView.getOffset) ⇒ <code>number</code>
         * [.getSize(length)](#ArrayView.getSize) ⇒ <code>number</code>
+        * [.toJSON(view, [start], [length])](#ArrayView.toJSON) ⇒ <code>Object</code>
         * [.of(size)](#ArrayView.of) ⇒ [<code>ArrayView</code>](#ArrayView)
 
 <a name="ArrayView+size"></a>
@@ -292,6 +284,39 @@ Creates an array view from a given array of objects.
 | [start] | <code>number</code> | <code>0</code> | 
 | [length] | <code>number</code> |  | 
 
+<a name="ArrayView.getLength"></a>
+
+### ArrayView.getLength(size) ⇒ <code>number</code>
+Returns the byte length of an array view to hold a given amount of objects.
+
+**Kind**: static method of [<code>ArrayView</code>](#ArrayView)  
+
+| Param | Type |
+| --- | --- |
+| size | <code>number</code> | 
+
+<a name="ArrayView.getOffset"></a>
+
+### ArrayView.getOffset(index) ⇒ <code>number</code>
+Returns the starting byte offset of an item in the array.
+
+**Kind**: static method of [<code>ArrayView</code>](#ArrayView)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="ArrayView.getSize"></a>
+
+### ArrayView.getSize(length) ⇒ <code>number</code>
+Calculates the size of an array from it's byte length.
+
+**Kind**: static method of [<code>ArrayView</code>](#ArrayView)  
+
+| Param | Type |
+| --- | --- |
+| length | <code>number</code> | 
+
 <a name="ArrayView.toJSON"></a>
 
 ### ArrayView.toJSON(view, [start], [length]) ⇒ <code>Object</code>
@@ -304,28 +329,6 @@ Returns an array representation of a given array view.
 | view | [<code>View</code>](#View) |  | 
 | [start] | <code>number</code> | <code>0</code> | 
 | [length] | <code>number</code> |  | 
-
-<a name="ArrayView.getLength"></a>
-
-### ArrayView.getLength(size) ⇒ <code>number</code>
-Returns the byte length of an array view to hold a given amount of objects.
-
-**Kind**: static method of [<code>ArrayView</code>](#ArrayView)  
-
-| Param | Type |
-| --- | --- |
-| size | <code>number</code> | 
-
-<a name="ArrayView.getSize"></a>
-
-### ArrayView.getSize(length) ⇒ <code>number</code>
-Calculates the size of an array from it's byte length.
-
-**Kind**: static method of [<code>ArrayView</code>](#ArrayView)  
-
-| Param | Type |
-| --- | --- |
-| length | <code>number</code> | 
 
 <a name="ArrayView.of"></a>
 
@@ -1803,11 +1806,11 @@ a.get(2, 1);
 
 <a name="MapView"></a>
 
-## MapView ⇐ <code>DataView</code>
+## MapView ⇐ [<code>VariableView</code>](#VariableView)
 **Kind**: global class  
-**Extends**: <code>DataView</code>  
+**Extends**: [<code>VariableView</code>](#VariableView)  
 
-* [MapView](#MapView) ⇐ <code>DataView</code>
+* [MapView](#MapView) ⇐ [<code>VariableView</code>](#VariableView)
     * _instance_
         * [.get(field)](#MapView+get) ⇒ <code>\*</code>
         * [.getView(field)](#MapView+getView) ⇒ [<code>View</code>](#View)
@@ -1815,7 +1818,6 @@ a.get(2, 1);
         * [.setView(field, value)](#MapView+setView) ⇒ [<code>MapView</code>](#MapView)
         * [.toJSON()](#MapView+toJSON) ⇒ <code>Object</code>
     * _static_
-        * [.bufferView](#MapView.bufferView) : <code>DataView</code>
         * [.schema](#MapView.schema) : <code>Object</code>
         * [.layout](#MapView.layout) : <code>Object.&lt;string, Object&gt;</code>
         * [.optionalFields](#MapView.optionalFields) : <code>Array.&lt;string&gt;</code>
@@ -1825,8 +1827,7 @@ a.get(2, 1);
         * [.defaultBuffer](#MapView.defaultBuffer) : <code>Uint8Array</code>
         * [.ObjectViewClass](#MapView.ObjectViewClass) : [<code>Class.&lt;ObjectView&gt;</code>](#ObjectView)
         * [.Views](#MapView.Views) : <code>Object.&lt;string, Class.&lt;MapView&gt;&gt;</code>
-        * [.maxLength](#MapView.maxLength) : <code>number</code>
-        * [.maxView](#MapView.maxView) : <code>DataView</code>
+        * [.encode(value, view, [start])](#MapView.encode) ⇒ <code>number</code>
         * [.from(value, [view], [start])](#MapView.from) ⇒ [<code>View</code>](#View)
         * [.getLength(value)](#MapView.getLength) ⇒ <code>number</code>
         * [.toJSON(view, [start])](#MapView.toJSON) ⇒ <code>Object</code>
@@ -1886,10 +1887,6 @@ Copies a given view into a field.
 Returns an object corresponding to the view.
 
 **Kind**: instance method of [<code>MapView</code>](#MapView)  
-<a name="MapView.bufferView"></a>
-
-### MapView.bufferView : <code>DataView</code>
-**Kind**: static property of [<code>MapView</code>](#MapView)  
 <a name="MapView.schema"></a>
 
 ### MapView.schema : <code>Object</code>
@@ -1926,17 +1923,19 @@ Returns an object corresponding to the view.
 
 ### MapView.Views : <code>Object.&lt;string, Class.&lt;MapView&gt;&gt;</code>
 **Kind**: static property of [<code>MapView</code>](#MapView)  
-<a name="MapView.maxLength"></a>
+<a name="MapView.encode"></a>
 
-### MapView.maxLength : <code>number</code>
-Maximum possible size of a map.
+### MapView.encode(value, view, [start]) ⇒ <code>number</code>
+Creates a map view from a given object.
 
-**Kind**: static property of [<code>MapView</code>](#MapView)  
-<a name="MapView.maxView"></a>
+**Kind**: static method of [<code>MapView</code>](#MapView)  
 
-### MapView.maxView : <code>DataView</code>
-**Kind**: static property of [<code>MapView</code>](#MapView)  
-**Access**: protected  
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| value | <code>Object</code> |  | the object to take data from |
+| view | [<code>View</code>](#View) |  | the view to assign fields to |
+| [start] | <code>number</code> | <code>0</code> |  |
+
 <a name="MapView.from"></a>
 
 ### MapView.from(value, [view], [start]) ⇒ [<code>View</code>](#View)
@@ -2837,12 +2836,15 @@ Extends Uint8Array to handle C-like representation of UTF-8 encoded strings.
         * [.toJSON()](#StringView+toJSON) ⇒ <code>string</code>
         * [.trim()](#StringView+trim) ⇒ [<code>StringView</code>](#StringView)
     * _static_
-        * [.encoder](#StringView.encoder) : <code>TextEncoder</code>
-        * [.decoder](#StringView.decoder) : <code>TextDecoder</code>
+        * ~~[.encoder](#StringView.encoder) : <code>TextEncoder</code>~~
+        * ~~[.decoder](#StringView.decoder) : <code>TextDecoder</code>~~
         * [.ArrayClass](#StringView.ArrayClass) : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
+        * [.decode(bytes)](#StringView.decode) ⇒ <code>string</code>
+        * [.encode(string, view, [start], [length])](#StringView.encode) ⇒ <code>number</code>
         * [.from(...args)](#StringView.from) ⇒ <code>Uint8Array</code> \| [<code>StringView</code>](#StringView)
-        * [.toJSON(view, [start], [length])](#StringView.toJSON) ⇒ <code>Array.&lt;number&gt;</code>
-        * [.getByteSize(string)](#StringView.getByteSize) ⇒ <code>number</code>
+        * [.toJSON(view, [start], [length])](#StringView.toJSON) ⇒ <code>string</code>
+        * ~~[.getByteSize(string)](#StringView.getByteSize) ⇒ <code>number</code>~~
+        * [.getLength(string)](#StringView.getLength) ⇒ <code>number</code>
 
 <a name="StringView+size"></a>
 
@@ -3002,16 +3004,53 @@ stringView.trim();
 ```
 <a name="StringView.encoder"></a>
 
-### StringView.encoder : <code>TextEncoder</code>
+### ~~StringView.encoder : <code>TextEncoder</code>~~
+***Deprecated***
+
 **Kind**: static property of [<code>StringView</code>](#StringView)  
 <a name="StringView.decoder"></a>
 
-### StringView.decoder : <code>TextDecoder</code>
+### ~~StringView.decoder : <code>TextDecoder</code>~~
+***Deprecated***
+
 **Kind**: static property of [<code>StringView</code>](#StringView)  
 <a name="StringView.ArrayClass"></a>
 
 ### StringView.ArrayClass : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
 **Kind**: static property of [<code>StringView</code>](#StringView)  
+<a name="StringView.decode"></a>
+
+### StringView.decode(bytes) ⇒ <code>string</code>
+Converts a UTF8 byte array into a JS string.
+Shamelessly stolen from Google Closure:
+https://github.com/google/closure-library/blob/master/closure/goog/crypt/crypt.js
+
+**Kind**: static method of [<code>StringView</code>](#StringView)  
+
+| Param | Type |
+| --- | --- |
+| bytes | <code>Uint8Array</code> | 
+
+<a name="StringView.encode"></a>
+
+### StringView.encode(string, view, [start], [length]) ⇒ <code>number</code>
+Converts a JS string into a UTF8 byte array.
+Shamelessly stolen from Google Closure:
+https://github.com/google/closure-library/blob/master/closure/goog/crypt/crypt.js
+
+TODO: use TextEncoder#encode/encodeInto when the following issues are resolved:
+- https://bugs.chromium.org/p/v8/issues/detail?id=4383
+- https://bugs.webkit.org/show_bug.cgi?id=193274
+
+**Kind**: static method of [<code>StringView</code>](#StringView)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| string | <code>string</code> |  | 
+| view | <code>Array</code> \| <code>Uint8Array</code> |  | 
+| [start] | <code>number</code> | <code>0</code> | 
+| [length] | <code>number</code> |  | 
+
 <a name="StringView.from"></a>
 
 ### StringView.from(...args) ⇒ <code>Uint8Array</code> \| [<code>StringView</code>](#StringView)
@@ -3025,7 +3064,7 @@ Creates a StringView from a string or an array like object.
 
 <a name="StringView.toJSON"></a>
 
-### StringView.toJSON(view, [start], [length]) ⇒ <code>Array.&lt;number&gt;</code>
+### StringView.toJSON(view, [start], [length]) ⇒ <code>string</code>
 Returns a string representation of a given view.
 
 **Kind**: static method of [<code>StringView</code>](#StringView)  
@@ -3038,7 +3077,18 @@ Returns a string representation of a given view.
 
 <a name="StringView.getByteSize"></a>
 
-### StringView.getByteSize(string) ⇒ <code>number</code>
+### ~~StringView.getByteSize(string) ⇒ <code>number</code>~~
+***Deprecated***
+
+**Kind**: static method of [<code>StringView</code>](#StringView)  
+
+| Param | Type |
+| --- | --- |
+| string | <code>string</code> | 
+
+<a name="StringView.getLength"></a>
+
+### StringView.getLength(string) ⇒ <code>number</code>
 Returns the size in bytes of a given string without encoding it.
 
 **Kind**: static method of [<code>StringView</code>](#StringView)  
@@ -3253,7 +3303,7 @@ a.get(2, 1);
     * _static_
         * [.offset](#TypeView.offset) : <code>number</code>
         * [.littleEndian](#TypeView.littleEndian) : <code>boolean</code>
-        * [.objectLength](#TypeView.objectLength) : <code>number</code>
+        * [.viewLength](#TypeView.viewLength) : <code>number</code>
         * [.Views](#TypeView.Views) : <code>Map.&lt;string, Class.&lt;TypeView&gt;&gt;</code>
         * [.ArrayClass](#TypeView.ArrayClass) : [<code>Class.&lt;ArrayView&gt;</code>](#ArrayView)
         * [.getLength()](#TypeView.getLength) ⇒ <code>number</code>
@@ -3292,9 +3342,9 @@ Returns the numerical value of the view.
 
 ### TypeView.littleEndian : <code>boolean</code>
 **Kind**: static property of [<code>TypeView</code>](#TypeView)  
-<a name="TypeView.objectLength"></a>
+<a name="TypeView.viewLength"></a>
 
-### TypeView.objectLength : <code>number</code>
+### TypeView.viewLength : <code>number</code>
 **Kind**: static property of [<code>TypeView</code>](#TypeView)  
 <a name="TypeView.Views"></a>
 
@@ -3350,24 +3400,10 @@ A DataView based TypedArray that supports endianness and can be set at any offse
 **Extends**: <code>DataView</code>  
 
 * [TypedArrayView](#TypedArrayView) ⇐ <code>DataView</code>
-    * _instance_
-        * [.get(index)](#TypedArrayView+get) ⇒ <code>number</code>
-    * _static_
-        * [.View](#TypedArrayView.View) : [<code>Class.&lt;TypeView&gt;</code>](#TypeView)
-        * [.itemLength](#TypedArrayView.itemLength) : <code>number</code>
-        * [.getLength(size)](#TypedArrayView.getLength) ⇒ <code>number</code>
-        * [.getSize(length)](#TypedArrayView.getSize) ⇒ <code>number</code>
-
-<a name="TypedArrayView+get"></a>
-
-### typedArrayView.get(index) ⇒ <code>number</code>
-Returns a number at a given index.
-
-**Kind**: instance method of [<code>TypedArrayView</code>](#TypedArrayView)  
-
-| Param | Type |
-| --- | --- |
-| index | <code>number</code> | 
+    * [.View](#TypedArrayView.View) : [<code>Class.&lt;TypeView&gt;</code>](#TypeView)
+    * [.itemLength](#TypedArrayView.itemLength) : <code>number</code>
+    * [.getOffset(index)](#TypedArrayView.getOffset) ⇒ <code>number</code>
+    * [.getSize(length)](#TypedArrayView.getSize) ⇒ <code>number</code>
 
 <a name="TypedArrayView.View"></a>
 
@@ -3377,16 +3413,16 @@ Returns a number at a given index.
 
 ### TypedArrayView.itemLength : <code>number</code>
 **Kind**: static property of [<code>TypedArrayView</code>](#TypedArrayView)  
-<a name="TypedArrayView.getLength"></a>
+<a name="TypedArrayView.getOffset"></a>
 
-### TypedArrayView.getLength(size) ⇒ <code>number</code>
-Returns the byte length of an array view to hold a given amount of numbers.
+### TypedArrayView.getOffset(index) ⇒ <code>number</code>
+Returns the starting byte offset of an item in the array.
 
 **Kind**: static method of [<code>TypedArrayView</code>](#TypedArrayView)  
 
 | Param | Type |
 | --- | --- |
-| size | <code>number</code> | 
+| index | <code>number</code> | 
 
 <a name="TypedArrayView.getSize"></a>
 
@@ -3741,6 +3777,181 @@ Creates an adjacency matrix from a given adjacency list.
 | Param | Type |
 | --- | --- |
 | list | [<code>UnweightedAdjacencyList</code>](#UnweightedAdjacencyList) | 
+
+<a name="VariableView"></a>
+
+## VariableView ⇐ <code>DataView</code>
+**Kind**: global class  
+**Extends**: <code>DataView</code>  
+
+* [VariableView](#VariableView) ⇐ <code>DataView</code>
+    * [.bufferView](#VariableView.bufferView) : <code>DataView</code>
+    * [.maxLength](#VariableView.maxLength) : <code>number</code>
+    * [.maxView](#VariableView.maxView) : <code>DataView</code>
+
+<a name="VariableView.bufferView"></a>
+
+### VariableView.bufferView : <code>DataView</code>
+**Kind**: static property of [<code>VariableView</code>](#VariableView)  
+<a name="VariableView.maxLength"></a>
+
+### VariableView.maxLength : <code>number</code>
+Maximum possible size of a map.
+
+**Kind**: static property of [<code>VariableView</code>](#VariableView)  
+<a name="VariableView.maxView"></a>
+
+### VariableView.maxView : <code>DataView</code>
+**Kind**: static property of [<code>VariableView</code>](#VariableView)  
+<a name="VectorView"></a>
+
+## VectorView ⇐ [<code>VariableView</code>](#VariableView)
+**Kind**: global class  
+**Extends**: [<code>VariableView</code>](#VariableView)  
+
+* [VectorView](#VectorView) ⇐ [<code>VariableView</code>](#VariableView)
+    * _instance_
+        * [.size](#VectorView+size) : <code>number</code>
+        * [.get(index)](#VectorView+get) ⇒ <code>\*</code>
+        * [.getView(index)](#VectorView+getView) ⇒ [<code>View</code>](#View) \| [<code>VariableView</code>](#VariableView)
+        * [.set(index, value)](#VectorView+set) ⇒ [<code>VectorView</code>](#VectorView)
+        * [.setView(index, value)](#VectorView+setView) ⇒ [<code>VectorView</code>](#VectorView)
+        * [.toJSON()](#VectorView+toJSON) ⇒ <code>Array.&lt;Object&gt;</code>
+    * _static_
+        * [.View](#VectorView.View) : [<code>View</code>](#View)
+        * [.Views](#VectorView.Views) : <code>WeakMap</code>
+        * [.encode(value, view, [start])](#VectorView.encode) ⇒ <code>number</code>
+        * [.from(value, [view], [start])](#VectorView.from) ⇒ [<code>VectorView</code>](#VectorView)
+        * [.toJSON(view, [start])](#VectorView.toJSON) ⇒ <code>Object</code>
+        * [.getLength(value)](#VectorView.getLength) ⇒ <code>number</code>
+        * [.getSize(view, [start])](#VectorView.getSize) ⇒ <code>number</code>
+
+<a name="VectorView+size"></a>
+
+### vectorView.size : <code>number</code>
+Returns the amount of available values in the vector.
+
+**Kind**: instance property of [<code>VectorView</code>](#VectorView)  
+<a name="VectorView+get"></a>
+
+### vectorView.get(index) ⇒ <code>\*</code>
+Returns an object at a given index.
+
+**Kind**: instance method of [<code>VectorView</code>](#VectorView)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="VectorView+getView"></a>
+
+### vectorView.getView(index) ⇒ [<code>View</code>](#View) \| [<code>VariableView</code>](#VariableView)
+Returns a view at a given index.
+
+**Kind**: instance method of [<code>VectorView</code>](#VectorView)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+
+<a name="VectorView+set"></a>
+
+### vectorView.set(index, value) ⇒ [<code>VectorView</code>](#VectorView)
+Sets a value at a given index.
+
+**Kind**: instance method of [<code>VectorView</code>](#VectorView)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+| value | <code>\*</code> | 
+
+<a name="VectorView+setView"></a>
+
+### vectorView.setView(index, value) ⇒ [<code>VectorView</code>](#VectorView)
+Sets a view at a given index.
+
+**Kind**: instance method of [<code>VectorView</code>](#VectorView)  
+
+| Param | Type |
+| --- | --- |
+| index | <code>number</code> | 
+| value | [<code>View</code>](#View) \| [<code>VariableView</code>](#VariableView) | 
+
+<a name="VectorView+toJSON"></a>
+
+### vectorView.toJSON() ⇒ <code>Array.&lt;Object&gt;</code>
+Returns an array representation of the vector view.
+
+**Kind**: instance method of [<code>VectorView</code>](#VectorView)  
+<a name="VectorView.View"></a>
+
+### VectorView.View : [<code>View</code>](#View)
+**Kind**: static property of [<code>VectorView</code>](#VectorView)  
+<a name="VectorView.Views"></a>
+
+### VectorView.Views : <code>WeakMap</code>
+**Kind**: static property of [<code>VectorView</code>](#VectorView)  
+<a name="VectorView.encode"></a>
+
+### VectorView.encode(value, view, [start]) ⇒ <code>number</code>
+Encodes a given value into a view.
+
+**Kind**: static method of [<code>VectorView</code>](#VectorView)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| value | <code>Array.&lt;\*&gt;</code> |  | 
+| view | [<code>View</code>](#View) \| [<code>VariableView</code>](#VariableView) |  | 
+| [start] | <code>number</code> | <code>0</code> | 
+
+<a name="VectorView.from"></a>
+
+### VectorView.from(value, [view], [start]) ⇒ [<code>VectorView</code>](#VectorView)
+Creates a vector view from a given array of values.
+
+**Kind**: static method of [<code>VectorView</code>](#VectorView)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| value | <code>ArrayLike.&lt;Object&gt;</code> |  | 
+| [view] | [<code>View</code>](#View) |  | 
+| [start] | <code>number</code> | <code>0</code> | 
+
+<a name="VectorView.toJSON"></a>
+
+### VectorView.toJSON(view, [start]) ⇒ <code>Object</code>
+Returns an array representation of a given vector view.
+
+**Kind**: static method of [<code>VectorView</code>](#VectorView)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| view | [<code>View</code>](#View) |  | 
+| [start] | <code>number</code> | <code>0</code> | 
+
+<a name="VectorView.getLength"></a>
+
+### VectorView.getLength(value) ⇒ <code>number</code>
+Returns the byte length of a view necessary to hold given values.
+
+**Kind**: static method of [<code>VectorView</code>](#VectorView)  
+
+| Param | Type |
+| --- | --- |
+| value | <code>Array.&lt;\*&gt;</code> | 
+
+<a name="VectorView.getSize"></a>
+
+### VectorView.getSize(view, [start]) ⇒ <code>number</code>
+Returns the amount of values in a given view.
+
+**Kind**: static method of [<code>VectorView</code>](#VectorView)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| view | [<code>View</code>](#View) \| [<code>VariableView</code>](#VariableView) |  | 
+| [start] | <code>number</code> | <code>0</code> | 
 
 <a name="WeightedAdjacencyList"></a>
 
@@ -4335,45 +4546,15 @@ Returns the minimum amount of bits necessary to hold a given number.
 | --- | --- |
 | number | <code>number</code> | 
 
-<a name="writeUTF8"></a>
+<a name="VectorViewMixin"></a>
 
-## writeUTF8(string, bytes, start) ⇒ <code>number</code>
-Converts a JS string into a UTF8 byte array.
-Shamelessly stolen from Google Closure:
-https://github.com/google/closure-library/blob/master/closure/goog/crypt/crypt.js
-
-TODO: use TextEncoder#encode/encodeInto when the following issues are resolved:
-- https://bugs.chromium.org/p/v8/issues/detail?id=4383
-- https://bugs.webkit.org/show_bug.cgi?id=193274
-
+## VectorViewMixin(ViewClass, [VectorViewClass]) ⇒ [<code>Class.&lt;VectorView&gt;</code>](#VectorView)
 **Kind**: global function  
 
 | Param | Type | Default |
 | --- | --- | --- |
-| string | <code>string</code> |  | 
-| bytes | <code>Array</code> \| <code>Uint8Array</code> |  | 
-| start | <code>number</code> | <code>0</code> | 
-
-<a name="stringToUTF8"></a>
-
-## stringToUTF8(string, bytes) ⇒ <code>Array</code> \| <code>Uint8Array</code>
-**Kind**: global function  
-
-| Param | Type |
-| --- | --- |
-| string | <code>string</code> | 
-| bytes | <code>Array</code> \| <code>Uint8Array</code> | 
-
-<a name="UTF8ToString"></a>
-
-## UTF8ToString(bytes) ⇒ <code>string</code>
-Converts a UTF8 byte array into a JS string.
-
-**Kind**: global function  
-
-| Param | Type |
-| --- | --- |
-| bytes | <code>Uint8Array</code> | 
+| ViewClass | [<code>Class.&lt;View&gt;</code>](#View) |  | 
+| [VectorViewClass] | [<code>Class.&lt;VectorView&gt;</code>](#VectorView) | <code>VectorView</code> | 
 
 <a name="WeightedAdjacencyListMixin"></a>
 
