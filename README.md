@@ -991,7 +991,7 @@ By default, BinaryHeap implements min-heap, but it can be changed by providing a
 const { BinaryHeap } = require('structurae');
 
 class MaxHeap extends BinaryHeap {}
-MaxHeap.compare = (a, b) => b - a; 
+MaxHeap.compare = (a, b) => a > b; 
 ```
 In addition to all array methods, BinaryHeap provides a few methods to traverse or change the heap:
 ```javascript
