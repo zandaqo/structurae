@@ -406,6 +406,7 @@ stringView == 'abc😀a';
 ```
 
 While the array itself holds code points, StringView provides methods to operate on characters of the underlying string:
+
 ```javascript
 const stringView = StringView.from('abc😀');
 stringView.length; // length of the view in bytes
@@ -423,6 +424,7 @@ stringView.substring(0, 4);
 ```
 
 StringView also offers methods for searching and in-place changing the underlying string without decoding:
+
 ```javascript
 const stringView = StringView.from('abc😀a');
 const searchValue = StringView.from('😀');

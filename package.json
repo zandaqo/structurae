@@ -1,9 +1,9 @@
 {
   "name": "structurae",
-  "version": "3.3.0",
+  "version": "4.0.0-beta.1",
   "description": "Data structures for performance-sensitive modern JavaScript applications.",
   "main": "index.js",
-  "types": "index.d.ts",
+  "type": "module",
   "keywords": [
     "optimization",
     "binary",
@@ -21,18 +21,12 @@
   ],
   "scripts": {
     "test": "jest",
-    "lint": "eslint ./lib/*.js ./test/*.js",
-    "doc:api": "jsdoc2md > doc/API.md",
-    "benchmark": "node bench/index.js"
-  },
-  "directories": {
-    "lib": "lib",
-    "doc": "doc",
-    "test": "test"
+    "build": "tsc",
+    "doc": "typedoc --out doc src/index.ts"
   },
   "files": [
-    "/lib/",
-    "index.d.ts"
+    "*.js",
+    "*.d.ts"
   ],
   "author": "Maga D. Zandaqo <denelxan@gmail.com> (http://maga.name)",
   "license": "MIT",
@@ -45,23 +39,28 @@
     "url": "https://github.com/zandaqo/structurae/issues"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.4",
+    "@types/jest": "^26.0.22",
     "benchmark": "^2.1.4",
-    "eslint": "^7.4.0",
-    "eslint-config-airbnb-base": "^14.2.0",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-import": "^2.22.0",
-    "jest": "^26.1.0",
-    "jsdoc-to-markdown": "^6.0.1",
-    "json-schema-faker": "^0.5.0-rcv.24"
+    "jest": "^27.0.3",
+    "json-schema-faker": "^0.5.0-rcv.34",
+    "ts-jest": "^27.0.2",
+    "typescript": "^4.3.2"
   },
   "jest": {
+    "preset": "ts-jest",
     "testEnvironment": "node",
+    "transform": {
+      "^.+\\.(js|ts)$": "ts-jest"
+    },
+    "testMatch": [
+      "**/test/**/*.spec.ts"
+    ],
     "collectCoverage": true,
     "collectCoverageFrom": [
-      "**/lib/**",
+      "**/src/**",
       "!**/node_modules/**",
-      "!**/test/**"
+      "!**/__snapshots__/**",
+      "!**/__fixtures__/**"
     ],
     "coverageDirectory": "<rootDir>/coverage",
     "coverageReporters": [
@@ -69,7 +68,7 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 95,
+        "branches": 90,
         "functions": 100,
         "lines": 100,
         "statements": 100
@@ -78,48 +77,5 @@
   },
   "engines": {
     "node": ">=11.0.0"
-  },
-  "prettier": {
-    "printWidth": 100,
-    "singleQuote": true,
-    "trailingComma": "all"
-  },
-  "eslintConfig": {
-    "extends": [
-      "airbnb-base",
-      "prettier"
-    ],
-    "env": {
-      "node": true,
-      "jest": true
-    },
-    "globals": {
-      "globalThis": false
-    },
-    "rules": {
-      "max-classes-per-file": 0,
-      "no-bitwise": 0,
-      "no-plusplus": 0,
-      "no-continue": 0,
-      "no-restricted-syntax": 0,
-      "no-nested-ternary": 1,
-      "no-labels": 1,
-      "no-param-reassign": [
-        2,
-        {
-          "props": false
-        }
-      ],
-      "valid-jsdoc": [
-        2,
-        {
-          "prefer": {
-            "return": "returns"
-          },
-          "requireReturnDescription": false,
-          "requireParamDescription": false
-        }
-      ]
-    }
   }
 }
