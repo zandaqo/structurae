@@ -29,12 +29,11 @@ export class BinaryHeap<T> extends Array<T> {
   static from<T, U>(
     iterable: Iterable<T> | ArrayLike<T>,
     mapfn?: (v: T, k: number) => U,
-    thisArg?: any
+    thisArg?: any,
   ): BinaryHeap<U> {
     return (mapfn !== undefined
       ? super.from(iterable, mapfn, thisArg)
-      : (super.from(iterable) as any)
-    ).heapify();
+      : (super.from(iterable) as any)).heapify();
   }
 
   static getLeftIndex(index: number): number {
@@ -205,10 +204,9 @@ export class BinaryHeap<T> extends Array<T> {
    * Changes elements of the heap.
    */
   splice(start: number, deleteCount?: number, ...items: Array<T>): Array<T> {
-    const deletedItems =
-      deleteCount === undefined
-        ? super.splice(start)
-        : super.splice(start, deleteCount, ...items);
+    const deletedItems = deleteCount === undefined
+      ? super.splice(start)
+      : super.splice(start, deleteCount, ...items);
     const isSingle = deletedItems.length < 2 && items.length < 2;
     if (isSingle) {
       const index = start;

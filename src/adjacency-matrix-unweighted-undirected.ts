@@ -1,6 +1,7 @@
-import { AdjacencyMatrixUnweightedDirected } from "./adjacency-matrix-unweighted-directed";
+import { AdjacencyMatrixUnweightedDirected } from "./adjacency-matrix-unweighted-directed.ts";
 
-export class AdjacencyMatrixUnweightedUndirected extends AdjacencyMatrixUnweightedDirected {
+export class AdjacencyMatrixUnweightedUndirected
+  extends AdjacencyMatrixUnweightedDirected {
   static directed = false;
   static getLength(vertices: number): number {
     return (((vertices + 1) * vertices) >> 6) + 2;

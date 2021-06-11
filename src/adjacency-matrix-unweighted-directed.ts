@@ -1,12 +1,10 @@
-import { getLog2 } from "./utilities";
-import { AdjacencyStructure } from "./types";
-import { Bit } from "./types";
+import type { AdjacencyStructure, Bit } from "./utility-types.ts";
+import { getLog2 } from "./utilities.ts";
 
 /**
  * Implements Adjacency Matrix for unweighted graphs.
  */
-export class AdjacencyMatrixUnweightedDirected
-  extends Uint32Array
+export class AdjacencyMatrixUnweightedDirected extends Uint32Array
   implements AdjacencyStructure {
   static directed = true;
   static weighted = false;
@@ -35,6 +33,12 @@ export class AdjacencyMatrixUnweightedDirected
     return this.vertices ** 2;
   }
 
+  /**
+  * Create a graph of specified dimensions.
+  *
+  * @param vertices the numbe of vertices
+  * @return a new graph of specified dimentions
+  */
   static create(vertices: number) {
     const length = this.getLength(vertices);
     const matrix = new this(length);
@@ -56,6 +60,7 @@ export class AdjacencyMatrixUnweightedDirected
    *
    * @param x the starting vertex
    * @param y the ending vertex
+   * @return the graph
    */
   addEdge(x: number, y: number): this {
     const [bucket, position] = this.getCoordinates(x, y);

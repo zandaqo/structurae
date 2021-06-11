@@ -1,25 +1,21 @@
+import type { Constructor, TypedArrayConstructors } from "./utility-types.ts";
+import { getLog2 } from "./utilities.ts";
+
 /**
  * Creates a Grid class extending a given Array-like class.
  */
-import {
-  Constructor,
-  IndexedCollection,
-  TypedArrayConstructors,
-} from "./types";
-import { getLog2 } from "./utilities";
-
 export function GridMixin<
   ItemType = number,
   U extends Constructor<Array<ItemType>> | TypedArrayConstructors = Constructor<
     Array<ItemType>
-  >
+  >,
 >(Base: U) {
-  interface Grid extends IndexedCollection<ItemType> {}
-
   /**
    * Extends built-in indexed collections to handle 2 dimensional data.
    */
-  class Grid extends Base {
+  return class Grid extends Base {
+    [key: number]: ItemType
+
     size = 0;
 
     static get [Symbol.species]() {
@@ -44,13 +40,14 @@ export function GridMixin<
      * Number of rows in the grid.
      */
     get rows() {
+      //@ts-ignore 2339
       return this.length >> this.size;
     }
 
     static create<T extends typeof Grid>(
       this: T,
       rows: number,
-      columns = 1
+      columns = 1,
     ): InstanceType<T> {
       const offset = getLog2(columns);
       const length = rows << offset;
@@ -72,7 +69,7 @@ export function GridMixin<
      */
     static fromArrays<T extends typeof Grid>(
       this: T,
-      arrays: Array<Array<ItemType>>
+      arrays: Array<Array<ItemType>>,
     ): InstanceType<T> {
       const rows = arrays.length;
 
@@ -178,7 +175,5 @@ export function GridMixin<
       }
       return result;
     }
-  }
-
-  return Grid;
+  };
 }

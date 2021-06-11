@@ -1,20 +1,24 @@
-import { IndexedCollection, TypedArrayConstructors } from "./types";
-import { AdjacencyMatrixWeightedDirectedMixin } from "./adjacency-matrix-weighted-directed";
-import { AdjacencyStructureConstructor } from "./types";
+import type {
+  AdjacencyStructureConstructor,
+  IndexedCollection,
+  TypedArrayConstructors,
+} from "./utility-types.ts";
+import { AdjacencyMatrixWeightedDirectedMixin } from "./adjacency-matrix-weighted-directed.ts";
 
 /**
  * Creates a WeightedAdjacencyMatrix class extending a given Array-like class.
  */
 export function AdjacencyMatrixWeightedUndirectedMixin<
-  U extends TypedArrayConstructors
+  U extends TypedArrayConstructors,
 >(Base: U): AdjacencyStructureConstructor<U> {
   interface AdjacencyMatrixWeightedUndirected extends IndexedCollection {}
   /**
    * Implements Adjacency Matrix for weighted graphs.
    */
-  class AdjacencyMatrixWeightedUndirected extends AdjacencyMatrixWeightedDirectedMixin(
-    Base
-  ) {
+  class AdjacencyMatrixWeightedUndirected
+    extends AdjacencyMatrixWeightedDirectedMixin(
+      Base,
+    ) {
     static directed = false;
     /**
      * Returns the length of underlying Array required to hold the graph.

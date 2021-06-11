@@ -1,5 +1,5 @@
-import { Bit } from "./types";
-import { getLog2 } from "./utilities";
+import type { Bit } from "./utility-types.ts";
+import { getLog2 } from "./utilities.ts";
 
 /**
  * Implements a grid or 2D matrix of bits.

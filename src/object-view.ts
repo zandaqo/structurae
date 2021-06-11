@@ -1,13 +1,20 @@
-import { ComplexView, ViewInstance, ViewLayout } from "./view-types";
+import type { ComplexView, ViewInstance, ViewLayout } from "./view-types.ts";
 
-export class ObjectView<T extends object>
-  extends DataView
+export class ObjectView<T extends object> extends DataView
   implements ComplexView<T> {
   static viewLength: number;
   static layout?: ViewLayout<unknown>;
   static fields: Array<unknown>;
   static defaultData?: Uint8Array;
 
+  /**
+   * Decodes a given view into corresponding JavaScript value.
+   *
+   * @param view the view to decode
+   * @param start the starting offset
+   * @param length the byte length to decode
+   * @return the JavaScript value
+   */
   static decode<T extends object>(view: DataView, start = 0, _?: number): T {
     const layout = this.layout as ViewLayout<T>;
     const fields = this.fields as Array<keyof T>;
@@ -20,15 +27,26 @@ export class ObjectView<T extends object>
     return result;
   }
 
+  /**
+   * Encodes a JavaScript value into a given view.
+   *
+   * @param value the value to encode
+   * @param view the view to encode into
+   * @param start the view offset to start
+   * @param length the byte length to encode
+   * @param amend whether to avoid zeroing out the view (used to apply default values)
+   * @return the amount of written bytes
+   */
   static encode<T extends object>(
     value: T,
     view: DataView,
     start = 0,
     length = this.viewLength,
-    amend?: boolean
+    amend?: boolean,
   ): number {
-    if (!amend)
+    if (!amend) {
       new Uint8Array(view.buffer, view.byteOffset + start, length).fill(0);
+    }
     const layout = this.layout as ViewLayout<T>;
     const fields = this.fields as Array<keyof T>;
     for (let i = 0; i < fields.length; i++) {
@@ -42,10 +60,9 @@ export class ObjectView<T extends object>
   }
 
   /**
-   * Assigns fields of a given object to the provided view or a new object view.
+   * Creates an object view from a given object.
    *
-   * @param value the object to take data from
-   *
+   * @param value the object to encode
    */
   static from<T extends object, U extends ObjectView<T>>(value: T): U {
     const objectView = new this<T>(this.defaultData!.buffer.slice(0));
@@ -55,8 +72,6 @@ export class ObjectView<T extends object>
 
   /**
    * Returns the byte length of an object view.
-   *
-   *
    */
   static getLength(): number {
     return this.viewLength;
@@ -127,14 +142,12 @@ export class ObjectView<T extends object>
     const { start } = layout[field];
     new Uint8Array(this.buffer, this.byteOffset, this.byteLength).set(
       new Uint8Array(view.buffer, view.byteOffset, view.byteLength),
-      start
+      start,
     );
   }
 
   /**
-   * Returns an Object corresponding to the view.
-   *
-   *
+   * Returns an object corresponding to the view.
    */
   toJSON(): T {
     return (this.constructor as typeof ObjectView).decode<T>(this, 0);

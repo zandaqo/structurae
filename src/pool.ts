@@ -1,5 +1,5 @@
-import { BitArray } from "./bit-array";
-import { getLSBIndex } from "./utilities";
+import { BitArray } from "./bit-array.ts";
+import { getLSBIndex } from "./utilities.ts";
 
 /**
  * Manages availability of objects in object pools.

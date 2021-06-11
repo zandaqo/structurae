@@ -1,8 +1,12 @@
-import { IndexedCollection, TypedArrayConstructors } from "./types";
-import { AdjacencyStructure, AdjacencyStructureConstructor } from "./types";
+import type {
+  AdjacencyStructure,
+  AdjacencyStructureConstructor,
+  IndexedCollection,
+  TypedArrayConstructors,
+} from "./utility-types.ts";
 
 export function AdjacencyListMixin<U extends TypedArrayConstructors>(
-  Base: U
+  Base: U,
 ): AdjacencyStructureConstructor<U> {
   interface AdjacencyList extends IndexedCollection {}
 
@@ -25,6 +29,13 @@ export function AdjacencyListMixin<U extends TypedArrayConstructors>(
       return Base;
     }
 
+    /**
+    * Create a graph of specified dimensions.
+    *
+    * @param vertices the numbe of vertices
+    * @param edges the maximum amount of edges
+    * @return a new graph of specified dimentions
+    */
     static create(vertices: number, edges: number) {
       const length = this.getLength(vertices, edges);
       const list = new this(length);
@@ -34,8 +45,11 @@ export function AdjacencyListMixin<U extends TypedArrayConstructors>(
       return list as AdjacencyList & InstanceType<U>;
     }
 
+    /*
+    * Returns the dimensions, vertices and maximum edge count, of an existing AdjacencyList
+    */
     static getDimensions(
-      list: IndexedCollection
+      list: IndexedCollection,
     ): [vertices: number, edges: number] {
       let vertices = 0;
       while (list[vertices] <= list[vertices + 1]) {
@@ -59,6 +73,7 @@ export function AdjacencyListMixin<U extends TypedArrayConstructors>(
      * @param y the ending vertex
      * @param weight the weight
      * @throws RangeError if the list is full
+     * @return the graph
      */
     addEdge(x: number, y: number, weight: number): this {
       if (this.hasEdge(x, y)) return this;

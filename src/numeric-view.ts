@@ -1,12 +1,29 @@
-import { PrimitiveView } from "./view-types";
+import type { PrimitiveView } from "./view-types.ts";
 
 export class Uint8View extends DataView implements PrimitiveView<number> {
   static viewLength = 1;
 
+  /**
+  * Decodes a given view into corresponding JavaScript value.
+  *
+  * @param view the view to decode
+  * @param start the starting offset
+  * @param length the byte length to decode
+  * @return the JavaScript value
+  */
   static decode(view: DataView, start = 0): number {
     return DataView.prototype.getUint8.call(view, start);
   }
 
+  /**
+  * Encodes a JavaScript value into a given view.
+  *
+  * @param value the value to encode
+  * @param view the view to encode into
+  * @param start the view offset to start
+  * @param length the byte length to encode
+  * @return the amount of written bytes
+  */
   static encode(value: number, view: DataView, start = 0): number {
     DataView.prototype.setUint8.call(view, start, value);
     return this.viewLength;
@@ -23,8 +40,6 @@ export class Uint8View extends DataView implements PrimitiveView<number> {
 
   /**
    * Returns the length of a view.
-   *
-   *
    */
   static getLength(): number {
     return this.viewLength;
@@ -39,8 +54,6 @@ export class Uint8View extends DataView implements PrimitiveView<number> {
 
   /**
    * Sets the numerical value of the view.
-   *
-   * @param value
    */
   set(value: number): this {
     (this.constructor as typeof Uint8View).encode(value, this);

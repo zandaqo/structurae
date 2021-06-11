@@ -1,13 +1,12 @@
-import {
+import type {
   ComplexView,
+  SchemaArray,
   ViewConstructor,
   ViewInstance,
   ViewLayout,
-  SchemaArray,
-} from "./view-types";
+} from "./view-types.ts";
 
-export class MapView<T extends object>
-  extends DataView
+export class MapView<T extends object> extends DataView
   implements ComplexView<T> {
   static viewLength = 0;
   static layout: ViewLayout<unknown>;
@@ -19,10 +18,12 @@ export class MapView<T extends object>
   static defaultData?: Uint8Array;
 
   /**
-   * Returns an Object corresponding to a given map view.
+   * Decodes a given view into corresponding JavaScript value.
    *
-   * @param view a given view
-   * @param [start=0] starting offset
+   * @param view the view to decode
+   * @param start the starting offset
+   * @param length the byte length to decode
+   * @return the JavaScript value
    */
   static decode<T>(view: DataView, start = 0): T {
     const fields = this.fields as Array<keyof T>;
@@ -46,31 +47,33 @@ export class MapView<T extends object>
   }
 
   /**
-   * Creates a map view from a given object.
+   * Encodes a JavaScript value into a given view.
    *
-   * @param value the object to take data from
-   * @param view the view to assign fields to
-   * @param start
-   * @param length
-   * @param amend
+   * @param value the value to encode
+   * @param view the view to encode into
+   * @param start the view offset to start
+   * @param length the byte length to encode
+   * @param amend whether to avoid zeroing out the view (used to apply default values)
+   * @return the amount of written bytes
    */
   static encode<T>(
     value: T,
     view: DataView,
     start = 0,
     length?: number,
-    amend?: boolean
+    amend?: boolean,
   ) {
     const fields = this.fields as Array<keyof T>;
     const layout = this.layout as ViewLayout<T>;
     const optionalFields = this.optionalFields as Array<keyof T>;
     // zero-out required part if encode is called internally providing length
-    if (!amend)
+    if (!amend) {
       new Uint8Array(
         view.buffer,
         view.byteOffset + start,
-        this.optionalOffset
+        this.optionalOffset,
       ).fill(0);
+    }
     for (const field of fields) {
       const fieldValue = value[field];
       if (fieldValue != null) {
@@ -113,10 +116,7 @@ export class MapView<T extends object>
   /**
    * Creates a map view from a given object.
    *
-   * @param value the object to take data from
-   * @param [view] the view to assign fields to
-   * @param [start=0]
-   *
+   * @param value the object to encode
    */
   static from<T extends object, U extends MapView<T>>(value: T): U {
     const { maxView, defaultData } = this;
@@ -130,9 +130,6 @@ export class MapView<T extends object>
 
   /**
    * Returns the byte length of a map view necessary to hold a given object.
-   *
-   * @param value
-   *
    */
   static getLength<T>(value: T): number {
     const layout = this.layout as ViewLayout<T>;
@@ -148,7 +145,7 @@ export class MapView<T extends object>
         fieldLength = View.viewLength;
       } else if (View.itemLength) {
         fieldLength = View.getLength(
-          ((fieldValue as unknown) as SchemaArray).length
+          ((fieldValue as unknown) as SchemaArray).length,
         );
       } else {
         fieldLength = View.getLength((fieldValue as unknown) as number);
@@ -183,13 +180,8 @@ export class MapView<T extends object>
     return layout[2];
   }
 
-  /**
-   * @private
-   * @param field
-   *
-   */
   getLayout<P extends keyof T>(
-    field: P
+    field: P,
   ): [ViewConstructor<T[P]>, number, number] | undefined {
     const layout = (this.constructor as typeof MapView).layout as ViewLayout<T>;
     const definition = layout[field];
@@ -244,15 +236,13 @@ export class MapView<T extends object>
     if (!layout) return undefined;
     new Uint8Array(this.buffer, this.byteOffset, this.byteLength).set(
       new Uint8Array(view.buffer, view.byteOffset, view.byteLength),
-      layout[1]
+      layout[1],
     );
     return undefined;
   }
 
   /**
    * Returns an object corresponding to the view.
-   *
-   *
    */
   toJSON(): T {
     return (this.constructor as typeof MapView).decode<T>(this);

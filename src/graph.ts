@@ -1,6 +1,8 @@
-import { BinaryHeap } from "./binary-heap";
-import { AdjacencyStructureConstructor } from "./types";
-import { TypedArrayConstructors } from "./types";
+import type {
+  AdjacencyStructureConstructor,
+  TypedArrayConstructors,
+} from "./utility-types.ts";
+import { BinaryHeap } from "./binary-heap.ts";
 
 export const Colors = {
   WHITE: 0,
@@ -23,13 +25,13 @@ class VertexHeap extends BinaryHeap<Vertex> {
  */
 export function GraphMixin<
   T extends TypedArrayConstructors,
-  U extends AdjacencyStructureConstructor<T>
+  U extends AdjacencyStructureConstructor<T>,
 >(Base: U) {
   /**
    * Extends an adjacency list/matrix structure and provides methods for traversal (BFS, DFS),
    * pathfinding (Dijkstra, Bellman-Ford), spanning tree construction (BFS, Prim), etc.
    */
-  class Graph extends Base {
+  return class Graph extends Base {
     _colors?: Uint8Array;
 
     get colors(): Uint8Array {
@@ -42,8 +44,9 @@ export function GraphMixin<
     // fix for messed up types of mixins
     // todo fix when sanity dawns on ts mixins
     static create(vertices: number, edges?: number) {
-      return (super.create(vertices, edges) as unknown) as Graph &
-        InstanceType<U>;
+      return (super.create(vertices, edges) as unknown) as
+        & Graph
+        & InstanceType<U>;
     }
 
     hasColor(vertex: number, color: Colors): boolean {
@@ -72,7 +75,7 @@ export function GraphMixin<
       start: number,
       end: number,
       isAcyclic = false,
-      isNonNegative = false
+      isNonNegative = false,
     ): Array<number> {
       const { weighted } = this
         .constructor as AdjacencyStructureConstructor<any>;
@@ -101,9 +104,8 @@ export function GraphMixin<
      *
      * @private
      */
-    resetColors(): this {
+    resetColors(): void {
       this.colors.fill(0);
-      return this;
     }
 
     /**
@@ -118,7 +120,7 @@ export function GraphMixin<
       start: number,
       end: number,
       distances: Array<number>,
-      predecessors: Array<number>
+      predecessors: Array<number>,
     ): boolean {
       const { vertices } = this;
       distances[start] = 0;
@@ -151,7 +153,7 @@ export function GraphMixin<
       start: number,
       end: number,
       distances: Array<number>,
-      predecessors: Array<number>
+      predecessors: Array<number>,
     ): boolean {
       this.resetColors();
       const heap = new VertexHeap();
@@ -190,7 +192,7 @@ export function GraphMixin<
       start: number,
       end: number,
       distances: Array<number>,
-      predecessors: Array<number>
+      predecessors: Array<number>,
     ): boolean {
       distances[start] = 0;
       let lastPredecessor = start;
@@ -222,7 +224,7 @@ export function GraphMixin<
     searchUnweighted(
       start: number,
       end: number | undefined,
-      predecessors: Array<number>
+      predecessors: Array<number>,
     ): boolean {
       let lastPredecessor = start;
       let isFound = false;
@@ -241,9 +243,8 @@ export function GraphMixin<
       return isFound;
     }
 
-    setColor(vertex: number, color: Colors): this {
+    setColor(vertex: number, color: Colors): void {
       this.colors[vertex] = color;
-      return this;
     }
 
     /**
@@ -272,7 +273,7 @@ export function GraphMixin<
       start = 0,
       gray = true,
       white = false,
-      black = false
+      black = false,
     ) {
       this.resetColors();
       const processing = [start];
@@ -320,8 +321,9 @@ export function GraphMixin<
         this.setColor(vertex.e, Colors.GRAY);
         for (const edge of this.outEdges(vertex.e)) {
           const weight = this.getEdge(vertex.e, edge);
-          if (this.hasColor(edge, Colors.GRAY) || weight > distances[edge])
+          if (this.hasColor(edge, Colors.GRAY) || weight > distances[edge]) {
             continue;
+          }
           distances[edge] = weight;
           predecessors[edge] = vertex.e;
           heap.push({ e: edge, w: weight });
@@ -329,7 +331,5 @@ export function GraphMixin<
       }
       return predecessors;
     }
-  }
-
-  return Graph;
+  };
 }

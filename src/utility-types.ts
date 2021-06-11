@@ -32,14 +32,14 @@ export interface AdjacencyStructure extends IndexedCollection {
 }
 
 export interface AdjacencyStructureConstructor<
-  U extends TypedArrayConstructors
+  U extends TypedArrayConstructors,
 > {
   directed: boolean;
   weighted: boolean;
   new (...args: any[]): AdjacencyStructure;
   create(
     vertices: number,
-    edges?: number
+    edges?: number,
   ): AdjacencyStructure & InstanceType<U>;
   getLength(vertices: number, edges?: number): number;
 }

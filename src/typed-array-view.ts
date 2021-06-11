@@ -1,4 +1,4 @@
-import { ArrayView } from "./array-view";
+import { ArrayView } from "./array-view.ts";
 
 export class TypedArrayView extends ArrayView<number> {
   static offset = 0;

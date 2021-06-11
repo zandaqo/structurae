@@ -1,4 +1,4 @@
-import { IndexedCollection } from "./types";
+import type { IndexedCollection } from "./utility-types.ts";
 
 export type Comparator<T> = (a: T, b: T) => -1 | 0 | 1;
 
@@ -31,12 +31,11 @@ export class SortedArray<ItemType> extends Array<ItemType> {
   static from<T, U>(
     iterable: Iterable<T> | ArrayLike<T>,
     mapfn?: (v: T, k: number) => U,
-    thisArg?: any
+    thisArg?: any,
   ): SortedArray<U> {
-    const result =
-      mapfn !== undefined
-        ? super.from(iterable, mapfn, thisArg)
-        : (super.from(iterable) as any);
+    const result = mapfn !== undefined
+      ? super.from(iterable, mapfn, thisArg)
+      : (super.from(iterable) as any);
     result.sort();
     return result;
   }
@@ -72,7 +71,7 @@ export class SortedArray<ItemType> extends Array<ItemType> {
     b: U,
     symmetric = false,
     comparator: Comparator<T> = this.compare,
-    container: U = ([] as unknown) as U
+    container: U = ([] as unknown) as U,
   ): typeof container {
     let i = 0;
     let j = 0;
@@ -119,7 +118,7 @@ export class SortedArray<ItemType> extends Array<ItemType> {
     a: U,
     b: U,
     symmetric = false,
-    comparator = this.compare
+    comparator = this.compare,
   ): number {
     const score = this.getIntersectionScore(a, b, comparator);
     return symmetric ? a.length + b.length - 2 * score : a.length - score;
@@ -146,7 +145,7 @@ export class SortedArray<ItemType> extends Array<ItemType> {
     comparator: Comparator<T> = this.compare,
     rank = false,
     start = 0,
-    end = arr.length - 1
+    end = arr.length - 1,
   ): number {
     let left = start;
     let right = end;
@@ -187,7 +186,7 @@ export class SortedArray<ItemType> extends Array<ItemType> {
     a: U,
     b: U,
     comparator: Comparator<T> = this.compare,
-    container: U = ([] as unknown) as U
+    container: U = ([] as unknown) as U,
   ): U {
     let i = 0;
     let j = 0;
@@ -221,7 +220,7 @@ export class SortedArray<ItemType> extends Array<ItemType> {
   static getIntersectionScore<T, U extends IndexedCollection<T>>(
     a: U,
     b: U,
-    comparator: Comparator<T> = this.compare
+    comparator: Comparator<T> = this.compare,
   ): number {
     let score = 0;
     let i = 0;
@@ -264,16 +263,14 @@ export class SortedArray<ItemType> extends Array<ItemType> {
     start?: T,
     end?: T,
     comparator?: Comparator<T>,
-    subarray?: boolean
+    subarray?: boolean,
   ): U {
-    const startIndex =
-      start === undefined
-        ? 0
-        : this.getIndex<T, U>(arr, start, comparator, true);
-    const endIndex =
-      end === undefined
-        ? arr.length
-        : this.getIndex(arr, end, comparator, true, startIndex) + 1;
+    const startIndex = start === undefined
+      ? 0
+      : this.getIndex<T, U>(arr, start, comparator, true);
+    const endIndex = end === undefined
+      ? arr.length
+      : this.getIndex(arr, end, comparator, true, startIndex) + 1;
     return subarray
       ? (arr as any).subarray(startIndex, endIndex)
       : (arr as any).slice(startIndex, endIndex);
@@ -306,7 +303,7 @@ export class SortedArray<ItemType> extends Array<ItemType> {
     b: IndexedCollection<T>,
     unique = false,
     comparator: Comparator<T> = this.compare,
-    container: U = ([] as unknown) as U
+    container: U = ([] as unknown) as U,
   ): U {
     let i = 0;
     let j = 0;
@@ -351,7 +348,7 @@ export class SortedArray<ItemType> extends Array<ItemType> {
   static getUnique<T, U extends IndexedCollection<T>>(
     arr: IndexedCollection<T>,
     comparator: Comparator<T> = this.compare,
-    container: U = ([] as unknown) as U
+    container: U = ([] as unknown) as U,
   ): typeof container {
     container[0] = arr[0];
     for (let i = 1; i < arr.length; i++) {
@@ -376,7 +373,7 @@ export class SortedArray<ItemType> extends Array<ItemType> {
    */
   static isSorted<T, U extends IndexedCollection<T>>(
     arr: U,
-    comparator: Comparator<T> = this.compare
+    comparator: Comparator<T> = this.compare,
   ): boolean {
     for (let i = 1; i < arr.length; i++) {
       if (comparator(arr[i - 1], arr[i]) > 0) return false;
@@ -397,7 +394,7 @@ export class SortedArray<ItemType> extends Array<ItemType> {
    */
   static isUnique<T, U extends IndexedCollection<T>>(
     arr: U,
-    comparator: Comparator<T> = this.compare
+    comparator: Comparator<T> = this.compare,
   ) {
     for (let i = 1; i < arr.length; i++) {
       if (comparator(arr[i - 1], arr[i]) === 0) return false;
@@ -436,7 +433,7 @@ export class SortedArray<ItemType> extends Array<ItemType> {
         arrays[i],
         this.unique,
         constructor.compare,
-        new constructor<ItemType>() as this
+        new constructor<ItemType>() as this,
       );
     }
     return result;
@@ -592,7 +589,7 @@ export class SortedArray<ItemType> extends Array<ItemType> {
    */
   sort(
     compareFunction: Comparator<ItemType> = (this
-      .constructor as typeof SortedArray).compare
+      .constructor as typeof SortedArray).compare,
   ): this {
     return super.sort(compareFunction);
   }
@@ -613,7 +610,7 @@ export class SortedArray<ItemType> extends Array<ItemType> {
   ): SortedArray<ItemType> {
     const deletedElements = super.splice(
       start,
-      deleteCount
+      deleteCount,
     ) as SortedArray<ItemType>;
     this.push(...elements);
     return deletedElements;
@@ -632,7 +629,7 @@ export class SortedArray<ItemType> extends Array<ItemType> {
   uniquify() {
     const constructor = this.constructor as typeof SortedArray;
     return this.set(
-      constructor.getUnique(this, constructor.compare, new constructor())
+      constructor.getUnique(this, constructor.compare, new constructor()),
     );
   }
 

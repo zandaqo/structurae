@@ -1,4 +1,4 @@
-import { PrimitiveView } from "./view-types";
+import type { PrimitiveView } from "./view-types.ts";
 
 export class BooleanView extends DataView implements PrimitiveView<boolean> {
   static viewLength = 1;

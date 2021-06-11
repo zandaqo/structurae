@@ -1,13 +1,13 @@
-/**
- * Uses Uint32Array as a vector or array of bits.
- */
-import { Bit } from "./types";
+import type { Bit } from "./utility-types.ts";
 
 type BitPosition = {
   bucket: number;
   position: number;
 };
 
+/**
+ * Uses Uint32Array as a vector or array of bits.
+ */
 export class BitArray extends Uint32Array {
   lastPosition: BitPosition;
   /**
@@ -18,7 +18,7 @@ export class BitArray extends Uint32Array {
   constructor(
     buffer: number | ArrayLike<number> | ArrayBufferLike = 32,
     byteOffset?: number,
-    length?: number
+    length?: number,
   ) {
     if (typeof buffer === "number") {
       super(new.target.getLength(buffer));

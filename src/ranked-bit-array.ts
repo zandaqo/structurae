@@ -1,6 +1,6 @@
-import { BitArray } from "./bit-array";
-import { popCount32, getLSBIndex } from "./utilities";
-import { Bit } from "./types";
+import type { Bit } from "./utility-types.ts";
+import { BitArray } from "./bit-array.ts";
+import { getLSBIndex, popCount32 } from "./utilities.ts";
 
 /**
  * A bit array that supports constant time rank and O(logN) time select operations.

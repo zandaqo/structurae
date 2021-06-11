@@ -1,4 +1,16 @@
-import { BooleanView } from "./boolean-view";
+import type {
+  ComplexView,
+  ContainerView,
+  PrimitiveView,
+  Schema,
+  SchemaObject,
+  SchemaType,
+  ViewConstructor,
+  ViewFieldLayout,
+  ViewInstance,
+  ViewLayout,
+} from "./view-types.ts";
+import { BooleanView } from "./boolean-view.ts";
 import {
   BigInt64View,
   BigUint64View,
@@ -10,24 +22,12 @@ import {
   Uint16View,
   Uint32View,
   Uint8View,
-} from "./numeric-view";
-import {
-  Schema,
-  SchemaObject,
-  SchemaType,
-  ComplexView,
-  ContainerView,
-  PrimitiveView,
-  ViewConstructor,
-  ViewFieldLayout,
-  ViewLayout,
-  ViewInstance,
-} from "./view-types";
-import { ObjectView } from "./object-view";
-import { ArrayView } from "./array-view";
-import { VectorView } from "./vector-view";
-import { MapView } from "./map-view";
-import { StringView } from "./string-view";
+} from "./numeric-view.ts";
+import { ObjectView } from "./object-view.ts";
+import { ArrayView } from "./array-view.ts";
+import { VectorView } from "./vector-view.ts";
+import { MapView } from "./map-view.ts";
+import { StringView } from "./string-view.ts";
 
 type UnknownViewConstructor = ViewConstructor<
   unknown,
@@ -61,8 +61,9 @@ export class View {
   static _maxView: DataView;
 
   static get maxView(): DataView {
-    if (!this._maxView)
+    if (!this._maxView) {
       this._maxView = new DataView(new ArrayBuffer(this.maxLength));
+    }
     return this._maxView;
   }
 
@@ -72,10 +73,9 @@ export class View {
       const objectSchema = schemas[i];
       const id = objectSchema.$id!;
       if (this.Views.has(id)) continue;
-      const View: ViewConstructor<SchemaObject> =
-        objectSchema.btype === "map"
-          ? this.getMapView(objectSchema)
-          : this.getObjectView(objectSchema);
+      const View: ViewConstructor<SchemaObject> = objectSchema.btype === "map"
+        ? this.getMapView(objectSchema)
+        : this.getObjectView(objectSchema);
       // cache the view by id
       this.Views.set(id, View);
       // cache by tag if present
@@ -104,7 +104,7 @@ export class View {
 
   static encode<T>(value: T, view?: DataView): ViewInstance<T> | undefined {
     const ViewClass = this.TaggedViews.get(
-      (value as any)[this.tagName] as number
+      (value as any)[this.tagName] as number,
     ) as ViewConstructor<T>;
     if (!ViewClass) return undefined;
     if (!view) return ViewClass.from(value);
@@ -113,7 +113,7 @@ export class View {
   }
 
   static getArray<T>(
-    schema: Schema
+    schema: Schema,
   ): [view: ViewConstructor<T>, length: number] {
     const arrays = [] as Array<Schema>;
     let currentField = schema;
@@ -149,7 +149,7 @@ export class View {
       } else {
         View = this.getVectorView(
           View as ViewConstructor<unknown>,
-          this.maxView
+          this.maxView,
         );
       }
     }
@@ -158,11 +158,12 @@ export class View {
 
   static getArrayView<T>(
     View: ViewConstructor<T>,
-    maxLength?: number
+    maxLength?: number,
   ): ViewConstructor<Array<T>> {
     const itemLength = maxLength || View.viewLength;
-    if (itemLength <= 0 || itemLength >= Infinity)
+    if (itemLength <= 0 || itemLength >= Infinity) {
       throw TypeError("ArrayView should have fixed sized items.");
+    }
     return class extends this.ArrayClass<T> {
       static View = View;
       static itemLength = itemLength;
@@ -172,7 +173,7 @@ export class View {
   static getDefaultData<T extends object>(
     layout: ViewLayout<T>,
     viewLength: number,
-    fields: Array<keyof T>
+    fields: Array<keyof T>,
   ): Uint8Array {
     const buffer = new ArrayBuffer(viewLength);
     const view = new DataView(buffer);
@@ -206,7 +207,7 @@ export class View {
     field: Schema,
     start: number,
     required: boolean,
-    name: string
+    name: string,
   ): ViewFieldLayout<T> {
     let View: ViewConstructor<T>;
     let length = 0;
@@ -217,24 +218,26 @@ export class View {
       [View, length] = this.getArray(field);
     }
     if (!length) length = Infinity;
-    if (required && length === Infinity)
+    if (required && length === Infinity) {
       throw new TypeError(
-        `The length of a required field "${name}" is undefined.`
+        `The length of a required field "${name}" is undefined.`,
       );
+    }
     const layout: ViewFieldLayout<T> = { start, View, length };
-    if (Reflect.has(field, "default"))
+    if (Reflect.has(field, "default")) {
       layout.default = (field.default as unknown) as T;
+    }
     return layout;
   }
 
   static getMapView<T extends SchemaObject>(
-    schema: Schema
+    schema: Schema,
   ): ViewConstructor<T, ComplexView<T>> {
     const required = schema.required || [];
     const optional = Object.keys(schema.properties!).filter(
-      (i) => !required.includes(i)
+      (i) => !required.includes(i),
     );
-    let layout = {} as ViewLayout<T>;
+    const layout = {} as ViewLayout<T>;
     let offset = 0;
     for (const property of required) {
       const field = schema.properties![property];
@@ -252,7 +255,7 @@ export class View {
         field,
         offset + (i << 2),
         false,
-        property
+        property,
       );
     }
     const maxView = this.maxView;
@@ -269,7 +272,7 @@ export class View {
   }
 
   static getObjectView<T extends SchemaObject>(
-    schema: Schema
+    schema: Schema,
   ): ViewConstructor<T, ComplexView<T>> {
     const fields = Object.keys(schema.properties!) as Array<keyof T>;
     const layout = {} as ViewLayout<T>;
@@ -280,7 +283,7 @@ export class View {
         field,
         lastOffset,
         true,
-        (property as unknown) as string
+        (property as unknown) as string,
       );
       lastOffset += fieldLayout.length;
       //@ts-ignore
@@ -360,7 +363,7 @@ export class View {
 
   static getVectorView<T>(
     View: ViewConstructor<T>,
-    maxView: DataView
+    maxView: DataView,
   ): ViewConstructor<Array<T | undefined>> {
     return class extends this.VectorClass<T> {
       static View = View;

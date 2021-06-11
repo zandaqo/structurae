@@ -14,11 +14,13 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "lib": [
-      "es2020",
+      "es2020"
     ]
   },
   "include": [
     "src/**/*.ts"
   ],
-  "exclude": []
+  "exclude": [
+    "src/**/*_test.ts"
+  ]
 }

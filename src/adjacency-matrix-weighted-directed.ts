@@ -1,18 +1,21 @@
-import { IndexedCollection, TypedArrayConstructors } from "./types";
-import { AdjacencyStructure, AdjacencyStructureConstructor } from "./types";
+import type {
+  AdjacencyStructure,
+  AdjacencyStructureConstructor,
+  IndexedCollection,
+  TypedArrayConstructors,
+} from "./utility-types.ts";
 
 /**
  * Creates a WeightedAdjacencyMatrix class extending a given Array-like class.
  */
 export function AdjacencyMatrixWeightedDirectedMixin<
-  U extends TypedArrayConstructors
+  U extends TypedArrayConstructors,
 >(Base: U): AdjacencyStructureConstructor<U> {
   interface AdjacencyMatrixWeightedDirected extends IndexedCollection {}
   /**
    * Implements Adjacency Matrix for weighted graphs.
    */
-  class AdjacencyMatrixWeightedDirected
-    extends Base
+  class AdjacencyMatrixWeightedDirected extends Base
     implements AdjacencyStructure {
     static directed = true;
     static weighted = true;
@@ -27,11 +30,10 @@ export function AdjacencyMatrixWeightedDirectedMixin<
     get vertices() {
       return (
         this._vertices ||
-          (this._vertices = (this
-            .constructor as typeof AdjacencyMatrixWeightedDirected).getVertices(
-            this.length
-          )),
-        this._vertices
+        (this._vertices = (this
+          .constructor as typeof AdjacencyMatrixWeightedDirected).getVertices(
+            this.length,
+          )), this._vertices
       );
     }
 
@@ -39,10 +41,17 @@ export function AdjacencyMatrixWeightedDirectedMixin<
       return this.length;
     }
 
+    /**
+    * Create a graph of specified dimensions.
+    *
+    * @param vertices the numbe of vertices
+    * @return a new graph of specified dimentions
+    */
     static create(vertices: number) {
       const length = this.getLength(vertices);
-      return new this(length) as AdjacencyMatrixWeightedDirected &
-        InstanceType<U>;
+      return new this(length) as
+        & AdjacencyMatrixWeightedDirected
+        & InstanceType<U>;
     }
 
     /**
@@ -62,6 +71,7 @@ export function AdjacencyMatrixWeightedDirectedMixin<
      * @param x the starting vertex
      * @param y the ending vertex
      * @param weight
+     * @return the graph
      */
     addEdge(x: number, y: number, weight: number): this {
       this[this.getIndex(x, y)] = weight;

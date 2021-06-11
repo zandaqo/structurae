@@ -26,10 +26,8 @@ export interface ComplexView<T> extends DataView {
 
 export type ViewInstance<T> = [T] extends [boolean | number | string | bigint]
   ? PrimitiveView<T>
-  : T extends Array<infer U>
-  ? ContainerView<U>
-  : T extends object
-  ? ComplexView<T>
+  : T extends Array<infer U> ? ContainerView<U>
+  : T extends object ? ComplexView<T>
   : never;
 
 export interface ViewConstructor<T, Instance = ViewInstance<T>> {

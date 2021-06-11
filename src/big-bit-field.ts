@@ -5,7 +5,7 @@ const TWO = BigInt(2);
 
 export function BigBitFieldMixin<
   K extends PropertyKey,
-  T extends Record<K, number>
+  T extends Record<K, number>,
 >(schema: T) {
   /**
    * Stores and operates on data in BigInts treating them as bitfields.
@@ -45,12 +45,11 @@ export function BigBitFieldMixin<
      * //=> 10
      */
     constructor(data: bigint | BigBitFieldClass | Array<number> | T = ZERO) {
-      this.value =
-        data instanceof BigBitFieldClass
-          ? data.valueOf()
-          : typeof data === "object"
-          ? (this.constructor as typeof BigBitFieldClass).encode(data)
-          : BigInt(data);
+      this.value = data instanceof BigBitFieldClass
+        ? data.valueOf()
+        : typeof data === "object"
+        ? (this.constructor as typeof BigBitFieldClass).encode(data)
+        : BigInt(data);
     }
 
     /**
@@ -290,7 +289,7 @@ export function BigBitFieldMixin<
         this.value,
         Array.isArray(matcher)
           ? matcher
-          : (this.constructor as typeof BigBitFieldClass).getMatcher(matcher)
+          : (this.constructor as typeof BigBitFieldClass).getMatcher(matcher),
       );
     }
 
@@ -313,8 +312,7 @@ export function BigBitFieldMixin<
     set(field: K, value = 1) {
       const { offsets, masks } = this.constructor as typeof BigBitFieldClass;
       const offset: bigint = offsets[field];
-      this.value =
-        (this.value & ~(masks[field] << offset)) |
+      this.value = (this.value & ~(masks[field] << offset)) |
         (BigInt(value) << offsets[field]);
       return this;
     }

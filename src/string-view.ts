@@ -1,17 +1,10 @@
-/**
- * Extends Uint8Array to handle C-like representation of UTF-8 encoded strings.
- *
- * @extends Uint8Array
- */
-import { IndexedCollection } from "./types";
-import { PrimitiveView } from "./view-types";
+import type { IndexedCollection } from "./utility-types.ts";
+import type { PrimitiveView } from "./view-types.ts";
 
 export class StringView extends DataView implements PrimitiveView<string> {
   static viewLength = 0;
   static masks = new Int8Array(256).fill(-1);
-  //@ts-ignore
   static decoder = new TextDecoder();
-  //@ts-ignore
   static encoder = new TextEncoder();
 
   /**
@@ -33,17 +26,23 @@ export class StringView extends DataView implements PrimitiveView<string> {
   }
 
   /**
-   * Converts a UTF8 byte array into a JS string.
-   * Adopted from Google Closure:
-   * https://github.com/google/closure-library/blob/master/closure/goog/crypt/crypt.js
-   */
+  * Converts a UTF8 byte array into a JS string.
+  * Adopted from Google Closure:
+  * https://github.com/google/closure-library/blob/master/closure/goog/crypt/crypt.js
+  *
+  * @param view the view to decode
+  * @param start the starting offset
+  * @param length the byte length to decode
+  * @return the JavaScript value
+  */
   static decode(view: DataView, start = 0, length = view.byteLength): string {
     if (length > 200) {
       const arrayOffset = view.byteOffset + start;
-      const arrayLength =
-        length === view.byteLength ? length - arrayOffset : length;
+      const arrayLength = length === view.byteLength
+        ? length - arrayOffset
+        : length;
       return this.decoder.decode(
-        new Uint8Array(view.buffer, arrayOffset, arrayLength)
+        new Uint8Array(view.buffer, arrayOffset, arrayLength),
       );
     }
     const out = [];
@@ -60,17 +59,15 @@ export class StringView extends DataView implements PrimitiveView<string> {
         out[c++] = ((c1 & 31) << 6) | (view.getUint8(pos++) & 63);
       } else if (c1 > 239 && c1 < 365) {
         // Surrogate Pair
-        const u =
-          (((c1 & 7) << 18) |
-            ((view.getUint8(pos++) & 63) << 12) |
-            ((view.getUint8(pos++) & 63) << 6) |
-            (view.getUint8(pos++) & 63)) -
+        const u = (((c1 & 7) << 18) |
+          ((view.getUint8(pos++) & 63) << 12) |
+          ((view.getUint8(pos++) & 63) << 6) |
+          (view.getUint8(pos++) & 63)) -
           0x10000;
         out[c++] = 0xd800 + (u >> 10);
         out[c++] = 0xdc00 + (u & 1023);
       } else {
-        out[c++] =
-          ((c1 & 15) << 12) |
+        out[c++] = ((c1 & 15) << 12) |
           ((view.getUint8(pos++) & 63) << 6) |
           (view.getUint8(pos++) & 63);
       }
@@ -79,15 +76,21 @@ export class StringView extends DataView implements PrimitiveView<string> {
   }
 
   /**
-   * Converts a JS string into a UTF8 byte array.
-   * Adopted from Deno:
-   * https://github.com/denoland/deno/blob/18a684ab1c20914e13c27bc10e20bda6396ea38d/extensions/web/08_text_encoding.js#L79
-   */
+  * Converts a JS string into a UTF8 byte array.
+  * Adopted from Deno:
+  * https://github.com/denoland/deno/blob/18a684ab1c20914e13c27bc10e20bda6396ea38d/extensions/web/08_text_encoding.js#L79
+  *
+  * @param value the value to encode
+  * @param view the view to encode into
+  * @param start the view offset to start
+  * @param length the byte length to encode
+  * @return the amount of written bytes
+  */
   static encode(
     value: string,
     view: DataView,
     start = 0,
-    length?: number
+    length?: number,
   ): number {
     let written = 0;
     const valueLength = value.length;
@@ -95,7 +98,7 @@ export class StringView extends DataView implements PrimitiveView<string> {
     if (byteLength > 200) {
       ({ written } = this.encoder.encodeInto(
         value,
-        new Uint8Array(view.buffer, view.byteOffset + start, length)
+        new Uint8Array(view.buffer, view.byteOffset + start, length),
       ));
     } else {
       let read = 0;
@@ -109,8 +112,8 @@ export class StringView extends DataView implements PrimitiveView<string> {
           if (read < valueLength) {
             const nextCodeUnit = value.charCodeAt(read);
             if ((nextCodeUnit & 0xfc00) === 0xdc00) {
-              codePoint =
-                0x10000 + ((codeUnit & 0x3ff) << 10) + (nextCodeUnit & 0x3ff);
+              codePoint = 0x10000 + ((codeUnit & 0x3ff) << 10) +
+                (nextCodeUnit & 0x3ff);
               read++;
             } else {
               codePoint = badCodePoint;
@@ -129,8 +132,8 @@ export class StringView extends DataView implements PrimitiveView<string> {
             (availableSpace < 3 && codePoint >= 0x800) ||
             codePoint >= 0x10000
           ) {
-            const isSurrogatePair =
-              codePoint !== codeUnit && codePoint !== badCodePoint;
+            const isSurrogatePair = codePoint !== codeUnit &&
+              codePoint !== badCodePoint;
             read -= isSurrogatePair ? 2 : 1;
             break;
           }
@@ -162,8 +165,11 @@ export class StringView extends DataView implements PrimitiveView<string> {
   }
 
   /**
-   * Creates a StringView from a string or an array like object.
-   */
+  * Creates a StringView from a string or an array like object.
+  *
+  * @param value the string to encode
+  * @return the new view
+  */
   static from(value: string) {
     const length = this.getLength(value);
     const view = new this(new ArrayBuffer(length));
@@ -180,7 +186,7 @@ export class StringView extends DataView implements PrimitiveView<string> {
    * const stringView = StringView.getByteSize('abc😀a');
    * //=> 8
    */
-  static getLength(string: string = "") {
+  static getLength(string = "") {
     let size = 0;
     for (let i = 0; i < string.length; i++) {
       const code = string.codePointAt(i)!; // todo test
@@ -367,7 +373,8 @@ export class StringView extends DataView implements PrimitiveView<string> {
   searchNaive(searchValue: IndexedCollection, start: number) {
     const wordLength = searchValue.length;
     const max = this.byteLength - wordLength;
-    outer: for (let i = start; i <= max; i++) {
+    outer:
+    for (let i = start; i <= max; i++) {
       for (let j = 0; j < wordLength; j++) {
         if (this.getUint8(i + j) !== searchValue[j]) {
           continue outer;
@@ -429,7 +436,7 @@ export class StringView extends DataView implements PrimitiveView<string> {
     return (this.constructor as typeof StringView).decode(
       this,
       start,
-      end - start + 1
+      end - start + 1,
     );
   }
 
@@ -449,18 +456,18 @@ export class StringView extends DataView implements PrimitiveView<string> {
           ((point & 0x07) << 18) |
             ((this.getUint8(index + 1) & 0x3f) << 12) |
             ((this.getUint8(index + 2) & 0x3f) << 6) |
-            (this.getUint8(index + 3) & 0x3f)
+            (this.getUint8(index + 3) & 0x3f),
         );
       case 0xe:
         return String.fromCodePoint(
           ((point & 0x0f) << 12) |
             ((this.getUint8(index + 1) & 0x3f) << 6) |
-            (this.getUint8(index + 2) & 0x3f)
+            (this.getUint8(index + 2) & 0x3f),
         );
       case 0xd:
       case 0xc:
         return String.fromCodePoint(
-          ((point & 0x1f) << 6) | (this.getUint8(index + 1) & 0x3f)
+          ((point & 0x1f) << 6) | (this.getUint8(index + 1) & 0x3f),
         );
       default:
         return "";
@@ -507,10 +514,10 @@ export class StringView extends DataView implements PrimitiveView<string> {
     }
     return end !== this.byteLength
       ? new (this.constructor as typeof StringView)(
-          this.buffer,
-          this.byteOffset,
-          end
-        )
+        this.buffer,
+        this.byteOffset,
+        end,
+      )
       : this;
   }
 

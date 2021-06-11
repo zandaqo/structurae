@@ -1,8 +1,4 @@
-import {
-  Constructor,
-  IndexedCollection,
-  TypedArrayConstructors,
-} from "./types";
+import type { Constructor, TypedArrayConstructors } from "./utility-types.ts";
 
 /**
  * Creates a SymmetricGrid class extending a given Array-like class.
@@ -11,14 +7,14 @@ export function SymmetricGridMixin<
   ItemType = number,
   U extends Constructor<Array<ItemType>> | TypedArrayConstructors = Constructor<
     Array<ItemType>
-  >
+  >,
 >(Base: U) {
-  interface SymmetricGrid extends IndexedCollection<ItemType> {}
   /**
    * A grid to handle symmetric or triangular matrices
    * using half the space required for a normal grid.
    */
-  class SymmetricGrid extends Base {
+  return class SymmetricGrid extends Base {
+    [key: number]: ItemType
     size = 0;
 
     static get [Symbol.species]() {
@@ -48,7 +44,7 @@ export function SymmetricGridMixin<
 
     static create<T extends typeof SymmetricGrid>(
       this: T,
-      columns: number
+      columns: number,
     ): InstanceType<T> {
       const length = this.getLength(columns);
       const grid = new this(length);
@@ -69,7 +65,7 @@ export function SymmetricGridMixin<
      */
     static fromArrays<T extends typeof SymmetricGrid>(
       this: T,
-      arrays: Array<Array<ItemType>>
+      arrays: Array<Array<ItemType>>,
     ): InstanceType<T> {
       const rows = arrays.length;
       const grid = this.create(rows);
@@ -174,7 +170,5 @@ export function SymmetricGridMixin<
       }
       return arrays;
     }
-  }
-
-  return SymmetricGrid;
+  };
 }

@@ -1,4 +1,4 @@
-import { getBitSize } from "./utilities";
+import { getBitSize } from "./utilities.ts";
 
 /**
  * The largest safe integer for bitwise operations.
@@ -12,7 +12,7 @@ const MAX_BITWISE_SIZE = 31;
 
 export function BitFieldMixin<
   K extends PropertyKey,
-  T extends Record<K, number>
+  T extends Record<K, number>,
 >(schema: T) {
   type PartialField = Partial<T>;
   /**
@@ -55,12 +55,11 @@ export function BitFieldMixin<
      * //=> 100
      */
     constructor(data: number | BitFieldClass | Array<number> | T = 0) {
-      this.value =
-        typeof data === "number"
-          ? data
-          : data instanceof BitFieldClass
-          ? data.valueOf()
-          : (this.constructor as typeof BitFieldClass).encode(data);
+      this.value = typeof data === "number"
+        ? data
+        : data instanceof BitFieldClass
+        ? data.valueOf()
+        : (this.constructor as typeof BitFieldClass).encode(data);
     }
 
     /**
@@ -321,7 +320,7 @@ export function BitFieldMixin<
         this.value,
         Array.isArray(matcher)
           ? matcher
-          : (this.constructor as typeof BitFieldClass).getMatcher(matcher)
+          : (this.constructor as typeof BitFieldClass).getMatcher(matcher),
       );
     }
 
@@ -344,8 +343,7 @@ export function BitFieldMixin<
      */
     set(field: K, value = 1): this {
       const { offsets, masks } = this.constructor as typeof BitFieldClass;
-      this.value =
-        (this.value & ~(masks[field] << offsets[field])) |
+      this.value = (this.value & ~(masks[field] << offsets[field])) |
         (value << offsets[field]);
       return this;
     }
@@ -399,5 +397,5 @@ export const BitField = BitFieldMixin(
   Array.from({ length: MAX_BITWISE_SIZE }, (_, i) => i).reduce((a, i) => {
     a[i] = 1;
     return a;
-  }, {} as Record<string, number>)
+  }, {} as Record<string, number>),
 );
