@@ -28,6 +28,8 @@ import { ArrayView } from "./array-view.ts";
 import { VectorView } from "./vector-view.ts";
 import { MapView } from "./map-view.ts";
 import { StringView } from "./string-view.ts";
+import { TypedArrayView } from "./typed-array-view.ts";
+import { log2 } from "./utilities.ts";
 
 type UnknownViewConstructor = ViewConstructor<
   unknown,
@@ -55,6 +57,7 @@ export class View {
   static maxLength = 8192;
   static ObjectClass = ObjectView;
   static ArrayClass = ArrayView;
+  static TypedArrayClass = TypedArrayView;
   static VectorClass = VectorView;
   static MapClass = MapView;
 
@@ -163,6 +166,14 @@ export class View {
     const itemLength = maxLength || View.viewLength;
     if (itemLength <= 0 || itemLength >= Infinity) {
       throw TypeError("ArrayView should have fixed sized items.");
+    }
+    const offset = log2[View.viewLength];
+    if (offset !== undefined) {
+      return class extends this.TypedArrayClass<T> {
+        static View = View;
+        static offset = offset;
+        static itemLength = itemLength;
+      };
     }
     return class extends this.ArrayClass<T> {
       static View = View;

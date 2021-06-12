@@ -1,7 +1,7 @@
 /**
  * Lookup table for powers of 2
  */
-const log2: Record<number, number> = {
+export const log2: Record<number, number> = {
   1: 0,
   2: 1,
   4: 2,

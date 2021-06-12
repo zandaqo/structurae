@@ -40,6 +40,16 @@ export function AdjacencyMatrixWeightedUndirectedMixin<
     getIndex(x: number, y: number): number {
       return x >= y ? y + (((x + 1) * x) >> 1) : x + (((y + 1) * y) >> 1);
     }
+
+    /**
+     * Iterates over outgoing edges of a vertex.
+     */
+    *outEdges(vertex: number) {
+      const { vertices } = this;
+      for (let i = 0; i < vertices; i++) {
+        if (this.hasEdge(vertex, i)) yield i;
+      }
+    }
   }
 
   return AdjacencyMatrixWeightedUndirected;

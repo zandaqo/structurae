@@ -1,6 +1,6 @@
 import { ArrayView } from "./array-view.ts";
 
-export class TypedArrayView extends ArrayView<number> {
+export class TypedArrayView<T> extends ArrayView<T> {
   static offset = 0;
   /**
    * Returns the starting byte offset of an item in the array.

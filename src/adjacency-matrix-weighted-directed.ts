@@ -126,8 +126,10 @@ export function AdjacencyMatrixWeightedDirectedMixin<
      */
     *outEdges(vertex: number) {
       const { vertices } = this;
+      const offset = vertex * vertices;
       for (let i = 0; i < vertices; i++) {
-        if (this.hasEdge(vertex, i)) yield i;
+        const edge = this[offset + i];
+        if (edge !== undefined && edge !== this.empty) yield i;
       }
     }
 
