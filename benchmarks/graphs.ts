@@ -185,23 +185,17 @@ bench({
 
 console.log(`Graph Byte Sizes for 100 vertices:`);
 console.log(
-  `List Weighted Directed (1000 edges): ${
-    (listWeightedDirected as unknown as Int32Array).byteLength
-  }`,
+  `List Weighted Directed (1000 edges): ${listWeightedDirected.byteLength}`,
 );
 console.log(
   `List Weighted Directed (10000 edges): ${WeightedList.getLength(100, 10000) *
     4}`,
 );
 console.log(
-  `Matrix Weighted Directed: ${
-    (matrixWeightedDirected as unknown as Int32Array).byteLength
-  }`,
+  `Matrix Weighted Directed: ${matrixWeightedDirected.byteLength}`,
 );
 console.log(
-  `Matrix Weighted Undirected: ${
-    (matrixWeightedUndirected as unknown as Int32Array).byteLength
-  }`,
+  `Matrix Weighted Undirected: ${matrixWeightedUndirected.byteLength}`,
 );
 console.log(
   `Matrix Unweighted Directed: ${matrixUnweightedDirected.byteLength}`,

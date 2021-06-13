@@ -144,18 +144,20 @@ const objects: Person[] = [];
 for (let i = 0; i < 100; i++) {
   objects.push((jsf as any).generate(JSONSchema));
 }
-
+const Encoder = new TextEncoder();
+const Decoder = new TextDecoder();
 const emptyPerson = Person.from({} as any);
 const people = People.from(objects);
 const views = [...people];
 const strings = objects.map((i) => JSON.stringify(i));
+const encodedStrings = strings.map((i) => Encoder.encode(i));
 
 const binarySize = people.byteLength;
 const binaryCompressedSize =
   deflateRaw(new Uint8Array(people.buffer)).byteLength;
 const stringSize = StringView.getLength(JSON.stringify(objects));
 const stringCompressedSize =
-  deflateRaw(new TextEncoder().encode(JSON.stringify(objects))).byteLength;
+  deflateRaw(Encoder.encode(JSON.stringify(objects))).byteLength;
 
 console.log(`Encoded Sizes:
  View: ${binarySize}
@@ -248,12 +250,33 @@ bench({
   },
 });
 bench({
+  name: "[View Protocol Serialize] JSON into Binary",
+  runs: 10000,
+  func(b): void {
+    b.start();
+    const object = objects[getIndex(100)];
+    Encoder.encode(JSON.stringify(object));
+    b.stop();
+  },
+});
+bench({
   name: "[View Protocol Deserialize] View",
   runs: 10000,
   func(b): void {
     b.start();
     const view = views[getIndex(100)]!;
     view.toJSON();
+    b.stop();
+  },
+});
+
+bench({
+  name: "[View Protocol Deserialize] JSON from Binary",
+  runs: 10000,
+  func(b): void {
+    b.start();
+    const string = encodedStrings[getIndex(100)];
+    JSON.parse(Decoder.decode(string));
     b.stop();
   },
 });

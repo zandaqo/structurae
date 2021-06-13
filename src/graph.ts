@@ -41,12 +41,15 @@ export function GraphMixin<
       );
     }
 
+    // todo fix constructor type not extending TypedArray
+
     // fix for messed up types of mixins
     // todo fix when sanity dawns on ts mixins
     static create(vertices: number, edges?: number) {
       return (super.create(vertices, edges) as unknown) as
         & Graph
-        & InstanceType<U>;
+        & InstanceType<U>
+        & InstanceType<T>;
     }
 
     hasColor(vertex: number, color: Colors): boolean {
