@@ -10,6 +10,13 @@ interface Tagged {
   tag: 10;
   name: string;
 }
+
+interface Person {
+  name: string;
+  age: number;
+  scores: Array<number>;
+}
+
 test("[View.create] creates a view for primitive types", () => {
   const NumberView = View.create<number>({
     type: "number",
@@ -70,11 +77,7 @@ test("[View.create] throws if array item size is not fixed", () => {
 });
 
 test("[View.create] handles objects", () => {
-  const PersonView = View.create<{
-    name: string;
-    age: number;
-    scores: Array<number>;
-  }>({
+  const PersonView = View.create<Person>({
     $id: "Person",
     type: "object",
     properties: {
@@ -89,8 +92,7 @@ test("[View.create] handles objects", () => {
   });
   assertEquals(PersonView.viewLength, 14);
   assertEquals(View.Views.get("Person"), PersonView);
-  //@ts-ignore
-  assertEquals(PersonView.from({}).toJSON(), {
+  assertEquals(PersonView.from({} as any).toJSON(), {
     name: "Arthur",
     age: 0,
     scores: [0, 0, 0],
@@ -99,11 +101,7 @@ test("[View.create] handles objects", () => {
 
 test("[View.create] handles array of objects", () => {
   const PersonArrayView = View.create<
-    Array<{
-      name: string;
-      age: number;
-      scores: Array<number>;
-    }>
+    Array<Person>
   >({
     type: "array",
     items: {
@@ -124,6 +122,27 @@ test("[View.create] handles array of objects", () => {
   assertEquals(PersonArrayView.itemLength, 14);
   assertEquals(View.Views.has("Person"), true);
   assertEquals(View.Views.get("ArrayView_Person"), PersonArrayView);
+});
+
+test("[View.create] handles references", () => {
+  const Person = View.create<Person>({
+    $id: "Person",
+    type: "object",
+    properties: {
+      name: { type: "string", maxLength: 10 },
+      age: { type: "number", btype: "uint8" },
+      scores: {
+        type: "array",
+        items: { type: "number", btype: "uint8" },
+        maxItems: 3,
+      },
+    },
+  });
+  const PersonArray = View.create<Array<Person>>({
+    type: "array",
+    items: { type: "object", $ref: "#Person" },
+  });
+  assertEquals((PersonArray as any).View === Person, true);
 });
 
 test("[View.create] handles nested objects", () => {

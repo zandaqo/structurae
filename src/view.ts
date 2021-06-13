@@ -74,7 +74,7 @@ export class View {
     const schemas = this.getSchemaOrdering(schema);
     for (let i = schemas.length - 1; i >= 0; i--) {
       const objectSchema = schemas[i];
-      const id = objectSchema.$id!;
+      const id = this.getSchemaId(objectSchema);
       if (this.Views.has(id)) continue;
       const View: ViewConstructor<SchemaObject> = objectSchema.btype === "map"
         ? this.getMapView(objectSchema)
@@ -201,17 +201,16 @@ export class View {
   }
 
   static getExistingView<T>(schema: Schema): ViewConstructor<T> {
-    const id = schema.$id || schema.$ref?.slice(0);
-    if (id) {
-      if (!this.Views.has(id)) throw Error(`View "${id}" is not found.`);
-      return this.Views.get(id) as ViewConstructor<T>;
+    let type = schema.$id || schema.$ref?.slice(1);
+    if (type) {
+      if (!this.Views.has(type)) throw Error(`View "${type}" is not found.`);
+    } else {
+      type = schema.btype || schema.type;
+      if (!this.Views.has(type)) {
+        throw TypeError(`Type "${type}" is not supported.`);
+      }
     }
-    const { type, btype } = schema;
-    if (btype && this.Views.has(btype)) {
-      return this.Views.get(btype) as ViewConstructor<T>;
-    }
-    if (this.Views.has(type)) return this.Views.get(type) as ViewConstructor<T>;
-    throw TypeError(`Type "${type}" is not supported.`);
+    return this.Views.get(type) as ViewConstructor<T>;
   }
 
   static getFieldLayout<T extends SchemaType>(
@@ -310,7 +309,7 @@ export class View {
   }
 
   static getSchemaId(schema: Schema): string {
-    return schema.$id || schema.$ref?.slice(0) || schema.btype || schema.type;
+    return schema.$id || schema.$ref?.slice(1) || schema.btype || schema.type;
   }
 
   static getSchemaOrdering(schema: Schema): Array<Schema> {
@@ -329,7 +328,8 @@ export class View {
     while (processing.length) {
       id = processing.pop()!;
       object = objects[id];
-      const properties = Object.keys(object.properties!) as Array<string>;
+      if (!object.properties) continue;
+      const properties = Object.keys(object.properties);
       for (const property of properties) {
         let field = object.properties![property];
         if (field.type === "array") {

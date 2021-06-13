@@ -136,7 +136,7 @@ const JSONSchema: Schema = {
 const Person = View.create<Person>(JSONSchema);
 const People = View.create<Array<Person>>({
   type: "array",
-  items: { type: "object", $ref: "Person", properties: {} },
+  items: { type: "object", $ref: "#Person" },
 });
 
 const objects: Person[] = [];
