@@ -5,6 +5,11 @@ import type {
   TypedArrayConstructors,
 } from "./utility-types.ts";
 
+/**
+ * Creates an Adjacency List class extending a given TypedArray class.
+ *
+ * @param Base a TypedArray class to extend
+ */
 export function AdjacencyListMixin<U extends TypedArrayConstructors>(
   Base: U,
 ): AdjacencyStructureConstructor<U> {
@@ -12,7 +17,7 @@ export function AdjacencyListMixin<U extends TypedArrayConstructors>(
   interface AdjacencyList extends IndexedCollection {}
 
   /**
-   * Implements Adjacency List data structure for weighted graphs.
+   * Implements the Adjacency List data structure for weighted directed graphs.
    */
   class AdjacencyList extends Base implements AdjacencyStructure {
     static directed = true;
@@ -31,13 +36,6 @@ export function AdjacencyListMixin<U extends TypedArrayConstructors>(
       return Base;
     }
 
-    /**
-    * Create a graph of specified dimensions.
-    *
-    * @param vertices the numbe of vertices
-    * @param edges the maximum amount of edges
-    * @return a new graph of specified dimentions
-    */
     static create(vertices: number, edges: number) {
       const length = this.getLength(vertices, edges);
       const list = new this(length);
@@ -61,22 +59,11 @@ export function AdjacencyListMixin<U extends TypedArrayConstructors>(
       return [vertices, edges];
     }
 
-    /**
-     * Returns the length of underlying TypedArray required to hold the graph.
-     */
     static getLength(vertices: number, edges: number): number {
       return vertices + (edges << 1) + 1;
     }
 
-    /**
-     * Adds an edge between two vertices.
-     *
-     * @param x the starting vertex
-     * @param y the ending vertex
-     * @param weight the weight
-     * @throws RangeError if the list is full
-     * @return the graph
-     */
+    // TODO document RangeError
     addEdge(x: number, y: number, weight: number): this {
       if (this.hasEdge(x, y)) return this;
       // the list is full
@@ -103,13 +90,6 @@ export function AdjacencyListMixin<U extends TypedArrayConstructors>(
       return this;
     }
 
-    /**
-     * Returns the weight of the edge between given vertices
-     * or NaN if the edge doesn't exist.
-     *
-     * @param x the starting vertex
-     * @param y the ending vertex
-     */
     getEdge(x: number, y: number): number {
       const offset = this[x];
       const nextOffset = this[x + 1];
@@ -121,21 +101,10 @@ export function AdjacencyListMixin<U extends TypedArrayConstructors>(
       return NaN;
     }
 
-    /**
-     * Checks if there is an edge between two vertices.
-     *
-     * @param x the starting vertex
-     * @param y the ending vertex
-     */
     hasEdge(x: number, y: number): boolean {
       return !Number.isNaN(this.getEdge(x, y));
     }
 
-    /**
-     * Iterates over incoming edges of a vertex.
-     *
-     * @param vertex the vertex
-     */
     *inEdges(vertex: number) {
       const { vertices } = this;
       let edge = 0;
@@ -149,18 +118,10 @@ export function AdjacencyListMixin<U extends TypedArrayConstructors>(
       }
     }
 
-    /**
-     * Checks whether the list is full--all available edges are set.
-     */
     isFull(): boolean {
       return this[this.vertices] >= this.length;
     }
 
-    /**
-     * Iterates over outgoing edges of a vertex.
-     *
-     * @param vertex the vertex
-     */
     *outEdges(vertex: number) {
       const offset = this[vertex];
       const nextOffset = this[vertex + 1];
@@ -171,12 +132,6 @@ export function AdjacencyListMixin<U extends TypedArrayConstructors>(
       }
     }
 
-    /**
-     * Removes an edge between two vertices.
-     *
-     * @param x the starting vertex
-     * @param y the ending vertex
-     */
     removeEdge(x: number, y: number): this {
       const offset = this[x];
       const nextOffset = this[x + 1];

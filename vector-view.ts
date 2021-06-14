@@ -14,22 +14,10 @@ export class VectorView<T> extends DataView implements ContainerView<T> {
   static viewLength = 0;
   static maxView: DataView;
 
-  /**
-   * Returns the amount of items in the vector.
-   */
   get size(): number {
     return (this.constructor as typeof VectorView).getSize(this);
   }
 
-  /**
-   * Encodes a JavaScript value into a given view.
-   *
-   * @param value the value to encode
-   * @param view the view to encode into
-   * @param start the view offset to start
-   * @param length the byte length to encode
-   * @return the amount of written bytes
-   */
   static decode<T>(view: DataView, start = 0): Array<T | undefined> {
     const View = this.View as ViewConstructor<T>;
     const size = this.getSize(view, start);
@@ -45,15 +33,6 @@ export class VectorView<T> extends DataView implements ContainerView<T> {
     return array;
   }
 
-  /**
-   * Encodes a JavaScript value into a given view.
-   *
-   * @param value the value to encode
-   * @param view the view to encode into
-   * @param start the view offset to start
-   * @param length the byte length to encode
-   * @return the amount of written bytes
-   */
   static encode<T>(
     value: Array<T>,
     view: DataView,
@@ -95,18 +74,12 @@ export class VectorView<T> extends DataView implements ContainerView<T> {
     return end;
   }
 
-  /**
-   * Creates a vector view from a given array of items.
-   */
   static from<T, U extends VectorView<T>>(value: Array<T>): U {
     const { maxView } = this;
     const end = this.encode(value, maxView);
     return new this(maxView.buffer.slice(0, end)) as U;
   }
 
-  /**
-   * Returns the byte length of a view necessary to hold the given items.
-   */
   static getLength<T>(value: Array<T>): number {
     const { View } = this;
     const items = value.length;
@@ -119,16 +92,10 @@ export class VectorView<T> extends DataView implements ContainerView<T> {
     return length;
   }
 
-  /**
-   * Returns the amount of items in a given view.
-   */
   static getSize(view: DataView, start = 0): number {
     return view.getUint32(start, true);
   }
 
-  /**
-   * Allows iterating over views stored in the vector.
-   */
   *[Symbol.iterator]() {
     const { size } = this;
     for (let i = 0; i < size; i++) {
@@ -136,9 +103,6 @@ export class VectorView<T> extends DataView implements ContainerView<T> {
     }
   }
 
-  /**
-   * Returns an item at a given index.
-   */
   get(index: number): T | undefined {
     const View = (this.constructor as typeof VectorView)
       .View as ViewConstructor<T>;
@@ -147,9 +111,6 @@ export class VectorView<T> extends DataView implements ContainerView<T> {
     return View.decode(this, layout[0], layout[1]);
   }
 
-  /**
-   * Returns the length of an item at a given index.
-   */
   getLength(index: number): number {
     const layout = this.getLayout(index);
     if (!layout) return 0;
@@ -166,9 +127,6 @@ export class VectorView<T> extends DataView implements ContainerView<T> {
     return [start, end - start];
   }
 
-  /**
-   * Returns a view at a given index.
-   */
   getView(index: number): ViewInstance<T> | undefined {
     const View = (this.constructor as typeof VectorView)
       .View as ViewConstructor<T>;
@@ -177,9 +135,6 @@ export class VectorView<T> extends DataView implements ContainerView<T> {
     return new View(this.buffer, this.byteOffset + layout[0], layout[1]);
   }
 
-  /**
-   * Sets a value at a given index.
-   */
   set(index: number, value: T): void {
     const View = (this.constructor as typeof VectorView)
       .View as ViewConstructor<T>;
@@ -188,9 +143,6 @@ export class VectorView<T> extends DataView implements ContainerView<T> {
     View.encode(value, this, this.byteOffset + layout[0], layout[1]);
   }
 
-  /**
-   * Sets a view at a given index.
-   */
   setView(index: number, value: DataView): void {
     const layout = this.getLayout(index);
     if (!layout) return undefined;
@@ -199,9 +151,6 @@ export class VectorView<T> extends DataView implements ContainerView<T> {
     );
   }
 
-  /**
-   * Returns an array representation of the vector view.
-   */
   toJSON(): Array<T | undefined> {
     return (this.constructor as typeof VectorView).decode(this, 0);
   }

@@ -10,21 +10,13 @@ export class MapView<T extends object> extends DataView
   implements ComplexView<T> {
   static viewLength = 0;
   static layout: ViewLayout<unknown>;
-  static lengthOffset: number; // optionalOffset + (optionalFields.length << 2)
+  static lengthOffset: number;
   static optionalOffset: number;
   static fields: Array<unknown>;
   static optionalFields: Array<unknown>;
   static maxView: DataView;
   static defaultData?: Uint8Array;
 
-  /**
-   * Decodes a given view into corresponding JavaScript value.
-   *
-   * @param view the view to decode
-   * @param start the starting offset
-   * @param length the byte length to decode
-   * @return the JavaScript value
-   */
   static decode<T>(view: DataView, start = 0): T {
     const fields = this.fields as Array<keyof T>;
     const layout = this.layout as ViewLayout<T>;
@@ -46,16 +38,6 @@ export class MapView<T extends object> extends DataView
     return object;
   }
 
-  /**
-   * Encodes a JavaScript value into a given view.
-   *
-   * @param value the value to encode
-   * @param view the view to encode into
-   * @param start the view offset to start
-   * @param length the byte length to encode
-   * @param amend whether to avoid zeroing out the view (used to apply default values)
-   * @return the amount of written bytes
-   */
   static encode<T>(
     value: T,
     view: DataView,
@@ -115,11 +97,6 @@ export class MapView<T extends object> extends DataView
     return end;
   }
 
-  /**
-   * Creates a map view from a given object.
-   *
-   * @param value the object to encode
-   */
   static from<T extends object, U extends MapView<T>>(value: T): U {
     const { maxView, defaultData } = this;
     const mapArray = new Uint8Array(maxView.buffer, maxView.byteOffset);
@@ -130,9 +107,6 @@ export class MapView<T extends object> extends DataView
     return new this<T>(maxView.buffer.slice(0, end)) as U;
   }
 
-  /**
-   * Returns the byte length of a map view necessary to hold a given object.
-   */
   static getLength<T>(value: T): number {
     const layout = this.layout as ViewLayout<T>;
     const optionalFields = this.optionalFields as Array<keyof T>;
@@ -157,12 +131,6 @@ export class MapView<T extends object> extends DataView
     return length;
   }
 
-  /**
-   * Returns the JavaScript value at a given field.
-   *
-   * @param field the name of the field
-   * @return value of the field
-   */
   get<P extends keyof T>(field: P): T[P] | undefined {
     const layout = this.getLayout(field);
     if (!layout) return undefined;
@@ -170,12 +138,6 @@ export class MapView<T extends object> extends DataView
     return View.decode(this, start, length);
   }
 
-  /**
-   * Returns the JavaScript value at a given field.
-   *
-   * @param field the name of the field
-   * @return value of the field
-   */
   getLength<P extends keyof T>(field: P): number {
     const layout = this.getLayout(field);
     if (!layout) return 0;
@@ -198,12 +160,6 @@ export class MapView<T extends object> extends DataView
     return [View, startOffset, end - startOffset];
   }
 
-  /**
-   * Returns a view of a given field.
-   *
-   * @param field the name of the field
-   * @return view of the field
-   */
   getView<P extends keyof T>(field: P): ViewInstance<T[P]> | undefined {
     const layout = this.getLayout(field);
     if (!layout) return undefined;
@@ -211,13 +167,6 @@ export class MapView<T extends object> extends DataView
     return new View(this.buffer, start, length);
   }
 
-  /**
-   * Sets a JavaScript value of a field.
-   *
-   * @param field the name of the field
-   * @param value the value to be set
-   *
-   */
   set<P extends keyof T>(field: P, value: T[P]) {
     const layout = this.getLayout(field);
     if (!layout) return undefined;
@@ -226,13 +175,6 @@ export class MapView<T extends object> extends DataView
     return undefined;
   }
 
-  /**
-   * Copies a given view into a field.
-   *
-   * @param field the name of the field
-   * @param view the view to set
-   *
-   */
   setView<P extends keyof T>(field: P, view: DataView) {
     const layout = this.getLayout(field);
     if (!layout) return undefined;
@@ -243,9 +185,6 @@ export class MapView<T extends object> extends DataView
     return undefined;
   }
 
-  /**
-   * Returns an object corresponding to the view.
-   */
   toJSON(): T {
     return (this.constructor as typeof MapView).decode<T>(this);
   }

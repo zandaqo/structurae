@@ -9,13 +9,6 @@ export class StringView extends DataView implements PrimitiveView<string> {
 
   /**
    * The amount of UTF characters in the StringView.
-   *
-   * @example
-   * const stringView = StringView.fromString('abc😀a');
-   * stringView.size
-   * //=> 5
-   * stringView.length
-   * //=> 8
    */
   get size() {
     let size = 0;
@@ -178,13 +171,10 @@ export class StringView extends DataView implements PrimitiveView<string> {
   }
 
   /**
-   * Returns the size in bytes of a given string without encoding it.
+   * Returns the size in bytes of a given string.
    *
    * @param string the string to check
    * @return the size in bytes
-   * @example
-   * const stringView = StringView.getByteSize('abc😀a');
-   * //=> 8
    */
   static getLength(string = "") {
     let size = 0;
@@ -209,14 +199,8 @@ export class StringView extends DataView implements PrimitiveView<string> {
    * Returns a new string consisting of the single UTF character
    * located at the specified character index.
    *
-   * @param [index=0] a character index
+   * @param index a character index
    * @return a string representing the character
-   * @example
-   * const stringView = StringView.fromString('abc😀');
-   * stringView.charAt(0);
-   * //=> 'a'
-   * stringView.charAt(3);
-   * //=> '😀'
    */
   charAt(index = 0) {
     return this.toChar(this.getCharStart(index));
@@ -224,12 +208,6 @@ export class StringView extends DataView implements PrimitiveView<string> {
 
   /**
    * Iterates over the characters in the StringView.
-   *
-   *
-   * @example
-   * const stringView = StringView.fromString('abc😀');
-   * [...stringView.characters()]
-   * //=> ['a', 'b', 'c', '😀']
    */
   *characters() {
     for (let i = 0; i < this.byteLength; i++) {
@@ -239,15 +217,13 @@ export class StringView extends DataView implements PrimitiveView<string> {
     }
   }
 
+  /**
+   * Returns the string encoded in the StringView.
+   */
   get(): string {
     return (this.constructor as typeof StringView).decode(this);
   }
 
-  /**
-   * @private
-   * @param index
-   *
-   */
   getCharEnd(index: number) {
     const point = this.getUint8(index);
     if (point < 0x80) return index;
@@ -264,13 +240,6 @@ export class StringView extends DataView implements PrimitiveView<string> {
     }
   }
 
-  /**
-   * @private
-   * @param index
-   * @param [startCharIndex=-1]
-   * @param [startIndex=0]
-   *
-   */
   getCharStart(index: number, startCharIndex = -1, startIndex = 0) {
     let current = startCharIndex;
     for (let i = startIndex; i < this.byteLength; i++) {
@@ -286,13 +255,7 @@ export class StringView extends DataView implements PrimitiveView<string> {
    *
    * @param pattern the pattern to be replaced
    * @param replacement the replacement
-   *
-   * @example
-   * const stringView = StringView.fromString('abc😀a');
-   * const pattern = StringView.fromString('a');
-   * const replacement = StringView.fromString('d');
-   * stringView.replace(pattern, replacement).toString();
-   * //=> 'dbc😀d'
+   * @return this
    */
   replace(pattern: IndexedCollection, replacement: IndexedCollection) {
     let position = 0;
@@ -308,11 +271,7 @@ export class StringView extends DataView implements PrimitiveView<string> {
   /**
    * Reverses the characters of the StringView in-place.
    *
-   *
-   * @example
-   * const stringView = StringView.fromString('abc😀a');
-   * stringView.reverse().toString();
-   * //=> 'a😀cba'
+   * @return this
    */
   reverse() {
     const last = this.byteLength - 1;
@@ -344,18 +303,13 @@ export class StringView extends DataView implements PrimitiveView<string> {
   }
 
   /**
-   * Returns the index within the calling StringView
+   * Returns the index within the StringView
    * of the first occurrence of the specified value, starting the search at start.
    * Returns -1 if the value is not found.
    *
    * @param searchValue the value to search for
-   * @param [fromIndex=0] the index at which to start the search
+   * @param fromIndex the index at which to start the search
    * @return the index of the first occurrence of the specified value
-   * @example
-   * const stringView = StringView.fromString('abc😀a');
-   * const searchValue = StringView.fromString('😀');
-   * stringView.search(searchValue);
-   * //=> 3
    */
   search(searchValue: IndexedCollection, fromIndex = 0) {
     if (this.byteLength > 256 && searchValue.length < 32) {
@@ -364,12 +318,6 @@ export class StringView extends DataView implements PrimitiveView<string> {
     return this.searchNaive(searchValue, fromIndex);
   }
 
-  /**
-   * @private
-   * @param searchValue
-   * @param start
-   *
-   */
   searchNaive(searchValue: IndexedCollection, start: number) {
     const wordLength = searchValue.length;
     const max = this.byteLength - wordLength;
@@ -385,12 +333,6 @@ export class StringView extends DataView implements PrimitiveView<string> {
     return -1;
   }
 
-  /**
-   * @private
-   * @param searchValue
-   * @param start
-   *
-   */
   searchShiftOr(searchValue: IndexedCollection, start: number) {
     const { masks } = this.constructor as typeof StringView;
     const m = searchValue.length;
@@ -410,6 +352,9 @@ export class StringView extends DataView implements PrimitiveView<string> {
     return -1;
   }
 
+  /**
+   * Encodes a given string into the StringView
+   */
   set(value: string): void {
     (this.constructor as typeof StringView).encode(value, this);
   }
@@ -419,14 +364,8 @@ export class StringView extends DataView implements PrimitiveView<string> {
    * character indexes, or to the end of the string.
    *
    * @param indexStart the character index of the first character to include
-   * @param [indexEnd] the character index of the first character to exclude
+   * @param indexEnd the character index of the first character to exclude
    * @return a new string containing the specified part of the given string
-   * @example
-   * const stringView = StringView.fromString('abc😀a');
-   * stringView.substring(0, 4);
-   * //=> 'abc😀'
-   * stringView.substring(2);
-   * //=> 'c😀a'
    */
   substring(indexStart = 0, indexEnd = this.size) {
     const start = this.getCharStart(indexStart);
@@ -440,11 +379,6 @@ export class StringView extends DataView implements PrimitiveView<string> {
     );
   }
 
-  /**
-   * @private
-   * @param index
-   *
-   */
   toChar(index: number) {
     // check boundaries
     if (index < 0 || index > this.byteLength) return "";
@@ -475,22 +409,14 @@ export class StringView extends DataView implements PrimitiveView<string> {
   }
 
   /**
-   *
+   * Returns a string value of the StringView.
    */
   toJSON() {
     return this.get();
   }
 
   /**
-   * Returns a string representation of the StringView.
-   *
-   *
-   * @example
-   * const stringView = StringView.fromString('abc😀a');
-   * stringView.toString();
-   * //=> 'abc😀a'
-   * stringView == 'abc😀a'
-   * //=> true
+   * Returns a string value of the StringView.
    */
   toString() {
     return this.get();
@@ -498,14 +424,6 @@ export class StringView extends DataView implements PrimitiveView<string> {
 
   /**
    * Returns a StringView without trailing zeros.
-   *
-   *
-   * @example
-   * const stringView = StringView.fromString('abc😀a', 10);
-   * stringView
-   * //=> StringView [ 97, 98, 99, 240, 159, 152, 128, 97, 0, 0 ]
-   * stringView.trim();
-   * //=> StringView [ 97, 98, 99, 240, 159, 152, 128, 97 ]
    */
   trim() {
     let end = -1;
@@ -521,7 +439,7 @@ export class StringView extends DataView implements PrimitiveView<string> {
       : this;
   }
 
-  private swapChar(i: number, j: number): void {
+  swapChar(i: number, j: number): void {
     const temp = this.getUint8(i);
     this.setUint8(i, this.getUint8(j));
     this.setUint8(j, temp);

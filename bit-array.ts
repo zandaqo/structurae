@@ -10,11 +10,7 @@ type BitPosition = {
  */
 export class BitArray extends Uint32Array {
   lastPosition: BitPosition;
-  /**
-   * @param buffer=32 the number of bits
-   * @param byteOffset
-   * @param length
-   */
+
   // deno-lint-ignore constructor-super
   constructor(
     buffer: number | ArrayLike<number> | ArrayBufferLike = 32,
@@ -34,34 +30,33 @@ export class BitArray extends Uint32Array {
   }
 
   /**
-   * Returns the amount of available bits in the array.
+   * The amount of bits in the array.
    */
   get size(): number {
     return this.length << 5;
   }
 
   /**
-   * Returns the length of underlying TypedArray required to hold the bit array.
+   * Returns the length of the underlying TypedArray required to hold the given amount of bits.
    *
-   * @param size
+   * @param size the amount of bits
+   * @return the required length
    */
   static getLength(size: number): number {
     return Math.ceil(size / 32);
   }
 
   /**
-   * Returns the bit value at a given index.
+   * Returns the bit at a given index.
    *
-   * @param index
+   * @param index the index
+   * @return the bit
    */
   getBit(index: number): Bit {
     const { bucket, position } = this.getBitPosition(index);
     return ((this[bucket] >> position) & 1) as Bit;
   }
 
-  /**
-   * @param index
-   */
   getBitPosition(index: number): BitPosition {
     const bucket = index >> 5;
     this.lastPosition.bucket = bucket;
@@ -70,10 +65,11 @@ export class BitArray extends Uint32Array {
   }
 
   /**
-   * Sets the bit value at a given index.
+   * Sets the bit at a given index.
    *
-   * @param index
-   * @param value=1
+   * @param index the index
+   * @param value the value
+   * @return this
    */
   setBit(index: number, value: Bit = 1): this {
     const { bucket, position } = this.getBitPosition(index);

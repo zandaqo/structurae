@@ -6,7 +6,9 @@ import type {
 } from "./utility-types.ts";
 
 /**
- * Creates a WeightedAdjacencyMatrix class extending a given Array-like class.
+ * Creates an Adjacency Matrix class extending a given TypedArray class.
+ *
+ * @param Base a TypedArray class to extend
  */
 export function AdjacencyMatrixWeightedDirectedMixin<
   U extends TypedArrayConstructors,
@@ -14,7 +16,7 @@ export function AdjacencyMatrixWeightedDirectedMixin<
   // deno-lint-ignore no-empty-interface
   interface AdjacencyMatrixWeightedDirected extends IndexedCollection {}
   /**
-   * Implements Adjacency Matrix for weighted graphs.
+   * Implements Adjacency Matrix for weighted directed graphs.
    */
   class AdjacencyMatrixWeightedDirected extends Base
     implements AdjacencyStructure {
@@ -42,12 +44,6 @@ export function AdjacencyMatrixWeightedDirectedMixin<
       return this.length;
     }
 
-    /**
-    * Create a graph of specified dimensions.
-    *
-    * @param vertices the numbe of vertices
-    * @return a new graph of specified dimentions
-    */
     static create(vertices: number) {
       const length = this.getLength(vertices);
       return new this(length) as
@@ -55,9 +51,6 @@ export function AdjacencyMatrixWeightedDirectedMixin<
         & InstanceType<U>;
     }
 
-    /**
-     * Returns the length of underlying Array required to hold the graph.
-     */
     static getLength(vertices: number): number {
       return vertices * vertices;
     }
@@ -66,14 +59,6 @@ export function AdjacencyMatrixWeightedDirectedMixin<
       return Math.sqrt(length);
     }
 
-    /**
-     * Adds an edge between two vertices.
-     *
-     * @param x the starting vertex
-     * @param y the ending vertex
-     * @param weight
-     * @return the graph
-     */
     addEdge(x: number, y: number, weight: number): this {
       this[this.getIndex(x, y)] = weight;
       return this;
@@ -83,12 +68,6 @@ export function AdjacencyMatrixWeightedDirectedMixin<
       return [Math.floor(index / this.vertices), index % this.vertices];
     }
 
-    /**
-     * Returns the weight of the edge between given vertices if it exists.
-     *
-     * @param x the starting vertex
-     * @param y the ending vertex
-     */
     getEdge(x: number, y: number) {
       return this[this.getIndex(x, y)];
     }
@@ -97,20 +76,11 @@ export function AdjacencyMatrixWeightedDirectedMixin<
       return x * this.vertices + y;
     }
 
-    /**
-     * Checks if there is an edge between two vertices.
-     *
-     * @param x the starting vertex
-     * @param y the ending vertex
-     */
     hasEdge(x: number, y: number) {
       const edge = this.getEdge(x, y);
       return edge !== undefined && edge !== this.empty;
     }
 
-    /**
-     * Iterates over incoming edges of a vertex.
-     */
     *inEdges(vertex: number) {
       const { vertices } = this;
       for (let i = 0; i < vertices; i++) {
@@ -122,9 +92,6 @@ export function AdjacencyMatrixWeightedDirectedMixin<
       return false;
     }
 
-    /**
-     * Iterates over outgoing edges of a vertex.
-     */
     *outEdges(vertex: number) {
       const { vertices } = this;
       const offset = vertex * vertices;
@@ -134,12 +101,6 @@ export function AdjacencyMatrixWeightedDirectedMixin<
       }
     }
 
-    /**
-     * Removes an edge between two vertices.
-     *
-     * @param x the starting vertex
-     * @param y the ending vertex
-     */
     removeEdge(x: number, y: number): this {
       this[this.getIndex(x, y)] = this.empty;
       return this;

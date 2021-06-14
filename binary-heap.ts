@@ -16,6 +16,10 @@ export class BinaryHeap<T> extends Array<T> {
 
   /**
    * The comparator function used by the heap.
+   *
+   * @param a first value to compare
+   * @param b second value to compare
+   * @return whether first value is less than the second
    */
   static compare(a: any, b: any): boolean {
     return a < b;
@@ -35,22 +39,38 @@ export class BinaryHeap<T> extends Array<T> {
       : super.from(iterable)) as BinaryHeap<U>).heapify();
   }
 
+  /**
+   * Get left child index from parent index.
+   *
+   * @param index the parent index
+   * @return the index of the left child
+   */
   static getLeftIndex(index: number): number {
     return (index << 1) + 1;
   }
 
+  /**
+   * Get left child index from parent index.
+   *
+   * @param index the child index
+   * @return the index of the parent
+   */
   static getParentIndex(index: number): number {
     return (index - 1) >> 1;
   }
 
+  /**
+   * Get right child index from parent index.
+   *
+   * @param index the parent index
+   * @return the index of the right child
+   */
   static getRightIndex(index: number): number {
     return (index << 1) + 2;
   }
 
   /**
    * Checks if a given collection is a valid binary heap.
-   *
-   * @param heap
    */
   static isHeap<T>(heap: ArrayLike<T>): boolean {
     for (let i = heap.length - 1; i > -1; i--) {
@@ -73,7 +93,7 @@ export class BinaryHeap<T> extends Array<T> {
   }
 
   /**
-   * @param index
+   * Check whether the index is whithin the heap.
    */
   has(index: number): boolean {
     return index >= 0 && index < this.length;
@@ -91,8 +111,6 @@ export class BinaryHeap<T> extends Array<T> {
 
   /**
    * Checks whether the array is a valid binary heap.
-   *
-   * @return whether the array is a valid binary heap
    */
   isHeap(): boolean {
     return (this.constructor as typeof BinaryHeap).isHeap(this);
@@ -100,8 +118,6 @@ export class BinaryHeap<T> extends Array<T> {
 
   /**
    * Returns the left child of an element at a given index.
-   *
-   * @param index
    */
   left(index: number): T {
     return this[(this.constructor as typeof BinaryHeap).getLeftIndex(index)];
@@ -109,8 +125,6 @@ export class BinaryHeap<T> extends Array<T> {
 
   /**
    * Returns the parent of an element at a given index.
-   *
-   * @param index
    */
   parent(index: number): T {
     return this[(this.constructor as typeof BinaryHeap).getParentIndex(index)];
@@ -118,6 +132,9 @@ export class BinaryHeap<T> extends Array<T> {
 
   /**
    * Adds items to the heap.
+   *
+   * @param elements items to add
+   * @return new length of the heap
    */
   push(...elements: Array<T>): number {
     for (let i = 0; i < elements.length; i++) {
@@ -130,7 +147,8 @@ export class BinaryHeap<T> extends Array<T> {
   /**
    * Returns the first (min/max) element of the heap and replaces it with a given element.
    *
-   * @param element
+   * @param element the element to replace the first element of the heap
+   * @return the first element of the heap
    */
   replace(element: T): T {
     const first = this[0];
@@ -141,8 +159,6 @@ export class BinaryHeap<T> extends Array<T> {
 
   /**
    * Returns the right child of an element at a given index.
-   *
-   * @param index
    */
   right(index: number): T {
     return this[(this.constructor as typeof BinaryHeap).getRightIndex(index)];
@@ -160,9 +176,6 @@ export class BinaryHeap<T> extends Array<T> {
     return item;
   }
 
-  /**
-   * @param start
-   */
   siftDown(start: number): void {
     const { getRightIndex, getLeftIndex, compare } = this
       .constructor as typeof BinaryHeap;
@@ -185,9 +198,6 @@ export class BinaryHeap<T> extends Array<T> {
     }
   }
 
-  /**
-   * @param start
-   */
   siftUp(start: number): void {
     const { getParentIndex, compare } = this.constructor as typeof BinaryHeap;
     let index = start;
@@ -201,6 +211,11 @@ export class BinaryHeap<T> extends Array<T> {
 
   /**
    * Changes elements of the heap.
+   *
+   * @param start starting index
+   * @param deleteCount the amount of elements to delete
+   * @param items elements to add
+   * @return the deleted elements
    */
   splice(start: number, deleteCount?: number, ...items: Array<T>): Array<T> {
     const deletedItems = deleteCount === undefined
@@ -226,7 +241,8 @@ export class BinaryHeap<T> extends Array<T> {
   /**
    * Adds elements to the heap.
    *
-   * @param items
+   * @param items elements to add
+   * @return the new length of the heap
    */
   unshift(...items: Array<T>): number {
     return this.push(...items);
@@ -235,7 +251,7 @@ export class BinaryHeap<T> extends Array<T> {
   /**
    * Updates the position of an element inside the heap.
    *
-   * @param index
+   * @param index the index of the element to update
    */
   update(index: number): void {
     const { compare, getLeftIndex } = this.constructor as typeof BinaryHeap;

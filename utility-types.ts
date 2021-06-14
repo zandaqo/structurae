@@ -21,14 +21,62 @@ export type TypedArrayConstructors =
 
 export interface AdjacencyStructure extends IndexedCollection {
   empty: unknown;
+  /**
+   * The number of vertices.
+   */
   vertices: number;
+  /**
+   * The maximum number of edges.
+   */
   edges: number;
-  addEdge(x: number, y: number, weight: number): this;
+  /**
+   * Adds an edge between two vertices.
+   *
+   * @param x the starting vertex
+   * @param y the ending vertex
+   * @param weight the weight
+   * @return the structure
+   */
+  addEdge(x: number, y: number, weight?: number): this;
+  /**
+   * Returns the weight of the edge between given vertices
+   * or NaN if the edge doesn't exist.
+   *
+   * @param x the starting vertex
+   * @param y the ending vertex
+   * @returns the edge
+   */
   getEdge(x: number, y: number): number;
+  /**
+   * Checks if there is an edge between two vertices.
+   *
+   * @param x the starting vertex
+   * @param y the ending vertex
+   */
   hasEdge(x: number, y: number): boolean;
+  /**
+   * Iterates over incoming edges of a vertex.
+   *
+   * @param vertex the vertex
+   */
   inEdges(x: number): IterableIterator<number>;
+  /**
+   * Check if all available edges are set.
+   */
   isFull(): boolean;
+  /**
+   * Iterates over outgoing edges of a vertex.
+   *
+   * @param vertex the vertex
+   */
   outEdges(x: number): IterableIterator<number>;
+  /**
+   * Removes an edge between two vertices.
+   *
+   * @param x the starting vertex
+   * @param y the ending vertex
+   * @return the structure
+   */
   removeEdge(x: number, y: number): this;
 }
 
@@ -39,9 +87,24 @@ export interface AdjacencyStructureConstructor<
   weighted: boolean;
   // deno-lint-ignore no-explicit-any
   new (...args: any[]): AdjacencyStructure;
+  /**
+    * Create an adjacency structure of specified dimensions.
+    *
+    * @param vertices the number of vertices
+    * @param edges the maximum amount of edges
+    * @return a new adjacency structure of specified dimentions
+    */
   create(
     vertices: number,
     edges?: number,
   ): AdjacencyStructure & InstanceType<U>;
+  /**
+    * Returns the length of underlying TypedArray required to hold a structure
+    * of the specified dimensions.
+    *
+    * @param vertices the number of vertices
+    * @param edges the maximum amount of edges
+    * @return the length
+    */
   getLength(vertices: number, edges?: number): number;
 }

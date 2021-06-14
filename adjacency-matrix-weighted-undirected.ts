@@ -6,7 +6,9 @@ import type {
 import { AdjacencyMatrixWeightedDirectedMixin } from "./adjacency-matrix-weighted-directed.ts";
 
 /**
- * Creates a WeightedAdjacencyMatrix class extending a given Array-like class.
+ * Creates an Adjacency Matrix class extending a given TypedArray class.
+ *
+ * @param Base a TypedArray class to extend
  */
 export function AdjacencyMatrixWeightedUndirectedMixin<
   U extends TypedArrayConstructors,
@@ -14,16 +16,14 @@ export function AdjacencyMatrixWeightedUndirectedMixin<
   // deno-lint-ignore no-empty-interface
   interface AdjacencyMatrixWeightedUndirected extends IndexedCollection {}
   /**
-   * Implements Adjacency Matrix for weighted graphs.
+   * Implements the Adjacency Matrix for weighted undirected graphs.
    */
   class AdjacencyMatrixWeightedUndirected
     extends AdjacencyMatrixWeightedDirectedMixin(
       Base,
     ) {
     static directed = false;
-    /**
-     * Returns the length of underlying Array required to hold the graph.
-     */
+
     static getLength(vertices: number): number {
       return ((vertices + 1) * vertices) >> 1;
     }
@@ -42,9 +42,6 @@ export function AdjacencyMatrixWeightedUndirectedMixin<
       return x >= y ? y + (((x + 1) * x) >> 1) : x + (((y + 1) * y) >> 1);
     }
 
-    /**
-     * Iterates over outgoing edges of a vertex.
-     */
     *outEdges(vertex: number) {
       const { vertices } = this;
       for (let i = 0; i < vertices; i++) {

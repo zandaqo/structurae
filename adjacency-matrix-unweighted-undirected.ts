@@ -1,5 +1,8 @@
 import { AdjacencyMatrixUnweightedDirected } from "./adjacency-matrix-unweighted-directed.ts";
 
+/**
+ * Implements the Adjacency Matrix data structure for unweighted undirected graphs.
+ */
 export class AdjacencyMatrixUnweightedUndirected
   extends AdjacencyMatrixUnweightedDirected {
   static directed = false;

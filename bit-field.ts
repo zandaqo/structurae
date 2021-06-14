@@ -10,25 +10,18 @@ const SIGN_BIT = 2147483647;
  */
 const MAX_BITWISE_SIZE = 31;
 
+/**
+ * Creates a BitField class from with a given schema.
+ *
+ * @param schema the schema
+ * @returns the BitFieldClass
+ */
 export function BitFieldMixin<
   T extends Record<K, number>,
   K extends keyof T,
 >(schema: T) {
   /**
    * Stores and operates on data in Numbers treating them as bitfields.
-   *
-   * @example
-   *
-   * // a bitfield that holds two integers of 8 bits each
-   * class Field extends BitField {}
-   * Field.schema = {
-   *   width: 8,
-   *   height: 8,
-   * };
-   * Field.initialize();
-   *
-   * // same using BitFieldMixin
-   * const Field = BitFieldMixin({ width: 8, height: 8 });
    */
   const Class = class BitFieldClass {
     static schema = schema;
@@ -40,18 +33,8 @@ export function BitFieldMixin<
     value = 0;
 
     /**
-     * @param [data=0] a single number value of the field
-     *                                        or a map of field names with their respective values
-     * @example
-     *
-     * const field = new Field({ width: 100, height: 100 });
-     * //=> Field { value: 25700 }
-     * field.get('width');
-     * //=> 100;
-     *
-     * const copy = new Field(25700);
-     * copy.get('width');
-     * //=> 100
+     * @param data a single number value of the field,
+     * a bitfield, or a map of field names with their respective values
      */
     constructor(data: number | BitFieldClass | Array<number> | T = 0) {
       this.value = typeof data === "number"
@@ -66,12 +49,6 @@ export function BitFieldMixin<
      *
      * @param data encoded number
      * @return object representation
-     * @example
-     *
-     * const data = Field.encode({ width: 10, height: 20 })
-     * //=> 5130
-     * Field.decode(5130);
-     * //=> { width: 10, height: 20 }
      */
     static decode(data: number): Record<K, number> {
       const { fields, masks, schema } = this;
@@ -92,10 +69,6 @@ export function BitFieldMixin<
      *
      * @param data the list of numbers to encode
      * @return encoded number
-     * @example
-     *
-     * Field.encode({ width: 10, height: 20 })
-     * //=> 5130
      */
     static encode(data: Array<number> | T): number {
       const { fields, schema } = this;
@@ -137,18 +110,8 @@ export function BitFieldMixin<
     /**
      * Returns the minimum amount of bits necessary to hold a given number.
      *
-     * @param number
+     * @param number the number
      * @return the amount of bits
-     * @example
-     *
-     * BitField.getMinSize(100)
-     * //=> 7
-     *
-     * BitField.getMinSize(2000)
-     * //=> 11
-     *
-     * BitField.getMinSize(Number.MAX_SAFE_INTEGER)
-     * //=> 53
      */
     static getMinSize(number: number): number {
       return getBitSize(number);
@@ -156,8 +119,6 @@ export function BitFieldMixin<
 
     /**
      * Prepares the class to handle data according to its schema provided in `BitField.schema`.
-     *
-     *
      */
     static initialize(): void {
       const { schema } = this;
@@ -192,16 +153,6 @@ export function BitFieldMixin<
      *
      * @param data pairs of field name and value to check
      * @return whether all pairs are valid
-     * @example
-     *
-     * Field.isValid({ width: 20 })
-     * //=> true
-     * Field.isValid({ width: 10, height: 20 })
-     * //=> true
-     * Field.isValid({ width: -10, height: 20 })
-     * //=> false
-     * Field.isValid({ width: 1000, height: 20 });
-     * //=> false
      */
     static isValid(data: T): boolean {
       const { masks } = this;
@@ -219,22 +170,13 @@ export function BitFieldMixin<
      *
      * @param value a value to check
      * @param matcher a precomputed set of values
-     *
-     * @example
-     *
-     * Field.match(new Field({ width: 10 }), Field.getMatcher({ width: 10 }));
-     * //=> true
-     * Field.match(new Field({ width: 100 }), Field.getMatcher({ width: 10}));
-     * //=> false
      */
     static match(value: number, matcher: [number, number]): boolean {
       return (value & matcher[1]) === matcher[0];
     }
 
     /**
-     * Allows iterating over numbers stored in the instance.
-     *
-     *
+     * Iterates over numbers stored in the instance.
      */
     *[Symbol.iterator]() {
       const { fields } = this.constructor as typeof BitFieldClass;
@@ -247,15 +189,7 @@ export function BitFieldMixin<
      * Returns the value of a given field.
      *
      * @param field name of the field
-     * @return value value of the field
-     * @example
-     *
-     * const field = new Field({ width: 100, height: 200 });
-     * //=> Field { value: 51300 }
-     * field.get('width');
-     * //=> 100;
-     * field.get('height');
-     * //=> 200;
+     * @return value of the field
      */
     get(field: K): number {
       const { offsets, masks } = this.constructor as typeof BitFieldClass;
@@ -263,18 +197,10 @@ export function BitFieldMixin<
     }
 
     /**
-     * Checks if an instance has all the specified fields set to 1. Useful for bit flags.
+     * Checks whether an instance has all the specified fields set to 1. Useful for bit flags.
      *
      * @param fields names of the fields to check
      * @return whether all the specified fields are set in the instance
-     * @example
-     *
-     * const Flags = BitFieldMixin(['a', 'b', 'c']);
-     * const settings = new Flags({ 'a': 0, 'b': 1, 'c': 1 });
-     * settings.has('b', 'c');
-     * //=> true
-     * settings.has('a', 'b');
-     * //=> false
      */
     has(...fields: Array<K>): boolean {
       const { offsets } = this.constructor as typeof BitFieldClass;
@@ -292,27 +218,8 @@ export function BitFieldMixin<
      * that you can use to efficiently compare multiple instances
      * to the same key-value pairs as shown in the examples below.
      *
-     * @param matcher an object with key-value pairs,
-     *                                                or an array of precomputed matcher values
+     * @param matcher an object with key-value pairs, or an array of precomputed matcher values
      * @return whether the instance matches with the provided fields
-     * @example
-     *
-     * const field = new Field({ width: 10, height: 20 });
-     * field.match({ height: 20 });
-     * //=> true
-     * field.match({ width: 10, height: 20 });
-     * //=> true
-     * field.match({ width: 10 });
-     * //=> true
-     * field.match({ width: 10, height: 10 });
-     * //=> false
-     *
-     * // use precomputed matcher
-     * const matcher = BitField.getMatcher({ height: 20});
-     * new Field({ width: 10, height: 20 }).match(matcher);
-     * //=> true
-     * new Field({ width: 10, height: 10 }).match(matcher);
-     * //=> false
      */
     match(matcher: Partial<T> | [number, number]): boolean {
       return (this.constructor as typeof BitFieldClass).match(
@@ -329,16 +236,6 @@ export function BitFieldMixin<
      * @param field name of the field
      * @param value value of the field
      * @return the instance
-     * @example
-     *
-     * const field = new Field({ width: 100, height: 200 });
-     * //=> Field { value: 51300 }
-     * field.get('width');
-     * //=> 100;
-     * field.set('width', 50);
-     * //=> Field { value: 51250 }
-     * field.get('width');
-     * //=> 50
      */
     set(field: K, value = 1): this {
       const { offsets, masks } = this.constructor as typeof BitFieldClass;
@@ -349,8 +246,6 @@ export function BitFieldMixin<
 
     /**
      * Returns the numerical value of an instance.
-     *
-     *
      */
     toJSON() {
       return this.value;
@@ -359,12 +254,6 @@ export function BitFieldMixin<
     /**
      * Returns the object representation of the instance,
      * with field names as properties with corresponding values.
-     * @return the object representation of the instance
-     * @example
-     *
-     * const field = new Field({ width: 10, height: 20 });
-     * field.toObject();
-     * //=> { width: 10, height: 20 }
      */
     toObject(): Record<K, number> {
       return (this.constructor as typeof BitFieldClass).decode(this.value);
@@ -372,8 +261,6 @@ export function BitFieldMixin<
 
     /**
      * Returns a string representing the value of the instance.
-     *
-     * @return a string representing the value of the instance
      */
     toString(): string {
       return this.value.toString();
@@ -381,8 +268,6 @@ export function BitFieldMixin<
 
     /**
      * Returns the numerical value of an instance.
-     *
-     * @return the numerical value of the instance
      */
     valueOf(): number {
       return this.value;

@@ -39,8 +39,8 @@ export const log2: Record<number, number> = {
 /**
  * Counts set bits in a given number.
  *
- * @param value
- *
+ * @param value the number
+ * @return the amount of set bits
  */
 export function popCount32(value: number): number {
   const a = value - ((value >> 1) & 0x55555555);
@@ -51,8 +51,8 @@ export function popCount32(value: number): number {
 /**
  * Returns the index of the Least Significant Bit in a number.
  *
- * @param value
- *
+ * @param value the number
+ * @return the index of LSB
  */
 export function getLSBIndex(value: number): number {
   if (value === 2147483648) return 31;
@@ -62,8 +62,8 @@ export function getLSBIndex(value: number): number {
 /**
  * Returns the minimum amount of bits necessary to hold a given number.
  *
- * @param number
- * @return the amount of bits
+ * @param number the number
+ * @return the amount of bits necessary
  */
 export function getBitSize(number: number): number {
   if (number < 281474976710656) return (Math.log2(number) | 0) + 1;

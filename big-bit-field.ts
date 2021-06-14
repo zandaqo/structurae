@@ -3,24 +3,18 @@ const ZERO = BigInt(0);
 const ONE = BigInt(1);
 const TWO = BigInt(2);
 
+/**
+ * Creates a BigBitField class from with a given schema.
+ *
+ * @param schema the schema
+ * @returns the BigBitFieldClass
+ */
 export function BigBitFieldMixin<
   T extends Record<string, number>,
   K extends keyof T,
 >(schema: T) {
   /**
    * Stores and operates on data in BigInts treating them as bitfields.
-   *
-   * // a bitfield that holds three integers of 32, 16, and 8 bits
-   * class Field extends BigBitField {}
-   * Field.schema = {
-   *   area: 32,
-   *   width: 16,
-   *   height: 8,
-   * };
-   * Field.initialize();
-   *
-   * // same using BitFieldMixin
-   * const Field = BitFieldMixin({ area: 32, width: 16, height: 8 });
    */
   const Class = class BigBitFieldClass {
     static schema: Record<K, bigint>;
@@ -32,17 +26,8 @@ export function BigBitFieldMixin<
     value = ZERO;
 
     /**
-     * @param [data=0]
-     * @example
-     *
-     * const field = new Field({ area: 100, width: 10, height: 10 });
-     * //=> Field { value: 2814792716779620n }
-     * field.get('width');
-     * //=> 10;
-     *
-     * const copy = new Field(2814792716779620n);
-     * copy.get('width');
-     * //=> 10
+     * @param data a single number value of the field,
+     * a bit field, or a map of field names with their respective values
      */
     constructor(data: bigint | BigBitFieldClass | Array<number> | T = ZERO) {
       this.value = data instanceof BigBitFieldClass
@@ -57,12 +42,6 @@ export function BigBitFieldMixin<
      *
      * @param data encoded number
      * @return object representation
-     * @example
-     *
-     * new Field({ area: 100, width: 10, height: 10 });
-     * //=> 2814792716779620n
-     * Field.decode(2814792716779620n);
-     * //=> { area: 100, width: 10, height: 10 }
      */
     static decode(data: bigint): Record<K, number> {
       const { fields, masks, schema } = this;
@@ -77,14 +56,11 @@ export function BigBitFieldMixin<
     }
 
     /**
-     * Encodes a given list of numbers into a single number according to the schema.
+     * Encodes a given list of numbers or map of fields and their respective values
+     * into a single number according to the schema.
      *
      * @param data the list of numbers to encode
      * @return encoded number
-     * @example
-     *
-     * new Field({ area: 100, width: 10, height: 10 });
-     * //=> 2814792716779620n
      */
     static encode(data: Array<number> | T): bigint {
       const { fields, schema } = this;
@@ -107,10 +83,6 @@ export function BigBitFieldMixin<
      *
      * @param matcher an object containing field names and their values
      * @return an array of precomputed values
-     * @example
-     *
-     * Field.getMatcher({ area: 100 });
-     * //=> [ 100n, 72057598332895231n ]
      */
     static getMatcher(matcher: Partial<T>): [bigint, bigint] {
       const { masks, offsets } = this;
@@ -130,8 +102,6 @@ export function BigBitFieldMixin<
 
     /**
      * Prepares the class to handle data according to its schema provided in `BigBitField.schema`.
-     *
-     *
      */
     static initialize(schema: Record<K, number>): void {
       const fields = Object.keys(schema) as Array<K>;
@@ -163,16 +133,6 @@ export function BigBitFieldMixin<
      *
      * @param data pairs of field name and value to check
      * @return whether all pairs are valid
-     * @example
-     *
-     * Field.isValid({ area: 100000, width: 20 })
-     * //=> true
-     * Field.isValid({ width: 10, height: 20 })
-     * //=> true
-     * Field.isValid({ width: -10, height: 20 })
-     * //=> false
-     * Field.isValid({ width: 1000000, height: 20 });
-     * //=> false
      */
     static isValid(data: Partial<T>): boolean {
       const { masks } = this;
@@ -190,20 +150,13 @@ export function BigBitFieldMixin<
      *
      * @param value a value to check
      * @param matcher a precomputed set of values
-     *
-     * @example
-     *
-     * Field.match(new Field({ area: 100 }), Field.getMatcher({ area: 100}));
-     * //=> true
-     * Field.match(new Field({ area: 1000 }), Field.getMatcher({ area: 100}));
-     * //=> false
      */
     static match(value: bigint, matcher: [bigint, bigint]) {
       return (value & matcher[1]) === matcher[0];
     }
 
     /**
-     * Allows iterating over numbers stored in the instance.
+     * Iterates over numbers stored in the instance.
      */
     *[Symbol.iterator]() {
       const { fields } = this.constructor as typeof BigBitFieldClass;
@@ -217,14 +170,6 @@ export function BigBitFieldMixin<
      *
      * @param field name of the field
      * @return value of the field
-     * @example
-     *
-     * const field = new Field({ area: 100, width: 10, height: 10 });
-     * //=> Field { value: 2814792716779620n }
-     * field.get('width');
-     * //=> 10;
-     * field.get('area');
-     * //=> 100;
      */
     get(field: K) {
       const { offsets, masks } = this.constructor as typeof BigBitFieldClass;
@@ -233,18 +178,10 @@ export function BigBitFieldMixin<
     }
 
     /**
-     * Checks if an instance has all the specified fields set to 1. Useful for bit flags.
+     * Checks whether an instance has all the specified fields set to 1. Useful for bit flags.
      *
      * @param fields names of the fields to check
      * @return whether all the specified fields are set in the instance
-     * @example
-     *
-     * const Flags = BitFieldMixin(['a', 'b', 'c']);
-     * const settings = new Flags({ 'a': 0, 'b': 1, 'c': 1 });
-     * settings.has('b', 'c');
-     * //=> true
-     * settings.has('a', 'b');
-     * //=> false
      */
     has(...fields: Array<K>): boolean {
       const { offsets } = this.constructor as typeof BigBitFieldClass;
@@ -262,27 +199,8 @@ export function BigBitFieldMixin<
      * that you can use to efficiently compare multiple instances
      * to the same key-value pairs as shown in the examples below.
      *
-     * @param matcher an object with key-value pairs,
-     *                                                or an array of precomputed matcher values
+     * @param matcher an object with key-value pairs, or an array of precomputed matcher values
      * @return whether the instance matches with the provided fields
-     * @example
-     *
-     * const field = new Field({ area: 200, width: 10, height: 20 });
-     * field.match({ height: 20 });
-     * //=> true
-     * field.match({ width: 10, height: 20 });
-     * //=> true
-     * field.match({ area: 10 });
-     * //=> false
-     * field.match({ width: 10, height: 10 });
-     * //=> false
-     *
-     * // use precomputed matcher
-     * const matcher = BitField.getMatcher({ height: 20});
-     * new Field({ width: 10, height: 20 }).match(matcher);
-     * //=> true
-     * new Field({ width: 10, height: 10 }).match(matcher);
-     * //=> false
      */
     match(matcher: Partial<T> | [bigint, bigint]): boolean {
       return (this.constructor as typeof BigBitFieldClass).match(
@@ -299,15 +217,6 @@ export function BigBitFieldMixin<
      * @param field name of the field
      * @param value value of the field
      * @return the instance
-     * @example
-     *
-     * const field = new Field({ area: 100, width: 10, height: 10 });
-     * //=> Field { value: 2814792716779620n }
-     * field.get('width');
-     * //=> 10;
-     * field.set('width', 100);
-     * field.get('width');
-     * //=> 100;
      */
     set(field: K, value = 1) {
       const { offsets, masks } = this.constructor as typeof BigBitFieldClass;
@@ -319,7 +228,6 @@ export function BigBitFieldMixin<
 
     /**
      * Returns the bigint value of an instance.
-     *
      */
     toJSON() {
       return this.value;
@@ -328,12 +236,6 @@ export function BigBitFieldMixin<
     /**
      * Returns the object representation of the instance,
      * with field names as properties with corresponding values.
-     * @return the object representation of the instance
-     * @example
-     *
-     * const field = new Field({ area: 200, width: 10, height: 20 });
-     * field.toObject();
-     * //=> { area: 200, width: 10, height: 20 }
      */
     toObject(): Record<K, number> {
       return (this.constructor as typeof BigBitFieldClass).decode(this.value);
@@ -341,8 +243,6 @@ export function BigBitFieldMixin<
 
     /**
      * Returns a string representing the value of the instance.
-     *
-     * @return a string representing the value of the instance
      */
     toString(): string {
       return this.value.toString();
@@ -350,8 +250,6 @@ export function BigBitFieldMixin<
 
     /**
      * Returns the bigint value of an instance.
-     *
-     * @return the numerical value of the instance
      */
     valueOf(): bigint {
       return this.value;

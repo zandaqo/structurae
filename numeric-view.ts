@@ -3,66 +3,34 @@ import type { PrimitiveView } from "./view-types.ts";
 export class Uint8View extends DataView implements PrimitiveView<number> {
   static viewLength = 1;
 
-  /**
-  * Decodes a given view into corresponding JavaScript value.
-  *
-  * @param view the view to decode
-  * @param start the starting offset
-  * @param length the byte length to decode
-  * @return the JavaScript value
-  */
   static decode(view: DataView, start = 0): number {
     return DataView.prototype.getUint8.call(view, start);
   }
 
-  /**
-  * Encodes a JavaScript value into a given view.
-  *
-  * @param value the value to encode
-  * @param view the view to encode into
-  * @param start the view offset to start
-  * @param length the byte length to encode
-  * @return the amount of written bytes
-  */
   static encode(value: number, view: DataView, start = 0): number {
     DataView.prototype.setUint8.call(view, start, value);
     return this.viewLength;
   }
 
-  /**
-   * Creates a view with a given value.
-   */
   static from(value: number) {
     const typeView = new this(new ArrayBuffer(this.viewLength));
     this.encode(value, typeView, 0);
     return typeView;
   }
 
-  /**
-   * Returns the length of a view.
-   */
   static getLength(): number {
     return this.viewLength;
   }
 
-  /**
-   * Returns the numerical value of the view.
-   */
   get(): number {
     return (this.constructor as typeof Uint8View).decode(this);
   }
 
-  /**
-   * Sets the numerical value of the view.
-   */
   set(value: number): this {
     (this.constructor as typeof Uint8View).encode(value, this);
     return this;
   }
 
-  /**
-   * Returns the numerical value of the view.
-   */
   toJSON(): number {
     return (this.constructor as typeof Uint8View).decode(this);
   }
@@ -157,44 +125,25 @@ export class BigInt64View extends DataView implements PrimitiveView<bigint> {
     return this.viewLength;
   }
 
-  /**
-   * Creates a view with a given value.
-   */
   static from(value: bigint) {
     const typeView = new this(new ArrayBuffer(this.viewLength));
     this.encode(value, typeView, 0);
     return typeView;
   }
 
-  /**
-   * Returns the length of a view.
-   *
-   *
-   */
   static getLength(): number {
     return this.viewLength;
   }
 
-  /**
-   * Returns the numerical value of the view.
-   */
   get(): bigint {
     return (this.constructor as typeof BigInt64View).decode(this);
   }
 
-  /**
-   * Sets the numerical value of the view.
-   *
-   * @param value
-   */
   set(value: bigint): this {
     (this.constructor as typeof BigInt64View).encode(value, this);
     return this;
   }
 
-  /**
-   * Returns the numerical value of the view.
-   */
   toJSON(): bigint {
     // todo fix bigint is not serializable in JSON
     return (this.constructor as typeof BigInt64View).decode(this);

@@ -7,16 +7,17 @@ import { getLSBIndex, popCount32 } from "./utilities.ts";
  */
 export class RankedBitArray extends BitArray {
   /**
-   * Returns the amount of available bits in the array.
+   * The amount of bits in the array.
    */
   get size(): number {
     return (this.length >> 1) << 5;
   }
 
   /**
-   * Returns the length of underlying TypedArray required to hold the bit array.
+   * Returns the length of the underlying TypedArray required to hold the given amount of bits.
    *
-   * @param size
+   * @param size the amount of bits
+   * @return the required length
    */
   static getLength(size: number): number {
     return Math.ceil(size / 32) << 1;
@@ -25,7 +26,8 @@ export class RankedBitArray extends BitArray {
   /**
    * Returns the rank of a bit at a given index.
    *
-   * @param index
+   * @param index the index
+   * @return the rank
    */
   rank(index: number): number {
     const { bucket, position } = this.getBitPosition(index);
@@ -40,7 +42,8 @@ export class RankedBitArray extends BitArray {
   /**
    * Returns the select of a bit at a given index.
    *
-   * @param index
+   * @param index the index
+   * @return the select
    */
   select(index: number): number {
     const middle = this.length >> 1;
@@ -79,10 +82,11 @@ export class RankedBitArray extends BitArray {
   }
 
   /**
-   * Sets the bit value at a given index.
+   * Sets the bit at a given index.
    *
-   * @param index
-   * @param value
+   * @param index the index
+   * @param value the value
+   * @return this
    */
   setBit(index: number, value: Bit = 1): this {
     super.setBit(index, value);

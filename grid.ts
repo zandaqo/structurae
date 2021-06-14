@@ -44,6 +44,13 @@ export function GridMixin<
       return this.length >> this.size;
     }
 
+    /**
+     * Creates a grid of specified dimensions.
+     *
+     * @param rows the amount of rows
+     * @param columns the amount of columns
+     * @return a new grid
+     */
     static create<T extends typeof Grid>(
       this: T,
       rows: number,
@@ -59,13 +66,8 @@ export function GridMixin<
     /**
      * Creates a grid from an array of arrays.
      *
-     * @example
-     * const a = ArrayGrid.from([[1, 2], [3], [4, 5, 6]])
-     * //=> ArrayGrid [1, 2, 0, 0, 3, 0, 0, 0, 4, 5, 6, 0]
-     * a.get(1, 0);
-     * //=> 3
-     * a.get(2, 1);
-     * //=> 5
+     * @param arrays the array of arrays
+     * @return a new grid
      */
     static fromArrays<T extends typeof Grid>(
       this: T,
@@ -96,44 +98,37 @@ export function GridMixin<
     }
 
     /**
-     * Returns the length of underlying Array required to hold the grid.
+     * Returns the length of the underlying Array required to hold the grid of specified dimensions.
+     *
+     * @param rows the amount of rows
+     * @param columns the amount of columns
+     * @return the required length
      */
     static getLength(rows: number, columns = 1): number {
       return rows << getLog2(columns);
     }
 
-    /**
-     * Gets coordinates of an element at specified index.
-     * @example
-     * const a = ArrayGrid({ rows: 3, columns: 2, pad: 3});
-     * a.getCoordinates(1);
-     * //=> [0, 1]
-     * a.getCoordinates(2);
-     * //=> [1, 0]
-     */
     getCoordinates(index: number): [row: number, column: number] {
       return [index >> this.size, index & ((1 << this.size) - 1)];
     }
 
     /**
-     * Returns an array index of an element at given coordinates.
-     * @example
+     * Returns the index of an element at given coordinates.
      *
-     * const a = ArrayGrid({ rows: 3, columns: 2, pad: 3});
-     * a.get(1, 0);
-     * //=> 2
+     * @param rows the row index
+     * @param columns the column index
+     * @return the element index
      */
     getIndex(row: number, column = 1): number {
       return (row << this.size) + column;
     }
 
     /**
-     * Returns an element from given coordinates.
-     * @example
+     * Returns the element at given coordinates.
      *
-     * const a = ArrayGrid({ rows: 3, columns: 2, pad: 3});
-     * a.get(0, 1);
-     * //=> 3
+     * @param rows the row index
+     * @param columns the column index
+     * @return the element
      */
     getValue(row: number, column: number): ItemType {
       return this[this.getIndex(row, column)];
@@ -141,14 +136,11 @@ export function GridMixin<
 
     /**
      * Sets the element at given coordinates.
-     * Proxies to TypedArray#set if the first parameter is Array-like
-     * and the grid is based on a TypedArray.
-     * @example
      *
-     * const a = ArrayGrid({ rows: 3, columns: 2, pad: 3});
-     * a.set(0, 1, 5);
-     * a.get(0, 1);
-     * //=> 5
+     * @param rows the row index
+     * @param columns the column index
+     * @param value the element
+     * @return the grid
      */
     setValue(row: number, column: number, value: ItemType): this {
       this[this.getIndex(row, column)] = value;
@@ -156,12 +148,9 @@ export function GridMixin<
     }
 
     /**
-     * Returns an array of arrays where each nested array correspond to a row in the grid.
-     * @example
+     * Creates an array of arrays representing rows of the grid.
      *
-     * const a = ArrayGrid({ rows: 3, columns: 2, pad: 3});
-     * a.toArrays();
-     * //=> [[3, 3], [3, 3], [3, 3]]
+     * @return an array of arrays
      */
     toArrays(): Array<Array<ItemType>> {
       const { rows, columns, size } = this;

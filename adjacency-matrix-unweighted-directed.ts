@@ -2,7 +2,7 @@ import type { AdjacencyStructure, Bit } from "./utility-types.ts";
 import { getLog2 } from "./utilities.ts";
 
 /**
- * Implements Adjacency Matrix for unweighted graphs.
+ * Implements the Adjacency Matrix structure for unweighted directed graphs.
  */
 export class AdjacencyMatrixUnweightedDirected extends Uint32Array
   implements AdjacencyStructure {
@@ -33,12 +33,6 @@ export class AdjacencyMatrixUnweightedDirected extends Uint32Array
     return this.vertices ** 2;
   }
 
-  /**
-  * Create a graph of specified dimensions.
-  *
-  * @param vertices the numbe of vertices
-  * @return a new graph of specified dimentions
-  */
   static create(vertices: number) {
     const length = this.getLength(vertices);
     const matrix = new this(length);
@@ -46,22 +40,10 @@ export class AdjacencyMatrixUnweightedDirected extends Uint32Array
     return matrix;
   }
 
-  /**
-   * Returns the length of underlying TypedArray required to hold the graph.
-   *
-   * @param vertices
-   */
   static getLength(vertices: number) {
     return ((vertices << getLog2(vertices)) >> 5) + 2;
   }
 
-  /**
-   * Adds an edge between two vertices.
-   *
-   * @param x the starting vertex
-   * @param y the ending vertex
-   * @return the graph
-   */
   addEdge(x: number, y: number): this {
     const [bucket, position] = this.getCoordinates(x, y);
     if (Number.isNaN(bucket)) return this;
@@ -76,13 +58,6 @@ export class AdjacencyMatrixUnweightedDirected extends Uint32Array
     return [bucket, index - (bucket << 5)];
   }
 
-  /**
-   * Returns 1 if the edge between the given vertices exists, 0 otherwise.
-   *
-   * @param x the starting vertex
-   * @param y the ending vertex
-   *
-   */
   getEdge(x: number, y: number): number {
     const [bucket, position] = this.getCoordinates(x, y);
     if (Number.isNaN(bucket)) return 0;
@@ -93,24 +68,10 @@ export class AdjacencyMatrixUnweightedDirected extends Uint32Array
     return (x << this.size) + y;
   }
 
-  /**
-   * Checks if there is an edge between two vertices.
-   *
-   * @param x the starting vertex
-   * @param y the ending vertex
-   *
-   */
   hasEdge(x: number, y: number): boolean {
     return !!this.getEdge(x, y);
   }
 
-  /**
-   * Iterates over incoming edges of a vertex.
-   *
-   * @generator
-   * @param vertex the vertex
-   *
-   */
   *inEdges(vertex: number) {
     const { vertices } = this;
     for (let i = 0; i < vertices; i++) {
@@ -122,13 +83,6 @@ export class AdjacencyMatrixUnweightedDirected extends Uint32Array
     return false;
   }
 
-  /**
-   * Iterates over outgoing edges of a vertex.
-   *
-   * @generator
-   * @param vertex the vertex
-   *
-   */
   *outEdges(vertex: number) {
     const { vertices } = this;
     for (let i = 0; i < vertices; i++) {
@@ -136,12 +90,6 @@ export class AdjacencyMatrixUnweightedDirected extends Uint32Array
     }
   }
 
-  /**
-   * Removes an edge between two vertices.
-   *
-   * @param x the starting vertex
-   * @param y the ending vertex
-   */
   removeEdge(x: number, y: number): this {
     const [bucket, position] = this.getCoordinates(x, y);
     if (Number.isNaN(bucket)) return this;

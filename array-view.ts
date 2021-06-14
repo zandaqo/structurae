@@ -14,21 +14,10 @@ export class ArrayView<T> extends DataView implements ContainerView<T> {
   static viewLength = 0;
   static itemLength: number;
 
-  /**
-   * The amount of items in the array.
-   */
   get size() {
     return (this.constructor as typeof ArrayView).getSize(this.byteLength);
   }
 
-  /**
-   * Decodes a given view into corresponding JavaScript value.
-   *
-   * @param view the view to decode
-   * @param start the starting offset
-   * @param length the byte length to decode
-   * @return the JavaScript value
-   */
   static decode<T>(
     view: DataView,
     start = 0,
@@ -44,15 +33,6 @@ export class ArrayView<T> extends DataView implements ContainerView<T> {
     return array;
   }
 
-  /**
-   * Encodes a JavaScript value into a given view.
-   *
-   * @param value the value to encode
-   * @param view the view to encode into
-   * @param start the view offset to start
-   * @param length the byte length to encode
-   * @return the amount of written bytes
-   */
   static encode<T>(
     value: Array<T>,
     view: DataView,
@@ -73,49 +53,24 @@ export class ArrayView<T> extends DataView implements ContainerView<T> {
     return written;
   }
 
-  /**
-  * Creates an array view from a given JavaScript array.
-  *
-  * @param value the array to encode
-  * @return the new view
-  */
   static from<T, U extends ArrayView<T>>(value: Array<T>): U {
     const view = new this<T>(new ArrayBuffer(this.getOffset(value.length)));
     this.encode<T>(value, view, 0, view.byteLength);
     return view as U;
   }
 
-  /**
-   * Returns the byte length of an array view to hold a given amount of items.
-   *
-   * @param size the amount of items
-   * @return the byte length required for the given amount of items
-   */
   static getLength(size: number): number {
     return this.getOffset(size);
   }
 
-  /**
-   * Returns the starting byte offset of an item in the array.
-   *
-   * @param index
-   */
   static getOffset(index: number): number {
     return (index * this.itemLength) | 0;
   }
 
-  /**
-   * Calculates the size of an array from it's byte length.
-   *
-   * @param length
-   */
   static getSize(length: number): number {
     return (length / this.itemLength) | 0;
   }
 
-  /**
-   * Allows iterating over views stored in the array.
-   */
   *[Symbol.iterator](): Iterator<ViewInstance<T>> {
     const { size } = this;
     for (let i = 0; i < size; i++) {
@@ -123,29 +78,16 @@ export class ArrayView<T> extends DataView implements ContainerView<T> {
     }
   }
 
-  /**
-   * Returns a value at a given index.
-   *
-   * @param index
-   */
   get(index: number): T {
     const constructor = this.constructor as typeof ArrayView;
     const View = constructor.View as ViewConstructor<T>;
     return View.decode(this, constructor.getOffset(index));
   }
 
-  /**
-   * Returns the length of an item.
-   */
   getLength(_: number): number {
     return (this.constructor as typeof ArrayView).itemLength;
   }
 
-  /**
-   * Returns an item view at a given index.
-   *
-   * @param index
-   */
   getView(index: number): ViewInstance<T> {
     const constructor = this.constructor as typeof ArrayView;
     const View = constructor.View as ViewConstructor<T>;
@@ -156,12 +98,6 @@ export class ArrayView<T> extends DataView implements ContainerView<T> {
     );
   }
 
-  /**
-   * Sets a value at a given index.
-   *
-   * @param index
-   * @param value
-   */
   set(index: number, value: T): void {
     const constructor = this.constructor as typeof ArrayView;
     const View = constructor.View as ViewConstructor<T>;
@@ -173,12 +109,6 @@ export class ArrayView<T> extends DataView implements ContainerView<T> {
     );
   }
 
-  /**
-   * Sets an item view at a given index.
-   *
-   * @param index
-   * @param value
-   */
   setView(index: number, value: DataView): void {
     const constructor = this.constructor as typeof ArrayView;
     new Uint8Array(
@@ -188,9 +118,6 @@ export class ArrayView<T> extends DataView implements ContainerView<T> {
     ).set(new Uint8Array(value.buffer, value.byteOffset, value.byteLength));
   }
 
-  /**
-   * Returns an array representation of the array view.
-   */
   toJSON(): Array<T> {
     return (this.constructor as typeof ArrayView).decode<T>(
       this,

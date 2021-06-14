@@ -32,6 +32,13 @@ export class BinaryGrid extends Uint32Array {
     return (this.length << 5) >> this.size;
   }
 
+  /**
+   * Creates a binary grid of specified dimensions.
+   *
+   * @param rows the amount of rows
+   * @param columns the amount of columns
+   * @return a new binary grid
+   */
   static create(rows: number, columns = 1): BinaryGrid {
     const offset = getLog2(columns);
     const length = (rows << offset) >> 5;
@@ -40,7 +47,13 @@ export class BinaryGrid extends Uint32Array {
     return grid;
   }
 
-  static fromArrays(arrays: Array<Array<Bit>>) {
+  /**
+   * Creates a new binary grid from an array of arrays representing rows and item value of the grid.
+   *
+   * @param arrays the array of arrays
+   * @return a new binary grid
+   */
+  static fromArrays(arrays: Array<Array<Bit>>): BinaryGrid {
     const rows = arrays.length;
 
     // find longest array to get the column size
@@ -63,7 +76,11 @@ export class BinaryGrid extends Uint32Array {
   }
 
   /**
-   * Returns the length of underlying Array required to hold the grid.
+   * Returns the length of the underlying TypedArray required to hold a grid of specified dimensions.
+   *
+   * @param rows the amount of rows
+   * @param columns the amount of columns
+   * @return the required length
    */
   static getLength(rows: number, columns = 1): number {
     return (rows << getLog2(columns)) >> 5;
@@ -76,7 +93,11 @@ export class BinaryGrid extends Uint32Array {
   }
 
   /**
-   * Returns the index of a number holding a bit at given coordinates.
+   * Returns the index of an item holding the bit at given coordinates.
+   *
+   * @param rows the row index
+   * @param columns the column index
+   * @return the item index
    */
   getIndex(row: number, column = 1): number {
     const index = (row << this.size) + column;
@@ -84,7 +105,11 @@ export class BinaryGrid extends Uint32Array {
   }
 
   /**
-   * Returns the value of a bit at given coordinates.
+   * Returns the bit at given coordinates.
+   *
+   * @param rows the row index
+   * @param columns the column index
+   * @return the bit
    */
   getValue(row: number, column: number): Bit {
     const [bucket, position] = this.getCoordinates(row, column);
@@ -92,7 +117,12 @@ export class BinaryGrid extends Uint32Array {
   }
 
   /**
-   * Sets the value of a bit at given coordinates.
+   * Sets the bit at given coordinates.
+   *
+   * @param rows the row index
+   * @param columns the column index
+   * @param value the bit
+   * @return the grid
    */
   setValue(row: number, column: number, value: Bit = 1): this {
     const [bucket, position] = this.getCoordinates(row, column || 0);
@@ -100,6 +130,11 @@ export class BinaryGrid extends Uint32Array {
     return this;
   }
 
+  /**
+   * Creates an array of arrays representing rows of the grid.
+   *
+   * @return an array of arrays
+   */
   toArrays(): Array<Array<Bit>> {
     const { rows, columns } = this;
     const result: Array<Array<Bit>> = new Array(rows);
