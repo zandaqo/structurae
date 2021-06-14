@@ -7,7 +7,7 @@
     "isolatedModules": true,
     "declaration": true,
     "skipLibCheck": true,
-    "outDir": "./build",
+    "outDir": "./",
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -18,9 +18,9 @@
     ]
   },
   "include": [
-    "src/**/*.ts"
+    "*.ts"
   ],
   "exclude": [
-    "src/**/*_test.ts"
+    "*.d.ts"
   ]
 }

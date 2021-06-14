@@ -5,9 +5,9 @@ import {
 import { benchmarkReporter, getIndex } from "./helpers.ts";
 import jsf from "https://jspm.dev/json-schema-faker";
 import { deflateRaw } from "https://deno.land/x/compress@v0.3.8/mod.ts";
-import { View } from "../src/view.ts";
-import { StringView } from "../src/string-view.ts";
-import { Schema } from "../src/view-types.ts";
+import { View } from "../view.ts";
+import { StringView } from "../string-view.ts";
+import { Schema } from "../view-types.ts";
 
 interface House {
   type: number;
@@ -142,11 +142,12 @@ const People = View.create<Array<Person>>({
 const objects: Person[] = [];
 
 for (let i = 0; i < 100; i++) {
+  // deno-lint-ignore no-explicit-any
   objects.push((jsf as any).generate(JSONSchema));
 }
 const Encoder = new TextEncoder();
 const Decoder = new TextDecoder();
-const emptyPerson = Person.from({} as any);
+const emptyPerson = Person.from({} as Person);
 const people = People.from(objects);
 const views = [...people];
 const strings = objects.map((i) => JSON.stringify(i));

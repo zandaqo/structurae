@@ -2,7 +2,7 @@ import {
   bench,
   runBenchmarks,
 } from "https://deno.land/std@0.95.0/testing/bench.ts";
-import { Pool } from "../src/pool.ts";
+import { Pool } from "../pool.ts";
 import { benchmarkReporter, getIndex } from "./helpers.ts";
 
 const SIZE = 1000 * 16;

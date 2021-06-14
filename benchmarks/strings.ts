@@ -3,7 +3,7 @@ import {
   runBenchmarks,
 } from "https://deno.land/std@0.95.0/testing/bench.ts";
 import { benchmarkReporter, getIndex } from "./helpers.ts";
-import { StringView } from "../src/string-view.ts";
+import { StringView } from "../string-view.ts";
 
 function getString(size: number) {
   const text = new Array(size);

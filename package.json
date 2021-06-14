@@ -2,7 +2,7 @@
   "name": "structurae",
   "version": "4.0.0-beta.1",
   "description": "Data structures for performance-sensitive modern JavaScript applications.",
-  "main": "build/index.js",
+  "main": "index.js",
   "type": "module",
   "keywords": [
     "optimization",
@@ -23,8 +23,9 @@
     "build": "tsc-silent -p tsconfig.json --suppress @"
   },
   "files": [
-    "build/**/*.js",
-    "build/**/*.d.ts"
+    "*.js",
+    "*.d.ts",
+    "*.js.map"
   ],
   "author": "Maga D. Zandaqo <denelxan@gmail.com> (http://maga.name)",
   "license": "MIT",

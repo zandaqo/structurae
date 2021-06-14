@@ -3,12 +3,12 @@ import {
   runBenchmarks,
 } from "https://deno.land/std@0.95.0/testing/bench.ts";
 import { benchmarkReporter, getIndex } from "./helpers.ts";
-import { GraphMixin } from "../src/graph.ts";
-import { AdjacencyMatrixUnweightedDirected } from "../src/adjacency-matrix-unweighted-directed.ts";
-import { AdjacencyMatrixUnweightedUndirected } from "../src/adjacency-matrix-unweighted-undirected.ts";
-import { AdjacencyListMixin } from "../src/adjacency-list.ts";
-import { AdjacencyMatrixWeightedDirectedMixin } from "../src/adjacency-matrix-weighted-directed.ts";
-import { AdjacencyMatrixWeightedUndirectedMixin } from "../src/adjacency-matrix-weighted-undirected.ts";
+import { GraphMixin } from "../graph.ts";
+import { AdjacencyMatrixUnweightedDirected } from "../adjacency-matrix-unweighted-directed.ts";
+import { AdjacencyMatrixUnweightedUndirected } from "../adjacency-matrix-unweighted-undirected.ts";
+import { AdjacencyListMixin } from "../adjacency-list.ts";
+import { AdjacencyMatrixWeightedDirectedMixin } from "../adjacency-matrix-weighted-directed.ts";
+import { AdjacencyMatrixWeightedUndirectedMixin } from "../adjacency-matrix-weighted-undirected.ts";
 
 const WeightedList = GraphMixin(AdjacencyListMixin(Int32Array));
 const WeightedDirectedMatrix = GraphMixin(
