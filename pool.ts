@@ -8,11 +8,18 @@ export class Pool extends BitArray {
   nextAvailable = 0;
 
   /**
+   * Creates a Pool of the specified size.
+   *
    * @param size the size of the pool
+   * @return a new Pool
    */
-  constructor(size: number) {
-    super(size);
-    this.fill(4294967295);
+  static create<T extends typeof BitArray>(
+    this: T,
+    size: number,
+  ): InstanceType<T> {
+    const pool = new this(this.getLength(size));
+    pool.fill(4294967295);
+    return pool as InstanceType<T>;
   }
 
   /**

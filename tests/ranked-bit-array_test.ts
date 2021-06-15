@@ -3,13 +3,6 @@ import { assertEquals } from "https://deno.land/std@0.98.0/testing/asserts.ts";
 
 const { test } = Deno;
 
-test("[RankedBitArray.constuctor] creates a bit array of a required size", () => {
-  const array = new RankedBitArray(100);
-  assertEquals(array instanceof RankedBitArray, true);
-  assertEquals(array instanceof Uint32Array, true);
-  assertEquals(array.length, 8);
-});
-
 test("[RankedBitArray.constuctor] creates a bit array from a given buffer", () => {
   const buffer = new ArrayBuffer(32);
   const array = new RankedBitArray(buffer);
@@ -18,8 +11,15 @@ test("[RankedBitArray.constuctor] creates a bit array from a given buffer", () =
   assertEquals(array.length, 8);
 });
 
+test("[RankedBitArray.create] creates a bit array of a required size", () => {
+  const array = RankedBitArray.create(100);
+  assertEquals(array instanceof RankedBitArray, true);
+  assertEquals(array instanceof Uint32Array, true);
+  assertEquals(array.length, 8);
+});
+
 test("[RankedBitArray#setBit] sets individual bits and updates ranks", () => {
-  const array = new RankedBitArray(16);
+  const array = RankedBitArray.create(16);
   assertEquals(array.getBit(0), 0);
   assertEquals(array.getBit(1), 0);
   assertEquals(array[1], 0);
@@ -32,13 +32,13 @@ test("[RankedBitArray#setBit] sets individual bits and updates ranks", () => {
 });
 
 test("[RankedBitArray#size] returns the amount of available bits in the array", () => {
-  const array = new RankedBitArray(32);
+  const array = RankedBitArray.create(32);
   assertEquals(array.size, 32);
   assertEquals(array.length, 2);
 });
 
 test("[RankedBitArray#rank] returns the rank of a bit at a given index", () => {
-  const array = new RankedBitArray(64);
+  const array = RankedBitArray.create(64);
   array.setBit(33).setBit(16).setBit(9).setBit(5);
   assertEquals(array.rank(36), 4);
   assertEquals(array.rank(33), 3);
@@ -48,7 +48,7 @@ test("[RankedBitArray#rank] returns the rank of a bit at a given index", () => {
 });
 
 test("[RankedBitArray#select] the select of a bit at a given index", () => {
-  const array = new RankedBitArray(320);
+  const array = RankedBitArray.create(320);
   array.setBit(300).setBit(20).setBit(16).setBit(9).setBit(5);
   assertEquals(array.select(4), 20);
   assertEquals(array.select(3), 16);

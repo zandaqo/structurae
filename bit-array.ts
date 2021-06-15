@@ -9,21 +9,7 @@ type BitPosition = {
  * Uses Uint32Array as a vector or array of bits.
  */
 export class BitArray extends Uint32Array {
-  lastPosition: BitPosition;
-
-  // deno-lint-ignore constructor-super
-  constructor(
-    buffer: number | ArrayLike<number> | ArrayBufferLike = 32,
-    byteOffset?: number,
-    length?: number,
-  ) {
-    if (typeof buffer === "number") {
-      super(new.target.getLength(buffer));
-    } else {
-      super(buffer as ArrayBufferLike, byteOffset, length);
-    }
-    this.lastPosition = { bucket: 0, position: 0 };
-  }
+  lastPosition: BitPosition = { bucket: 0, position: 0 };
 
   static get [Symbol.species]() {
     return Uint32Array;
@@ -34,6 +20,19 @@ export class BitArray extends Uint32Array {
    */
   get size(): number {
     return this.length << 5;
+  }
+
+  /**
+   * Creates a BitArray of the specified size.
+   *
+   * @param size the maximum amount of bits in the array
+   * @return a new BitArray
+   */
+  static create<T extends typeof BitArray>(
+    this: T,
+    size: number,
+  ): InstanceType<T> {
+    return new this(this.getLength(size)) as InstanceType<T>;
   }
 
   /**

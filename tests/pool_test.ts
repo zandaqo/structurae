@@ -3,15 +3,15 @@ import { assertEquals } from "https://deno.land/std@0.98.0/testing/asserts.ts";
 
 const { test } = Deno;
 
-test("[Pool.constructor] creates a Pool", () => {
-  const pool = new Pool(10 * 16);
+test("[Pool.create] creates a Pool", () => {
+  const pool = Pool.create(10 * 16);
   assertEquals(pool.length, 5);
   assertEquals(pool.nextAvailable, 0);
   assertEquals(pool[0], 4294967295);
 });
 
 test("[Pool#get] gets the next available index", () => {
-  const pool = new Pool(2 * 32);
+  const pool = Pool.create(2 * 32);
   assertEquals(pool.get(), 0);
   assertEquals(pool.nextAvailable, 0);
   assertEquals(pool[0], 0b11111111111111111111111111111110);
@@ -33,7 +33,7 @@ test("[Pool#get] gets the next available index", () => {
 });
 
 test("[Pool#free] makes a given index available", () => {
-  const pool = new Pool(2 * 32);
+  const pool = Pool.create(2 * 32);
   for (let i = 0; i < 32; i++) {
     assertEquals(pool.get(), i);
   }
