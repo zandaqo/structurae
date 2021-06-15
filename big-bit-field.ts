@@ -1,21 +1,31 @@
+import { getBitSize } from "./utilities.ts";
+
 const SIGN_BIT = BigInt(2147483647);
 const ZERO = BigInt(0);
 const ONE = BigInt(1);
 const TWO = BigInt(2);
 
 /**
- * Creates a BigBitField class from with a given schema.
+ * Creates a BigBitField class with a given schema. BigBitField uses bigints as bitfields
+ * to store and operate on data using bitwise operations.
  *
  * @param schema the schema
  * @returns the BigBitFieldClass
+ *
+ * @example
+ * const LargeField = BitFieldMixin({ width: 20, height: 20 });
+ * const largeField = new LargeField({ width: 1048576, height: 1048576 });
+ * largeField.value
+ * //=> 1099512676352n
+ * largeField.set('width', 1000).get('width')
+ * //=> 1000
+ * largeField.toObject()
+ * //=> { width: 1000, height: 1048576 }
  */
 export function BigBitFieldMixin<
   T extends Record<string, number>,
   K extends keyof T,
 >(schema: T) {
-  /**
-   * Stores and operates on data in BigInts treating them as bitfields.
-   */
   const Class = class BigBitFieldClass {
     static schema: Record<K, bigint>;
     static fields: Array<K>;
@@ -98,6 +108,16 @@ export function BigBitFieldMixin<
         mask |= fieldMask;
       }
       return [value, this.mask ^ mask];
+    }
+
+    /**
+     * Returns the minimum amount of bits necessary to hold a given number.
+     *
+     * @param number the number
+     * @return the amount of bits
+     */
+    static getMinSize(number: number): number {
+      return getBitSize(number);
     }
 
     /**

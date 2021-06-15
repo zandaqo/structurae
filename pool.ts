@@ -2,7 +2,25 @@ import { BitArray } from "./bit-array.ts";
 import { getLSBIndex } from "./utilities.ts";
 
 /**
- * Manages availability of objects in object pools.
+ * Implements a fast algorithm to manage availability of objects in an object pool using a BitArray.
+ *
+ * @example
+ * // create a pool of 1600 indexes
+ * const pool = Pool.create(100 * 16);
+ *
+ * // get the next available index and make it unavailable
+ * pool.get();
+ * //=> 0
+ * pool.get();
+ * //=> 1
+ *
+ * // set index available
+ * pool.free(0);
+ * pool.get();
+ * //=> 0
+ *
+ * pool.get();
+ * //=> 2
  */
 export class Pool extends BitArray {
   nextAvailable = 0;

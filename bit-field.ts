@@ -11,18 +11,30 @@ const SIGN_BIT = 2147483647;
 const MAX_BITWISE_SIZE = 31;
 
 /**
- * Creates a BitField class from with a given schema.
+ * Creates a BitField class from with a given schema. BitField uses numbers as bitfields
+ * to store and operate on data using bitwise operations. The size of the field is limited to 31 bits,
+ * for a larger bitfields consider using BigBitField class that uses bigints instead.
  *
  * @param schema the schema
  * @returns the BitFieldClass
+ *
+ * @example
+ * const Field = BitFieldMixin({ width: 8, height: 8 });
+ * const field = new Field({ width: 100, height: 200 });
+ * field.get('width');
+ * //=> 100;
+ * field.get('height');
+ * //=> 200
+ * field.set('width', 18);
+ * field.get('width');
+ * //=> 18
+ * field.toObject();
+ * //=> { width: 18, height: 200 }
  */
 export function BitFieldMixin<
   T extends Record<K, number>,
   K extends keyof T,
 >(schema: T) {
-  /**
-   * Stores and operates on data in Numbers treating them as bitfields.
-   */
   const Class = class BitFieldClass {
     static schema = schema;
     static fields: Array<K>;

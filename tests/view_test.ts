@@ -48,7 +48,7 @@ test("[View.create] handles array of arrays", () => {
     },
     maxItems: 3,
   });
-  assertEquals(ArraysView.itemLength, 12);
+  assertEquals(ArraysView.itemLength, 24);
   assertEquals(View.Views.has("ArrayView_number"), true);
   assertEquals(
     ArraysView.from([

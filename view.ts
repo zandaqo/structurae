@@ -43,7 +43,8 @@ export class View {
     ["int16", Int16View],
     ["uint16", Uint16View],
     ["int32", Int32View],
-    ["number", Int32View],
+    ["number", Float64View],
+    ["integer", Int32View],
     ["uint32", Uint32View],
     ["float32", Float32View],
     ["float64", Float64View],
@@ -234,7 +235,7 @@ export class View {
         `The length of a required field "${name}" is undefined.`,
       );
     }
-    const layout: ViewFieldLayout<T> = { start, View, length };
+    const layout: ViewFieldLayout<T> = { start, View, length, required };
     if (Reflect.has(field, "default")) {
       layout.default = (field.default as unknown) as T;
     }

@@ -4,6 +4,16 @@ import { getLSBIndex, popCount32 } from "./utilities.ts";
 
 /**
  * A bit array that supports constant time rank and O(logN) time select operations.
+ *
+ * @example
+ * const array = RankedBitArray.create(10);
+ * array.setBit(1).setBit(3).setBit(7);
+ * array.rank(2);
+ * //=> 1
+ * array.rank(7);
+ * //=> 2
+ * array.select(2);
+ * //=> 3
  */
 export class RankedBitArray extends BitArray {
   /**

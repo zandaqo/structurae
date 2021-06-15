@@ -6,7 +6,19 @@ type BitPosition = {
 };
 
 /**
- * Uses Uint32Array as a vector or array of bits.
+ * Uses Uint32Array as an array or vector of bits. It's a simpler version of BitField
+ * that only sets and checks individual bits.
+ *
+ * @example
+ * const array = BitArray.create(10);
+ * array.getBit(0);
+ * //=> 0
+ * array.setBit(0).getBit(0);
+ * //=> 1
+ * array.size;
+ * //=> 10
+ * array.length;
+ * //=> 1
  */
 export class BitArray extends Uint32Array {
   lastPosition: BitPosition = { bucket: 0, position: 0 };
