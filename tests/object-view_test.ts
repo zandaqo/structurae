@@ -31,6 +31,7 @@ const PersonView: ViewConstructor<Person> = class extends ObjectView<Person> {
   };
   static fields = ["name", "age", "scores"];
   static defaultData = new Uint8Array(new ArrayBuffer(14));
+  static defaultObject = () => ({ name: "", age: 0, scores: null });
 };
 
 PersonView.defaultData![10] = 100;
@@ -50,6 +51,7 @@ const FamilyView: ViewConstructor<Family> = class extends ObjectView<Family> {
   };
   static fields = ["name", "members"];
   static defaultData = new Uint8Array(new ArrayBuffer(52));
+  static defaultObject = () => ({ name: "", members: null });
 };
 
 test("[ObjectView.from] creates a new object view with the given data", () => {

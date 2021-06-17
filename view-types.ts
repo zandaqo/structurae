@@ -136,6 +136,8 @@ export interface ViewConstructor<T, Instance = ViewInstance<T>> {
   itemLength?: number;
   layout?: ViewLayout<T>;
   defaultData?: Uint8Array;
+  defaultObject?: Function;
+
   // deno-lint-ignore no-explicit-any
   new (...args: any[]): Instance;
   /**

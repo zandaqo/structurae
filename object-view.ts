@@ -6,11 +6,12 @@ export class ObjectView<T extends object> extends DataView
   static layout?: ViewLayout<unknown>;
   static fields: Array<unknown>;
   static defaultData?: Uint8Array;
+  static defaultObject?: Function;
 
   static decode<T extends object>(view: DataView, start = 0, _?: number): T {
     const layout = this.layout as ViewLayout<T>;
     const fields = this.fields as Array<keyof T>;
-    const result = {} as T;
+    const result = this.defaultObject!() as T;
     for (let i = 0; i < fields.length; i++) {
       const name = fields[i];
       const { View, start: fieldStart, length: fieldLength } = layout[name];

@@ -202,6 +202,29 @@ export class View {
     return array;
   }
 
+  static getDefaultValue(View: ViewConstructor<unknown, unknown>): string {
+    switch (View) {
+      case Int8View:
+      case Int16View:
+      case Uint16View:
+      case Uint8View:
+      case Int32View:
+        return "0";
+      case Float32View:
+      case Float64View:
+        return "0.0";
+      case BigInt64View:
+      case BigUint64View:
+        return "0n";
+      case BooleanView:
+        return "false";
+      case StringView:
+        return "''";
+      default:
+        return "null";
+    }
+  }
+
   static getExistingView<T>(schema: Schema): ViewConstructor<T> {
     let type = schema.$id || schema.$ref?.slice(1);
     if (type) {
@@ -302,11 +325,18 @@ export class View {
       layout[property] = fieldLayout;
     }
     const defaultData = this.getDefaultData(layout, lastOffset, fields);
+    const defaultObject = new Function(
+      "return {" +
+        fields.map((key) => `${key}:${this.getDefaultValue(layout[key].View)}`)
+          .join(",") +
+        "}",
+    );
     return class extends this.ObjectClass<T> {
       static viewLength = lastOffset;
       static layout = layout;
       static fields = fields;
       static defaultData = defaultData;
+      static defaultObject = defaultObject;
     };
   }
 
