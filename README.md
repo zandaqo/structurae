@@ -8,10 +8,6 @@ that includes:
 
 - [Binary Protocol](https://github.com/zandaqo/structurae#binary-protocol) -
   simple binary protocol based on DataView and defined with JSONSchema
-  - [Objects and Maps](https://github.com/zandaqo/structurae#objects-and-maps)
-  - [Arrays and Vector](https://github.com/zandaqo/structurae#arrays-and-vectors)
-  - [Strings](https://github.com/zandaqo/structurae#strings)
-  - [Tagged Objects](https://github.com/zandaqo/structurae#tagged-objects)
 - Bit Structures:
   - [BitField & BigBitField](https://github.com/zandaqo/structurae#BitField) -
     stores and operates on data in Numbers and BigInts treating them as
@@ -63,7 +59,6 @@ import * as structurae from "https://raw.githubusercontent.com/zandaqo/structura
 
 ## Documentation
 
-- API documentation
 - Articles:
   - [Structurae: Data Structures for Heigh-Performance
     JavaScript](https://blog.usejournal.com/structurae-data-structures-for-high-performance-javascript-9b7da4c73f8)
@@ -127,10 +122,9 @@ animal.toJSON();
 
 #### Objects and Maps
 
-The objects by default are treated as C-like structs, the data is laid out
-sequentially with fixed sizes, all standard JavaScript values can be used as
-fields of objects, inluding other objects and arrays of fixed size. Here is a
-more involved example:
+Objects by default are treated as C-like structs, the data is laid out
+sequentially with fixed sizes, all standard JavaScript values are supported,
+inluding other objects and arrays of fixed size:
 
 ```typescript
 interface Friend {
