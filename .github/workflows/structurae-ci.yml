@@ -5,15 +5,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    steps:
       - uses: actions/checkout@v2
       - name: download deno
         uses: denoland/setup-deno@main
         with:
-          deno-version: canary
-
+          deno-version: 1.11.1
       - name: check format
         run: deno fmt --check
-
       - name: run tests
         run: deno test --allow-read --allow-write
