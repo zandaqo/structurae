@@ -54,7 +54,7 @@ import {...} from "structurae";
 Deno:
 
 ```
-import * as structurae from "https://raw.githubusercontent.com/zandaqo/structurae/4.0.0-rc1/index.ts"
+import {...} from "https://deno.land/x/structurae@4.0.0-pre.2/index.ts"
 ```
 
 ## Documentation
@@ -77,8 +77,8 @@ objects, and arrays. These classes ("views") form the basis for a simple binary
 protocol ("view protocol") with the following features:
 
 - smaller and faster than schema-less binary formats (e.g. BSON, MessagePack);
-- supports zero-copy operations, e.g. reading and changing object fields
-  without; decoding the whole object;
+- supports zero-copy operations, e.g. reading and changing object fields without
+  decoding the whole object;
 - supports static typing through TypeScript;
 - uses JSON Schema for schema definitions;
 - does not require compilation unlike most other schema-based formats (e.g.
@@ -111,8 +111,6 @@ animal instanceof DataView;
 //=> true
 animal.byteLength;
 //=> 14
-animal.get("name");
-//=> Gaspode
 animal.get("age");
 //=> 10
 animal.set("age", 20);
@@ -171,8 +169,6 @@ const person = Person.from({
   bestFriend: { name: "Sam Vimes" },
   friends: [{ name: "Sam Vimes" }],
 });
-person.byteLength;
-//=> 130
 person.get("name");
 //=> Carrot
 person.getView("name");

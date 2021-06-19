@@ -155,13 +155,13 @@ test("[BitField.encode] encodes a given map of fields and their values into a si
 });
 
 test("[BitField.isValid] checks if a given set of values is valued according to the schema", () => {
-  class Person extends BitField {}
-  Person.schema = { age: 7, gender: 1 };
-  Person.initialize();
-  assertEquals(Person.isValid({}), true);
+  const Person = BitFieldMixin({ age: 7, gender: 1 });
+  // deno-lint-ignore no-explicit-any
+  assertEquals(Person.isValid({} as any), true);
   assertEquals(Person.isValid({ age: 20, gender: 0 }), true);
   assertEquals(Person.isValid({ age: 200, gender: -1 }), false);
-  assertEquals(Person.isValid({ age: 20 }), true);
+  // deno-lint-ignore no-explicit-any
+  assertEquals(Person.isValid({ age: 20 } as any), true);
 });
 
 test("[BitField.getMinSize] calculates the minimum amount of bits to hold a given number", () => {

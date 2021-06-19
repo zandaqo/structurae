@@ -293,5 +293,5 @@ export const BitField = BitFieldMixin(
   Array.from({ length: MAX_BITWISE_SIZE }, (_, i) => i).reduce((a, i) => {
     a[i] = 1;
     return a;
-  }, {} as Record<string, number>),
+  }, {} as Record<number, number>),
 );
