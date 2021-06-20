@@ -3,7 +3,7 @@ import { StringView } from "../string-view.ts";
 import { Uint8View } from "../numeric-view.ts";
 import { VectorView } from "../vector-view.ts";
 import { MapView } from "../map-view.ts";
-import { assertEquals } from "https://deno.land/std@0.98.0/testing/asserts.ts";
+import { assertEquals } from "../dev_deps.ts";
 
 const { test } = Deno;
 const maxView = new DataView(new ArrayBuffer(1024));

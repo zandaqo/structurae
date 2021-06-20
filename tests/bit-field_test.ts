@@ -1,8 +1,5 @@
 import { BitField, BitFieldMixin } from "../bit-field.ts";
-import {
-  assertEquals,
-  assertThrows,
-} from "https://deno.land/std@0.98.0/testing/asserts.ts";
+import { assertEquals, assertThrows } from "../dev_deps.ts";
 
 const { test } = Deno;
 

@@ -1,5 +1,5 @@
 import { BinaryGrid } from "../binary-grid.ts";
-import { assertEquals } from "https://deno.land/std@0.98.0/testing/asserts.ts";
+import { assertEquals } from "../dev_deps.ts";
 
 const { test } = Deno;
 test("[BinaryGrid.constructor] creates a BinaryGrid from existing data with default dimensions", () => {

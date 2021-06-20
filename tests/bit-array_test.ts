@@ -1,5 +1,5 @@
 import { BitArray } from "../bit-array.ts";
-import { assertEquals } from "https://deno.land/std@0.98.0/testing/asserts.ts";
+import { assertEquals } from "../dev_deps.ts";
 
 const { test } = Deno;
 

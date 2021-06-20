@@ -1,4 +1,4 @@
-import { runBenchmarks } from "https://deno.land/std@0.95.0/testing/bench.ts";
+import { runBenchmarks } from "../dev_deps.ts";
 import { benchmarkReporter } from "./helpers.ts";
 
 import "./bit-field-match.ts";

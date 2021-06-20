@@ -1,5 +1,5 @@
 import { AdjacencyMatrixWeightedDirectedMixin } from "../adjacency-matrix-weighted-directed.ts";
-import { assertEquals } from "https://deno.land/std@0.98.0/testing/asserts.ts";
+import { assertEquals } from "../dev_deps.ts";
 
 const { test } = Deno;
 

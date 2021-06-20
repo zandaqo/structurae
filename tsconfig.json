@@ -21,6 +21,7 @@
     "*.ts"
   ],
   "exclude": [
-    "*.d.ts"
+    "*.d.ts",
+    "dev_deps.ts"
   ]
 }

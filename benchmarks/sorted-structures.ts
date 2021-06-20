@@ -1,7 +1,4 @@
-import {
-  bench,
-  runBenchmarks,
-} from "https://deno.land/std@0.95.0/testing/bench.ts";
+import { bench, runBenchmarks } from "../dev_deps.ts";
 import { benchmarkReporter, getIndex } from "./helpers.ts";
 import { SortedArray } from "../sorted-array.ts";
 import { BinaryHeap } from "../binary-heap.ts";

@@ -1,7 +1,4 @@
-import {
-  assertEquals,
-  assertThrows,
-} from "https://deno.land/std@0.98.0/testing/asserts.ts";
+import { assertEquals, assertThrows } from "../dev_deps.ts";
 import { AdjacencyListMixin } from "../adjacency-list.ts";
 
 const { test } = Deno;

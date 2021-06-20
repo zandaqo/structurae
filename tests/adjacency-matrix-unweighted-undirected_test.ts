@@ -1,5 +1,5 @@
 import { AdjacencyMatrixUnweightedUndirected } from "../adjacency-matrix-unweighted-undirected.ts";
-import { assertEquals } from "https://deno.land/std@0.98.0/testing/asserts.ts";
+import { assertEquals } from "../dev_deps.ts";
 
 const { test } = Deno;
 const exampleGraph = AdjacencyMatrixUnweightedUndirected.create(6);

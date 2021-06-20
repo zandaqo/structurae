@@ -1,7 +1,4 @@
-import {
-  BenchmarkResult,
-  BenchmarkRunResult,
-} from "https://deno.land/std@0.95.0/testing/bench.ts";
+import type { BenchmarkResult, BenchmarkRunResult } from "../dev_deps.ts";
 
 const reSuitName = /^\[(.*?)\]\s(.*?)$/i;
 
