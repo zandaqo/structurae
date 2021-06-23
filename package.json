@@ -1,6 +1,6 @@
 {
   "name": "structurae",
-  "version": "4.0.0-pre.2",
+  "version": "4.0.0-pre.3",
   "description": "Data structures for performance-sensitive modern JavaScript applications.",
   "main": "index.js",
   "type": "module",
@@ -19,9 +19,7 @@
     "list",
     "adjacency"
   ],
-  "scripts": {
-    "build": "tsc-silent -p tsconfig.json --suppress @"
-  },
+  "scripts": {},
   "files": [
     "*.js",
     "*.d.ts",
@@ -39,9 +37,5 @@
   },
   "engines": {
     "node": ">=14.0.0"
-  },
-  "devDependencies": {
-    "tsc-silent": "^1.2.1",
-    "typescript": "^4.3.2"
   }
 }

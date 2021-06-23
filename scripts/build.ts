@@ -1,12 +1,27 @@
-for await (const dirEntry of Deno.readDir(Deno.realPathSync("./"))) {
-  if (!dirEntry.isFile) continue;
-  const fileName = dirEntry.name;
-  const isJS = fileName.endsWith(".js");
-  const isDTS = !isJS && fileName.endsWith(".d.ts");
-  if (!isJS && !isDTS) continue;
-  const filePath = Deno.realPathSync("./" + fileName);
-  let content = Deno.readTextFileSync(filePath);
-  content = content.replace(/\.ts";/g, isDTS ? '";' : '.js";');
-  Deno.writeTextFileSync(filePath, content);
-  console.log(dirEntry.name);
+try {
+  const { files } = await Deno.emit("index.ts", {
+    compilerOptions: {
+      "target": "es2020",
+      "module": "es2015",
+      "sourceMap": true,
+      "inlineSources": true,
+      "declaration": true,
+      "removeComments": false,
+    },
+  });
+  for (const [fileName, text] of Object.entries(files)) {
+    const isJS = fileName.endsWith(".js");
+    const isDTS = !isJS && fileName.endsWith(".d.ts");
+    const newName = fileName.replace(/file\:\/\/\//g, "")
+      .replace(/\.ts\./g, "."); // remove .ts extenstion
+    let content = text;
+    if (isJS || isDTS) {
+      content = text.replace(/\.ts";/g, isDTS ? '";' : '.js";') // remove .ts extension
+        .replace(/^\/\/\/.*?\/>\s/g, ""); // remove triple slash comments
+    }
+    Deno.writeTextFileSync(newName, content);
+  }
+  console.log("Done!");
+} catch (e) {
+  console.log(e);
 }
