@@ -1,6 +1,6 @@
+import { Constructor } from "./utility-types.ts";
 import type {
   ComplexView,
-  SchemaArray,
   ViewConstructor,
   ViewInstance,
   ViewLayout,
@@ -16,12 +16,13 @@ export class MapView<T extends object> extends DataView
   static optionalFields: Array<unknown>;
   static maxView: DataView;
   static defaultData?: Uint8Array;
+  static ObjectConstructor: Constructor<unknown>;
 
   static decode<T>(view: DataView, start = 0): T {
     const fields = this.fields as Array<keyof T>;
     const layout = this.layout as ViewLayout<T>;
     const optionalFields = this.optionalFields as Array<keyof T>;
-    const object = {} as T;
+    const object = new this.ObjectConstructor() as T;
     for (let i = 0; i < fields.length; i++) {
       const field = fields[i];
       const { View, start: startOffset, length } = layout[field];
@@ -121,7 +122,7 @@ export class MapView<T extends object> extends DataView
         fieldLength = View.viewLength;
       } else if (View.itemLength) {
         fieldLength = View.getLength(
-          ((fieldValue as unknown) as SchemaArray).length,
+          ((fieldValue as unknown) as Array<unknown>).length,
         );
       } else {
         fieldLength = View.getLength((fieldValue as unknown) as number);

@@ -1,3 +1,5 @@
+import { Constructor } from "./utility-types.ts";
+
 export interface PrimitiveView<T> extends DataView {
   /**
    * Returns the JavaScript value of the view.
@@ -136,7 +138,7 @@ export interface ViewConstructor<T, Instance = ViewInstance<T>> {
   itemLength?: number;
   layout?: ViewLayout<T>;
   defaultData?: Uint8Array;
-  defaultObject?: Function;
+  ObjectConstructor?: Constructor<T>;
 
   // deno-lint-ignore no-explicit-any
   new (...args: any[]): Instance;
@@ -193,14 +195,6 @@ export type SchemaTypeName =
   | "object"
   | "array";
 
-export type SchemaType =
-  | string
-  | number
-  | boolean
-  | SchemaObject
-  | SchemaArray
-  | undefined;
-
 export type SchemaBinaryType =
   | "map"
   | "vector"
@@ -231,15 +225,5 @@ export interface Schema {
   };
   type: SchemaTypeName;
   btype?: SchemaBinaryType;
-  default?: SchemaType;
+  default?: unknown;
 }
-
-// Workaround for infinite type recursion
-export interface SchemaObject {
-  [key: string]: SchemaType;
-}
-
-// Workaround for infinite type recursion
-// https://github.com/Microsoft/TypeScript/issues/3496#issuecomment-128553540
-// deno-lint-ignore no-empty-interface
-export interface SchemaArray extends Array<SchemaType> {}

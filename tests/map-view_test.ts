@@ -4,6 +4,7 @@ import { Uint8View } from "../numeric-view.ts";
 import { VectorView } from "../vector-view.ts";
 import { MapView } from "../map-view.ts";
 import { assertEquals } from "../dev_deps.ts";
+import { Constructor } from "../utility-types.ts";
 
 const { test } = Deno;
 const maxView = new DataView(new ArrayBuffer(1024));
@@ -29,6 +30,11 @@ const PersonView: ViewConstructor<Person> = class extends MapView<Person> {
   static optionalFields = ["name"];
   static maxView = maxView;
   static defaultData = new Uint8Array(new ArrayBuffer(1));
+  static ObjectConstructor = (function () {
+    return { name: "", age: 0 };
+  }) as unknown as Constructor<
+    Person
+  >;
 };
 
 const Members: ViewConstructor<
@@ -49,6 +55,9 @@ const FamilyView: ViewConstructor<Family> = class extends MapView<Family> {
   static optionalFields = ["members"];
   static maxView = maxView;
   static defaultData = new Uint8Array(new ArrayBuffer(10));
+  static ObjectConstructor = (function () {
+    return { name: "", members: null };
+  }) as unknown as Constructor<Family>;
 };
 
 FamilyView.defaultData!.set([90, 97, 112, 104, 111, 100]); // default name is Zaphod

@@ -42,4 +42,5 @@ export type {
 } from "./utility-types.ts";
 export { getBitSize, getLog2, getLSBIndex, popCount32 } from "./utilities.ts";
 export { VectorView } from "./vector-view.ts";
+export type { ViewConstructor, ViewInstance } from "./view-types.ts";
 export { View } from "./view.ts";

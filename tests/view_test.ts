@@ -96,6 +96,28 @@ test("[View.create] handles objects", () => {
   });
 });
 
+test("[View.create] handles objects with constructors", () => {
+  class ABC {
+    a = 1;
+    b = 2;
+  }
+
+  const AView = View.create({
+    $id: "ABC",
+    type: "object",
+    properties: {
+      a: { type: "number", btype: "uint8", default: 5 },
+      b: { type: "number", btype: "uint8", default: 6 },
+    },
+  }, ABC);
+  assertEquals(AView.viewLength, 2);
+  assertEquals(View.Views.get("ABC"), AView);
+  assertEquals(AView.from({} as unknown as ABC).toJSON(), {
+    a: 5,
+    b: 6,
+  });
+});
+
 test("[View.create] handles array of objects", () => {
   const PersonArrayView = View.create<
     Array<Person>

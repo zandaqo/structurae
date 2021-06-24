@@ -4,6 +4,7 @@ import { ArrayView } from "../array-view.ts";
 import { Uint8View } from "../numeric-view.ts";
 import { StringView } from "../string-view.ts";
 import { assertEquals } from "../dev_deps.ts";
+import { Constructor } from "../utility-types.ts";
 
 const { test } = Deno;
 interface Person {
@@ -31,7 +32,11 @@ const PersonView: ViewConstructor<Person> = class extends ObjectView<Person> {
   };
   static fields = ["name", "age", "scores"];
   static defaultData = new Uint8Array(new ArrayBuffer(14));
-  static defaultObject = () => ({ name: "", age: 0, scores: null });
+  static ObjectConstructor = (function () {
+    return { name: "", age: 0, scores: null };
+  }) as unknown as Constructor<
+    Person
+  >;
 };
 
 PersonView.defaultData![10] = 100;
@@ -51,7 +56,9 @@ const FamilyView: ViewConstructor<Family> = class extends ObjectView<Family> {
   };
   static fields = ["name", "members"];
   static defaultData = new Uint8Array(new ArrayBuffer(52));
-  static defaultObject = () => ({ name: "", members: null });
+  static ObjectConstructor = (function () {
+    return { name: "", members: null };
+  }) as unknown as Constructor<Family>;
 };
 
 test("[ObjectView.from] creates a new object view with the given data", () => {

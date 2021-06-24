@@ -3,8 +3,6 @@ import type {
   ContainerView,
   PrimitiveView,
   Schema,
-  SchemaObject,
-  SchemaType,
   ViewConstructor,
   ViewFieldLayout,
   ViewInstance,
@@ -30,6 +28,7 @@ import { MapView } from "./map-view.ts";
 import { StringView } from "./string-view.ts";
 import { TypedArrayView } from "./typed-array-view.ts";
 import { log2 } from "./utilities.ts";
+import { Constructor } from "./utility-types.ts";
 
 type UnknownViewConstructor = ViewConstructor<
   unknown,
@@ -71,15 +70,18 @@ export class View {
     return this._maxView;
   }
 
-  static create<T>(schema: Schema): ViewConstructor<T> {
+  static create<T>(
+    schema: Schema,
+    constructor?: Constructor<T extends object ? T : never>,
+  ): ViewConstructor<T> {
     const schemas = this.getSchemaOrdering(schema);
     for (let i = schemas.length - 1; i >= 0; i--) {
       const objectSchema = schemas[i];
       const id = this.getSchemaId(objectSchema);
       if (this.Views.has(id)) continue;
-      const View: ViewConstructor<SchemaObject> = objectSchema.btype === "map"
-        ? this.getMapView(objectSchema)
-        : this.getObjectView(objectSchema);
+      const View: ViewConstructor<object> = objectSchema.btype === "map"
+        ? this.getMapView(objectSchema, constructor)
+        : this.getObjectView(objectSchema, constructor);
       // cache the view by id
       this.Views.set(id, View);
       // cache by tag if present
@@ -202,27 +204,45 @@ export class View {
     return array;
   }
 
-  static getDefaultValue(View: ViewConstructor<unknown, unknown>): string {
-    switch (View) {
-      case Int8View:
-      case Int16View:
-      case Uint16View:
-      case Uint8View:
-      case Int32View:
-        return "0";
-      case Float32View:
-      case Float64View:
-        return "0.0";
-      case BigInt64View:
-      case BigUint64View:
-        return "0n";
-      case BooleanView:
-        return "false";
-      case StringView:
-        return "''";
-      default:
-        return "null";
+  static getDefaultConstructor<T>(
+    fields: Array<keyof T>,
+    layout: ViewLayout<T>,
+  ): Constructor<T> {
+    const content = [];
+    for (const field of fields) {
+      const View = layout[field].View as ViewConstructor<unknown, unknown>;
+      let value = "";
+      switch (View) {
+        case Int8View:
+        case Int16View:
+        case Uint16View:
+        case Uint8View:
+        case Int32View:
+          value = "0";
+          break;
+        case Float32View:
+        case Float64View:
+          value = "0.0";
+          break;
+        case BigInt64View:
+        case BigUint64View:
+          value = "0n";
+          break;
+        case BooleanView:
+          value = "false";
+          break;
+        case StringView:
+          value = "''";
+          break;
+        default:
+          value = "null";
+      }
+      content.push(`${field}:${value}`);
     }
+    return new Function(
+      "return {" + content.join(",") +
+        "}",
+    ) as Constructor<T>;
   }
 
   static getExistingView<T>(schema: Schema): ViewConstructor<T> {
@@ -238,7 +258,7 @@ export class View {
     return this.Views.get(type) as ViewConstructor<T>;
   }
 
-  static getFieldLayout<T extends SchemaType>(
+  static getFieldLayout<T>(
     field: Schema,
     start: number,
     required: boolean,
@@ -265,8 +285,9 @@ export class View {
     return layout;
   }
 
-  static getMapView<T extends SchemaObject>(
+  static getMapView<T extends object>(
     schema: Schema,
+    constructor?: Constructor<T>,
   ): ViewConstructor<T, ComplexView<T>> {
     const required = schema.required || [];
     const optional = Object.keys(schema.properties!).filter(
@@ -294,7 +315,13 @@ export class View {
       );
     }
     const maxView = this.maxView;
-    const defaultData = this.getDefaultData(layout, optionalOffset, required);
+    const defaultData = this.getDefaultData(
+      layout,
+      optionalOffset,
+      required as Array<keyof T>,
+    );
+    const ObjectConstructor = constructor ||
+      this.getDefaultConstructor(required as Array<keyof T>, layout);
     return class extends this.MapClass<T> {
       static layout = layout;
       static lengthOffset = optionalOffset + (optional.length << 2);
@@ -303,11 +330,13 @@ export class View {
       static optionalFields = optional;
       static maxView = maxView;
       static defaultData = defaultData;
+      static ObjectConstructor = ObjectConstructor;
     };
   }
 
-  static getObjectView<T extends SchemaObject>(
+  static getObjectView<T extends object>(
     schema: Schema,
+    constructor?: Constructor<T>,
   ): ViewConstructor<T, ComplexView<T>> {
     const fields = Object.keys(schema.properties!) as Array<keyof T>;
     const layout = {} as ViewLayout<T>;
@@ -325,18 +354,14 @@ export class View {
       layout[property] = fieldLayout;
     }
     const defaultData = this.getDefaultData(layout, lastOffset, fields);
-    const defaultObject = new Function(
-      "return {" +
-        fields.map((key) => `${key}:${this.getDefaultValue(layout[key].View)}`)
-          .join(",") +
-        "}",
-    );
+    const ObjectConstructor = constructor ||
+      this.getDefaultConstructor(fields, layout);
     return class extends this.ObjectClass<T> {
       static viewLength = lastOffset;
       static layout = layout;
       static fields = fields;
       static defaultData = defaultData;
-      static defaultObject = defaultObject;
+      static ObjectConstructor = ObjectConstructor;
     };
   }
 

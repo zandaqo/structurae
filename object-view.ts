@@ -1,3 +1,4 @@
+import { Constructor } from "./utility-types.ts";
 import type { ComplexView, ViewInstance, ViewLayout } from "./view-types.ts";
 
 export class ObjectView<T extends object> extends DataView
@@ -6,12 +7,12 @@ export class ObjectView<T extends object> extends DataView
   static layout?: ViewLayout<unknown>;
   static fields: Array<unknown>;
   static defaultData?: Uint8Array;
-  static defaultObject?: Function;
+  static ObjectConstructor: Constructor<unknown>;
 
   static decode<T extends object>(view: DataView, start = 0, _?: number): T {
     const layout = this.layout as ViewLayout<T>;
     const fields = this.fields as Array<keyof T>;
-    const result = this.defaultObject!() as T;
+    const result = new this.ObjectConstructor() as T;
     for (let i = 0; i < fields.length; i++) {
       const name = fields[i];
       const { View, start: fieldStart, length: fieldLength } = layout[name];
