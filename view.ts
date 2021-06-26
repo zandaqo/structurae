@@ -2,11 +2,11 @@ import type {
   ComplexView,
   ContainerView,
   PrimitiveView,
-  Schema,
   ViewConstructor,
   ViewFieldLayout,
   ViewInstance,
   ViewLayout,
+  ViewSchema,
 } from "./view-types.ts";
 import { BooleanView } from "./boolean-view.ts";
 import {
@@ -71,21 +71,21 @@ export class View {
   }
 
   static create<T>(
-    schema: Schema,
+    schema: ViewSchema<T>,
     constructor?: Constructor<T extends object ? T : never>,
   ): ViewConstructor<T> {
-    const schemas = this.getSchemaOrdering(schema);
+    const schemas = this.getSchemaOrdering(schema as ViewSchema<unknown>);
     for (let i = schemas.length - 1; i >= 0; i--) {
       const objectSchema = schemas[i];
       const id = this.getSchemaId(objectSchema);
       if (this.Views.has(id)) continue;
       const View: ViewConstructor<object> = objectSchema.btype === "map"
-        ? this.getMapView(objectSchema, constructor)
-        : this.getObjectView(objectSchema, constructor);
+        ? this.getMapView(objectSchema as ViewSchema<object>, constructor)
+        : this.getObjectView(objectSchema as ViewSchema<object>, constructor);
       // cache the view by id
       this.Views.set(id, View);
       // cache by tag if present
-      const tag = objectSchema.properties![this.tagName]?.default;
+      const tag = (objectSchema.properties as any)[this.tagName]?.default;
       if (typeof tag === "number") {
         this.TaggedViews.set(tag, View);
       }
@@ -120,20 +120,20 @@ export class View {
   }
 
   static getArray<T>(
-    schema: Schema,
+    schema: ViewSchema<T>,
   ): [view: ViewConstructor<T>, length: number] {
-    const arrays = [] as Array<Schema>;
-    let currentField = schema;
+    const arrays = [] as Array<ViewSchema<Array<unknown>>>;
+    let currentField = schema as ViewSchema<unknown>;
     // go down the array(s) to the item field
     while (currentField && currentField.type === "array") {
-      arrays.push(currentField);
+      arrays.push(currentField as ViewSchema<Array<unknown>>);
       currentField = currentField.items!;
     }
     let currentArray = arrays.pop()!;
     // get existing view of the item
     const itemView = this.getExistingView(currentField);
     // check
-    const itemId = this.getSchemaId(currentField);
+    const itemId = this.getSchemaId(currentField as ViewSchema<unknown>);
     const isArray = currentArray.btype !== "vector";
     const viewId = isArray ? `ArrayView_${itemId}` : `VectorView_${itemId}`;
     let View: UnknownViewConstructor;
@@ -245,7 +245,7 @@ export class View {
     ) as Constructor<T>;
   }
 
-  static getExistingView<T>(schema: Schema): ViewConstructor<T> {
+  static getExistingView<T>(schema: ViewSchema<T>): ViewConstructor<T> {
     let type = schema.$id || schema.$ref?.slice(1);
     if (type) {
       if (!this.Views.has(type)) throw Error(`View "${type}" is not found.`);
@@ -259,7 +259,7 @@ export class View {
   }
 
   static getFieldLayout<T>(
-    field: Schema,
+    field: ViewSchema<T>,
     start: number,
     required: boolean,
     name: string,
@@ -286,18 +286,23 @@ export class View {
   }
 
   static getMapView<T extends object>(
-    schema: Schema,
+    schema: ViewSchema<T>,
     constructor?: Constructor<T>,
   ): ViewConstructor<T, ComplexView<T>> {
-    const required = schema.required || [];
-    const optional = Object.keys(schema.properties!).filter(
+    const required = schema.required || [] as Array<keyof T>;
+    const optional = (Object.keys(schema.properties!) as Array<keyof T>).filter(
       (i) => !required.includes(i),
     );
     const layout = {} as ViewLayout<T>;
     let offset = 0;
     for (const property of required) {
       const field = schema.properties![property];
-      const fieldLayout = this.getFieldLayout(field, offset, true, property);
+      const fieldLayout = this.getFieldLayout(
+        field,
+        offset,
+        true,
+        property as string,
+      );
       offset += fieldLayout.length;
       // @ts-ignore TS2322
       layout[property] = fieldLayout;
@@ -311,7 +316,7 @@ export class View {
         field,
         offset + (i << 2),
         false,
-        property,
+        property as string,
       );
     }
     const maxView = this.maxView;
@@ -335,19 +340,19 @@ export class View {
   }
 
   static getObjectView<T extends object>(
-    schema: Schema,
+    schema: ViewSchema<T>,
     constructor?: Constructor<T>,
   ): ViewConstructor<T, ComplexView<T>> {
     const fields = Object.keys(schema.properties!) as Array<keyof T>;
     const layout = {} as ViewLayout<T>;
     let lastOffset = 0;
     for (const property of fields) {
-      const field = schema.properties![(property as unknown) as string];
+      const field = schema.properties![property];
       const fieldLayout = this.getFieldLayout(
         field,
         lastOffset,
         true,
-        (property as unknown) as string,
+        property as string,
       );
       lastOffset += fieldLayout.length;
       // @ts-ignore TS2322
@@ -365,11 +370,13 @@ export class View {
     };
   }
 
-  static getSchemaId(schema: Schema): string {
+  static getSchemaId(schema: ViewSchema<unknown>): string {
     return schema.$id || schema.$ref?.slice(1) || schema.btype || schema.type;
   }
 
-  static getSchemaOrdering(schema: Schema): Array<Schema> {
+  static getSchemaOrdering(
+    schema: ViewSchema<unknown>,
+  ): Array<ViewSchema<unknown>> {
     // create graph
     let object = schema;
     // reach the nested object if an array is provided
@@ -388,7 +395,7 @@ export class View {
       if (!object.properties) continue;
       const properties = Object.keys(object.properties);
       for (const property of properties) {
-        let field = object.properties![property];
+        let field = (object.properties! as any)[property];
         if (field.type === "array") {
           while (field.type === "array") field = field.items!;
         }

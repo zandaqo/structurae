@@ -187,7 +187,7 @@ export type ViewLayout<T> = {
   [key in keyof T]: ViewFieldLayout<T[key]>;
 };
 
-export type SchemaTypeName =
+export type ViewSchemaType =
   | "string"
   | "number"
   | "integer"
@@ -195,9 +195,7 @@ export type SchemaTypeName =
   | "object"
   | "array";
 
-export type SchemaBinaryType =
-  | "map"
-  | "vector"
+export type ViewSchemaNumberType =
   | "int8"
   | "uint8"
   | "int16"
@@ -209,21 +207,24 @@ export type SchemaBinaryType =
   | "bigint64"
   | "biguint64";
 
-export interface Schema {
+export interface ViewSchema<T> {
   $id?: string;
   $ref?: string;
   maxLength?: number;
   minLength?: number;
   minimum?: number;
   maximum?: number;
-  items?: Schema;
+  items?: T extends Array<infer U> ? ViewSchema<U> : never;
   maxItems?: number;
   minItems?: number;
-  required?: string[];
+  required?: Array<keyof T>;
   properties?: {
-    [k: string]: Schema;
+    [P in keyof T]: ViewSchema<T[P]>;
   };
-  type: SchemaTypeName;
-  btype?: SchemaBinaryType;
-  default?: unknown;
+  type: ViewSchemaType;
+  btype?: T extends number ? ViewSchemaNumberType
+    : T extends Array<unknown> ? "vector"
+    : T extends object ? "map"
+    : never;
+  default?: T;
 }
