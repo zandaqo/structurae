@@ -209,7 +209,7 @@ export type ViewSchemaNumberType =
 
 export interface ViewSchema<T> {
   $id?: string;
-  $ref?: string;
+  $ref?: `#${string}`;
   maxLength?: number;
   minLength?: number;
   minimum?: number;

@@ -72,7 +72,7 @@ export class View {
 
   static create<T>(
     schema: ViewSchema<T>,
-    constructor?: Constructor<T extends object ? T : never>,
+    constructor?: T extends object ? Constructor<T> : never,
   ): ViewConstructor<T> {
     const schemas = this.getSchemaOrdering(schema as ViewSchema<unknown>);
     for (let i = schemas.length - 1; i >= 0; i--) {
