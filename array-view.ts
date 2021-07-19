@@ -78,6 +78,11 @@ export class ArrayView<T> extends DataView implements ContainerView<T> {
     }
   }
 
+  at(index: number): T {
+    if (index < 0) return this.get(this.size + index);
+    return this.get(index);
+  }
+
   get(index: number): T {
     const constructor = this.constructor as typeof ArrayView;
     const View = constructor.View as ViewConstructor<T>;

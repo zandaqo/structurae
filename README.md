@@ -54,7 +54,7 @@ import {...} from "structurae";
 Deno:
 
 ```
-import {...} from "https://deno.land/x/structurae@4.0.0-pre.5/index.ts"
+import {...} from "https://deno.land/x/structurae@4.0.0-pre.7/index.ts"
 ```
 
 ## Documentation
@@ -70,11 +70,11 @@ import {...} from "https://deno.land/x/structurae@4.0.0-pre.5/index.ts"
 ### Binary Protocol
 
 Binary data in JavaScript is represented by ArrayBuffer and accessed through
-"view" interfaces--TypedArrays and DataView. However, both of those interfaces
-are limited to working with numbers. Structurae offers a set of classes that
-extend the DataView interface to support using ArrayBuffers for strings,
-objects, and arrays. These classes ("views") form the basis for a simple binary
-protocol ("view protocol") with the following features:
+TypedArrays and DataView. However, both of those interfaces are limited to
+working with numbers. Structurae offers a set of classes that extend the
+DataView interface to support using ArrayBuffers for strings, objects, and
+arrays. These classes ("views") form the basis for a simple binary protocol with
+the following features:
 
 - smaller and faster than schema-less binary formats (e.g. BSON, MessagePack);
 - supports zero-copy operations, e.g. reading and changing object fields without
@@ -107,15 +107,11 @@ const AnimalView = View.create<Animal>({
 });
 // encode our animal object
 const animal = AnimalView.from({ name: "Gaspode", age: 10 });
-animal instanceof DataView;
-//=> true
-animal.byteLength;
-//=> 14
-animal.get("age");
-//=> 10
+animal instanceof DataView; //=> true
+animal.byteLength; //=> 14
+animal.get("age"); //=> 10
 animal.set("age", 20);
-animal.toJSON();
-//=> { name: "Gaspode", age: 20 }
+animal.toJSON(); //=> { name: "Gaspode", age: 20 }
 ```
 
 #### Objects and Maps
@@ -169,12 +165,9 @@ const person = Person.from({
   bestFriend: { name: "Sam Vimes" },
   friends: [{ name: "Sam Vimes" }],
 });
-person.get("name");
-//=> Carrot
-person.getView("name");
-//=> StringView [10]
-person.get("fullName");
-//=> ["Carrot", "Ironfoundersson"]
+person.get("name"); //=> Carrot
+person.getView("name"); //=> StringView [10]
+person.get("fullName"); //=> ["Carrot", "Ironfoundersson"]
 person.toJSON();
 //=> {
 //     name: "Carrot",
@@ -258,8 +251,7 @@ const House = View.create<House>({
   },
 });
 const house = House.from({} as House);
-house.get("size");
-//=> 100
+house.get("size"); //=> 100
 ```
 
 Default values of an object can be overridden when it is nested inside another
@@ -279,10 +271,8 @@ const Neighborhood = View.create<Neighborhood>({
   },
 });
 const neighborhood = Neighborhood.from({} as Neighborhood);
-neighborhood.get("house");
-//=> { size: 100 }
-neighborhood.get("biggerHouse");
-//=> { size: 200 }
+neighborhood.get("house"); //=> { size: 100 }
+neighborhood.get("biggerHouse"); //=> { size: 200 }
 ```
 
 #### Arrays and Vectors
@@ -346,36 +336,28 @@ import { StringView } from "structurae";
 
 let stringView = StringView.from("abc😀a");
 //=> StringView [ 97, 98, 99, 240, 159, 152, 128, 97 ]
-stringView.toString();
-//=> "abc😀a"
-stringView == "abc😀a";
-//=> true
+stringView.toString(); //=> "abc😀a"
+stringView == "abc😀a"; //=> true
 
 stringView = StringView.from("abc😀");
-stringView.length; // length of the view in bytes
-//=> 8
-stringView.size; // the amount of characters in the string
-//=> 4
-stringView.charAt(0); // get the first character in the string
-//=> "a"
-stringView.charAt(3); // get the fourth character in the string
-//=> "😀"
-[...stringView.characters()]; // iterate over characters
-//=> ["a", "b", "c", "😀"]
-stringView.substring(0, 4);
-//=> "abc😀"
+// length of the view in bytes
+stringView.length; //=> 8
+// the amount of characters in the string
+stringView.size; //=> 4
+// get the first character in the string
+stringView.charAt(0); //=> "a"
+// get the fourth character in the string
+stringView.charAt(3); //=> "😀"
+// iterate over characters
+[...stringView.characters()]; //=> ["a", "b", "c", "😀"]
+stringView.substring(0, 4); //=> "abc😀"
 
 stringView = StringView.from("abc😀a");
 const searchValue = StringView.from("😀");
-stringView.search(searchValue); // equivalent of String#indexOf
-//=> 3
-
+stringView.indexOf(searchValue); //=> 3
 const replacement = StringView.from("d");
-stringView.replace(searchValue, replacement).toString();
-//=> "abcda"
-
-stringView.reverse().toString();
-//=> "adcba"
+stringView.replace(searchValue, replacement).toString(); //=> "abcda"
+stringView.reverse().toString(); //=> "adcba"
 ```
 
 #### Tagged Objects
@@ -473,12 +455,9 @@ significant to most:
 import { BitField } from "structurae";
 
 const bitfield = new BitField(29); // 29 === 0b11101
-bitfield.get(0);
-//=> 1
-bitfield.get(1);
-//=> 0
-bitfield.has(2, 3, 4);
-//=> true
+bitfield.get(0); //=> 1
+bitfield.get(1); //=> 0
+bitfield.has(2, 3, 4); //=> true
 ```
 
 You can use BitFieldMixin or BigBitFieldMixin with your own schema by specifying
@@ -487,15 +466,11 @@ field names and their respective sizes in bits:
 ```javascript
 const Field = BitFieldMixin({ width: 8, height: 8 });
 const field = new Field({ width: 100, height: 200 });
-field.get("width");
-//=> 100;
-field.get("height");
-//=> 200
+field.get("width"); //=> 100;
+field.get("height"); //=> 200
 field.set("width", 18);
-field.get("width");
-//=> 18
-field.toObject();
-//=> { width: 18, height: 200 }
+field.get("width"); //=> 18
+field.toObject(); //=> { width: 18, height: 200 }
 ```
 
 If the total size of your fields exceeds 31 bits, use BigBitFieldMixin that
@@ -506,10 +481,8 @@ well:
 ```javascript
 const LargeField = BitFieldMixin({ width: 20, height: 20 });
 const largeField = new LargeField([1048576, 1048576]);
-largeField.value;
-//=> 1099512676352n
-largeField.set("width", 1000).get("width");
-//=> 1000
+largeField.value; //=> 1099512676352n
+largeField.set("width", 1000).get("width"); //=> 1000
 ```
 
 If you have to add more fields to your schema later on, you do not have to
@@ -523,12 +496,9 @@ const oldField = OldField.encode([20, 1]);
 
 const NewField = BitFieldMixin({ width: 8, height: 8, area: 10 });
 const newField = new NewField(oldField);
-newField.get("width");
-//=> 20
-newField.get("height");
-//=> 1
-newField.set("weight", 100).get("weight");
-//=> 100
+newField.get("width"); //=> 20
+newField.get("height"); //=> 1
+newField.set("weight", 100).get("weight"); //=> 100
 ```
 
 If you only want to encode or decode a set of field values without creating an
@@ -538,22 +508,16 @@ instance, you can do so by using static methods `BitField.encode` and
 ```javascript
 const Field = BitFieldMixin({ width: 7, height: 1 });
 
-Field.encode([20, 1]);
-//=> 41
-
-Field.encode({ height: 1, width: 20 });
-//=> 41
-
-Field.decode(41);
-//=> { width: 20, height: 1 }
+Field.encode([20, 1]); //=> 41
+Field.encode({ height: 1, width: 20 }); //=> 41
+Field.decode(41); //=> { width: 20, height: 1 }
 ```
 
 If you don't know beforehand how many bits you need for your field, you can call
 `BitField.getMinSize` with the maximum possible value of your field to find out:
 
 ```javascript
-BitField.getMinSize(100);
-//=> 7
+BitField.getMinSize(100); //=> 7
 const Field = BitFieldMixin({ width: BitField.getMinSize(250), height: 8 });
 ```
 
@@ -565,10 +529,8 @@ can use `BitField.isValid`:
 ```javascript
 const Field = BitFieldMixin({ width: 7, height: 1 });
 
-Field.isValid({ width: 100 });
-//=> true
-Field.isValid({ width: 100, height: 3 });
-//=> false
+Field.isValid({ width: 100 }); //=> true
+Field.isValid({ width: 100, height: 3 }); //=> false
 ```
 
 `BitField#match` (and its static variation `BitField.match`) can be used to
@@ -577,14 +539,10 @@ check values of multiple fields at once:
 ```javascript
 const Field = BitFieldMixin({ width: 7, height: 1 });
 const field = new Field([20, 1]);
-field.match({ width: 20 });
-//=> true
-field.match({ height: 1, width: 20 });
-//=> true
-field.match({ height: 1, width: 19 });
-//=> false
-Field.match(field.valueOf(), { height: 1, width: 20 });
-//=> true
+field.match({ width: 20 }); //=> true
+field.match({ height: 1, width: 20 }); //=> true
+field.match({ height: 1, width: 19 }); //=> false
+Field.match(field.valueOf(), { height: 1, width: 20 }); //=> true
 ```
 
 If you have to check multiple BitField instances for the same values, create a
@@ -594,10 +552,8 @@ way each check will require only one bitwise operation and a comparison:
 ```javascript
 const Field = BitFieldMixin({ width: 7, height: 1 });
 const matcher = Field.getMatcher({ height: 1, width: 20 });
-Field.match(new Field([20, 1]).valueOf(), matcher);
-//=> true
-Field.match(new Field([19, 1]).valueOf(), matcher);
-//=> false
+Field.match(new Field([20, 1]).valueOf(), matcher); //=> true
+Field.match(new Field([19, 1]).valueOf(), matcher); //=> false
 ```
 
 #### BitArray
@@ -607,14 +563,10 @@ of BitField that only sets and checks individual bits:
 
 ```javascript
 const array = new BitArray(10);
-array.getBit(0);
-//=> 0
-array.setBit(0).getBit(0);
-//=> 1
-array.size;
-//=> 10
-array.length;
-//=> 1
+array.getBit(0); //=> 0
+array.setBit(0).getBit(0); //=> 1
+array.size; //=> 10
+array.length; //=> 1
 ```
 
 BitArray is the base class for
@@ -636,18 +588,13 @@ const { Pool } = require("structurae");
 const pool = new Pool(100 * 16);
 
 // get the next available index and make it unavailable
-pool.get();
-//=> 0
-pool.get();
-//=> 1
+pool.get(); //=> 0
+pool.get(); //=> 1
 
 // set index available
 pool.free(0);
-pool.get();
-//=> 0
-
-pool.get();
-//=> 2
+pool.get(); //=> 0
+pool.get(); //=> 2
 ```
 
 #### RankedBitArray
@@ -660,12 +607,9 @@ succinct data structures.
 ```javascript
 const array = new RankedBitArray(10);
 array.setBit(1).setBit(3).setBit(7);
-array.rank(2);
-//=> 1
-array.rank(7);
-//=> 2
-array.select(2);
-//=> 3
+array.rank(2); //=> 1
+array.rank(7); //=> 2
+array.select(2); //=> 3
 ```
 
 ### Graphs
@@ -693,24 +637,17 @@ const List = AdjacencyListMixin(Int32Array);
 const graph = List.create(6, 6);
 
 // the length of a weighted graph is vertices + edges * 2 + 1
-graph.length;
-//=> 19
+graph.length; //=> 19
 graph.addEdge(0, 1, 5);
 graph.addEdge(0, 2, 1);
 graph.addEdge(2, 4, 1);
 graph.addEdge(2, 5, 2);
-graph.hasEdge(0, 1);
-//=> true
-graph.hasEdge(0, 4);
-//=> false
-graph.outEdges(2);
-//=> [4, 5]
-graph.inEdges(2);
-//=> [0]
-graph.hasEdge(0, 1);
-//=> true
-graph.getEdge(0, 1);
-//=> 5
+graph.hasEdge(0, 1); //=> true
+graph.hasEdge(0, 4); //=> false
+graph.outEdges(2); //=> [4, 5]
+graph.inEdges(2); //=> [0]
+graph.hasEdge(0, 1); //=> true
+graph.getEdge(0, 1); //=> 5
 ```
 
 Since the maximum amount of egdes in AdjacencyList is limited to the number
@@ -741,23 +678,16 @@ unweightedMatrix.addEdge(0, 2);
 unweightedMatrix.addEdge(0, 3);
 unweightedMatrix.addEdge(2, 4);
 unweightedMatrix.addEdge(2, 5);
-unweightedMatrix.hasEdge(0, 1);
-//=> true
-unweightedMatrix.hasEdge(0, 4);
-//=> false
-unweightedMatrix.outEdges(2);
-//=> [4, 5]
-unweightedMatrix.inEdges(2);
-//=> [0]
+unweightedMatrix.hasEdge(0, 1); //=> true
+unweightedMatrix.hasEdge(0, 4); //=> false
+unweightedMatrix.outEdges(2); //=> [4, 5]
+unweightedMatrix.inEdges(2); //=> [0]
 
 const weightedMatrix = Matrix.create(6);
 weightedMatrix.addEdge(0, 1, 3);
-weightedMatrix.hasEdge(0, 1);
-//=> true
-weightedMatrix.hasEdge(1, 0);
-//=> false
-weightedMatrix.getEdge(1, 0);
-//=> 3
+weightedMatrix.hasEdge(0, 1); //=> true
+weightedMatrix.hasEdge(1, 0); //=> false
+weightedMatrix.getEdge(1, 0); //=> 3
 ```
 
 #### Graph
@@ -796,16 +726,13 @@ graph.addEdge(2, 4, 8);
 graph.addEdge(2, 5, 6);
 
 // a BFS traversal results
-[...graph.traverse()];
-//=> [0, 1, 2, 3, 4, 5]
+[...graph.traverse()]; //=> [0, 1, 2, 3, 4, 5]
 
 // DFS
-[...graph.traverse(true)];
-//=> [0, 3, 2, 5, 4, 1]
+[...graph.traverse(true)]; //=> [0, 3, 2, 5, 4, 1]
 
 // BFS yeilding only non-encountered ("white") vertices starting from 0
-[...graph.traverse(false, 0, false, true)];
-//=> [1, 2, 3, 4, 5]
+[...graph.traverse(false, 0, false, true)]; //=> [1, 2, 3, 4, 5]
 ```
 
 `Graph#path` returns the list of vertices constituting the shortest path between
@@ -832,12 +759,9 @@ import { BinaryGrid } from "structurae";
 // create a grid of 2 rows and 8 columns
 const bitGrid = BinaryGrid.create(2, 8);
 bitGrid.setValue(0, 0).setValue(0, 2).setValue(0, 5);
-bitGrid.getValue(0, 0);
-//=> 1
-bitGrid.getValue(0, 1);
-//=> 0
-bitGrid.getValue(0, 2);
-//=> 1
+bitGrid.getValue(0, 0); //=> 1
+bitGrid.getValue(0, 1); //=> 0
+bitGrid.getValue(0, 2); //=> 1
 ```
 
 BinaryGrid packs bits into numbers like
@@ -858,10 +782,8 @@ const ArrayGrid = GridMixin(Array);
 
 // create a grid of 5 rows and 4 columns
 const grid = ArrayGrid.create(5, 4);
-grid.length;
-//=> 20
-grid[0];
-//=> 0
+grid.length; //=> 20
+grid[0]; //=> 0
 
 // create a grid from existing data:
 const dataGrid = new ArrayGrid([
@@ -876,34 +798,27 @@ const dataGrid = new ArrayGrid([
 ]);
 // set columns number:
 dataGrid.columns = 4;
-dataGrid.getValue(1, 0);
-//=> 5
+dataGrid.getValue(1, 0); //=> 5
 
 // you can change dimensions of the grid by setting columns number at any time:
 dataGrid.columns = 2;
-dataGrid.getValue(1, 0);
-//=> 3
+dataGrid.getValue(1, 0); //=> 3
 ```
 
 You can get and set elements using their row and column indexes:
 
 ```javascript
 //=> ArrayGrid [1, 2, 3, 4, 5, 6, 7, 8]
-grid.getValue(0, 1);
-//=> 2
+grid.getValue(0, 1); //=> 2
 grid.setValue(0, 1, 10);
-grid.getValue(0, 1);
-//=> 10
+grid.getValue(0, 1); //=> 10
 
 // use `getIndex` to get an array index of an element at given coordinates
-grid.getIndex(0, 1);
-//=> 1
+grid.getIndex(0, 1); //=> 1
 
 // use `getCoordinates` to find out row and column indexes of a given element by its array index:
-grid.getCoordinates(0);
-//=> [0, 0]
-grid.getCoordinates(1);
-//=> [0, 1]
+grid.getCoordinates(0); //=> [0, 0]
+grid.getCoordinates(1); //=> [0, 1]
 ```
 
 A grid can be turned to and from an array of nested arrays using respectively
@@ -912,22 +827,17 @@ A grid can be turned to and from an array of nested arrays using respectively
 ```javascript
 const grid = ArrayGrid.fromArrays([[1, 2], [3, 4]]);
 //=> ArrayGrid [ 1, 2, 3, 4 ]
-grid.getValue(1, 1);
-//=> 4
+grid.getValue(1, 1); //=> 4
 
 // if arrays are not the same size or their size is not equal to a power two, Grid will pad them with 0 by default
 // the value for padding can be specified as the second argument
 const grid = ArrayGrid.fromArrays([[1, 2], [3, 4, 5]]);
 //=> ArrayGrid [ 1, 2, 0, 0, 3, 4, 5, 0 ]
-grid.getValue(1, 1);
-//=> 4
-
-grid.toArrays();
-//=> [ [1, 2], [3, 4, 5] ]
+grid.getValue(1, 1); //=> 4
+grid.toArrays(); //=> [ [1, 2], [3, 4, 5] ]
 
 // you can choose to keep the padding values
-grid.toArrays(true);
-//=> [ [1, 2, 0, 0], [3, 4, 5, 0] ]
+grid.toArrays(true); //=> [ [1, 2, 0, 0], [3, 4, 5, 0] ]
 ```
 
 #### SymmetricGrid
@@ -939,11 +849,9 @@ triangular square matrices using half as much space.
 import { SymmetricGrid } from "structurae";
 
 const grid = ArrayGrid.create(100, 100);
-grid.length;
-//=> 12800
+grid.length; //=> 12800
 const symmetricGrid = SymmetricGrid.create(100);
-symmetricGrid.length;
-//=> 5050
+symmetricGrid.length; //=> 5050
 ```
 
 Since the grid is symmetric, it returns the same value for a given pair of
@@ -951,10 +859,8 @@ coordinates regardless of their position:
 
 ```javascript
 symmetricGrid.setValue(0, 5, 10);
-symmetricGrid.getValue(0, 5);
-//=> 10
-symmetricGrid.getValue(5, 0);
-//=> 10
+symmetricGrid.getValue(0, 5); //=> 10
+symmetricGrid.getValue(5, 0); //=> 10
 ```
 
 ### Sorted Structures
@@ -978,19 +884,16 @@ or change the heap:
 
 ```javascript
 const heap = new BinaryHeap(10, 1, 20, 3, 9, 8);
-heap[0];
-//=> 1
-heap.left(0); // the left child of the first (minimal) element of the heap
-//=> 3
-heap.right(0); // the right child of the first (minimal) element of the heap
-//=> 8
-heap.parent(1); // the parent of the second element of the heap
-//=> 1
-
-heap.replace(4); // returns the first element and adds a new element in one operation
-//=> 1
-heap[0];
-//=> 3
+heap[0]; //=> 1
+// the left child of the first (minimal) element of the heap
+heap.left(0); //=> 3
+// the right child of the first (minimal) element of the heap
+heap.right(0); //=> 8
+// the parent of the second element of the heap
+heap.parent(1); //=> 1
+// returns the first element and adds a new element in one operation
+heap.replace(4); //=> 1
+heap[0]; //=> 3
 heap[0] = 6;
 // BinaryHeap [ 6, 4, 8, 10, 9, 20 ]
 heap.update(0); // updates the position of an element in the heap
@@ -1029,14 +932,10 @@ behave as a set and avoid duplicating elements:
 ```js
 const a = new SortedArray();
 a.unique = true;
-a.push(1);
-//=> 1
-a.push(2);
-//=> 2
-a.push(1);
-//=> 2
-a;
-//=> SortedArray [ 1, 2 ]
+a.push(1); //=> 1
+a.push(2); //=> 2
+a.push(1); //=> 2
+a; //=> SortedArray [ 1, 2 ]
 ```
 
 To create a sorted collection from unsorted array-like objects or items use

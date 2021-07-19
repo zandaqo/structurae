@@ -19,6 +19,14 @@ test("[ArrayView.getLength] returns the byte length required to hold the array",
   assertEquals(Uint32ArrayView.getLength(5), 20);
 });
 
+test("[ArrayView#at] returns an item at a given index", () => {
+  const expected = [30, 40];
+  const arrayView = Uint32ArrayView.from(expected);
+  assertEquals(arrayView.at(0), expected[0]);
+  assertEquals(arrayView.at(1), expected[1]);
+  assertEquals(arrayView.at(-1), expected[1]);
+});
+
 test("[ArrayView#get] returns an item at a given index", () => {
   const expected = [30, 40];
   const arrayView = Uint32ArrayView.from(expected);

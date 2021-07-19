@@ -27,6 +27,13 @@ export interface ContainerView<T> extends DataView {
   /**
    * Get the JavaScript value of an item.
    *
+   * @param index the of the item.
+   */
+  at(index: number): T | undefined;
+
+  /**
+   * Get the JavaScript value of an item.
+   *
    * @param index the index of the item
    * @return the item
    */

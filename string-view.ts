@@ -260,7 +260,7 @@ export class StringView extends DataView implements PrimitiveView<string> {
   replace(pattern: IndexedCollection, replacement: IndexedCollection) {
     let position = 0;
     while (position < this.byteLength) {
-      const currentIndex = this.search(pattern, position);
+      const currentIndex = this.indexOf(pattern, position);
       if (!~currentIndex) break;
       new Uint8Array(this.buffer).set(replacement, currentIndex);
       position = currentIndex + replacement.length;
@@ -303,6 +303,17 @@ export class StringView extends DataView implements PrimitiveView<string> {
   }
 
   /**
+   * Checks whether the provided encoded sequence is found inside the view.
+   *
+   * @param searchValue the value to search for
+   * @param position the starting position
+   * @return whether the value is found
+   */
+  includes(searchValue: IndexedCollection, position?: number): boolean {
+    return this.indexOf(searchValue, position) !== -1;
+  }
+
+  /**
    * Returns the index within the StringView
    * of the first occurrence of the specified value, starting the search at start.
    * Returns -1 if the value is not found.
@@ -311,7 +322,7 @@ export class StringView extends DataView implements PrimitiveView<string> {
    * @param fromIndex the index at which to start the search
    * @return the index of the first occurrence of the specified value
    */
-  search(searchValue: IndexedCollection, fromIndex = 0) {
+  indexOf(searchValue: IndexedCollection, fromIndex = 0) {
     if (this.byteLength > 256 && searchValue.length < 32) {
       return this.searchShiftOr(searchValue, fromIndex);
     }

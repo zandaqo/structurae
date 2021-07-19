@@ -49,7 +49,7 @@ bench({
     b.start();
     const view = views[getIndex(arrayLength)];
     const match = viewMatches[getIndex(arrayLength)];
-    view.search(match);
+    view.indexOf(match);
     b.stop();
   },
 });

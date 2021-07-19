@@ -103,16 +103,16 @@ test("[StringView#reverse] reverses the characters of the StringView in-place", 
   assertEquals(stringView.reverse().toString(), "←😀аoof");
 });
 
-test("[StringView#search] returns the index of the first occurrence of the specified value", () => {
+test("[StringView#indexOf] returns the index of the first occurrence of the specified value", () => {
   const stringView = StringView.from("Vimesi");
-  assertEquals(stringView.search(Encoder.encode("im")), 1);
-  assertEquals(stringView.search(Encoder.encode("Vi")), 0);
-  assertEquals(stringView.search(Encoder.encode("Vimes")), 0);
-  assertEquals(stringView.search(Encoder.encode("x")), -1);
-  assertEquals(stringView.search(Encoder.encode("Vix")), -1);
-  assertEquals(stringView.search(Encoder.encode("s")), 4);
-  assertEquals(stringView.search(Encoder.encode("i")), 1);
-  assertEquals(stringView.search(Encoder.encode("i"), 2), 5);
+  assertEquals(stringView.indexOf(Encoder.encode("im")), 1);
+  assertEquals(stringView.indexOf(Encoder.encode("Vi")), 0);
+  assertEquals(stringView.indexOf(Encoder.encode("Vimes")), 0);
+  assertEquals(stringView.indexOf(Encoder.encode("x")), -1);
+  assertEquals(stringView.indexOf(Encoder.encode("Vix")), -1);
+  assertEquals(stringView.indexOf(Encoder.encode("s")), 4);
+  assertEquals(stringView.indexOf(Encoder.encode("i")), 1);
+  assertEquals(stringView.indexOf(Encoder.encode("i"), 2), 5);
 
   const array = new Uint8Array(
     new Array(300).fill(0).map(() => (Math.random() * 128) | 0),
@@ -120,8 +120,8 @@ test("[StringView#search] returns the index of the first occurrence of the speci
   const longString = new StringView(array.buffer);
   longString.setUint8(0, 97);
   assertEquals(longString.byteLength, 300);
-  assertEquals(longString.search(Encoder.encode("ё")), -1);
-  assertEquals(longString.search(Encoder.encode("a")), 0);
+  assertEquals(longString.indexOf(Encoder.encode("ё")), -1);
+  assertEquals(longString.indexOf(Encoder.encode("a")), 0);
 });
 
 test("[StringView#substring] returns a new string containing the specified part of the given string", () => {

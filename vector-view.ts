@@ -103,6 +103,11 @@ export class VectorView<T> extends DataView implements ContainerView<T> {
     }
   }
 
+  at(index: number): T | undefined {
+    if (index < 0) return this.get(this.size + index);
+    return this.get(index);
+  }
+
   get(index: number): T | undefined {
     const View = (this.constructor as typeof VectorView)
       .View as ViewConstructor<T>;

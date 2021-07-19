@@ -38,6 +38,15 @@ test("[VectorView.getLength] returns the byte length required to hold the vector
   assertEquals(StringVector.getLength(["a", undefined, "abc"]), 24);
 });
 
+test("[VectorView#at] returns a value at a given index", () => {
+  const expected = ["a", "b", undefined, "cd"];
+  assertEquals(StringVector.from(expected).at(0), expected[0]);
+  assertEquals(StringVector.from(expected).at(1), expected[1]);
+  assertEquals(StringVector.from(expected).at(-1), expected[3]);
+  assertEquals(StringVector.from(expected).at(-3), expected[1]);
+  assertEquals(StringVector.from(expected).at(-4), expected[0]);
+});
+
 test("[VectorView#get] returns a value at a given index", () => {
   const expected = ["a", "b", undefined, "cd"];
   assertEquals(StringVector.from(expected).get(0), expected[0]);

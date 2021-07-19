@@ -4,7 +4,7 @@ import jsf from "https://jspm.dev/json-schema-faker";
 import { deflateRaw } from "https://deno.land/x/compress@v0.3.8/mod.ts";
 import { View } from "../view.ts";
 import { StringView } from "../string-view.ts";
-import { Schema } from "../view-types.ts";
+import { ViewSchema } from "../view-types.ts";
 
 interface House {
   type: number;
@@ -36,7 +36,7 @@ interface Person {
   parents: Array<string>;
 }
 
-const JSONSchema: Schema = {
+const JSONSchema: ViewSchema<Person> = {
   type: "object",
   $id: "Person",
   properties: {
