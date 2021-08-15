@@ -64,6 +64,7 @@ import {...} from "https://deno.land/x/structurae@4.0.0-pre.7/index.ts"
     JavaScript](https://blog.usejournal.com/structurae-data-structures-for-high-performance-javascript-9b7da4c73f8)
   - [Structurae 1.0: Graphs, Strings, and
     WebAssembly](https://medium.com/@zandaqo/structurae-1-0-graphs-strings-and-webassembly-25dd964d5a70)
+  - [Binary Protocol for JavaScript](https://itnext.io/binary-protocol-for-javascript-cc409e144a3c)
 
 ## Overview
 

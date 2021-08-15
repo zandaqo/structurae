@@ -104,8 +104,6 @@ export function GraphMixin<
 
     /**
      * Resets all coloring of vertices done during traversals.
-     *
-     * @private
      */
     resetColors(): void {
       this.colors.fill(0);

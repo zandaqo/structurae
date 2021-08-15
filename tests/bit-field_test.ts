@@ -10,9 +10,12 @@ const PersonFlags = BitFieldMixin({
   tall: 1,
 });
 
-test("[BitFieldMixin] throws if the total size of a field exceeds 31 bits", () => {
-  assertThrows(() => BitFieldMixin({ a: 1, b: 31 }), TypeError);
-});
+test(
+  "[BitFieldMixin] throws if the total size of a field exceeds 31 bits",
+  () => {
+    assertThrows(() => BitFieldMixin({ a: 1, b: 31 }), TypeError);
+  },
+);
 
 test("[BitField.constructor] creates an instance with a given numerical value", () => {
   assertEquals(new Field().value, 0);
@@ -171,7 +174,6 @@ test("[BitField.getMinSize] calculates the minimum amount of bits to hold a give
 });
 
 test("[BitField.getMatcher] returns matcher to partially match an instance", () => {
-  Field.initialize();
   const matcher = Field.getMatcher({ width: 10 });
   assertEquals(matcher, [10, -2147418113]);
 });

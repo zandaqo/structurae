@@ -8,7 +8,11 @@ export { BigBitFieldMixin } from "./big-bit-field.ts";
 export { BinaryGrid } from "./binary-grid.ts";
 export { BinaryHeap } from "./binary-heap.ts";
 export { BitArray } from "./bit-array.ts";
-export { BitFieldMixin } from "./bit-field.ts";
+export { BitField, BitFieldMixin } from "./bit-field.ts";
+export type {
+  BitFieldConstructor,
+  BitFieldStructure,
+} from "./bit-field-types.ts";
 export { BooleanView } from "./boolean-view.ts";
 export { GraphMixin } from "./graph.ts";
 export type { Colors } from "./graph.ts";

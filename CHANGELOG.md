@@ -6,7 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [4.0.0-pre.7] - 2020-07-19
+## [4.0.0-pre.8] - 2021-08-15
+
+### Changed
+
+- BitField and BigBitField classes are refactored and simplified with common
+  typings. `Big/BitField.initialize` methods are removed as redundant when
+  mixins are used.
+
+## [4.0.0-pre.7] - 2021-07-19
 
 ### Added
 
@@ -17,19 +25,19 @@ and this project adheres to
 
 - `StringView#search` renamed into `StringView#indexof`.
 
-## [4.0.0-pre.6] - 2020-06-26
+## [4.0.0-pre.6] - 2021-06-26
 
 ### Added
 
 - Support typing View schemas through ViewSchema interface.
 
-## [4.0.0-pre.5] - 2020-06-24
+## [4.0.0-pre.5] - 2021-06-24
 
 ### Added
 
 - `View.create` accepts object constructor as optional second parameter.
 
-## [4.0.0-pre.1] - 2020-06-16
+## [4.0.0-pre.1] - 2021-06-16
 
 ### Changed
 

@@ -407,7 +407,6 @@ export class SortedArray<ItemType> extends Array<ItemType> {
    * Creates a new SortedArray instance with a variable number of arguments,
    * regardless of number or type of the arguments
    *
-   * @private
    * @param elements the elements of which to create the array
    * @return the new SortedArray
    */
@@ -420,7 +419,6 @@ export class SortedArray<ItemType> extends Array<ItemType> {
   /**
    * Returns a merger of the array with one or more provided sorted arrays.
    *
-   * @private
    * @param arrays sorted array(s) to merge
    * @return a new SortedArray
    */
@@ -452,7 +450,6 @@ export class SortedArray<ItemType> extends Array<ItemType> {
   /**
    * Looks for the index of a given element in the array or -1
    *
-   * @private
    * @param element the element to look for
    * @return the element's index in the array or -1
    */
@@ -494,7 +491,6 @@ export class SortedArray<ItemType> extends Array<ItemType> {
   /**
    * Adds provided elements to the array preserving the sorted order of the array.
    *
-   * @private
    * @param elements the elements to add to the array
    * @return the new length of the array
    */
@@ -584,7 +580,6 @@ export class SortedArray<ItemType> extends Array<ItemType> {
   /**
    * Sorts the array with a provided compare function.
    *
-   * @private
    * @param compareFunction the function to use for comparison
    *
    */
@@ -598,7 +593,6 @@ export class SortedArray<ItemType> extends Array<ItemType> {
   /**
    * Changes the array by removing existing elements and adding new ones.
    *
-   * @private
    * @param start the index at which to start changing the array
    * @param deleteCount the amount of old elements to delete
    * @param elements the elements to add to the array
@@ -637,7 +631,6 @@ export class SortedArray<ItemType> extends Array<ItemType> {
   /**
    * Adds provided elements to the array preserving the sorted order of the array.
    *
-   * @private
    * @param elements the elements to add to the array
    * @return the new length of the array
    */
