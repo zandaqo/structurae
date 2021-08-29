@@ -7,6 +7,7 @@ const SymmetricGrid = SymmetricGridMixin(Int32Array);
 test("[SymmetricGrid.constructor] creates an instance of grid with data", () => {
   const gridFromData = new SymmetricGrid([1, 2, 3]);
   gridFromData.columns = 2;
+  assertEquals(gridFromData.columns, 2);
   assertEquals(gridFromData.length, 3);
   assertEquals(gridFromData[0], 1);
 });

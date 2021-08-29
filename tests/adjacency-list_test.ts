@@ -92,3 +92,7 @@ test("[AdjacencyList#isFull] checks if the list is full, i.e. all the edges are 
   fullGraph.addEdge(1, 0, 1);
   assertEquals(fullGraph.isFull(), true);
 });
+
+test("[AdjacencyList.$species] returns underlying TypedArray when sliced", () => {
+  assertEquals(DirectedList[Symbol.species], Uint32Array);
+});

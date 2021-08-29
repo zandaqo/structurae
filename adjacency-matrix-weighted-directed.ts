@@ -41,7 +41,7 @@ export function AdjacencyMatrixWeightedDirectedMixin<
     }
 
     get edges() {
-      return this.length;
+      return this.vertices ** 2;
     }
 
     static create(vertices: number) {
@@ -62,10 +62,6 @@ export function AdjacencyMatrixWeightedDirectedMixin<
     addEdge(x: number, y: number, weight: number): this {
       this[this.getIndex(x, y)] = weight;
       return this;
-    }
-
-    getCoordinates(index: number): [x: number, y: number] {
-      return [Math.floor(index / this.vertices), index % this.vertices];
     }
 
     getEdge(x: number, y: number) {

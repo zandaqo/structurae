@@ -13,6 +13,8 @@ exampleGraph.addEdge(2, 5);
 test("[AdjacencyMatrixUnweightedDirected.constructor] creates a graph from an existing graph", () => {
   const graph = new AdjacencyMatrixUnweightedDirected(exampleGraph);
   assertEquals(graph.vertices, 6);
+  assertEquals(graph.edges, 36);
+  assertEquals(graph.isFull(), false);
   assertEquals(graph.buffer !== exampleGraph.buffer, true);
 });
 
@@ -62,4 +64,8 @@ test("[AdjacencyMatrixUnweightedDirected#getEdge] returns 1 if edge is set, 0 ot
   const graph = new AdjacencyMatrixUnweightedDirected(exampleGraph);
   assertEquals(graph.getEdge(0, 1), 1);
   assertEquals(graph.getEdge(0, 5), 0);
+});
+
+test("[AdjacencyMatrixUnweightedDirected.$species] returns underlying TypedArray when sliced", () => {
+  assertEquals(AdjacencyMatrixUnweightedDirected[Symbol.species], Uint32Array);
 });

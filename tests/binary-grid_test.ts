@@ -74,8 +74,8 @@ test("[BinaryGrid.getLength] returns the length of underlying TypedArray require
   assertEquals(BinaryGrid.getLength(10, 10), 5);
 });
 
-test("[BinaryGrid.[Symbol.species]] returns Uint32Array when sliced", () => {
+test("[BinaryGrid.$species] returns Uint32Array when sliced", () => {
   const grid = new BinaryGrid();
-  grid.setValue(0, 1, 1);
   assertEquals(grid.slice() instanceof Uint32Array, true);
+  assertEquals(BinaryGrid[Symbol.species], Uint32Array);
 });

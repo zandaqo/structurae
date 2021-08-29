@@ -36,6 +36,13 @@ const bigNumber = BigInt(10);
 for (const [type, Ctor] of Object.entries(TypeViews)) {
   const isBigInt = type.startsWith("big");
 
+  test(`[${type}.encode] encodes a value into a view at a given index`, () => {
+    const expected = isBigInt ? bigNumber : number;
+    const view = new DataView(new ArrayBuffer(20));
+    Ctor.encode(expected, view, 8);
+    assertEquals(Ctor.decode(view, 8), expected);
+  });
+
   test(`[${type}.from] creates a typed array from an array of numbers`, () => {
     const expected = isBigInt ? bigNumber : number;
     const view = Ctor.from(expected);

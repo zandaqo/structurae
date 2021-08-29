@@ -32,12 +32,6 @@ export function AdjacencyMatrixWeightedUndirectedMixin<
       return (Math.sqrt((length << 3) + 1) - 1) >> 1;
     }
 
-    getCoordinates(index: number): [x: number, y: number] {
-      const x = AdjacencyMatrixWeightedUndirected.getVertices(index);
-      const y = index - AdjacencyMatrixWeightedUndirected.getLength(x);
-      return [x, y];
-    }
-
     getIndex(x: number, y: number): number {
       return x >= y ? y + (((x + 1) * x) >> 1) : x + (((y + 1) * y) >> 1);
     }

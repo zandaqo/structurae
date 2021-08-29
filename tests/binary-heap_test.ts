@@ -109,3 +109,9 @@ test("[BinaryHeap.of] creates a binary heap from a given arguments", () => {
   const heap = BinaryHeap.of(10, 9, 8, 0, 3, 8, 9, 5, 6, 4);
   assertEquals(heap, [0, 3, 8, 5, 4, 8, 9, 9, 6, 10]);
 });
+
+test("[BinaryHeap.$species] returns Uint32Array when sliced", () => {
+  const grid = new BinaryHeap();
+  assertEquals(grid.slice() instanceof Array, true);
+  assertEquals(BinaryHeap[Symbol.species], Array);
+});

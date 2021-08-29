@@ -145,3 +145,10 @@ test("[VectorView#[Symbol.iterator]] iterates over elements of the vector", () =
   assertEquals(array[0] instanceof StringView, true);
   assertEquals(array.length, 4);
 });
+
+test("[VectorView#getLength] returns the byte length of a field", () => {
+  const vector = StringVector.from(["a", "b", undefined, "cd"]);
+  assertEquals(vector.getLength(0), 1);
+  assertEquals(vector.getLength(3), 2);
+  assertEquals(vector.getLength(2), 0);
+});

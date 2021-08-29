@@ -14,6 +14,8 @@ exampleGraph.addEdge(2, 5, 6);
 test("[AdjacencyMatrixWeightedDirected.constructor] creates a graph from an existing graph", () => {
   const graph = new DirectedMatrix(exampleGraph);
   assertEquals(graph.vertices, 6);
+  assertEquals(graph.edges, 36);
+  assertEquals(graph.isFull(), false);
   assertEquals(
     (graph as unknown as Int32Array).buffer !== exampleGraph.buffer,
     true,
@@ -62,4 +64,8 @@ test("[AdjacencyMatrixWeightedDirected#hasEdges] checks whether there is an edge
   assertEquals(graph.hasEdge(0, 1), true);
   assertEquals(graph.hasEdge(0, 5), false);
   assertEquals(graph.hasEdge(2, 5), true);
+});
+
+test("[DirectedMatrix.$species] returns underlying TypedArray when sliced", () => {
+  assertEquals(DirectedMatrix[Symbol.species], Int32Array);
 });

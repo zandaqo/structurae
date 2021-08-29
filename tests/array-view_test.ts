@@ -68,7 +68,12 @@ test("[ArrayView#toJSON] returns an array of items in the array", () => {
   assertEquals(arrayView.toJSON(), expected);
 });
 
-test("[ArrayView[Symbol.iterator]] iterates over elements of the array", () => {
+test("[ArrayView#getLength] returns the byte length of an item", () => {
+  const arrayView = Uint32ArrayView.from([30, 40, 50]);
+  assertEquals(arrayView.getLength(0), 4);
+});
+
+test("[ArrayView#[Symbol.iterator]] iterates over elements of the array", () => {
   const arrayView = Uint32ArrayView.from([30, 40, 50]);
   const array = [...arrayView];
   assertEquals(array[0] instanceof Uint32View, true);

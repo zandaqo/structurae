@@ -212,3 +212,8 @@ test("[MapView#toJSON] returns an an object corresponding to the view", () => {
   const map = FamilyView.from(expected);
   assertEquals(map.toJSON(), expected);
 });
+
+test("[MapView#getLength] returns the byte length of a field", () => {
+  const person = PersonView.from({ name: "a", age: 10 });
+  assertEquals(person.getLength("name"), 1);
+});

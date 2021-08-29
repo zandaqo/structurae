@@ -150,3 +150,8 @@ test("[ObjectView#setView] copies a given view into a field", () => {
   assertEquals(actual, value);
   assertEquals(actual.buffer !== value.buffer, true);
 });
+
+test("[ObjectView#getLength] returns the byte length of a field", () => {
+  const person = PersonView.from({ name: "a", age: 10, scores: [] });
+  assertEquals(person.getLength("name"), 10);
+});

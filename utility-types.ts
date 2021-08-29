@@ -85,6 +85,7 @@ export interface AdjacencyStructureConstructor<
 > {
   directed: boolean;
   weighted: boolean;
+  [Symbol.species]: U;
   // deno-lint-ignore no-explicit-any
   new (...args: any[]): AdjacencyStructure;
   /**

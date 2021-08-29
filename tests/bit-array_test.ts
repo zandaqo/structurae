@@ -54,7 +54,8 @@ test("[BitArray.getLength] returns the length of underlying TypedArray required 
   assertEquals(BitArray.getLength(160), 5);
 });
 
-test("[BitArray[Symbol.species]] returns Uint32Array when sliced", () => {
+test("[BitArray.$species] returns Uint32Array when sliced", () => {
   const grid = new BitArray();
   assertEquals(grid.slice() instanceof Uint32Array, true);
+  assertEquals(BitArray[Symbol.species], Uint32Array);
 });
