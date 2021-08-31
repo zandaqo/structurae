@@ -10,7 +10,7 @@ export class BinaryHeap<T> extends Array<T> {
     this.heapify();
   }
 
-  static get [Symbol.species]() {
+  static get [Symbol.species](): ArrayConstructor {
     return Array;
   }
 

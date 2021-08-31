@@ -59,7 +59,7 @@ export interface AdjacencyStructure extends IndexedCollection {
    *
    * @param vertex the vertex
    */
-  inEdges(x: number): IterableIterator<number>;
+  inEdges(x: number): Generator<number, void, unknown>;
   /**
    * Check if all available edges are set.
    */
@@ -69,7 +69,7 @@ export interface AdjacencyStructure extends IndexedCollection {
    *
    * @param vertex the vertex
    */
-  outEdges(x: number): IterableIterator<number>;
+  outEdges(x: number): Generator<number, void, unknown>;
   /**
    * Removes an edge between two vertices.
    *
@@ -80,13 +80,12 @@ export interface AdjacencyStructure extends IndexedCollection {
   removeEdge(x: number, y: number): this;
 }
 
-export interface AdjacencyStructureConstructor<
+export type AdjacencyStructureConstructor<
   U extends TypedArrayConstructors,
-> {
+> = {
   directed: boolean;
   weighted: boolean;
-  [Symbol.species]: U;
-  // deno-lint-ignore no-explicit-any
+  get [Symbol.species](): U;
   new (...args: any[]): AdjacencyStructure;
   /**
     * Create an adjacency structure of specified dimensions.
@@ -95,10 +94,11 @@ export interface AdjacencyStructureConstructor<
     * @param edges the maximum amount of edges
     * @return a new adjacency structure of specified dimentions
     */
-  create(
+  create<T extends AdjacencyStructureConstructor<U>>(
+    this: T,
     vertices: number,
     edges?: number,
-  ): AdjacencyStructure & InstanceType<U>;
+  ): InstanceType<T>;
   /**
     * Returns the length of underlying TypedArray required to hold a structure
     * of the specified dimensions.
@@ -108,4 +108,4 @@ export interface AdjacencyStructureConstructor<
     * @return the length
     */
   getLength(vertices: number, edges?: number): number;
-}
+} & U;

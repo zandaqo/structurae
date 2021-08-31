@@ -24,7 +24,7 @@ export function AdjacencyMatrixWeightedDirectedMixin<
     static weighted = true;
     empty = 0;
 
-    static get [Symbol.species]() {
+    static get [Symbol.species](): U {
       return Base;
     }
 
@@ -44,11 +44,11 @@ export function AdjacencyMatrixWeightedDirectedMixin<
       return this.vertices ** 2;
     }
 
-    static create(vertices: number) {
+    static create<
+      T extends AdjacencyStructureConstructor<TypedArrayConstructors>,
+    >(vertices: number): InstanceType<T> {
       const length = this.getLength(vertices);
-      return new this(length) as
-        & AdjacencyMatrixWeightedDirected
-        & InstanceType<U>;
+      return new this(length) as InstanceType<T>;
     }
 
     static getLength(vertices: number): number {

@@ -1,4 +1,5 @@
 import type {
+  AdjacencyStructure,
   AdjacencyStructureConstructor,
   TypedArrayConstructors,
 } from "./utility-types.ts";
@@ -27,11 +28,13 @@ export function GraphMixin<
   T extends TypedArrayConstructors,
   U extends AdjacencyStructureConstructor<T>,
 >(Base: U) {
+  interface Graph extends AdjacencyStructure {}
+
   /**
    * Extends an adjacency list/matrix structure and provides methods for traversal (BFS, DFS),
    * pathfinding (Dijkstra, Bellman-Ford), spanning tree construction (BFS, Prim), etc.
    */
-  return class Graph extends Base {
+  class Graph extends Base {
     _colors?: Uint8Array;
 
     get colors(): Uint8Array {
@@ -39,17 +42,6 @@ export function GraphMixin<
         this._colors ||
         ((this._colors = new Uint8Array(this.vertices)), this._colors)
       );
-    }
-
-    // todo fix constructor type not extending TypedArray
-
-    // fix for messed up types of mixins
-    // todo fix when sanity dawns on ts mixins
-    static create(vertices: number, edges?: number) {
-      return (super.create(vertices, edges) as unknown) as
-        & Graph
-        & InstanceType<U>
-        & InstanceType<T>;
     }
 
     hasColor(vertex: number, color: Colors): boolean {
@@ -332,5 +324,7 @@ export function GraphMixin<
       }
       return predecessors;
     }
-  };
+  }
+
+  return Graph;
 }

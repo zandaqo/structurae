@@ -71,7 +71,7 @@ export class ArrayView<T> extends DataView implements ContainerView<T> {
     return (length / this.itemLength) | 0;
   }
 
-  *[Symbol.iterator](): Iterator<ViewInstance<T>> {
+  *[Symbol.iterator](): Generator<ViewInstance<T>> {
     const { size } = this;
     for (let i = 0; i < size; i++) {
       yield this.getView(i);

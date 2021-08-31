@@ -7,7 +7,7 @@ import { getLog2 } from "./utilities.ts";
 export class BinaryGrid extends Uint32Array {
   size = 0;
 
-  static get [Symbol.species]() {
+  static get [Symbol.species](): Uint32ArrayConstructor {
     return Uint32Array;
   }
 

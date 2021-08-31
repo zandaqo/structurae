@@ -1,4 +1,9 @@
-import type { AdjacencyStructure, Bit } from "./utility-types.ts";
+import type {
+  AdjacencyStructure,
+  AdjacencyStructureConstructor,
+  Bit,
+  TypedArrayConstructors,
+} from "./utility-types.ts";
 import { getLog2 } from "./utilities.ts";
 
 /**
@@ -10,7 +15,7 @@ export class AdjacencyMatrixUnweightedDirected extends Uint32Array
   static weighted = false;
   empty = 0;
 
-  static get [Symbol.species]() {
+  static get [Symbol.species](): Uint32ArrayConstructor {
     return Uint32Array;
   }
 
@@ -33,11 +38,13 @@ export class AdjacencyMatrixUnweightedDirected extends Uint32Array
     return this.vertices ** 2;
   }
 
-  static create(vertices: number) {
+  static create<
+    T extends AdjacencyStructureConstructor<TypedArrayConstructors>,
+  >(this: T, vertices: number): InstanceType<T> {
     const length = this.getLength(vertices);
     const matrix = new this(length);
     matrix.vertices = vertices;
-    return matrix;
+    return matrix as InstanceType<T>;
   }
 
   static getLength(vertices: number) {

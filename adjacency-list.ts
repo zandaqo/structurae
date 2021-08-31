@@ -32,7 +32,7 @@ export function AdjacencyListMixin<U extends TypedArrayConstructors>(
       [this.vertices, this.edges] = AdjacencyList.getDimensions(this);
     }
 
-    static get [Symbol.species]() {
+    static get [Symbol.species](): U {
       return Base;
     }
 

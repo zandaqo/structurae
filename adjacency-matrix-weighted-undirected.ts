@@ -1,6 +1,6 @@
 import type {
+  AdjacencyStructure,
   AdjacencyStructureConstructor,
-  IndexedCollection,
   TypedArrayConstructors,
 } from "./utility-types.ts";
 import { AdjacencyMatrixWeightedDirectedMixin } from "./adjacency-matrix-weighted-directed.ts";
@@ -13,18 +13,14 @@ import { AdjacencyMatrixWeightedDirectedMixin } from "./adjacency-matrix-weighte
 export function AdjacencyMatrixWeightedUndirectedMixin<
   U extends TypedArrayConstructors,
 >(Base: U): AdjacencyStructureConstructor<U> {
-  // deno-lint-ignore no-empty-interface
-  interface AdjacencyMatrixWeightedUndirected extends IndexedCollection {}
   /**
    * Implements the Adjacency Matrix for weighted undirected graphs.
    */
   class AdjacencyMatrixWeightedUndirected
-    extends AdjacencyMatrixWeightedDirectedMixin(
-      Base,
-    ) {
+    extends AdjacencyMatrixWeightedDirectedMixin(Base) {
     static directed = false;
 
-    static getLength(vertices: number): number {
+    static getLength(vertices: number, _?: number): number {
       return ((vertices + 1) * vertices) >> 1;
     }
 
@@ -36,13 +32,14 @@ export function AdjacencyMatrixWeightedUndirectedMixin<
       return x >= y ? y + (((x + 1) * x) >> 1) : x + (((y + 1) * y) >> 1);
     }
 
-    *outEdges(vertex: number) {
-      const { vertices } = this;
-      for (let i = 0; i < vertices; i++) {
-        if (this.hasEdge(vertex, i)) yield i;
-      }
+    outEdges(vertex: number) {
+      // TODO: fix type casting
+      return (this as unknown as AdjacencyStructure).inEdges(vertex);
     }
   }
 
-  return AdjacencyMatrixWeightedUndirected;
+  // TODO: fix type casting
+  return AdjacencyMatrixWeightedUndirected as unknown as AdjacencyStructureConstructor<
+    U
+  >;
 }

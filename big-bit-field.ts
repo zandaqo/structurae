@@ -100,7 +100,7 @@ class BigBitField<K extends PropertyKey>
     return (value & matcher[1]) === matcher[0];
   }
 
-  *[Symbol.iterator]() {
+  *[Symbol.iterator](): Generator<number> {
     const { fields } = this.constructor as BitFieldConstructor<K, bigint>;
     for (let i = 0; i < fields.length; i++) {
       yield this.get(fields[i]);

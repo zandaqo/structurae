@@ -54,7 +54,7 @@ import {...} from "structurae";
 Deno:
 
 ```
-import {...} from "https://deno.land/x/structurae@4.0.0-pre.7/index.ts"
+import {...} from "https://deno.land/x/structurae@4.0.0-pre.9/index.ts"
 ```
 
 ## Documentation

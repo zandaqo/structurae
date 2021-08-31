@@ -22,7 +22,7 @@ export interface ContainerView<T> extends DataView {
    * The amount of items in the view.
    */
   size: number;
-  [Symbol.iterator](): Iterator<ViewInstance<T> | undefined>;
+  [Symbol.iterator](): Generator<ViewInstance<T> | undefined>;
 
   /**
    * Get the JavaScript value of an item.

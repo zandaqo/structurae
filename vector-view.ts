@@ -96,7 +96,7 @@ export class VectorView<T> extends DataView implements ContainerView<T> {
     return view.getUint32(start, true);
   }
 
-  *[Symbol.iterator]() {
+  *[Symbol.iterator](): Generator<ViewInstance<T> | undefined> {
     const { size } = this;
     for (let i = 0; i < size; i++) {
       yield this.getView(i);
