@@ -79,13 +79,16 @@ export class View {
       const objectSchema = schemas[i];
       const id = this.getSchemaId(objectSchema);
       if (this.Views.has(id)) continue;
-      const View: ViewConstructor<object> = objectSchema.btype === "map"
-        ? this.getMapView(objectSchema as ViewSchema<object>, constructor)
-        : this.getObjectView(objectSchema as ViewSchema<object>, constructor);
+      const View = objectSchema.btype === "map"
+        ? this.getMapView(objectSchema, constructor)
+        : this.getObjectView(objectSchema, constructor);
       // cache the view by id
       this.Views.set(id, View);
       // cache by tag if present
-      const tag = (objectSchema.properties as any)[this.tagName]?.default;
+      const tag =
+        (objectSchema.properties as Record<string, ViewSchema<unknown>>)[
+          this.tagName
+        ]?.default;
       if (typeof tag === "number") {
         this.TaggedViews.set(tag, View);
       }
@@ -122,7 +125,7 @@ export class View {
   static getArray<T>(
     schema: ViewSchema<T>,
   ): [view: ViewConstructor<T>, length: number] {
-    const arrays = [] as Array<ViewSchema<Array<unknown>>>;
+    const arrays: Array<ViewSchema<Array<unknown>>> = [];
     let currentField = schema as ViewSchema<unknown>;
     // go down the array(s) to the item field
     while (currentField && currentField.type === "array") {
@@ -208,9 +211,9 @@ export class View {
     fields: Array<keyof T>,
     layout: ViewLayout<T>,
   ): Constructor<T> {
-    const content = [];
+    const content: Array<string> = [];
     for (const field of fields) {
-      const View = layout[field].View as ViewConstructor<unknown, unknown>;
+      const View: ViewConstructor<unknown, unknown> = layout[field].View;
       let value = "";
       switch (View) {
         case Int8View:
@@ -289,7 +292,7 @@ export class View {
     schema: ViewSchema<T>,
     constructor?: Constructor<T>,
   ): ViewConstructor<T, ComplexView<T>> {
-    const required = schema.required || [] as Array<keyof T>;
+    const required: Array<keyof T> = schema.required || [];
     const optional = (Object.keys(schema.properties!) as Array<keyof T>).filter(
       (i) => !required.includes(i),
     );
@@ -370,13 +373,13 @@ export class View {
     };
   }
 
-  static getSchemaId(schema: ViewSchema<unknown>): string {
+  static getSchemaId(schema: ViewSchema<any>): string {
     return schema.$id || schema.$ref?.slice(1) || schema.btype || schema.type;
   }
 
   static getSchemaOrdering(
     schema: ViewSchema<unknown>,
-  ): Array<ViewSchema<unknown>> {
+  ): Array<ViewSchema<object>> {
     // create graph
     let object = schema;
     // reach the nested object if an array is provided
@@ -386,7 +389,7 @@ export class View {
     const mainId = object.$id!;
     let id = mainId;
     const objects = { [id]: object };
-    const adjacency = { [id]: [] as Array<string> };
+    const adjacency: Record<string, Array<string>> = { [id]: [] };
     const indegrees = { [id]: 0 };
     const processing = [id];
     while (processing.length) {
@@ -395,7 +398,8 @@ export class View {
       if (!object.properties) continue;
       const properties = Object.keys(object.properties);
       for (const property of properties) {
-        let field = (object.properties! as any)[property];
+        let field =
+          (object.properties! as Record<string, ViewSchema<unknown>>)[property];
         if (field.type === "array") {
           while (field.type === "array") field = field.items!;
         }
@@ -416,13 +420,13 @@ export class View {
 
     // topologically sort the graph
     let visited = 0;
-    const order = [];
+    const order: Array<ViewSchema<object>> = [];
     processing.push(mainId);
     while (processing.length) {
       id = processing.shift()!;
       const children = adjacency[id];
       if (!children) continue; // $ref no external links
-      order.push(objects[id]);
+      order.push(objects[id] as ViewSchema<object>);
       for (const child of children) {
         indegrees[child] -= 1;
         if (indegrees[child] === 0) processing.push(child);

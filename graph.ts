@@ -28,6 +28,7 @@ export function GraphMixin<
   T extends TypedArrayConstructors,
   U extends AdjacencyStructureConstructor<T>,
 >(Base: U) {
+  // deno-lint-ignore no-empty-interface
   interface Graph extends AdjacencyStructure {}
 
   /**
@@ -73,7 +74,7 @@ export function GraphMixin<
       isNonNegative = false,
     ): Array<number> {
       const { weighted } = this
-        .constructor as AdjacencyStructureConstructor<any>;
+        .constructor as AdjacencyStructureConstructor<TypedArrayConstructors>;
       const { vertices } = this;
       const predecessors = new Array(vertices).fill(-1);
       const distances = new Array(vertices).fill(Infinity);
@@ -296,7 +297,7 @@ export function GraphMixin<
      */
     tree(start = 0) {
       const { weighted } = this
-        .constructor as AdjacencyStructureConstructor<any>;
+        .constructor as AdjacencyStructureConstructor<TypedArrayConstructors>;
       const { vertices } = this;
       const predecessors = new Array(vertices).fill(-1);
       if (!weighted) {

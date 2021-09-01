@@ -194,13 +194,11 @@ export type ViewLayout<T> = {
   [key in keyof T]: ViewFieldLayout<T[key]>;
 };
 
-export type ViewSchemaType =
+export type ViewSchemaPrimitiveType =
   | "string"
   | "number"
   | "integer"
-  | "boolean"
-  | "object"
-  | "array";
+  | "boolean";
 
 export type ViewSchemaNumberType =
   | "int8"
@@ -228,7 +226,12 @@ export interface ViewSchema<T> {
   properties?: {
     [P in keyof T]: ViewSchema<T[P]>;
   };
-  type: ViewSchemaType;
+  type: [T] extends [number | bigint | undefined] ? "number" | "integer"
+    : [T] extends [string | undefined] ? "string"
+    : [T] extends [boolean | undefined] ? "boolean"
+    : T extends Array<unknown> ? "array"
+    : T extends object ? "object"
+    : never;
   btype?: T extends number ? ViewSchemaNumberType
     : T extends Array<unknown> ? "vector"
     : T extends object ? "map"

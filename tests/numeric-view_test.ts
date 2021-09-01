@@ -43,7 +43,7 @@ for (const [type, Ctor] of Object.entries(TypeViews)) {
     assertEquals(Ctor.decode(view, 8), expected);
   });
 
-  test(`[${type}.from] creates a typed array from an array of numbers`, () => {
+  test(`[${type}.from] creates a view from a number`, () => {
     const expected = isBigInt ? bigNumber : number;
     const view = Ctor.from(expected);
     assertEquals(view.get(), expected);
@@ -70,7 +70,7 @@ for (const [type, Ctor] of Object.entries(TypeViews)) {
     assertEquals(view.get(), expected);
   });
 
-  test(`[${type}#toJSON] converts a view into an array of numbers`, () => {
+  test(`[${type}#toJSON] converts the view into a number`, () => {
     const expected = isBigInt ? bigNumber : number;
     const array = Ctor.from(expected);
     assertEquals(array.toJSON(), expected);
