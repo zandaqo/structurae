@@ -1,3 +1,4 @@
+// deno-lint-ignore-file ban-types
 import { Constructor } from "./utility-types.ts";
 import type { ComplexView, ViewInstance, ViewLayout } from "./view-types.ts";
 

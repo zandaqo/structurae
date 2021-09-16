@@ -14,7 +14,6 @@ export class SortedArray<ItemType> extends Array<ItemType> {
    * @param a the first value
    * @param b the second value
    * @throws RangeError if the comparison is unstable
-   *
    */
   static compare<T>(a: T, b: T): -1 | 0 | 1 {
     if (a > b) return 1;
@@ -274,7 +273,8 @@ export class SortedArray<ItemType> extends Array<ItemType> {
       : this.getIndex(arr, end, comparator, true, startIndex) + 1;
     return subarray
       ? (arr as unknown as Int32Array).subarray(startIndex, endIndex)
-      : (arr as any).slice(startIndex, endIndex);
+      : // deno-lint-ignore no-explicit-any
+        (arr as any).slice(startIndex, endIndex);
   }
 
   /**
@@ -581,7 +581,6 @@ export class SortedArray<ItemType> extends Array<ItemType> {
    * Sorts the array with a provided compare function.
    *
    * @param compareFunction the function to use for comparison
-   *
    */
   sort(
     compareFunction: Comparator<ItemType> = (this
@@ -613,7 +612,6 @@ export class SortedArray<ItemType> extends Array<ItemType> {
 
   /**
    * Removes duplicating elements from the array.
-   *
    *
    * @example
    *

@@ -1,3 +1,4 @@
+// deno-lint-ignore-file ban-types
 import type {
   ComplexView,
   ContainerView,
@@ -373,6 +374,7 @@ export class View {
     };
   }
 
+  // deno-lint-ignore no-explicit-any
   static getSchemaId(schema: ViewSchema<any>): string {
     return schema.$id || schema.$ref?.slice(1) || schema.btype || schema.type;
   }

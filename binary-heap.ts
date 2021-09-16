@@ -21,8 +21,8 @@ export class BinaryHeap<T> extends Array<T> {
    * @param b second value to compare
    * @return whether first value is less than the second
    */
-  static compare(a: any, b: any): boolean {
-    return a < b;
+  static compare(a: unknown, b: unknown): boolean {
+    return <number> a < <number> b;
   }
 
   /**

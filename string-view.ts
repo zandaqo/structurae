@@ -19,15 +19,15 @@ export class StringView extends DataView implements PrimitiveView<string> {
   }
 
   /**
-  * Converts a UTF8 byte array into a JS string.
-  * Adopted from Google Closure:
-  * https://github.com/google/closure-library/blob/master/closure/goog/crypt/crypt.js
-  *
-  * @param view the view to decode
-  * @param start the starting offset
-  * @param length the byte length to decode
-  * @return the JavaScript value
-  */
+   * Converts a UTF8 byte array into a JS string.
+   * Adopted from Google Closure:
+   * https://github.com/google/closure-library/blob/master/closure/goog/crypt/crypt.js
+   *
+   * @param view the view to decode
+   * @param start the starting offset
+   * @param length the byte length to decode
+   * @return the JavaScript value
+   */
   static decode(view: DataView, start = 0, length = view.byteLength): string {
     if (length > 200) {
       const arrayOffset = view.byteOffset + start;
@@ -69,16 +69,16 @@ export class StringView extends DataView implements PrimitiveView<string> {
   }
 
   /**
-  * Converts a JS string into a UTF8 byte array.
-  * Adopted from Deno:
-  * https://github.com/denoland/deno/blob/18a684ab1c20914e13c27bc10e20bda6396ea38d/extensions/web/08_text_encoding.js#L79
-  *
-  * @param value the value to encode
-  * @param view the view to encode into
-  * @param start the view offset to start
-  * @param length the byte length to encode
-  * @return the amount of written bytes
-  */
+   * Converts a JS string into a UTF8 byte array.
+   * Adopted from Deno:
+   * https://github.com/denoland/deno/blob/18a684ab1c20914e13c27bc10e20bda6396ea38d/extensions/web/08_text_encoding.js#L79
+   *
+   * @param value the value to encode
+   * @param view the view to encode into
+   * @param start the view offset to start
+   * @param length the byte length to encode
+   * @return the amount of written bytes
+   */
   static encode(
     value: string,
     view: DataView,
@@ -158,11 +158,11 @@ export class StringView extends DataView implements PrimitiveView<string> {
   }
 
   /**
-  * Creates a StringView from a string or an array like object.
-  *
-  * @param value the string to encode
-  * @return the new view
-  */
+   * Creates a StringView from a string or an array like object.
+   *
+   * @param value the string to encode
+   * @return the new view
+   */
   static from(value: string) {
     const length = this.getLength(value);
     const view = new this(new ArrayBuffer(length));

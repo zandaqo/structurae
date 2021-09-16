@@ -9,8 +9,10 @@ jobs:
       - name: download deno
         uses: denoland/setup-deno@main
         with:
-          deno-version: 1.11.1
+          deno-version: 1.14
       - name: check format
         run: deno fmt --check
+      - name: lint
+        run: deno lint
       - name: run tests
         run: deno test --allow-read --allow-write

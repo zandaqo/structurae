@@ -1,3 +1,4 @@
+// deno-lint-ignore-file ban-types
 import { Constructor } from "./utility-types.ts";
 
 export interface PrimitiveView<T> extends DataView {

@@ -86,26 +86,27 @@ export type AdjacencyStructureConstructor<
   directed: boolean;
   weighted: boolean;
   get [Symbol.species](): U;
+  // deno-lint-ignore no-explicit-any
   new (...args: any[]): AdjacencyStructure;
   /**
-    * Create an adjacency structure of specified dimensions.
-    *
-    * @param vertices the number of vertices
-    * @param edges the maximum amount of edges
-    * @return a new adjacency structure of specified dimentions
-    */
+   * Create an adjacency structure of specified dimensions.
+   *
+   * @param vertices the number of vertices
+   * @param edges the maximum amount of edges
+   * @return a new adjacency structure of specified dimentions
+   */
   create<T extends AdjacencyStructureConstructor<U>>(
     this: T,
     vertices: number,
     edges?: number,
   ): InstanceType<T>;
   /**
-    * Returns the length of underlying TypedArray required to hold a structure
-    * of the specified dimensions.
-    *
-    * @param vertices the number of vertices
-    * @param edges the maximum amount of edges
-    * @return the length
-    */
+   * Returns the length of underlying TypedArray required to hold a structure
+   * of the specified dimensions.
+   *
+   * @param vertices the number of vertices
+   * @param edges the maximum amount of edges
+   * @return the length
+   */
   getLength(vertices: number, edges?: number): number;
 } & U;
