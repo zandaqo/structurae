@@ -14,6 +14,11 @@ interface Person {
   scores: Array<number>;
 }
 
+interface Photo {
+  name: string;
+  data: Uint8Array;
+}
+
 test("[View.create] creates a view for primitive types", () => {
   const NumberView = View.create<number>({
     type: "number",
@@ -94,6 +99,38 @@ test("[View.create] handles objects", () => {
     age: 0,
     scores: [0, 0, 0],
   });
+});
+
+test("[View.create] handles objects with binary data", () => {
+  const PhotoView = View.create<Photo>({
+    $id: "Photo",
+    type: "object",
+    properties: {
+      name: { type: "string", maxLength: 10, default: "Arthur" },
+      data: {
+        type: "string",
+        maxLength: 5,
+        btype: "binary",
+        default: new Uint8Array([1, 2, 3]),
+      },
+    },
+  });
+  assertEquals(PhotoView.viewLength, 15);
+  assertEquals(View.Views.get("Photo"), PhotoView);
+  assertEquals(PhotoView.from({} as unknown as Photo).toJSON(), {
+    name: "Arthur",
+    data: new Uint8Array([1, 2, 3, 0, 0]),
+  });
+  assertEquals(
+    PhotoView.from({
+      name: "Carrot",
+      data: new Uint8Array([5, 4, 3, 2, 1, 0, 10]),
+    }).toJSON(),
+    {
+      name: "Carrot",
+      data: new Uint8Array([5, 4, 3, 2, 1]),
+    },
+  );
 });
 
 test("[View.create] handles objects with constructors", () => {

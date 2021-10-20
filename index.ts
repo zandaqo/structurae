@@ -7,6 +7,7 @@ export { ArrayView } from "./array-view.ts";
 export { BigBitFieldMixin } from "./big-bit-field.ts";
 export { BinaryGrid } from "./binary-grid.ts";
 export { BinaryHeap } from "./binary-heap.ts";
+export { BinaryView } from "./binary-view.ts";
 export { BitArray } from "./bit-array.ts";
 export { BitField, BitFieldMixin } from "./bit-field.ts";
 export type {

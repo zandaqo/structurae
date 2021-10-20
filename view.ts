@@ -28,6 +28,7 @@ import { VectorView } from "./vector-view.ts";
 import { MapView } from "./map-view.ts";
 import { StringView } from "./string-view.ts";
 import { TypedArrayView } from "./typed-array-view.ts";
+import { BinaryView } from "./binary-view.ts";
 import { log2 } from "./utilities.ts";
 import { Constructor } from "./utility-types.ts";
 
@@ -52,6 +53,7 @@ export class View {
     ["biguint64", BigUint64View],
     ["boolean", BooleanView],
     ["string", StringView],
+    ["binary", BinaryView],
   ]);
   static TaggedViews = new Map<number, UnknownViewConstructor>();
   static tagName = "tag";
@@ -80,9 +82,11 @@ export class View {
       const objectSchema = schemas[i];
       const id = this.getSchemaId(objectSchema);
       if (this.Views.has(id)) continue;
+      // use provided constructor for top object
+      const objectCtor = objectSchema === schema ? constructor : undefined;
       const View = objectSchema.btype === "map"
-        ? this.getMapView(objectSchema, constructor)
-        : this.getObjectView(objectSchema, constructor);
+        ? this.getMapView(objectSchema, objectCtor)
+        : this.getObjectView(objectSchema, objectCtor);
       // cache the view by id
       this.Views.set(id, View);
       // cache by tag if present

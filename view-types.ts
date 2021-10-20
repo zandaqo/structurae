@@ -129,8 +129,8 @@ export interface ComplexView<T> extends DataView {
   toJSON(): T;
 }
 
-export type ViewInstance<T> = [T] extends [boolean | number | string | bigint]
-  ? PrimitiveView<T>
+export type ViewInstance<T> = [T] extends
+  [boolean | number | string | bigint | ArrayBufferLike] ? PrimitiveView<T>
   : T extends Array<infer U> ? ContainerView<U>
   : T extends object ? ComplexView<T>
   : never;
@@ -228,12 +228,13 @@ export interface ViewSchema<T> {
     [P in keyof T]: ViewSchema<T[P]>;
   };
   type: [T] extends [number | bigint | undefined] ? "number" | "integer"
-    : [T] extends [string | undefined] ? "string"
+    : [T] extends [string | ArrayBufferLike | undefined] ? "string"
     : [T] extends [boolean | undefined] ? "boolean"
     : T extends Array<unknown> ? "array"
     : T extends object ? "object"
     : never;
   btype?: T extends number ? ViewSchemaNumberType
+    : T extends ArrayBufferLike ? "binary"
     : T extends Array<unknown> ? "vector"
     : T extends object ? "map"
     : never;

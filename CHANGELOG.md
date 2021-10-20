@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.0-pre.10] - 2021-10-20
+
+### Added
+
+- Add BinaryView to simplify working with binary data of variable size in View
+
 ## [4.0.0-pre.9] - 2021-08-31
 
 ### Fixed

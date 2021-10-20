@@ -14,6 +14,7 @@ test("Public API Assertions", () => {
   assertEquals(typeof index.BigBitFieldMixin, "function");
   assertEquals(typeof index.BinaryGrid, "function");
   assertEquals(typeof index.BinaryHeap, "function");
+  assertEquals(typeof index.BinaryView, "function");
   assertEquals(typeof index.BitArray, "function");
   assertEquals(typeof index.BitFieldMixin, "function");
   assertEquals(typeof index.BitField, "function");

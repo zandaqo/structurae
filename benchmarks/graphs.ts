@@ -185,8 +185,10 @@ console.log(
   `List Weighted Directed (1000 edges): ${listWeightedDirected.byteLength}`,
 );
 console.log(
-  `List Weighted Directed (10000 edges): ${WeightedList.getLength(100, 10000) *
-    4}`,
+  `List Weighted Directed (10000 edges): ${
+    WeightedList.getLength(100, 10000) *
+    4
+  }`,
 );
 console.log(
   `Matrix Weighted Directed: ${matrixWeightedDirected.byteLength}`,
