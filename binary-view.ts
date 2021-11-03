@@ -11,8 +11,9 @@ export class BinaryView extends DataView implements PrimitiveView<Uint8Array> {
     );
   }
   static encode(value: Uint8Array, view: DataView, start = 0, length?: number) {
-    const valueLength = value.byteLength - value.byteOffset;
-    const size = !length || valueLength < length ? valueLength : length;
+    const size = !length || value.byteLength < length
+      ? value.byteLength
+      : length;
     new Uint8Array(view.buffer, view.byteOffset, view.byteLength).set(
       new Uint8Array(value.buffer, value.byteOffset, size),
       start,
