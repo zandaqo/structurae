@@ -71,6 +71,26 @@ export class ArrayView<T> extends DataView implements ContainerView<T> {
     return (length / this.itemLength) | 0;
   }
 
+  static indexOf<T>(
+    value: T,
+    view: DataView,
+    startIndex = 0,
+    startOffset = 0,
+    length = view.byteLength,
+  ): number {
+    const size = this.getSize(length);
+    const valueView = this.View.from(value);
+    outer:
+    for (let i = startIndex; i < size; i++) {
+      const offset = startOffset + this.getOffset(i);
+      for (let j = 0; j < valueView.byteLength; j++) {
+        if (valueView.getUint8(j) !== view.getUint8(offset + j)) continue outer;
+      }
+      return i;
+    }
+    return -1;
+  }
+
   *[Symbol.iterator](): Generator<ViewInstance<T>> {
     const { size } = this;
     for (let i = 0; i < size; i++) {
@@ -100,6 +120,16 @@ export class ArrayView<T> extends DataView implements ContainerView<T> {
       this.buffer,
       this.byteOffset + constructor.getOffset(index),
       constructor.itemLength,
+    );
+  }
+
+  indexOf(value: T, start = 0): number {
+    return (this.constructor as typeof ArrayView).indexOf(
+      value,
+      this,
+      start,
+      0,
+      this.byteLength,
     );
   }
 

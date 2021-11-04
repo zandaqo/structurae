@@ -23,11 +23,9 @@ export class VectorView<T> extends DataView implements ContainerView<T> {
     const size = this.getSize(view, start);
     const array = new Array(size) as Array<T | undefined>;
     for (let i = 0; i < size; i++) {
-      const offset = (i + 1) << 2;
-      const startOffset = view.getUint32(start + offset, true);
-      const end = view.getUint32(start + offset + 4, true);
-      array[i] = startOffset !== end
-        ? View.decode(view, start + startOffset, end - startOffset)
+      const offset = this.getOffset(i, view, start);
+      array[i] = offset
+        ? View.decode(view, start + offset[0], offset[1])
         : undefined;
     }
     return array;
@@ -92,8 +90,42 @@ export class VectorView<T> extends DataView implements ContainerView<T> {
     return length;
   }
 
+  static getOffset(
+    index: number,
+    view: DataView,
+    start = 0,
+  ): [start: number, length: number] | undefined {
+    const offset = start + ((index + 1) << 2);
+    const begin = view.getUint32(offset, true);
+    const end = view.getUint32(offset + 4, true);
+    if (begin === end) return undefined;
+    return [begin, end - begin];
+  }
+
   static getSize(view: DataView, start = 0): number {
     return view.getUint32(start, true);
+  }
+
+  static indexOf<T>(
+    value: T,
+    view: DataView,
+    startIndex = 0,
+    startOffset = 0,
+  ) {
+    const size = this.getSize(view, startOffset);
+    const valueView = this.View.from(value);
+    outer:
+    for (let i = startIndex; i < size; i++) {
+      const offset = this.getOffset(i, view, startOffset);
+      if (!offset || offset[1] !== valueView.byteLength) continue;
+      for (let j = 0; j < valueView.byteLength; j++) {
+        if (valueView.getUint8(j) !== view.getUint8(offset[0] + j)) {
+          continue outer;
+        }
+      }
+      return i;
+    }
+    return -1;
   }
 
   *[Symbol.iterator](): Generator<ViewInstance<T> | undefined> {
@@ -111,47 +143,51 @@ export class VectorView<T> extends DataView implements ContainerView<T> {
   get(index: number): T | undefined {
     const View = (this.constructor as typeof VectorView)
       .View as ViewConstructor<T>;
-    const layout = this.getLayout(index);
-    if (!layout) return undefined;
-    return View.decode(this, layout[0], layout[1]);
+    const offset = this.getOffset(index);
+    if (!offset) return undefined;
+    return View.decode(this, offset[0], offset[1]);
   }
 
   getLength(index: number): number {
-    const layout = this.getLayout(index);
-    if (!layout) return 0;
-    return layout[1];
+    const offset = this.getOffset(index);
+    return offset ? offset[1] : 0;
   }
 
-  getLayout(index: number): [number, number] | undefined {
+  getOffset(index: number): [number, number] | undefined {
     const length = this.getUint32(0, true);
     if (index >= length) return undefined;
-    const startOffset = (index + 1) << 2;
-    const start = this.getUint32(startOffset, true);
-    const end = this.getUint32(startOffset + 4, true);
-    if (start === end) return undefined;
-    return [start, end - start];
+    return (this.constructor as typeof VectorView).getOffset(index, this, 0);
   }
 
   getView(index: number): ViewInstance<T> | undefined {
     const View = (this.constructor as typeof VectorView)
       .View as ViewConstructor<T>;
-    const layout = this.getLayout(index);
-    if (!layout) return undefined;
-    return new View(this.buffer, this.byteOffset + layout[0], layout[1]);
+    const offset = this.getOffset(index);
+    if (!offset) return undefined;
+    return new View(this.buffer, this.byteOffset + offset[0], offset[1]);
+  }
+
+  indexOf(value: T, start = 0): number {
+    return (this.constructor as typeof VectorView).indexOf(
+      value,
+      this,
+      start,
+      0,
+    );
   }
 
   set(index: number, value: T): void {
     const View = (this.constructor as typeof VectorView)
       .View as ViewConstructor<T>;
-    const layout = this.getLayout(index);
-    if (!layout) return undefined;
-    View.encode(value, this, this.byteOffset + layout[0], layout[1]);
+    const offset = this.getOffset(index);
+    if (!offset) return undefined;
+    View.encode(value, this, this.byteOffset + offset[0], offset[1]);
   }
 
   setView(index: number, value: DataView): void {
-    const layout = this.getLayout(index);
-    if (!layout) return undefined;
-    new Uint8Array(this.buffer, this.byteOffset + layout[0], layout[1]).set(
+    const offset = this.getOffset(index);
+    if (!offset) return undefined;
+    new Uint8Array(this.buffer, this.byteOffset + offset[0], offset[1]).set(
       new Uint8Array(value.buffer, value.byteOffset, value.byteLength),
     );
   }

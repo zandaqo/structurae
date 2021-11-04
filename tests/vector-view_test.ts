@@ -67,6 +67,16 @@ test("[VectorView#getView] returns a view at a given index", () => {
   assertEquals(actual.byteLength, 2);
 });
 
+test("[VectorView#indexOf] returns a view at a given index", () => {
+  const vector = StringVector.from(["a", "b", "b", undefined, "cd"]);
+  assertEquals(vector.indexOf(""), -1);
+  assertEquals(vector.indexOf("a"), 0);
+  assertEquals(vector.indexOf("b"), 1);
+  assertEquals(vector.indexOf("b", 2), 2);
+  assertEquals(vector.indexOf("z"), -1);
+  assertEquals(vector.indexOf("cd"), 4);
+});
+
 test("[VectorView#getView] returns undefined for absent index", () => {
   assertEquals(
     StringVector.from(["a", "b", undefined, "cd"]).getView(2),

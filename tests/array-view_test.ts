@@ -42,6 +42,16 @@ test("[ArrayView#getView] returns an item view at a given index", () => {
   assertEquals(primitiveView.buffer, arrayView.buffer);
 });
 
+test("[ArrayView#indexOf] searches for a value in the array returning its index", () => {
+  const arrayView = Uint32ArrayView.from([30, 40, 40, 50]);
+  assertEquals(arrayView.indexOf(1), -1);
+  assertEquals(arrayView.indexOf(30), 0);
+  assertEquals(arrayView.indexOf(40), 1);
+  assertEquals(arrayView.indexOf(40, 2), 2);
+  assertEquals(arrayView.indexOf(50), 3);
+  assertEquals(arrayView.indexOf(150), -1);
+});
+
 test("[ArrayView#set] sets an item at a given index", () => {
   const arrayView = Uint32ArrayView.from([30, 40, 50]);
   const expected = 60;
