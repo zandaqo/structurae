@@ -57,6 +57,16 @@ export interface ContainerView<T> extends DataView {
   getView(index: number): ViewInstance<T> | undefined;
 
   /**
+   * Returns the index within the view of the first occurrence
+   * of the specified value, starting the search at start.
+   * Returns -1 if the value is not found.
+   *
+   * @param value the to search for
+   * @return index of the value or -1 if not found
+   */
+  indexOf(value: T, start?: number): number;
+
+  /**
    * Sets a given JavaScript value to an item at a given index.
    *
    * @param index the index of the item
@@ -147,6 +157,7 @@ export interface ViewConstructor<T, Instance = ViewInstance<T>> {
   layout?: ViewLayout<T>;
   defaultData?: Uint8Array;
   ObjectConstructor?: Constructor<T>;
+  View?: unknown;
 
   // deno-lint-ignore no-explicit-any
   new (...args: any[]): Instance;
@@ -227,6 +238,8 @@ export interface ViewSchema<T> {
   properties?: {
     [P in keyof T]: ViewSchema<T[P]>;
   };
+  propertyNames?: ViewSchema<number> | ViewSchema<string>;
+  additionalProperties?: ViewSchema<T[keyof T]>;
   type: [T] extends [number | bigint | undefined] ? "number" | "integer"
     : [T] extends [string | ArrayBufferLike | undefined] ? "string"
     : [T] extends [boolean | undefined] ? "boolean"
@@ -236,7 +249,7 @@ export interface ViewSchema<T> {
   btype?: T extends number ? ViewSchemaNumberType
     : T extends ArrayBufferLike ? "binary"
     : T extends Array<unknown> ? "vector"
-    : T extends object ? "map"
+    : T extends object ? "map" | "dict"
     : never;
   default?: T;
 }

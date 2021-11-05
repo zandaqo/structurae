@@ -303,6 +303,79 @@ test("[View.create] handles tagged objects", () => {
   assertEquals(View.TaggedViews.get(10), TaggedView);
 });
 
+test("[View.create] creates a dict view", () => {
+  const NumberDict = View.create<Record<number, string | undefined>>({
+    $id: "NumberDict",
+    type: "object",
+    btype: "dict",
+    propertyNames: { type: "number", btype: "uint8" },
+    additionalProperties: { type: "string" },
+  });
+  const dict: Record<number, string | undefined> = {
+    1: "a",
+    2: "b",
+    3: "c",
+    5: undefined,
+  };
+  const encoded = NumberDict.from(dict);
+  const decoded = encoded.toJSON();
+  assertEquals(dict, decoded);
+});
+
+test("[View.create] creates a nested dict view", () => {
+  View.create<Record<number, string | undefined>>({
+    $id: "NumberDict",
+    type: "object",
+    btype: "dict",
+    propertyNames: { type: "number", btype: "uint8" },
+    additionalProperties: { type: "string" },
+  });
+  type NestedDict = {
+    n: Record<string, Record<number, string | undefined> | undefined>;
+  };
+  const NestedDict = View.create<NestedDict>({
+    $id: "NestedDict",
+    type: "object",
+    btype: "map",
+    properties: {
+      n: {
+        $id: "StringDict",
+        type: "object",
+        btype: "dict",
+        propertyNames: { type: "string", maxLength: 5 },
+        additionalProperties: { type: "object", $ref: "#NumberDict" },
+      },
+    },
+  });
+  const dict: NestedDict = {
+    n: {
+      "a": { 1: "z" },
+      "b": { 2: "y" },
+      "c": { 3: "x" },
+      "d": undefined,
+    },
+  };
+  const encoded = NestedDict.from(dict);
+  const decoded = encoded.toJSON();
+  assertEquals(dict, decoded);
+});
+
+test("[View.create] throws if keys are not of fixed size", () => {
+  assertThrows(
+    () => {
+      View.create<Record<number, string | undefined>>({
+        $id: "NonFixedDict",
+        type: "object",
+        btype: "dict",
+        propertyNames: { type: "string" },
+        additionalProperties: { type: "string" },
+      });
+    },
+    TypeError,
+    "ArrayView should have fixed sized items.",
+  );
+});
+
 test("[View.view] instantiates a tagged view", () => {
   const TaggedView = View.create<Tagged>({
     $id: "TaggedView",

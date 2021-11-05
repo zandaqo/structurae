@@ -26,6 +26,7 @@ import { ObjectView } from "./object-view.ts";
 import { ArrayView } from "./array-view.ts";
 import { VectorView } from "./vector-view.ts";
 import { MapView } from "./map-view.ts";
+import { DictView } from "./dict-view.ts";
 import { StringView } from "./string-view.ts";
 import { TypedArrayView } from "./typed-array-view.ts";
 import { BinaryView } from "./binary-view.ts";
@@ -63,6 +64,7 @@ export class View {
   static TypedArrayClass = TypedArrayView;
   static VectorClass = VectorView;
   static MapClass = MapView;
+  static DictClass = DictView;
 
   static _maxView: DataView;
 
@@ -86,11 +88,13 @@ export class View {
       const objectCtor = objectSchema === schema ? constructor : undefined;
       const View = objectSchema.btype === "map"
         ? this.getMapView(objectSchema, objectCtor)
+        : objectSchema.btype === "dict"
+        ? this.getDictView(objectSchema)
         : this.getObjectView(objectSchema, objectCtor);
       // cache the view by id
       this.Views.set(id, View);
       // cache by tag if present
-      const tag =
+      const tag = objectSchema.properties &&
         (objectSchema.properties as Record<string, ViewSchema<unknown>>)[
           this.tagName
         ]?.default;
@@ -375,6 +379,29 @@ export class View {
       static fields = fields;
       static defaultData = defaultData;
       static ObjectConstructor = ObjectConstructor;
+    };
+  }
+
+  static getDictView<T extends object>(
+    schema: ViewSchema<T>,
+  ): ViewConstructor<T, ComplexView<T>> {
+    const maxView = this.maxView;
+    const KeyView = this.getExistingView(
+      schema.propertyNames as ViewSchema<number>,
+    );
+    const ValueView = this.getExistingView(schema.additionalProperties!);
+    const KeysView = this.getArrayView(
+      KeyView,
+      schema.propertyNames?.maxLength,
+    ) as typeof ArrayView;
+    const ValuesView = this.getVectorView(
+      ValueView,
+      maxView,
+    ) as typeof VectorView;
+    return class extends this.DictClass<T> {
+      static maxView = maxView;
+      static KeysView = KeysView;
+      static ValuesView = ValuesView;
     };
   }
 

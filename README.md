@@ -54,7 +54,7 @@ import {...} from "structurae";
 Deno:
 
 ```
-import {...} from "https://deno.land/x/structurae@4.0.0-pre.9/index.ts"
+import {...} from "https://deno.land/x/structurae@4.0.0-pre.11/index.ts"
 ```
 
 ## Documentation
@@ -274,6 +274,33 @@ const Neighborhood = View.create<Neighborhood>({
 const neighborhood = Neighborhood.from({} as Neighborhood);
 neighborhood.get("house"); //=> { size: 100 }
 neighborhood.get("biggerHouse"); //=> { size: 200 }
+```
+
+#### Dictionaries
+
+Objects and maps described above assume that all properties of encoded objects
+are known and defined beforehand, however, if the properties are not known, and
+we are dealing with an object used as a lookup table (also called map, hash map,
+or records in TypeScript) with varying amount of properties and known type of
+values, we can use a dictionary view:
+
+```typescript
+const NumberDict = View.create<Record<number, string | undefined>>({
+  $id: "NumberDict",
+  type: "object",
+  btype: "dict", // dictionaries use btype dict
+  // the type of keys are defined in the `propertyNames` field of a schema
+  // the keys must be either fixed sized strings or numbers
+  propertyNames: { type: "number", btype: "uint8" },
+  // the type of values defined in `addtionalProperties` field
+  // values can be of any supported type
+  additionalProperties: { type: "string" },
+});
+const dict = NumberDict.from({ 1: "a", 2: "bcd", 3: undefined });
+dict.get(1); //=> "a"
+dict.get(3); //=> undefined
+dict.get(10); //=> undefined
+dict.get(2); //=> "bcd"
 ```
 
 #### Arrays and Vectors
