@@ -42,7 +42,7 @@ export function AdjacencyListMixin<U extends TypedArrayConstructors>(
       list.vertices = vertices;
       list.edges = edges;
       list.setOffsets();
-      return list as AdjacencyList & InstanceType<U>;
+      return list as unknown as AdjacencyList & InstanceType<U>;
     }
 
     /*
