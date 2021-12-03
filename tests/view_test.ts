@@ -360,6 +360,48 @@ test("[View.create] creates a nested dict view", () => {
   assertEquals(dict, decoded);
 });
 
+test("[View.create] creates a dict view with an array", () => {
+  const ArrayDict = View.create<Record<number, Array<number>>>({
+    $id: "ArrayDict",
+    type: "object",
+    btype: "dict",
+    propertyNames: { type: "number", btype: "uint8" },
+    additionalProperties: {
+      type: "array",
+      maxItems: 2,
+      items: { type: "integer" },
+    },
+  });
+  const dict: Record<number, Array<number>> = {
+    1: [1, 2],
+    2: [3, 4],
+  };
+  const encoded = ArrayDict.from(dict);
+  const decoded = encoded.toJSON();
+  assertEquals(dict, decoded);
+});
+
+test("[View.create] creates a dict view with a vector", () => {
+  const VectorDict = View.create<Record<number, Array<string>>>({
+    $id: "VectorDict",
+    type: "object",
+    btype: "dict",
+    propertyNames: { type: "number", btype: "uint8" },
+    additionalProperties: {
+      type: "array",
+      btype: "vector",
+      items: { type: "string" },
+    },
+  });
+  const dict: Record<number, Array<string>> = {
+    1: ["a", "abc"],
+    2: ["asdfasdfasdf", "abcde", "a"],
+  };
+  const encoded = VectorDict.from(dict);
+  const decoded = encoded.toJSON();
+  assertEquals(dict, decoded);
+});
+
 test("[View.create] throws if keys are not of fixed size", () => {
   assertThrows(
     () => {

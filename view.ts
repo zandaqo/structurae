@@ -389,7 +389,10 @@ export class View {
     const KeyView = this.getExistingView(
       schema.propertyNames as ViewSchema<number>,
     );
-    const ValueView = this.getExistingView(schema.additionalProperties!);
+    const valueSchema = schema.additionalProperties!;
+    const ValueView = valueSchema.type === "array"
+      ? this.getArray(valueSchema)[0]
+      : this.getExistingView(schema.additionalProperties!);
     const KeysView = this.getArrayView(
       KeyView,
       schema.propertyNames?.maxLength,
