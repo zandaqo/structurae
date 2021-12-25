@@ -6,37 +6,37 @@
 A collection of data structures for high-performance JavaScript applications
 that includes:
 
-- [Binary Protocol](https://github.com/zandaqo/structurae#binary-protocol) -
+- **[Binary Protocol](#binary-protocol)** -
   simple binary protocol based on DataView and defined with JSONSchema
-- Bit Structures:
-  - [BitField & BigBitField](https://github.com/zandaqo/structurae#BitField) -
+- **[Bit Structures](#bit-structures)**:
+  - [BitField & BigBitField](#bitfield--bigbitfield) -
     stores and operates on data in Numbers and BigInts treating them as
     bitfields.
-  - [BitArray](https://github.com/zandaqo/structurae#BitArray) - an array of
+  - [BitArray](#bitArray) - an array of
     bits implemented with Uint32Array.
-  - [Pool](https://github.com/zandaqo/structurae#Pool) - manages availability of
+  - [Pool](#pool) - manages availability of
     objects in object pools.
-  - [RankedBitArray](https://github.com/zandaqo/structurae#RankedBitArray) -
+  - [RankedBitArray](#rankedbitarray) -
     extends BitArray with O(1) time rank and O(logN) select methods.
-- [Graphs](https://github.com/zandaqo/structurae#Graphs):
-  - [Adjacency Structures](https://github.com/zandaqo/structurae#Adjacency-Structures) -
+- **[Graphs](#graphs)**:
+  - [Adjacency Structures](#adjacency-structures) -
     implement adjacency list & matrix data structures.
-  - [Graph](https://github.com/zandaqo/structurae#Graph) - extends an adjacency
+  - [Graph](#graph) - extends an adjacency
     list/matrix structure and provides methods for traversal (BFS, DFS),
     pathfinding (Dijkstra, Bellman-Ford), spanning tree construction (BFS,
     Prim), etc.
-- [Grids](https://github.com/zandaqo/structurae#Grids):
-  - [BinaryGrid](https://github.com/zandaqo/structurae#BinaryGrid) - creates a
+- **[Grids](#grids)**:
+  - [BinaryGrid](#binarygrid) - creates a
     grid or 2D matrix of bits.
-  - [Grid](https://github.com/zandaqo/structurae#Grid) - extends built-in
+  - [Grid](#grid) - extends built-in
     indexed collections to handle 2 dimensional data (e.g. nested arrays).
-  - [SymmetricGrid](https://github.com/zandaqo/structurae#SymmetricGrid) - a
+  - [SymmetricGrid](#symmetricgrid) - a
     grid to handle symmetric or triangular matrices using half the space
     required for a normal grid.
-- [Sorted Structures](https://github.com/zandaqo/structurae#sorted-structures):
-  - [BinaryHeap](https://github.com/zandaqo/structurae#BinaryHeap) - extends
+- **[Sorted Structures](#sorted-structures)**:
+  - [BinaryHeap](#binaryheap) - extends
     Array to implement the Binary Heap data structure.
-  - [SortedArray](https://github.com/zandaqo/structurae#SortedArray) - extends
+  - [SortedArray](#sortedarray) - extends
     Array to handle sorted data.
 
 ## Usage
