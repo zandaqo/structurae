@@ -6,38 +6,31 @@
 A collection of data structures for high-performance JavaScript applications
 that includes:
 
-- **[Binary Protocol](#binary-protocol)** -
-  simple binary protocol based on DataView and defined with JSONSchema
+- **[Binary Protocol](#binary-protocol)** - simple binary protocol based on
+  DataView and defined with JSONSchema
 - **[Bit Structures](#bit-structures)**:
-  - [BitField & BigBitField](#bitfield--bigbitfield) -
-    stores and operates on data in Numbers and BigInts treating them as
-    bitfields.
-  - [BitArray](#bitArray) - an array of
-    bits implemented with Uint32Array.
-  - [Pool](#pool) - manages availability of
-    objects in object pools.
-  - [RankedBitArray](#rankedbitarray) -
-    extends BitArray with O(1) time rank and O(logN) select methods.
+  - [BitField & BigBitField](#bitfield--bigbitfield) - stores and operates on
+    data in Numbers and BigInts treating them as bitfields.
+  - [BitArray](#bitArray) - an array of bits implemented with Uint32Array.
+  - [Pool](#pool) - manages availability of objects in object pools.
+  - [RankedBitArray](#rankedbitarray) - extends BitArray with O(1) time rank and
+    O(logN) select methods.
 - **[Graphs](#graphs)**:
-  - [Adjacency Structures](#adjacency-structures) -
-    implement adjacency list & matrix data structures.
-  - [Graph](#graph) - extends an adjacency
-    list/matrix structure and provides methods for traversal (BFS, DFS),
-    pathfinding (Dijkstra, Bellman-Ford), spanning tree construction (BFS,
-    Prim), etc.
+  - [Adjacency Structures](#adjacency-structures) - implement adjacency list &
+    matrix data structures.
+  - [Graph](#graph) - extends an adjacency list/matrix structure and provides
+    methods for traversal (BFS, DFS), pathfinding (Dijkstra, Bellman-Ford),
+    spanning tree construction (BFS, Prim), etc.
 - **[Grids](#grids)**:
-  - [BinaryGrid](#binarygrid) - creates a
-    grid or 2D matrix of bits.
-  - [Grid](#grid) - extends built-in
-    indexed collections to handle 2 dimensional data (e.g. nested arrays).
-  - [SymmetricGrid](#symmetricgrid) - a
-    grid to handle symmetric or triangular matrices using half the space
-    required for a normal grid.
+  - [BinaryGrid](#binarygrid) - creates a grid or 2D matrix of bits.
+  - [Grid](#grid) - extends built-in indexed collections to handle 2 dimensional
+    data (e.g. nested arrays).
+  - [SymmetricGrid](#symmetricgrid) - a grid to handle symmetric or triangular
+    matrices using half the space required for a normal grid.
 - **[Sorted Structures](#sorted-structures)**:
-  - [BinaryHeap](#binaryheap) - extends
-    Array to implement the Binary Heap data structure.
-  - [SortedArray](#sortedarray) - extends
-    Array to handle sorted data.
+  - [BinaryHeap](#binaryheap) - extends Array to implement the Binary Heap data
+    structure.
+  - [SortedArray](#sortedarray) - extends Array to handle sorted data.
 
 ## Usage
 
