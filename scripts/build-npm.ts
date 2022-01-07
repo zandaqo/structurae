@@ -1,4 +1,4 @@
-import { build } from "https://raw.githubusercontent.com/denoland/dnt/0.7.0/mod.ts";
+import { build } from "https://raw.githubusercontent.com/denoland/dnt/0.12.0/mod.ts";
 
 await Deno.remove("npm", { recursive: true }).catch((_) => {});
 
@@ -14,6 +14,7 @@ await build({
     sourceMap: true,
     inlineSources: true,
   },
+  shims: {},
   package: {
     name: "structurae",
     version: Deno.args[0],

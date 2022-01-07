@@ -87,8 +87,8 @@ export class StringView extends DataView implements PrimitiveView<string> {
   ): number {
     let written = 0;
     const valueLength = value.length;
-    const byteLength = length ?? valueLength << 1;
-    if (byteLength > 200) {
+    const byteLength = length ?? (valueLength << 1) + valueLength;
+    if (byteLength > 300) {
       ({ written } = this.encoder.encodeInto(
         value,
         new Uint8Array(view.buffer, view.byteOffset + start, length),

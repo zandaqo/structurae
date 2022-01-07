@@ -26,6 +26,12 @@ test("[StringView.encode] encodes a string", () => {
   assertEquals(StringView.decode(view, 0, written), randomString);
 });
 
+test("[StringView.encode] handles 3-byte strings", () => {
+  const view = new StringView(new ArrayBuffer(10));
+  const written = StringView.encode("—", view);
+  assertEquals(StringView.decode(view, 0, written), "—");
+});
+
 test("[StringView#size] returns the amount UTF characters in the view", () => {
   assertEquals(StringView.from("asdf").size, 4);
   assertEquals(StringView.from("фыва").size, 4);
@@ -41,6 +47,7 @@ test("[StringView.from] creates a StringView from a string", () => {
 
 test("[StringView.getLength] returns the size in bytes of a given string", () => {
   assertEquals(StringView.getLength("asdf"), 4);
+  assertEquals(StringView.getLength("—"), 3);
   assertEquals(StringView.getLength("фыва"), 8);
   assertEquals(StringView.getLength("😀😀fooа😀←"), 20);
 });
