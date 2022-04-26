@@ -149,7 +149,7 @@ test("[View.create] handles objects with constructors", () => {
   }, ABC);
   assertEquals(AView.viewLength, 2);
   assertEquals(View.Views.get("ABC"), AView);
-  assertEquals(AView.from({} as unknown as ABC).toJSON(), {
+  assertEquals(JSON.parse(JSON.stringify(AView.from({} as unknown as ABC))), {
     a: 5,
     b: 6,
   });
