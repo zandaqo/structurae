@@ -1,6 +1,5 @@
-import { bench, runBenchmarks } from "../dev_deps.ts";
 import { Pool } from "../pool.ts";
-import { benchmarkReporter, getIndex } from "./helpers.ts";
+import { getIndex } from "./helpers.ts";
 
 const SIZE = 1000 * 16;
 class NaivePool {
@@ -32,38 +31,29 @@ naivePool.register.fill(1);
 pool.fill(0);
 const SAMPLES = 800;
 
-bench({
+Deno.bench({
   name: "[Object Pool] Native Pool",
-  runs: 1000,
-  func(b): void {
-    b.start();
+  group: "Object Pool",
+  fn() {
     for (let i = 0; i < SAMPLES; i++) {
       naivePool.release(getIndex(SIZE));
     }
     for (let i = 0; i < SAMPLES; i++) {
       naivePool.acquire();
     }
-    b.stop();
   },
 });
 
-bench({
+Deno.bench({
   name: "[Object Pool] Pool",
-  runs: 1000,
-  func(b): void {
-    b.start();
+  group: "Object Pool",
+  baseline: true,
+  fn() {
     for (let i = 0; i < SAMPLES; i++) {
       pool.free(getIndex(SIZE));
     }
     for (let i = 0; i < SAMPLES; i++) {
       pool.get();
     }
-    b.stop();
   },
 });
-
-if (import.meta.main) {
-  runBenchmarks().then(benchmarkReporter).catch((e) => {
-    console.log(e);
-  });
-}

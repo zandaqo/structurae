@@ -1,5 +1,4 @@
-import { bench, runBenchmarks } from "../dev_deps.ts";
-import { benchmarkReporter, getIndex } from "./helpers.ts";
+import { getIndex } from "./helpers.ts";
 import { StringView } from "../string-view.ts";
 
 function getString(size: number) {
@@ -31,130 +30,107 @@ const viewMatches = matches.map((s) =>
   new Uint8Array(StringView.from(s).buffer)
 );
 
-bench({
+Deno.bench({
   name: "[String Search] Native",
-  runs: 10000,
-  func(b): void {
-    b.start();
+  group: "String Search",
+  fn() {
     const string = strings[getIndex(arrayLength)];
     const match = matches[getIndex(arrayLength)];
     string.indexOf(match);
-    b.stop();
   },
 });
-bench({
+Deno.bench({
   name: "[String Search] StringView",
-  runs: 10000,
-  func(b): void {
-    b.start();
+  group: "String Search",
+  baseline: true,
+  fn() {
     const view = views[getIndex(arrayLength)];
     const match = viewMatches[getIndex(arrayLength)];
     view.indexOf(match);
-    b.stop();
   },
 });
-bench({
+Deno.bench({
   name: "[String Replace] Native",
-  runs: 10000,
-  func(b): void {
-    b.start();
+  group: "String Replace",
+  fn() {
     let string = strings[getIndex(arrayLength)];
     const replacement = matches[getIndex(arrayLength)];
     for (let i = 0; i < 10; i++) {
       const match = matches[getIndex(arrayLength)];
       string = string.replace(new RegExp(match), replacement);
     }
-    b.stop();
   },
 });
-bench({
+Deno.bench({
   name: "[String Replace] StringView",
-  runs: 10000,
-  func(b): void {
-    b.start();
+  group: "String Replace",
+  baseline: true,
+  fn() {
     const view = views[getIndex(arrayLength)];
     const replacement = viewMatches[getIndex(arrayLength)];
     for (let i = 0; i < 10; i++) {
       const match = viewMatches[getIndex(arrayLength)];
       view.replace(match, replacement);
     }
-    b.stop();
   },
 });
-bench({
+Deno.bench({
   name: "[String Reverse] Native",
-  runs: 10000,
-  func(b): void {
-    b.start();
+  group: "String Reverse",
+  fn() {
     const string = strings[getIndex(arrayLength)];
     string.split("").reverse().join("");
-    b.stop();
   },
 });
-bench({
+Deno.bench({
   name: "[String Reverse] StringView",
-  runs: 10000,
-  func(b): void {
-    b.start();
+  group: "String Reverse",
+  baseline: true,
+  fn() {
     const view = views[getIndex(arrayLength)];
     view.reverse();
-    b.stop();
   },
 });
-bench({
+Deno.bench({
   name: "[String Reverse] StringView to String",
-  runs: 10000,
-  func(b): void {
-    b.start();
+  group: "String Reverse",
+  fn() {
     const string = strings[getIndex(arrayLength)];
     StringView.from(string).toString();
-    b.stop();
   },
 });
 
-bench({
+Deno.bench({
   name: "[Get String Size] TextEncoder",
-  runs: 10000,
-  func(b): void {
-    b.start();
+  group: "Get String Size",
+  fn() {
     const string = strings[getIndex(arrayLength)];
     Encoder.encode(string).length;
-    b.stop();
   },
 });
-bench({
+Deno.bench({
   name: "[Get String Size] StringView",
-  runs: 10000,
-  func(b): void {
-    b.start();
+  group: "Get String Size",
+  baseline: true,
+  fn() {
     const string = strings[getIndex(arrayLength)];
     StringView.getLength(string);
-    b.stop();
   },
 });
-bench({
-  name: "[String Serialization] Serialize",
-  runs: 10000,
-  func(b): void {
-    b.start();
+Deno.bench({
+  name: "[StringView] Serialize",
+  group: "StringView",
+  baseline: true,
+  fn() {
     const string = strings[getIndex(arrayLength)];
     StringView.from(string);
-    b.stop();
   },
 });
-bench({
-  name: "[String Serialization] Deserialize",
-  runs: 10000,
-  func(b): void {
-    b.start();
+Deno.bench({
+  name: "[StringView] Deserialize",
+  group: "StringView",
+  fn() {
     const view = views[getIndex(arrayLength)];
     view.toString();
-    b.stop();
   },
 });
-
-if (import.meta.main) {
-  runBenchmarks().then(benchmarkReporter).catch((e) => {
-    console.log(e);
-  });
-}

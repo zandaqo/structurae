@@ -1,5 +1,4 @@
-import { bench, runBenchmarks } from "../dev_deps.ts";
-import { benchmarkReporter, getIndex } from "./helpers.ts";
+import { getIndex } from "./helpers.ts";
 import { GraphMixin } from "../graph.ts";
 import { AdjacencyMatrixUnweightedDirected } from "../adjacency-matrix-unweighted-directed.ts";
 import { AdjacencyMatrixUnweightedUndirected } from "../adjacency-matrix-unweighted-undirected.ts";
@@ -26,11 +25,10 @@ let matrixWeightedUndirected = WeightedUndirectedMatrix.create(SIZE);
 let matrixUnweightedDirected = UnweightedDirectedMatrix.create(SIZE);
 let matrixUnweightedUndirected = UnweightedUndirectedMatrix.create(SIZE);
 
-bench({
-  name: "[Graph Add/Remove Edge] List Weighted Directed",
-  runs: 10000,
-  func(b): void {
-    b.start();
+Deno.bench({
+  name: "List Weighted Directed",
+  group: "Graph Add/Remove Edge",
+  fn() {
     for (let i = 0; i < SIZE; i++) {
       if (!listWeightedDirected.isFull()) {
         listWeightedDirected.addEdge(
@@ -41,15 +39,14 @@ bench({
       }
       listWeightedDirected.removeEdge(getIndex(SIZE), getIndex(SIZE));
     }
-    b.stop();
   },
 });
 
-bench({
+Deno.bench({
   name: "[Graph Add/Remove Edge] Matrix Weighted Directed",
-  runs: 10000,
-  func(b): void {
-    b.start();
+  group: "Graph Add/Remove Edge",
+  baseline: true,
+  fn() {
     for (let i = 0; i < SIZE; i++) {
       matrixWeightedDirected.addEdge(
         getIndex(SIZE),
@@ -58,15 +55,13 @@ bench({
       );
       matrixWeightedDirected.removeEdge(getIndex(SIZE), getIndex(SIZE));
     }
-    b.stop();
   },
 });
 
-bench({
-  name: "[Graph Add/Remove Edge] Matrix Weighted Undirected",
-  runs: 10000,
-  func(b): void {
-    b.start();
+Deno.bench({
+  name: "Matrix Weighted Undirected",
+  group: "Graph Add/Remove Edge",
+  fn() {
     for (let i = 0; i < SIZE; i++) {
       matrixWeightedUndirected.addEdge(
         getIndex(SIZE),
@@ -75,15 +70,13 @@ bench({
       );
       matrixWeightedUndirected.removeEdge(getIndex(SIZE), getIndex(SIZE));
     }
-    b.stop();
   },
 });
 
-bench({
-  name: "[Graph Add/Remove Edge] Matrix Unweighted Directed",
-  runs: 10000,
-  func(b): void {
-    b.start();
+Deno.bench({
+  name: "Matrix Unweighted Directed",
+  group: "Graph Add/Remove Edge",
+  fn() {
     for (let i = 0; i < SIZE; i++) {
       matrixUnweightedDirected.addEdge(
         getIndex(SIZE),
@@ -92,15 +85,13 @@ bench({
       );
       matrixUnweightedDirected.removeEdge(getIndex(SIZE), getIndex(SIZE));
     }
-    b.stop();
   },
 });
 
-bench({
-  name: "[Graph Add/Remove Edge] Matrix Unweighted Undirected",
-  runs: 10000,
-  func(b): void {
-    b.start();
+Deno.bench({
+  name: "Matrix Unweighted Undirected",
+  group: "Graph Add/Remove Edge",
+  fn() {
     for (let i = 0; i < SIZE; i++) {
       matrixUnweightedUndirected.addEdge(
         getIndex(SIZE),
@@ -109,7 +100,6 @@ bench({
       );
       matrixUnweightedUndirected.removeEdge(getIndex(SIZE), getIndex(SIZE));
     }
-    b.stop();
   },
 });
 
@@ -130,53 +120,44 @@ for (let i = 0; i < 1000; i++) {
   }
 }
 
-bench({
-  name: "[Graph Traversal] List Weighted Directed",
-  runs: 100,
-  func(b): void {
-    b.start();
+Deno.bench({
+  name: "List Weighted Directed",
+  group: "Graph Traversal",
+  fn() {
     [...listWeightedDirected.traverse(false, getIndex(SIZE))];
-    b.stop();
   },
 });
 
-bench({
+Deno.bench({
   name: "[Graph Traversal] Matrix Weighted Directed",
-  runs: 100,
-  func(b): void {
-    b.start();
+  group: "Graph Traversal",
+  baseline: true,
+  fn() {
     [...matrixWeightedDirected.traverse(false, getIndex(SIZE))];
-    b.stop();
   },
 });
 
-bench({
-  name: "[Graph Traversal] Matrix Weighted Undirected",
-  runs: 100,
-  func(b): void {
-    b.start();
+Deno.bench({
+  name: "Matrix Weighted Undirected",
+  group: "Graph Traversal",
+  fn() {
     [...matrixWeightedUndirected.traverse(false, getIndex(SIZE))];
-    b.stop();
   },
 });
 
-bench({
-  name: "[Graph Traversal] Matrix Unweighted Directed",
-  runs: 100,
-  func(b): void {
-    b.start();
+Deno.bench({
+  name: "Matrix Unweighted Directed",
+  group: "Graph Traversal",
+  fn() {
     [...matrixUnweightedDirected.traverse(false, getIndex(SIZE))];
-    b.stop();
   },
 });
 
-bench({
-  name: "[Graph Traversal] Matrix Unweighted Undirected",
-  runs: 100,
-  func(b): void {
-    b.start();
+Deno.bench({
+  name: "Matrix Unweighted Undirected",
+  group: "Graph Traversal",
+  fn() {
     [...matrixUnweightedUndirected.traverse(false, getIndex(SIZE))];
-    b.stop();
   },
 });
 
@@ -202,9 +183,3 @@ console.log(
 console.log(
   `Matrix Unweighted Undirected: ${matrixUnweightedUndirected.byteLength}`,
 );
-
-if (import.meta.main) {
-  runBenchmarks().then(benchmarkReporter).catch((e) => {
-    console.log(e);
-  });
-}

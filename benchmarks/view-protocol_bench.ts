@@ -1,5 +1,4 @@
-import { bench, runBenchmarks } from "../dev_deps.ts";
-import { benchmarkReporter, getIndex } from "./helpers.ts";
+import { getIndex } from "./helpers.ts";
 import jsf from "https://jspm.dev/json-schema-faker";
 import { deflateRaw } from "https://deno.land/x/compress@v0.3.8/mod.ts";
 import { View } from "../view.ts";
@@ -171,126 +170,102 @@ console.log(`Encoded Sizes:
   )
 }%)`);
 
-bench({
+Deno.bench({
   name: "[View Protocol Get Value] View",
-  runs: 10000,
-  func(b): void {
-    b.start();
+  group: "[View Protocol Get Value]",
+  baseline: true,
+  fn() {
     const view = views[getIndex(100)]!;
     view.get("type")! + view.get("weight")! + view.get("height")!;
-    b.stop();
   },
 });
-bench({
-  name: "[View Protocol Get Value] JSON",
-  runs: 10000,
-  func(b): void {
-    b.start();
+Deno.bench({
+  name: "JSON",
+  group: "[View Protocol Get Value]",
+  fn() {
     const string = strings[getIndex(100)];
     const object = JSON.parse(string);
     object.house + object.weight + object.height;
-    b.stop();
   },
 });
-bench({
+Deno.bench({
   name: "[View Protocol Set Value] View",
-  runs: 10000,
-  func(b): void {
-    b.start();
+  group: "[View Protocol Set Value]",
+  baseline: true,
+  fn() {
     const view = views[getIndex(100)]!;
     view.set("type", 20);
     view.set("weight", 20);
     view.set("height", 20);
-    b.stop();
   },
 });
-bench({
-  name: "[View Protocol Set Value] JSON",
-  runs: 10000,
-  func(b): void {
-    b.start();
+Deno.bench({
+  name: "JSON",
+  group: "[View Protocol Set Value]",
+  fn() {
     const string = strings[getIndex(100)];
     const object = JSON.parse(string);
     object.type = 20;
     object.weight = 20;
     object.height = 20;
-    b.stop();
   },
 });
-bench({
+Deno.bench({
   name: "[View Protocol Serialize] View",
-  runs: 10000,
-  func(b): void {
-    b.start();
+  group: "View Protocol Serialize",
+  fn() {
     const object = objects[getIndex(100)];
     Person.from(object);
-    b.stop();
   },
 });
-bench({
+Deno.bench({
   name: "[View Protocol Serialize] View (into buffer)",
-  runs: 10000,
-  func(b): void {
-    b.start();
+  group: "View Protocol Serialize",
+  baseline: true,
+  fn() {
     const object = objects[getIndex(100)];
     Person.encode(object, emptyPerson);
-    b.stop();
   },
 });
-bench({
+Deno.bench({
   name: "[View Protocol Serialize] JSON",
-  runs: 10000,
-  func(b): void {
-    b.start();
+  group: "View Protocol Serialize",
+  fn() {
     const object = objects[getIndex(100)];
     JSON.stringify(object);
-    b.stop();
   },
 });
-bench({
+Deno.bench({
   name: "[View Protocol Serialize] JSON into Binary",
-  runs: 10000,
-  func(b): void {
-    b.start();
+  group: "View Protocol Serialize",
+  fn() {
     const object = objects[getIndex(100)];
     Encoder.encode(JSON.stringify(object));
-    b.stop();
   },
 });
-bench({
+Deno.bench({
   name: "[View Protocol Deserialize] View",
-  runs: 10000,
-  func(b): void {
-    b.start();
+  group: "View Protocol Deserialize",
+  baseline: true,
+  fn() {
     const view = views[getIndex(100)]!;
     view.toJSON();
-    b.stop();
   },
 });
 
-bench({
+Deno.bench({
   name: "[View Protocol Deserialize] JSON from Binary",
-  runs: 10000,
-  func(b): void {
-    b.start();
+  group: "View Protocol Deserialize",
+  fn() {
     const string = encodedStrings[getIndex(100)];
     JSON.parse(Decoder.decode(string));
-    b.stop();
   },
 });
-bench({
+Deno.bench({
   name: "[View Protocol Deserialize] JSON",
-  runs: 10000,
-  func(b): void {
-    b.start();
+  group: "View Protocol Deserialize",
+  fn() {
     const string = strings[getIndex(100)];
     JSON.parse(string);
-    b.stop();
   },
 });
-
-if (import.meta.main) {
-  runBenchmarks().then(benchmarkReporter).catch((e) => {
-    console.log(e);
-  });
-}
