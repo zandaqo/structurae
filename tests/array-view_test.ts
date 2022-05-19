@@ -8,6 +8,15 @@ class Uint32ArrayView extends ArrayView<number> {
   static itemLength = Uint32View.viewLength;
 }
 
+test("[ArrayView.encode] encodes a JavaScript value into a given view", () => {
+  const expected = [10, 20, 30, 40, 50];
+  const arrayView = new Uint32ArrayView(
+    new ArrayBuffer(Uint32ArrayView.getLength(4)),
+  );
+  Uint32ArrayView.encode(expected, arrayView);
+  assertEquals(arrayView.toJSON(), [10, 20, 30, 40]);
+});
+
 test("[ArrayView.from] creates an array view from a given array", () => {
   const expected = [30, 40, 50];
   const arrayView = Uint32ArrayView.from(expected);

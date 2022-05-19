@@ -13,8 +13,6 @@ function getString(size: number) {
   return text.join("");
 }
 
-const Encoder = new TextEncoder();
-
 const matchLength = 3;
 const stringLength = 100;
 const arrayLength = 100;
@@ -39,6 +37,7 @@ Deno.bench({
     string.indexOf(match);
   },
 });
+
 Deno.bench({
   name: "[String Search] StringView",
   group: "String Search",
@@ -49,6 +48,7 @@ Deno.bench({
     view.indexOf(match);
   },
 });
+
 Deno.bench({
   name: "[String Replace] Native",
   group: "String Replace",
@@ -61,6 +61,7 @@ Deno.bench({
     }
   },
 });
+
 Deno.bench({
   name: "[String Replace] StringView",
   group: "String Replace",
@@ -74,6 +75,7 @@ Deno.bench({
     }
   },
 });
+
 Deno.bench({
   name: "[String Reverse] Native",
   group: "String Reverse",
@@ -82,6 +84,7 @@ Deno.bench({
     string.split("").reverse().join("");
   },
 });
+
 Deno.bench({
   name: "[String Reverse] StringView",
   group: "String Reverse",
@@ -91,6 +94,7 @@ Deno.bench({
     view.reverse();
   },
 });
+
 Deno.bench({
   name: "[String Reverse] StringView to String",
   group: "String Reverse",
@@ -105,9 +109,10 @@ Deno.bench({
   group: "Get String Size",
   fn() {
     const string = strings[getIndex(arrayLength)];
-    Encoder.encode(string).length;
+    StringView.encoder.encode(string).length;
   },
 });
+
 Deno.bench({
   name: "[Get String Size] StringView",
   group: "Get String Size",
@@ -117,20 +122,41 @@ Deno.bench({
     StringView.getLength(string);
   },
 });
+
 Deno.bench({
-  name: "[StringView] Serialize",
-  group: "StringView",
+  name: "[String Encode] StringView",
+  group: "String Encode",
   baseline: true,
   fn() {
     const string = strings[getIndex(arrayLength)];
     StringView.from(string);
   },
 });
+
 Deno.bench({
-  name: "[StringView] Deserialize",
-  group: "StringView",
+  name: "[String Encode] TextEncoder",
+  group: "String Encode",
+  baseline: true,
+  fn() {
+    const string = strings[getIndex(arrayLength)];
+    StringView.encoder.encode(string);
+  },
+});
+
+Deno.bench({
+  name: "[String Decode] StringView",
+  group: "String Decode",
   fn() {
     const view = views[getIndex(arrayLength)];
     view.toString();
+  },
+});
+
+Deno.bench({
+  name: "[String Decode] TextDecoder",
+  group: "String Decode",
+  fn() {
+    const view = views[getIndex(arrayLength)];
+    StringView.decoder.decode(view);
   },
 });

@@ -27,6 +27,13 @@ const IntegerDict: ViewConstructor<Record<number, string | undefined>> = class
   static ValuesView = StringVector as typeof VectorView;
 };
 
+test("[DictView.encode] encodes a JavaScript value into a given view", () => {
+  const expected = { 30: "a", 40: "b" };
+  const dictView = IntegerDict.from({ 30: "a", 40: "b", 50: "c" });
+  IntegerDict.encode(expected, dictView, 0, dictView.byteLength);
+  assertEquals(dictView.toJSON(), expected);
+});
+
 test("[DictView.from] creates a dictionary view from a given object", () => {
   const expected = { 30: "a", 40: "b", 50: "c" };
   const dictView = IntegerDict.from(expected);
@@ -42,6 +49,7 @@ test("[DictView#get] returns the value of a given key", () => {
   const expected = { 30: "a", 40: "b", 50: "c" };
   const dictView = IntegerDict.from(expected);
   assertEquals(dictView.get(30), expected[30]);
+  assertEquals(dictView.get(20), undefined);
 });
 
 test("[DictView#getLength] returns the byte length of the value of a given key", () => {
@@ -58,12 +66,14 @@ test("[DictView#getView] returns a view of the key's value", () => {
   assertEquals(primitiveView.byteOffset, 20);
   assertEquals(primitiveView.byteLength, 1);
   assertEquals(primitiveView.buffer, dictView.buffer);
+  assertEquals(dictView.getView(20), undefined);
 });
 
 test("[DictView#set] sets a value for a given key", () => {
   const dictView = IntegerDict.from({ 30: "a", 40: "b", 50: "c" });
   const expected = "z";
   dictView.set(30, expected);
+  dictView.set(20, expected);
   assertEquals(dictView.get(30), expected);
 });
 
@@ -71,6 +81,7 @@ test("[DictView#setView] sets a value view for a given key", () => {
   const dictView = IntegerDict.from({ 30: "a", 40: "b", 50: "c" });
   const primitiveView = StringView.from("d");
   dictView.setView(30, primitiveView);
+  dictView.setView(20, primitiveView);
   assertEquals(dictView.get(30), "d");
 });
 

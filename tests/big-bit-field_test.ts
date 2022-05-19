@@ -10,12 +10,12 @@ const LargeField = BigBitFieldMixin({
   height: 15,
 });
 
-test("[BitField.constructor] creates an instance with a given numerical value", () => {
+test("[BigBitField.constructor] creates an instance with a given numerical value", () => {
   assertEquals(new LargeField().value, BigInt(0));
   assertEquals(new LargeField(BigInt(1375759717)).value, BigInt(1375759717));
 });
 
-test("[BitField.constructor] creates an instance from a list of values", () => {
+test("[BigBitField.constructor] creates an instance from a list of values", () => {
   assertEquals(
     new LargeField({
       location: 20,
@@ -28,7 +28,7 @@ test("[BitField.constructor] creates an instance from a list of values", () => {
   assertEquals(new LargeField([20, 1, 3500, 5]).value, BigInt("2748779965588"));
 });
 
-test("[BitField.constructor] creates an instance from another BigBitField", () => {
+test("[BigBitField.constructor] creates an instance from another BigBitField", () => {
   assertEquals(new LargeField(new LargeField()).value, BigInt(0));
   assertEquals(
     new LargeField(new LargeField(BigInt(1375759717))).value,
@@ -36,7 +36,11 @@ test("[BitField.constructor] creates an instance from another BigBitField", () =
   );
 });
 
-test("[BitField#get] returns a value of a given field", () => {
+test("[BigBitField.gitMinSize] creates an instance from another BigBitField", () => {
+  assertEquals(LargeField.getMinSize(4375759717), 33);
+});
+
+test("[BigBitField#get] returns a value of a given field", () => {
   assertEquals(
     new LargeField({
       location: 20,
@@ -49,7 +53,7 @@ test("[BitField#get] returns a value of a given field", () => {
   assertEquals(new LargeField(BigInt("2748779965588")).get("width"), 3500);
 });
 
-test("[BitField#set] sets a given value to a given field", () => {
+test("[BigBitField#set] sets a given value to a given field", () => {
   assertEquals(
     new LargeField({
       location: 20,
@@ -67,7 +71,7 @@ test("[BitField#set] sets a given value to a given field", () => {
   );
 });
 
-test("[BitField#has] checks if all specified fields are set in a given bitfield instance", () => {
+test("[BigBitField#has] checks if all specified fields are set in a given bitfield instance", () => {
   const largeField = new LargeField({
     location: 20,
     open: 0,
@@ -78,7 +82,7 @@ test("[BitField#has] checks if all specified fields are set in a given bitfield 
   assertEquals(largeField.set("open").has("open"), true);
 });
 
-test("[BitField#match] partially matches instance", () => {
+test("[BigBitField#match] partially matches instance", () => {
   const largeField = new LargeField({
     location: 20,
     open: 1,
@@ -93,14 +97,14 @@ test("[BitField#match] partially matches instance", () => {
   assertEquals(largeField.match(LargeField.getMatcher({ width: 3500 })), true);
 });
 
-test("[BitField#toJSON] returns the value of an instance as a number for JSON", () => {
+test("[BigBitField#toJSON] returns the value of an instance as a number for JSON", () => {
   assertEquals(
     new LargeField([20, 1, 3500, 5]).toJSON(),
     BigInt("2748779965588"),
   );
 });
 
-test("[BitField#toObject] returns a plain object representation of an instance", () => {
+test("[BigBitField#toObject] returns a plain object representation of an instance", () => {
   assertEquals(
     new LargeField({
       location: 20,
@@ -117,7 +121,7 @@ test("[BitField#toObject] returns a plain object representation of an instance",
   );
 });
 
-test("[BitField#toString] returns a string representing the value of the instance", () => {
+test("[BigBitField#toString] returns a string representing the value of the instance", () => {
   assertEquals(
     `${new LargeField({
       location: 20,
@@ -129,7 +133,7 @@ test("[BitField#toString] returns a string representing the value of the instanc
   );
 });
 
-test("[BitField#valueOf] returns the value of an instance as a number", () => {
+test("[BigBitField#valueOf] returns the value of an instance as a number", () => {
   assertEquals(
     BigInt(1) +
       new LargeField({
@@ -142,7 +146,7 @@ test("[BitField#valueOf] returns the value of an instance as a number", () => {
   );
 });
 
-test("[BitField.isValid] checks if given pairs of Person name and value are valid according to the schema", () => {
+test("[BigBitField.isValid] checks if given pairs of Person name and value are valid according to the schema", () => {
   assertEquals(LargeField.isValid({ location: 21 }), true);
   assertEquals(LargeField.isValid({ location: 200 }), false);
   assertEquals(LargeField.isValid({ location: -200 }), false);
@@ -150,13 +154,13 @@ test("[BitField.isValid] checks if given pairs of Person name and value are vali
   assertEquals(LargeField.isValid({ location: 21, open: 4 }), false);
 });
 
-test("[BitField.getMatcher] returns matcher to partially match an instance", () => {
+test("[BigBitField.getMatcher] returns matcher to partially match an instance", () => {
   const bigMatcher = LargeField.getMatcher({ location: 2, width: 12 });
   assertEquals(bigMatcher[0], BigInt(3074));
   assertEquals(bigMatcher[1], BigInt("18014948265295743"));
 });
 
-test("[BitField#[Symbol.iterator]] iterates over numbers stored in the instance", () => {
+test("[BigBitField#[Symbol.iterator]] iterates over numbers stored in the instance", () => {
   const data = {
     location: 20,
     open: 1,

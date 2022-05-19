@@ -24,8 +24,17 @@ test("[BinaryGrid.create] creates a BinaryGrid instance fitting into a single in
   assertEquals(grid.length, 1);
 });
 
+test("[BinaryGrid.fromArrays] creates a BinaryGrid from an array of arrays", () => {
+  const grid = BinaryGrid.fromArrays([[1, 0], [0, 1, 1]]);
+  assertEquals(grid.columns, 4);
+  assertEquals(grid.rows, 8);
+  assertEquals(grid.getValue(0, 0), 1);
+  assertEquals(grid.getValue(0, 1), 0);
+  assertEquals(grid.getValue(1, 1), 1);
+});
+
 test("[BinaryGrid#columns] changes dimensions of an existing BinaryGrid by setting the minum column size", () => {
-  const grid = new BinaryGrid([1, 2, 3]);
+  const grid = new BinaryGrid([1, 0, 1]);
   grid.columns = 32;
   assertEquals(grid.columns, 32);
   assertEquals(grid.rows, 3);
@@ -38,6 +47,14 @@ test("[BinaryGrid#get] returns individual bits", () => {
   const grid = new BinaryGrid([1]);
   assertEquals(grid.getValue(0, 0), 1);
   assertEquals(grid.getValue(0, 1), 0);
+});
+
+test("[BinaryGrid#getIndex] returns the index of an item holding the bit at given coordinates", () => {
+  const grid = BinaryGrid.create(8, 8);
+  assertEquals(grid.length, 2);
+  assertEquals(grid.getIndex(0, 0), 0);
+  assertEquals(grid.getIndex(1, 8), 0);
+  assertEquals(grid.getIndex(4, 4), 1);
 });
 
 test("[BinaryGrid#set] sets individual bets", () => {

@@ -32,6 +32,12 @@ test("[StringView.encode] handles 3-byte strings", () => {
   assertEquals(StringView.decode(view, 0, written), "—");
 });
 
+test("[StringView.encode] handles bad strings", () => {
+  const view = new StringView(new ArrayBuffer(10));
+  const written = StringView.encode("—", view);
+  assertEquals(StringView.decode(view, 0, written), "—");
+});
+
 test("[StringView#size] returns the amount UTF characters in the view", () => {
   assertEquals(StringView.from("asdf").size, 4);
   assertEquals(StringView.from("фыва").size, 4);
@@ -106,8 +112,14 @@ test("[StringView#replace] replaces a pattern with a replacement", () => {
 });
 
 test("[StringView#reverse] reverses the characters of the StringView in-place", () => {
-  const stringView = StringView.from("fooа😀←");
-  assertEquals(stringView.reverse().toString(), "←😀аoof");
+  const stringView = StringView.from("fooа😀←ц");
+  assertEquals(stringView.reverse().toString(), "ц←😀аoof");
+});
+
+test("[StringView#includes] checks whether the provided encoded sequence is found inside the view", () => {
+  const stringView = StringView.from("Vimesi");
+  assertEquals(stringView.includes(Encoder.encode("im")), true);
+  assertEquals(stringView.includes(Encoder.encode("x")), false);
 });
 
 test("[StringView#indexOf] returns the index of the first occurrence of the specified value", () => {
@@ -129,6 +141,16 @@ test("[StringView#indexOf] returns the index of the first occurrence of the spec
   assertEquals(longString.byteLength, 300);
   assertEquals(longString.indexOf(Encoder.encode("ё")), -1);
   assertEquals(longString.indexOf(Encoder.encode("a")), 0);
+});
+
+test("[StringView#set] encodes a given string into the StringView", () => {
+  const stringView = new StringView(new ArrayBuffer(6));
+  stringView.set("qwerty");
+  assertEquals(stringView.toString(), "qwerty");
+  stringView.set("qwerty12");
+  assertEquals(stringView.toString(), "qwerty");
+  stringView.set("1234");
+  assertEquals(stringView.toString(), "1234");
 });
 
 test("[StringView#substring] returns a new string containing the specified part of the given string", () => {
@@ -158,6 +180,9 @@ test("[StringView#toJSON] returns a string representation of the StringView", ()
 });
 
 test("[StringView#trim] returns a StringView without trailing zeros", () => {
-  const stringView = StringView.from("foo");
+  const stringView = new StringView(new ArrayBuffer(10));
+  assertEquals(stringView.byteLength, 10);
+  stringView.set("foo");
   assertEquals(stringView.trim().byteLength, 3);
+  assertEquals(StringView.from("bar").trim().byteLength, 3);
 });

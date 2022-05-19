@@ -434,6 +434,7 @@ test("[View.view] instantiates a tagged view", () => {
   assertEquals(view instanceof TaggedView, true);
   assertEquals(view.get("name"), "Zaphod");
   assertEquals(view.get("tag"), 10);
+  assertEquals(View.view(new DataView(new ArrayBuffer(10))), undefined);
 });
 
 test("[View.decode] returns a value of a tagged view", () => {
@@ -448,6 +449,7 @@ test("[View.decode] returns a value of a tagged view", () => {
   const value = { tag: 10, name: "Zaphod" } as const;
   const data = new DataView(TaggedView.from(value).buffer);
   assertEquals(View.decode<Tagged>(data)!, value);
+  assertEquals(View.decode(new DataView(new ArrayBuffer(10))), undefined);
 });
 
 test("[View.encode] encodes value into a tagged view", () => {
@@ -462,4 +464,5 @@ test("[View.encode] encodes value into a tagged view", () => {
   const value = { tag: 10, name: "Zaphod" } as const;
   const view = View.encode<Tagged>(value)!;
   assertEquals(view.toJSON(), value);
+  assertEquals(View.encode({}), undefined);
 });

@@ -112,6 +112,7 @@ test("[MapView.from] sets default values for required fields", () => {
 test("[MapView.getLength] returns the byte length of a map view to hold a given object", () => {
   assertEquals(PersonView.getLength({ age: 10, name: "a" }), 10);
   assertEquals(PersonView.getLength({ age: 10, name: "abc" }), 12);
+  assertEquals(PersonView.getLength({ age: 10, name: undefined }), 9);
   assertEquals(
     FamilyView.getLength({
       name: "Dent",

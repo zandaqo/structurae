@@ -52,7 +52,7 @@ export class VectorView<T> extends DataView implements ContainerView<T> {
       if (item != null) {
         const caret = start + end;
         if (View.viewLength || View.itemLength) {
-          itemLength = View.getLength(value.length || 1);
+          itemLength = View.getLength(value.length);
           // stop encoding if no more space is available
           if (itemLength > availableSpace) continue;
           View.encode(item, view, caret, itemLength);

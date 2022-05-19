@@ -66,6 +66,11 @@ test("[SortedArray.from] creates a sorted array from an array-like object", () =
     SortedArray.from([2, 1, 5, 3, 80, 9]),
     new SortedArray(1, 2, 3, 5, 9, 80),
   );
+  assertEquals(
+    // @ts-ignore 2554
+    SortedArray.from([2, 1, 5, 3, 80, 9], (i: number): number => i),
+    new SortedArray(1, 2, 3, 5, 9, 80),
+  );
 });
 
 test("[SortedArray.getDifference] returns the difference of two sorted arrays", () => {

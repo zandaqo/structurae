@@ -101,8 +101,15 @@ test("[BinaryHeap#update] updates the position of an element inside the heap", (
 });
 
 test("[BinaryHeap.from] creates a binary heap from a given array-like object", () => {
-  const heap = BinaryHeap.from([10, 9, 8, 0, 3, 8, 9, 5, 6, 4]);
-  assertEquals(Array.from(heap), [0, 3, 8, 5, 4, 8, 9, 9, 6, 10]);
+  assertEquals(
+    Array.from(BinaryHeap.from([10, 9, 8, 0, 3])),
+    [0, 3, 8, 9, 10],
+  );
+  assertEquals(
+    // @ts-ignore 2554
+    Array.from(BinaryHeap.from([10, 9, 8, 0, 3], (i: number): number => i)),
+    [0, 3, 8, 9, 10],
+  );
 });
 
 test("[BinaryHeap.of] creates a binary heap from a given arguments", () => {

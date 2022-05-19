@@ -61,6 +61,17 @@ const FamilyView: ViewConstructor<Family> = class extends ObjectView<Family> {
   }) as unknown as Constructor<Family>;
 };
 
+test("[ObjectView.encode] encodes a JavaScript value into a given view", () => {
+  const expected = {
+    name: "Zaphod",
+    age: 30,
+    scores: [10, 20, 30],
+  };
+  const person = new PersonView(new ArrayBuffer(PersonView.viewLength));
+  PersonView.encode(expected, person);
+  assertEquals(person.toJSON(), expected);
+});
+
 test("[ObjectView.from] creates a new object view with the given data", () => {
   const expected = {
     name: "Zaphod",
