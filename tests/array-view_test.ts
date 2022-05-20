@@ -1,6 +1,6 @@
 import { ArrayView } from "../array-view.ts";
 import { Uint32View } from "../numeric-view.ts";
-import { assertEquals } from "../dev_deps.ts";
+import { assertEquals } from "./test_deps.ts";
 
 const { test } = Deno;
 class Uint32ArrayView extends ArrayView<number> {

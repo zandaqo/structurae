@@ -1,5 +1,5 @@
 import { StringView } from "../string-view.ts";
-import { assertEquals } from "../dev_deps.ts";
+import { assertEquals } from "./test_deps.ts";
 
 const { test } = Deno;
 const Encoder = new TextEncoder();

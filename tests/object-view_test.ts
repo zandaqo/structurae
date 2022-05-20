@@ -3,7 +3,7 @@ import { ViewConstructor } from "../view-types.ts";
 import { ArrayView } from "../array-view.ts";
 import { Uint8View } from "../numeric-view.ts";
 import { StringView } from "../string-view.ts";
-import { assertEquals } from "../dev_deps.ts";
+import { assertEquals } from "./test_deps.ts";
 import { Constructor } from "../utility-types.ts";
 
 const { test } = Deno;

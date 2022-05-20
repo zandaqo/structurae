@@ -4,7 +4,7 @@ import { VectorView } from "../vector-view.ts";
 import { Uint32View } from "../numeric-view.ts";
 import { StringView } from "../string-view.ts";
 import { DictView } from "../dict-view.ts";
-import { assertEquals } from "../dev_deps.ts";
+import { assertEquals } from "./test_deps.ts";
 
 const { test } = Deno;
 

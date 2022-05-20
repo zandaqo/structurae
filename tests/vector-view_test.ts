@@ -1,7 +1,7 @@
 import { VectorView } from "../vector-view.ts";
 import { StringView } from "../string-view.ts";
 import { ContainerView, ViewConstructor } from "../view-types.ts";
-import { assertEquals } from "../dev_deps.ts";
+import { assertEquals } from "./test_deps.ts";
 
 const { test } = Deno;
 const StringVector: ViewConstructor<

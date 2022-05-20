@@ -1,4 +1,4 @@
-import { assertEquals } from "../dev_deps.ts";
+import { assertEquals } from "./test_deps.ts";
 import { AdjacencyMatrixUnweightedDirected } from "../adjacency-matrix-unweighted-directed.ts";
 
 const { test } = Deno;

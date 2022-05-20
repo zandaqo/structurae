@@ -1,5 +1,5 @@
 import { BinaryHeap } from "../binary-heap.ts";
-import { assertEquals } from "../dev_deps.ts";
+import { assertEquals } from "./test_deps.ts";
 
 const { test } = Deno;
 

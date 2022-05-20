@@ -1,5 +1,5 @@
 import { SymmetricGridMixin } from "../symmetric-grid.ts";
-import { assertEquals } from "../dev_deps.ts";
+import { assertEquals } from "./test_deps.ts";
 
 const { test } = Deno;
 const SymmetricGrid = SymmetricGridMixin(Int32Array);

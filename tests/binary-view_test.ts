@@ -1,5 +1,5 @@
 import { BinaryView } from "../binary-view.ts";
-import { assertEquals } from "../dev_deps.ts";
+import { assertEquals } from "./test_deps.ts";
 const { test } = Deno;
 
 test(`[BooleanView.encode] encodes a value into a view at a given index`, () => {

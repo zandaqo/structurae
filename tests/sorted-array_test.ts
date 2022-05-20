@@ -1,5 +1,5 @@
 import { SortedArray } from "../sorted-array.ts";
-import { assertEquals, assertThrows } from "../dev_deps.ts";
+import { assertEquals, assertThrows } from "./test_deps.ts";
 
 const { test } = Deno;
 const first = [1, 2, 3, 4, 8];

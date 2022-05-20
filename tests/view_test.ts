@@ -1,6 +1,6 @@
 import { View } from "../view.ts";
 import { Uint8View } from "../numeric-view.ts";
-import { assertEquals, assertThrows } from "../dev_deps.ts";
+import { assertEquals, assertThrows } from "./test_deps.ts";
 
 const { test } = Deno;
 interface Tagged {

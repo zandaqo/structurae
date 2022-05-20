@@ -4,7 +4,7 @@ import { AdjacencyMatrixUnweightedUndirected } from "../adjacency-matrix-unweigh
 import { AdjacencyListMixin } from "../adjacency-list.ts";
 import { AdjacencyMatrixWeightedDirectedMixin } from "../adjacency-matrix-weighted-directed.ts";
 import { AdjacencyMatrixWeightedUndirectedMixin } from "../adjacency-matrix-weighted-undirected.ts";
-import { assertEquals } from "../dev_deps.ts";
+import { assertEquals } from "./test_deps.ts";
 
 const { test } = Deno;
 const Graphs = [
