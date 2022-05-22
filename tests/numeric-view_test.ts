@@ -75,4 +75,8 @@ for (const [type, Ctor] of Object.entries(TypeViews)) {
     const array = Ctor.from(expected);
     assertEquals(array.toJSON(), expected);
   });
+
+  test(`[${type}.initialize] initializes a view class`, () => {
+    assertEquals(Ctor.initialize(), Ctor);
+  });
 }

@@ -1,4 +1,4 @@
-import type { PrimitiveView } from "./view-types.ts";
+import type { PrimitiveView, ViewConstructor } from "./view-types.ts";
 
 export class BinaryView extends DataView implements PrimitiveView<Uint8Array> {
   static viewLength = 0;
@@ -37,5 +37,9 @@ export class BinaryView extends DataView implements PrimitiveView<Uint8Array> {
   }
   toJSON() {
     return this.get();
+  }
+
+  static initialize(): ViewConstructor<Uint8Array, PrimitiveView<Uint8Array>> {
+    return this;
   }
 }

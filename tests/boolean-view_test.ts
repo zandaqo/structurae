@@ -35,3 +35,7 @@ test(`[BooleanView#toJSON] converts the view into a boolean`, () => {
   const array = BooleanView.from(true);
   assertEquals(array.toJSON(), true);
 });
+
+test("[BooleanView.initialize] initializes a view class", () => {
+  assertEquals(BooleanView.initialize(), BooleanView);
+});

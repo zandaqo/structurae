@@ -1,8 +1,6 @@
 // deno-lint-ignore-file ban-types
 import type {
-  ComplexView,
-  ContainerView,
-  PrimitiveView,
+  UnknownViewConstructor,
   ViewConstructor,
   ViewFieldLayout,
   ViewInstance,
@@ -31,15 +29,16 @@ import { StringView } from "./string-view.ts";
 import { TypedArrayView } from "./typed-array-view.ts";
 import { BinaryView } from "./binary-view.ts";
 import { log2 } from "./utilities.ts";
-import { Constructor } from "./utility-types.ts";
-
-type UnknownViewConstructor = ViewConstructor<
-  unknown,
-  PrimitiveView<unknown> | ContainerView<unknown> | ComplexView<unknown>
->;
+import type { Constructor } from "./utility-types.ts";
 
 export class View {
   static Views = new Map<string, UnknownViewConstructor>([
+    ["array", ArrayView],
+    ["typedarray", TypedArrayView],
+    ["vector", VectorView],
+    ["object", ObjectView as unknown as UnknownViewConstructor],
+    ["map", MapView as UnknownViewConstructor],
+    ["dict", DictView as UnknownViewConstructor],
     ["int8", Int8View],
     ["uint8", Uint8View],
     ["int16", Int16View],
@@ -57,14 +56,16 @@ export class View {
     ["binary", BinaryView],
   ]);
   static TaggedViews = new Map<number, UnknownViewConstructor>();
+  static AbstractViews = new Set([
+    "object",
+    "array",
+    "typedarray",
+    "vector",
+    "map",
+    "dict",
+  ]);
   static tagName = "tag";
   static maxLength = 8192;
-  static ObjectClass = ObjectView;
-  static ArrayClass = ArrayView;
-  static TypedArrayClass = TypedArrayView;
-  static VectorClass = VectorView;
-  static MapClass = MapView;
-  static DictClass = DictView;
 
   static _maxView: DataView;
 
@@ -87,10 +88,10 @@ export class View {
       // use provided constructor for top object
       const objectCtor = objectSchema === schema ? constructor : undefined;
       const View = objectSchema.btype === "map"
-        ? this.getMapView(objectSchema, objectCtor)
+        ? this.Views.get("map")!.initialize(objectSchema, this, objectCtor)
         : objectSchema.btype === "dict"
-        ? this.getDictView(objectSchema)
-        : this.getObjectView(objectSchema, objectCtor);
+        ? this.Views.get("dict")!.initialize(objectSchema, this)
+        : this.Views.get("object")!.initialize(objectSchema, this, objectCtor);
       // cache the view by id
       this.Views.set(id, View);
       // cache by tag if present
@@ -151,8 +152,16 @@ export class View {
     let View: UnknownViewConstructor;
     if (!this.Views.has(viewId)) {
       View = isArray
-        ? this.getArrayView(itemView, currentField.maxLength)
-        : this.getVectorView(itemView, this.maxView);
+        ? this.getArrayView(
+          currentField,
+          itemView,
+          currentField.maxLength,
+        )
+        : this.Views.get("vector")!.initialize(
+          currentField,
+          this,
+          itemView,
+        );
       // cache array views of unspecified length
       if (currentField.maxLength === undefined) this.Views.set(viewId, View);
     } else {
@@ -163,12 +172,17 @@ export class View {
     for (let i = arrays.length - 1; i >= 0; i--) {
       currentArray = arrays[i];
       if (currentArray.btype !== "vector") {
-        View = this.getArrayView(View as ViewConstructor<unknown>, itemLength);
+        View = this.getArrayView(
+          currentArray.items as ViewSchema<unknown>,
+          View as ViewConstructor<unknown>,
+          itemLength,
+        );
         itemLength = View.getLength(currentArray.maxItems);
       } else {
-        View = this.getVectorView(
-          View as ViewConstructor<unknown>,
-          this.maxView,
+        View = this.Views.get("vector")!.initialize(
+          currentArray.items,
+          this,
+          View,
         );
       }
     }
@@ -176,25 +190,16 @@ export class View {
   }
 
   static getArrayView<T>(
-    View: ViewConstructor<T>,
-    maxLength?: number,
+    schema: ViewSchema<T>,
+    SchemaView?: ViewConstructor<T>,
+    length?: number,
   ): ViewConstructor<Array<T>> {
-    const itemLength = maxLength || View.viewLength;
-    if (itemLength <= 0 || itemLength >= Infinity) {
-      throw TypeError("ArrayView should have fixed sized items.");
-    }
-    const offset = log2[View.viewLength];
-    if (offset !== undefined) {
-      return class extends this.TypedArrayClass<T> {
-        static View = View;
-        static offset = offset;
-        static itemLength = itemLength;
-      };
-    }
-    return class extends this.ArrayClass<T> {
-      static View = View;
-      static itemLength = itemLength;
-    };
+    const itemLength = length || SchemaView?.viewLength;
+    const isTypedArray = Reflect.has(log2, itemLength!);
+    return this.Views.get(isTypedArray ? "typedarray" : "array")!
+      .initialize(schema, this, SchemaView, itemLength) as ViewConstructor<
+        Array<T>
+      >;
   }
 
   static getDefaultData<T extends unknown>(
@@ -265,6 +270,8 @@ export class View {
       type = schema.btype || schema.type;
       if (!this.Views.has(type)) {
         throw TypeError(`Type "${type}" is not supported.`);
+      } else if (this.AbstractViews.has(type)) {
+        throw TypeError(`Type ${type} is abstract.`);
       }
     }
     return this.Views.get(type) as ViewConstructor<T>;
@@ -295,117 +302,6 @@ export class View {
       layout.default = (field.default as unknown) as T;
     }
     return layout;
-  }
-
-  static getMapView<T extends object>(
-    schema: ViewSchema<T>,
-    constructor?: Constructor<T>,
-  ): ViewConstructor<T, ComplexView<T>> {
-    const required: Array<keyof T> = schema.required || [];
-    const optional = (Object.keys(schema.properties!) as Array<keyof T>).filter(
-      (i) => !required.includes(i),
-    );
-    const layout = {} as ViewLayout<T>;
-    let offset = 0;
-    for (const property of required) {
-      const field = schema.properties![property];
-      const fieldLayout = this.getFieldLayout(
-        field,
-        offset,
-        true,
-        property as string,
-      );
-      offset += fieldLayout.length;
-      // @ts-ignore TS2322
-      layout[property] = fieldLayout;
-    }
-    const optionalOffset = offset;
-    for (let i = 0; i < optional.length; i++) {
-      const property = optional[i];
-      const field = schema.properties![property];
-      // @ts-ignore TS2322
-      layout[property as keyof T] = this.getFieldLayout(
-        field,
-        offset + (i << 2),
-        false,
-        property as string,
-      );
-    }
-    const maxView = this.maxView;
-    const defaultData = this.getDefaultData(
-      layout,
-      optionalOffset,
-      required as Array<keyof T>,
-    );
-    const ObjectConstructor = constructor ||
-      this.getDefaultConstructor(required as Array<keyof T>, layout);
-    return class extends this.MapClass<T> {
-      static layout = layout;
-      static lengthOffset = optionalOffset + (optional.length << 2);
-      static optionalOffset = optionalOffset;
-      static fields = required;
-      static optionalFields = optional;
-      static maxView = maxView;
-      static defaultData = defaultData;
-      static ObjectConstructor = ObjectConstructor;
-    };
-  }
-
-  static getObjectView<T extends object>(
-    schema: ViewSchema<T>,
-    constructor?: Constructor<T>,
-  ): ViewConstructor<T, ComplexView<T>> {
-    const fields = Object.keys(schema.properties!) as Array<keyof T>;
-    const layout = {} as ViewLayout<T>;
-    let lastOffset = 0;
-    for (const property of fields) {
-      const field = schema.properties![property];
-      const fieldLayout = this.getFieldLayout(
-        field,
-        lastOffset,
-        true,
-        property as string,
-      );
-      lastOffset += fieldLayout.length;
-      // @ts-ignore TS2322
-      layout[property] = fieldLayout;
-    }
-    const defaultData = this.getDefaultData(layout, lastOffset, fields);
-    const ObjectConstructor = constructor ||
-      this.getDefaultConstructor(fields, layout);
-    return class extends this.ObjectClass<T> {
-      static viewLength = lastOffset;
-      static layout = layout;
-      static fields = fields;
-      static defaultData = defaultData;
-      static ObjectConstructor = ObjectConstructor;
-    };
-  }
-
-  static getDictView<T extends object>(
-    schema: ViewSchema<T>,
-  ): ViewConstructor<T, ComplexView<T>> {
-    const maxView = this.maxView;
-    const KeyView = this.getExistingView(
-      schema.propertyNames as ViewSchema<number>,
-    );
-    const valueSchema = schema.additionalProperties!;
-    const ValueView = valueSchema.type === "array"
-      ? this.getArray(valueSchema)[0]
-      : this.getExistingView(schema.additionalProperties!);
-    const KeysView = this.getArrayView(
-      KeyView,
-      schema.propertyNames?.maxLength,
-    ) as typeof ArrayView;
-    const ValuesView = this.getVectorView(
-      ValueView,
-      maxView,
-    ) as typeof VectorView;
-    return class extends this.DictClass<T> {
-      static maxView = maxView;
-      static KeysView = KeysView;
-      static ValuesView = ValuesView;
-    };
   }
 
   // deno-lint-ignore no-explicit-any
@@ -474,15 +370,5 @@ export class View {
       throw TypeError("The schema has recursive references.");
     }
     return order;
-  }
-
-  static getVectorView<T>(
-    View: ViewConstructor<T>,
-    maxView: DataView,
-  ): ViewConstructor<Array<T | undefined>> {
-    return class extends this.VectorClass<T> {
-      static View = View;
-      static maxView = maxView;
-    };
   }
 }

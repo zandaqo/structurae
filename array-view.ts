@@ -1,10 +1,13 @@
+import { log2 } from "./utilities.ts";
 import type {
   ComplexView,
   ContainerView,
   PrimitiveView,
   ViewConstructor,
   ViewInstance,
+  ViewSchema,
 } from "./view-types.ts";
+import type { View } from "./view.ts";
 
 export class ArrayView<T> extends DataView implements ContainerView<T> {
   static View: ViewConstructor<
@@ -159,5 +162,23 @@ export class ArrayView<T> extends DataView implements ContainerView<T> {
       0,
       this.byteLength,
     );
+  }
+
+  static initialize<T>(
+    schema: ViewSchema<T>,
+    Factory: typeof View,
+    SchemaView?: ViewConstructor<T>,
+    length?: number,
+  ): ViewConstructor<Array<T>> {
+    const ItemView = SchemaView ?? Factory.getExistingView(schema);
+    const itemLength = length ?? ItemView.viewLength;
+    if (itemLength === undefined || itemLength <= 0 || itemLength >= Infinity) {
+      throw TypeError("ArrayView should have fixed sized items.");
+    }
+    return class extends this<T> {
+      static View = ItemView;
+      static itemLength = itemLength;
+      static offset = log2[itemLength];
+    };
   }
 }

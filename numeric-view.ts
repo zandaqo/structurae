@@ -1,4 +1,4 @@
-import type { PrimitiveView } from "./view-types.ts";
+import type { PrimitiveView, ViewConstructor } from "./view-types.ts";
 
 export class Uint8View extends DataView implements PrimitiveView<number> {
   static viewLength = 1;
@@ -33,6 +33,10 @@ export class Uint8View extends DataView implements PrimitiveView<number> {
 
   toJSON(): number {
     return (this.constructor as typeof Uint8View).decode(this);
+  }
+
+  static initialize(): ViewConstructor<number, PrimitiveView<number>> {
+    return this;
   }
 }
 
@@ -147,6 +151,10 @@ export class BigInt64View extends DataView implements PrimitiveView<bigint> {
   toJSON(): bigint {
     // todo fix bigint is not serializable in JSON
     return (this.constructor as typeof BigInt64View).decode(this);
+  }
+
+  static initialize(): ViewConstructor<bigint, PrimitiveView<bigint>> {
+    return this;
   }
 }
 

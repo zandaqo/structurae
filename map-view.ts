@@ -1,10 +1,12 @@
 // deno-lint-ignore-file ban-types
-import { Constructor } from "./utility-types.ts";
+import type { Constructor } from "./utility-types.ts";
+import type { View } from "./view.ts";
 import type {
   ComplexView,
   ViewConstructor,
   ViewInstance,
   ViewLayout,
+  ViewSchema,
 } from "./view-types.ts";
 
 export class MapView<T extends object> extends DataView
@@ -189,5 +191,57 @@ export class MapView<T extends object> extends DataView
 
   toJSON(): T {
     return (this.constructor as typeof MapView).decode<T>(this);
+  }
+
+  static initialize<T extends object>(
+    schema: ViewSchema<T>,
+    Factory: typeof View,
+    constructor: Constructor<T>,
+  ): ViewConstructor<T, ComplexView<T>> {
+    const required: Array<keyof T> = schema.required || [];
+    const optional = (Object.keys(schema.properties!) as Array<keyof T>).filter(
+      (i) => !required.includes(i),
+    );
+    const layout = {} as ViewLayout<T>;
+    let offset = 0;
+    for (const property of required) {
+      const field = schema.properties![property];
+      const fieldLayout = Factory.getFieldLayout(
+        field,
+        offset,
+        true,
+        property as string,
+      );
+      offset += fieldLayout.length;
+      layout[property] = fieldLayout;
+    }
+    const optionalOffset = offset;
+    for (let i = 0; i < optional.length; i++) {
+      const property = optional[i];
+      const field = schema.properties![property];
+      layout[property as keyof T] = Factory.getFieldLayout(
+        field,
+        offset + (i << 2),
+        false,
+        property as string,
+      );
+    }
+    const defaultData = Factory.getDefaultData(
+      layout,
+      optionalOffset,
+      required as Array<keyof T>,
+    );
+    const ObjectConstructor = constructor ||
+      Factory.getDefaultConstructor(required as Array<keyof T>, layout);
+    return class extends this<T> {
+      static layout = layout;
+      static lengthOffset = optionalOffset + (optional.length << 2);
+      static optionalOffset = optionalOffset;
+      static fields = required;
+      static optionalFields = optional;
+      static maxView = Factory.maxView;
+      static defaultData = defaultData;
+      static ObjectConstructor = ObjectConstructor;
+    };
   }
 }

@@ -1,5 +1,5 @@
 import type { IndexedCollection } from "./utility-types.ts";
-import type { PrimitiveView } from "./view-types.ts";
+import type { PrimitiveView, ViewConstructor } from "./view-types.ts";
 
 export class StringView extends DataView implements PrimitiveView<string> {
   static viewLength = 0;
@@ -449,5 +449,9 @@ export class StringView extends DataView implements PrimitiveView<string> {
     const temp = this.getUint8(i);
     this.setUint8(i, this.getUint8(j));
     this.setUint8(j, temp);
+  }
+
+  static initialize(): ViewConstructor<string, PrimitiveView<string>> {
+    return this;
   }
 }

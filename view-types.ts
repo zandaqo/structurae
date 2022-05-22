@@ -150,6 +150,7 @@ export interface ViewConstructor<T, Instance = ViewInstance<T>> {
    * The byte length of the view.
    */
   viewLength: number;
+
   /**
    * The byte length of an item inside the container view.
    */
@@ -161,6 +162,7 @@ export interface ViewConstructor<T, Instance = ViewInstance<T>> {
 
   // deno-lint-ignore no-explicit-any
   new (...args: any[]): Instance;
+
   /**
    * Decodes a given view into corresponding JavaScript value.
    *
@@ -170,6 +172,7 @@ export interface ViewConstructor<T, Instance = ViewInstance<T>> {
    * @return the JavaScript value
    */
   decode(view: DataView, start?: number, length?: number): T;
+
   /**
    * Encodes a JavaScript value into a given view.
    *
@@ -180,19 +183,31 @@ export interface ViewConstructor<T, Instance = ViewInstance<T>> {
    * @return the amount of written bytes
    */
   encode(value: T, view: DataView, start?: number, length?: number): number;
+
   /**
    * Creates a view from a given JavaScript value.
    *
    * @param value the JavaScript value
    */
   from(value: T): Instance;
+
   /**
    * Returns the length of the view.
    *
    * @param size the amount of items for ArrayView or the value for MapView and VectorView
    */
   getLength(size?: number | unknown): number;
+
+  /**
+   * Intializes a view class, used for complex and container views.
+   */
+  initialize(...args: Array<unknown>): UnknownViewConstructor;
 }
+
+export type UnknownViewConstructor = ViewConstructor<
+  unknown,
+  PrimitiveView<unknown> | ContainerView<unknown> | ComplexView<unknown>
+>;
 
 export type ViewFieldLayout<T> = {
   View: ViewConstructor<T>;

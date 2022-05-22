@@ -1,4 +1,4 @@
-import type { PrimitiveView } from "./view-types.ts";
+import type { PrimitiveView, ViewConstructor } from "./view-types.ts";
 
 export class BooleanView extends DataView implements PrimitiveView<boolean> {
   static viewLength = 1;
@@ -33,5 +33,9 @@ export class BooleanView extends DataView implements PrimitiveView<boolean> {
 
   toJSON(): boolean {
     return (this.constructor as typeof BooleanView).decode(this);
+  }
+
+  static initialize(): ViewConstructor<boolean, PrimitiveView<boolean>> {
+    return this;
   }
 }

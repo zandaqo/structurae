@@ -1,6 +1,13 @@
 // deno-lint-ignore-file ban-types
-import { Constructor } from "./utility-types.ts";
-import type { ComplexView, ViewInstance, ViewLayout } from "./view-types.ts";
+import type { Constructor } from "./utility-types.ts";
+import type {
+  ComplexView,
+  ViewConstructor,
+  ViewInstance,
+  ViewLayout,
+  ViewSchema,
+} from "./view-types.ts";
+import type { View } from "./view.ts";
 
 export class ObjectView<T extends object> extends DataView
   implements ComplexView<T> {
@@ -93,5 +100,36 @@ export class ObjectView<T extends object> extends DataView
 
   toJSON(): T {
     return (this.constructor as typeof ObjectView).decode<T>(this, 0);
+  }
+
+  static initialize<T extends object>(
+    schema: ViewSchema<T>,
+    Factory: typeof View,
+    constructor?: Constructor<T>,
+  ): ViewConstructor<T, ComplexView<T>> {
+    const fields = Object.keys(schema.properties!) as Array<keyof T>;
+    const layout = {} as ViewLayout<T>;
+    let lastOffset = 0;
+    for (const property of fields) {
+      const field = schema.properties![property];
+      const fieldLayout = Factory.getFieldLayout(
+        field,
+        lastOffset,
+        true,
+        property as string,
+      );
+      lastOffset += fieldLayout.length;
+      layout[property] = fieldLayout;
+    }
+    const defaultData = Factory.getDefaultData(layout, lastOffset, fields);
+    const ObjectConstructor = constructor ||
+      Factory.getDefaultConstructor(fields, layout);
+    return class extends this<T> {
+      static viewLength = lastOffset;
+      static layout = layout;
+      static fields = fields;
+      static defaultData = defaultData;
+      static ObjectConstructor = ObjectConstructor;
+    };
   }
 }

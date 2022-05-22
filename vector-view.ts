@@ -1,9 +1,11 @@
+import type { View } from "./view.ts";
 import type {
   ComplexView,
   ContainerView,
   PrimitiveView,
   ViewConstructor,
   ViewInstance,
+  ViewSchema,
 } from "./view-types.ts";
 
 export class VectorView<T> extends DataView implements ContainerView<T> {
@@ -194,5 +196,17 @@ export class VectorView<T> extends DataView implements ContainerView<T> {
 
   toJSON(): Array<T | undefined> {
     return (this.constructor as typeof VectorView).decode(this, 0);
+  }
+
+  static initialize<T>(
+    schema: ViewSchema<T>,
+    Factory: typeof View,
+    SchemaView?: ViewConstructor<T>,
+  ): ViewConstructor<Array<T | undefined>> {
+    const ItemView = SchemaView ?? Factory.getExistingView(schema);
+    return class extends this<T> {
+      static View = ItemView;
+      static maxView = Factory.maxView;
+    };
   }
 }

@@ -186,3 +186,7 @@ test("[StringView#trim] returns a StringView without trailing zeros", () => {
   assertEquals(stringView.trim().byteLength, 3);
   assertEquals(StringView.from("bar").trim().byteLength, 3);
 });
+
+test("[StringView.initialize] initializes a view class", () => {
+  assertEquals(StringView.initialize(), StringView);
+});

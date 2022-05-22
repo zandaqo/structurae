@@ -2,7 +2,9 @@ import type {
   ComplexView,
   ViewConstructor,
   ViewInstance,
+  ViewSchema,
 } from "./view-types.ts";
+import type { View } from "./view.ts";
 import type { ArrayView } from "./array-view.ts";
 import type { VectorView } from "./vector-view.ts";
 
@@ -155,5 +157,31 @@ export class DictView<T extends object> extends DataView
 
   toJSON(): T {
     return (this.constructor as typeof DictView).decode<T>(this);
+  }
+
+  // deno-lint-ignore ban-types
+  static initialize<T extends object>(
+    schema: ViewSchema<T>,
+    Factory: typeof View,
+  ): ViewConstructor<T, ComplexView<T>> {
+    const keySchema = schema.propertyNames!;
+    const valueSchema = schema.additionalProperties!;
+    const KeysView = Factory.getArrayView(
+      keySchema as ViewSchema<number>,
+      undefined,
+      keySchema.maxLength,
+    ) as typeof ArrayView;
+    const ValuesView = Factory.Views.get("vector")!.initialize(
+      valueSchema,
+      Factory,
+      valueSchema.type === "array"
+        ? Factory.getArray(valueSchema)[0]
+        : undefined,
+    ) as typeof VectorView;
+    return class extends this<T> {
+      static maxView = Factory.maxView;
+      static KeysView = KeysView;
+      static ValuesView = ValuesView;
+    };
   }
 }
