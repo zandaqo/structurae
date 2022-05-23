@@ -166,7 +166,7 @@ export class ArrayView<T> extends DataView implements ContainerView<T> {
 
   static initialize<T>(
     schema: ViewSchema<T>,
-    Factory: typeof View,
+    Factory: View,
     SchemaView?: ViewConstructor<T>,
     length?: number,
   ): ViewConstructor<Array<T>> {

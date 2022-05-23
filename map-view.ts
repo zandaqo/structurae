@@ -195,9 +195,11 @@ export class MapView<T extends object> extends DataView
 
   static initialize<T extends object>(
     schema: ViewSchema<T>,
-    Factory: typeof View,
+    Factory: View,
     constructor: Constructor<T>,
   ): ViewConstructor<T, ComplexView<T>> {
+    const { getDefaultConstructor, getDefaultData } = Factory
+      .constructor as typeof View;
     const required: Array<keyof T> = schema.required || [];
     const optional = (Object.keys(schema.properties!) as Array<keyof T>).filter(
       (i) => !required.includes(i),
@@ -226,13 +228,13 @@ export class MapView<T extends object> extends DataView
         property as string,
       );
     }
-    const defaultData = Factory.getDefaultData(
+    const defaultData = getDefaultData(
       layout,
       optionalOffset,
       required as Array<keyof T>,
     );
     const ObjectConstructor = constructor ||
-      Factory.getDefaultConstructor(required as Array<keyof T>, layout);
+      getDefaultConstructor(required as Array<keyof T>, layout);
     return class extends this<T> {
       static layout = layout;
       static lengthOffset = optionalOffset + (optional.length << 2);

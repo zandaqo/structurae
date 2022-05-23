@@ -129,8 +129,10 @@ const JSONSchema: ViewSchema<Person> = {
   ],
 };
 
-const Person = View.create<Person>(JSONSchema);
-const People = View.create<Array<Person>>({
+const protocol = new View();
+
+const Person = protocol.create<Person>(JSONSchema);
+const People = protocol.create<Array<Person>>({
   type: "array",
   items: { type: "object", $ref: "#Person" },
 });

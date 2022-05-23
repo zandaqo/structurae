@@ -19,16 +19,18 @@ interface Photo {
   data: Uint8Array;
 }
 
-test("[View.create] creates a view for primitive types", () => {
-  const NumberView = View.create<number>({
+const protocol = new View();
+
+test("[View#create] creates a view for primitive types", () => {
+  const NumberView = protocol.create<number>({
     type: "number",
     btype: "uint8",
   });
   assertEquals(NumberView, Uint8View);
 });
 
-test("[View.create] handles an array of primitive type", () => {
-  const Uint8ArrayView = View.create<Array<number>>({
+test("[View#create] handles an array of primitive type", () => {
+  const Uint8ArrayView = protocol.create<Array<number>>({
     type: "array",
     items: {
       type: "number",
@@ -37,11 +39,11 @@ test("[View.create] handles an array of primitive type", () => {
     },
   });
   assertEquals(Uint8ArrayView.itemLength, 1);
-  assertEquals(View.Views.get("ArrayView_uint8"), Uint8ArrayView);
+  assertEquals(protocol.Views.get("ArrayView_uint8"), Uint8ArrayView);
 });
 
-test("[View.create] handles array of arrays", () => {
-  const ArraysView = View.create<number[][]>({
+test("[View#create] handles array of arrays", () => {
+  const ArraysView = protocol.create<number[][]>({
     type: "array",
     items: {
       type: "array",
@@ -51,7 +53,7 @@ test("[View.create] handles array of arrays", () => {
     maxItems: 3,
   });
   assertEquals(ArraysView.itemLength, 24);
-  assertEquals(View.Views.has("ArrayView_number"), true);
+  assertEquals(protocol.Views.has("ArrayView_number"), true);
   assertEquals(
     ArraysView.from([
       [1, 2, 3],
@@ -64,10 +66,10 @@ test("[View.create] handles array of arrays", () => {
   );
 });
 
-test("[View.create] throws if array item size is not fixed", () => {
+test("[View#create] throws if array item size is not fixed", () => {
   assertThrows(
     () =>
-      View.create<Array<string>>({
+      protocol.create<Array<string>>({
         type: "array",
         items: {
           type: "string",
@@ -78,8 +80,8 @@ test("[View.create] throws if array item size is not fixed", () => {
   );
 });
 
-test("[View.create] handles objects", () => {
-  const PersonView = View.create<Person>({
+test("[View#create] handles objects", () => {
+  const PersonView = protocol.create<Person>({
     $id: "Person",
     type: "object",
     properties: {
@@ -93,7 +95,7 @@ test("[View.create] handles objects", () => {
     },
   });
   assertEquals(PersonView.viewLength, 14);
-  assertEquals(View.Views.get("Person"), PersonView);
+  assertEquals(protocol.Views.get("Person"), PersonView);
   assertEquals(PersonView.from({} as unknown as Person).toJSON(), {
     name: "Arthur",
     age: 0,
@@ -101,8 +103,8 @@ test("[View.create] handles objects", () => {
   });
 });
 
-test("[View.create] handles objects with binary data", () => {
-  const PhotoView = View.create<Photo>({
+test("[View#create] handles objects with binary data", () => {
+  const PhotoView = protocol.create<Photo>({
     $id: "Photo",
     type: "object",
     properties: {
@@ -116,7 +118,7 @@ test("[View.create] handles objects with binary data", () => {
     },
   });
   assertEquals(PhotoView.viewLength, 15);
-  assertEquals(View.Views.get("Photo"), PhotoView);
+  assertEquals(protocol.Views.get("Photo"), PhotoView);
   assertEquals(PhotoView.from({} as unknown as Photo).toJSON(), {
     name: "Arthur",
     data: new Uint8Array([1, 2, 3, 0, 0]),
@@ -133,13 +135,13 @@ test("[View.create] handles objects with binary data", () => {
   );
 });
 
-test("[View.create] handles objects with constructors", () => {
+test("[View#create] handles objects with constructors", () => {
   class ABC {
     a = 1;
     b = 2;
   }
 
-  const AView = View.create({
+  const AView = protocol.create({
     $id: "ABC",
     type: "object",
     properties: {
@@ -148,15 +150,15 @@ test("[View.create] handles objects with constructors", () => {
     },
   }, ABC);
   assertEquals(AView.viewLength, 2);
-  assertEquals(View.Views.get("ABC"), AView);
+  assertEquals(protocol.Views.get("ABC"), AView);
   assertEquals(JSON.parse(JSON.stringify(AView.from({} as unknown as ABC))), {
     a: 5,
     b: 6,
   });
 });
 
-test("[View.create] handles array of objects", () => {
-  const PersonArrayView = View.create<
+test("[View#create] handles array of objects", () => {
+  const PersonArrayView = protocol.create<
     Array<Person>
   >({
     type: "array",
@@ -176,12 +178,12 @@ test("[View.create] handles array of objects", () => {
     maxItems: 10,
   });
   assertEquals(PersonArrayView.itemLength, 14);
-  assertEquals(View.Views.has("Person"), true);
-  assertEquals(View.Views.get("ArrayView_Person"), PersonArrayView);
+  assertEquals(protocol.Views.has("Person"), true);
+  assertEquals(protocol.Views.get("ArrayView_Person"), PersonArrayView);
 });
 
-test("[View.create] handles references", () => {
-  const Person = View.create<Person>({
+test("[View#create] handles references", () => {
+  const Person = protocol.create<Person>({
     $id: "Person",
     type: "object",
     properties: {
@@ -194,7 +196,7 @@ test("[View.create] handles references", () => {
       },
     },
   });
-  const PersonArray = View.create<Array<Person>>({
+  const PersonArray = protocol.create<Array<Person>>({
     type: "array",
     items: { type: "object", $ref: "#Person" },
   });
@@ -202,8 +204,8 @@ test("[View.create] handles references", () => {
   assertEquals((PersonArray as any).View === Person, true);
 });
 
-test("[View.create] handles nested objects", () => {
-  const FamilyView = View.create<{
+test("[View#create] handles nested objects", () => {
+  const FamilyView = protocol.create<{
     name: string;
     members: Array<{
       name: string;
@@ -235,13 +237,13 @@ test("[View.create] handles nested objects", () => {
     },
   });
   assertEquals(FamilyView.viewLength, 150);
-  assertEquals(View.Views.has("Person"), true);
-  assertEquals(View.Views.has("ArrayView_Person"), true);
-  assertEquals(View.Views.get("Family"), FamilyView);
+  assertEquals(protocol.Views.has("Person"), true);
+  assertEquals(protocol.Views.has("ArrayView_Person"), true);
+  assertEquals(protocol.Views.get("Family"), FamilyView);
 });
 
-test("[View.create] handles maps", () => {
-  const HouseView = View.create<{
+test("[View#create] handles maps", () => {
+  const HouseView = protocol.create<{
     name?: string;
     rooms: Array<number | undefined>;
   }>({
@@ -259,15 +261,15 @@ test("[View.create] handles maps", () => {
     required: ["name"],
   });
   assertEquals(HouseView.viewLength, 0);
-  assertEquals(View.Views.get("House"), HouseView);
+  assertEquals(protocol.Views.get("House"), HouseView);
   const house = { rooms: [1, 2, undefined, 3] };
   assertEquals(HouseView.from(house).toJSON(), { name: "ABC", ...house });
 });
 
-test("[View.create] throws if required field size is not fixed", () => {
+test("[View#create] throws if required field size is not fixed", () => {
   assertThrows(
     () =>
-      View.create<{ map: { a: number } }>({
+      protocol.create<{ map: { a: number } }>({
         type: "object",
         $id: "ObjectWithMap",
         properties: {
@@ -286,8 +288,8 @@ test("[View.create] throws if required field size is not fixed", () => {
   );
 });
 
-test("[View.create] handles tagged objects", () => {
-  const TaggedView = View.create<{
+test("[View#create] handles tagged objects", () => {
+  const TaggedView = protocol.create<{
     tag: number;
     name: string;
   }>({
@@ -299,12 +301,12 @@ test("[View.create] handles tagged objects", () => {
     },
   });
   assertEquals(TaggedView.viewLength, 11);
-  assertEquals(View.Views.get("TaggedView"), TaggedView);
-  assertEquals(View.TaggedViews.get(10), TaggedView);
+  assertEquals(protocol.Views.get("TaggedView"), TaggedView);
+  assertEquals(protocol.TaggedViews.get(10), TaggedView);
 });
 
-test("[View.create] creates a dict view", () => {
-  const NumberDict = View.create<Record<number, string | undefined>>({
+test("[View#create] creates a dict view", () => {
+  const NumberDict = protocol.create<Record<number, string | undefined>>({
     $id: "NumberDict",
     type: "object",
     btype: "dict",
@@ -322,8 +324,8 @@ test("[View.create] creates a dict view", () => {
   assertEquals(dict, decoded);
 });
 
-test("[View.create] creates a nested dict view", () => {
-  View.create<Record<number, string | undefined>>({
+test("[View#create] creates a nested dict view", () => {
+  protocol.create<Record<number, string | undefined>>({
     $id: "NumberDict",
     type: "object",
     btype: "dict",
@@ -333,7 +335,7 @@ test("[View.create] creates a nested dict view", () => {
   type NestedDict = {
     n: Record<string, Record<number, string | undefined> | undefined>;
   };
-  const NestedDict = View.create<NestedDict>({
+  const NestedDict = protocol.create<NestedDict>({
     $id: "NestedDict",
     type: "object",
     btype: "map",
@@ -360,8 +362,8 @@ test("[View.create] creates a nested dict view", () => {
   assertEquals(dict, decoded);
 });
 
-test("[View.create] creates a dict view with an array", () => {
-  const ArrayDict = View.create<Record<number, Array<number>>>({
+test("[View#create] creates a dict view with an array", () => {
+  const ArrayDict = protocol.create<Record<number, Array<number>>>({
     $id: "ArrayDict",
     type: "object",
     btype: "dict",
@@ -381,8 +383,8 @@ test("[View.create] creates a dict view with an array", () => {
   assertEquals(dict, decoded);
 });
 
-test("[View.create] creates a dict view with a vector", () => {
-  const VectorDict = View.create<Record<number, Array<string>>>({
+test("[View#create] creates a dict view with a vector", () => {
+  const VectorDict = protocol.create<Record<number, Array<string>>>({
     $id: "VectorDict",
     type: "object",
     btype: "dict",
@@ -402,10 +404,10 @@ test("[View.create] creates a dict view with a vector", () => {
   assertEquals(dict, decoded);
 });
 
-test("[View.create] throws if keys are not of fixed size", () => {
+test("[View#create] throws if keys are not of fixed size", () => {
   assertThrows(
     () => {
-      View.create<Record<number, string | undefined>>({
+      protocol.create<Record<number, string | undefined>>({
         $id: "NonFixedDict",
         type: "object",
         btype: "dict",
@@ -418,8 +420,8 @@ test("[View.create] throws if keys are not of fixed size", () => {
   );
 });
 
-test("[View.view] instantiates a tagged view", () => {
-  const TaggedView = View.create<Tagged>({
+test("[View#view] instantiates a tagged view", () => {
+  const TaggedView = protocol.create<Tagged>({
     $id: "TaggedView",
     type: "object",
     properties: {
@@ -430,15 +432,15 @@ test("[View.view] instantiates a tagged view", () => {
   const data = new DataView(
     TaggedView.from({ tag: 10, name: "Zaphod" }).buffer,
   );
-  const view = View.view<Tagged>(data)!;
+  const view = protocol.view<Tagged>(data)!;
   assertEquals(view instanceof TaggedView, true);
   assertEquals(view.get("name"), "Zaphod");
   assertEquals(view.get("tag"), 10);
-  assertEquals(View.view(new DataView(new ArrayBuffer(10))), undefined);
+  assertEquals(protocol.view(new DataView(new ArrayBuffer(10))), undefined);
 });
 
-test("[View.decode] returns a value of a tagged view", () => {
-  const TaggedView = View.create<Tagged>({
+test("[View#decode] returns a value of a tagged view", () => {
+  const TaggedView = protocol.create<Tagged>({
     $id: "TaggedView",
     type: "object",
     properties: {
@@ -448,12 +450,12 @@ test("[View.decode] returns a value of a tagged view", () => {
   });
   const value = { tag: 10, name: "Zaphod" } as const;
   const data = new DataView(TaggedView.from(value).buffer);
-  assertEquals(View.decode<Tagged>(data)!, value);
-  assertEquals(View.decode(new DataView(new ArrayBuffer(10))), undefined);
+  assertEquals(protocol.decode<Tagged>(data)!, value);
+  assertEquals(protocol.decode(new DataView(new ArrayBuffer(10))), undefined);
 });
 
-test("[View.encode] encodes value into a tagged view", () => {
-  View.create<Tagged>({
+test("[View#encode] encodes value into a tagged view", () => {
+  protocol.create<Tagged>({
     $id: "TaggedView",
     type: "object",
     properties: {
@@ -462,7 +464,7 @@ test("[View.encode] encodes value into a tagged view", () => {
     },
   });
   const value = { tag: 10, name: "Zaphod" } as const;
-  const view = View.encode<Tagged>(value)!;
+  const view = protocol.encode<Tagged>(value)!;
   assertEquals(view.toJSON(), value);
-  assertEquals(View.encode({}), undefined);
+  assertEquals(protocol.encode({} as { tag: number }), undefined);
 });

@@ -32,7 +32,7 @@ import { log2 } from "./utilities.ts";
 import type { Constructor } from "./utility-types.ts";
 
 export class View {
-  static Views = new Map<string, UnknownViewConstructor>([
+  Views = new Map<string, UnknownViewConstructor>([
     ["array", ArrayView],
     ["typedarray", TypedArrayView],
     ["vector", VectorView],
@@ -55,7 +55,7 @@ export class View {
     ["string", StringView],
     ["binary", BinaryView],
   ]);
-  static TaggedViews = new Map<number, UnknownViewConstructor>();
+  TaggedViews = new Map<number, UnknownViewConstructor>();
   static AbstractViews = new Set([
     "object",
     "array",
@@ -64,26 +64,20 @@ export class View {
     "map",
     "dict",
   ]);
-  static tagName = "tag";
-  static maxLength = 8192;
 
-  static _maxView: DataView;
-
-  static get maxView(): DataView {
-    if (!this._maxView) {
-      this._maxView = new DataView(new ArrayBuffer(this.maxLength));
-    }
-    return this._maxView;
+  constructor(public maxView = new DataView(new ArrayBuffer(8192))) {
   }
 
-  static create<T>(
+  create<T>(
     schema: ViewSchema<T>,
     constructor?: T extends object ? Constructor<T> : never,
   ): ViewConstructor<T> {
-    const schemas = this.getSchemaOrdering(schema as ViewSchema<unknown>);
+    const { getSchemaId, getSchemaOrdering } = this
+      .constructor as typeof View;
+    const schemas = getSchemaOrdering(schema as ViewSchema<unknown>);
     for (let i = schemas.length - 1; i >= 0; i--) {
       const objectSchema = schemas[i];
-      const id = this.getSchemaId(objectSchema);
+      const id = getSchemaId(objectSchema);
       if (this.Views.has(id)) continue;
       // use provided constructor for top object
       const objectCtor = objectSchema === schema ? constructor : undefined;
@@ -95,46 +89,55 @@ export class View {
       // cache the view by id
       this.Views.set(id, View);
       // cache by tag if present
-      const tag = objectSchema.properties &&
-        (objectSchema.properties as Record<string, ViewSchema<unknown>>)[
-          this.tagName
-        ]?.default;
-      if (typeof tag === "number") {
-        this.TaggedViews.set(tag, View);
-      }
+      const tag = this.getSchemaTag(objectSchema);
+      if (tag) this.TaggedViews.set(tag, View);
     }
     if (schema.type === "array") return this.getArray<T>(schema)[0];
     return this.getExistingView<T>(schema);
   }
 
-  static view<T>(view: DataView): ViewInstance<T> | undefined {
-    const tag = view.getUint8(0);
-    const ViewClass = this.TaggedViews.get(tag) as ViewConstructor<T>;
+  view<T>(view: DataView): ViewInstance<T> | undefined {
+    const tag = this.getTag(view);
+    const ViewClass = this.TaggedViews.get(tag);
     if (!ViewClass) return undefined;
-    return new ViewClass(view.buffer, view.byteOffset);
+    return new (ViewClass as ViewConstructor<T>)(view.buffer, view.byteOffset);
   }
 
-  static decode<T>(view: DataView): T | undefined {
-    const tag = view.getUint8(0);
-    const ViewClass = this.TaggedViews.get(tag) as ViewConstructor<T>;
+  decode<T>(view: DataView): T | undefined {
+    const tag = this.getTag(view);
+    const ViewClass = this.TaggedViews.get(tag);
     if (!ViewClass) return undefined;
-    return ViewClass.decode(view, 0);
+    return (ViewClass as ViewConstructor<T>).decode(view, 0);
   }
 
-  static encode<T>(value: T, view?: DataView): ViewInstance<T> | undefined {
-    const ViewClass = this.TaggedViews.get(
-      // deno-lint-ignore no-explicit-any
-      (value as any)[this.tagName] as number,
-    ) as ViewConstructor<T>;
+  encode<T extends { tag: number }>(
+    value: T,
+    view?: DataView,
+    offset = 0,
+  ): ViewInstance<T> | undefined {
+    const ViewClass = this.TaggedViews.get(value.tag) as ViewConstructor<T>;
     if (!ViewClass) return undefined;
     if (!view) return ViewClass.from(value);
-    ViewClass.encode(value, view, 0);
+    ViewClass.encode(value, view, offset);
     return new ViewClass(view.buffer, view.byteOffset);
   }
 
-  static getArray<T>(
+  getTag(view: DataView): number {
+    return view.getUint8(0);
+  }
+
+  getSchemaTag(
+    schema: ViewSchema<object>,
+  ): number | undefined {
+    const tag = (schema.properties as { tag: ViewSchema<unknown> })?.tag
+      ?.default;
+    return typeof tag === "number" ? tag : undefined;
+  }
+
+  getArray<T>(
     schema: ViewSchema<T>,
   ): [view: ViewConstructor<T>, length: number] {
+    const { getSchemaId } = this.constructor as typeof View;
     const arrays: Array<ViewSchema<Array<unknown>>> = [];
     let currentField = schema as ViewSchema<unknown>;
     // go down the array(s) to the item field
@@ -146,12 +149,12 @@ export class View {
     // get existing view of the item
     const itemView = this.getExistingView(currentField);
     // check
-    const itemId = this.getSchemaId(currentField as ViewSchema<unknown>);
+    const itemId = getSchemaId(currentField as ViewSchema<unknown>);
     const isArray = currentArray.btype !== "vector";
     const viewId = isArray ? `ArrayView_${itemId}` : `VectorView_${itemId}`;
-    let View: UnknownViewConstructor;
+    let CurrentView: UnknownViewConstructor;
     if (!this.Views.has(viewId)) {
-      View = isArray
+      CurrentView = isArray
         ? this.getArrayView(
           currentField,
           itemView,
@@ -163,33 +166,35 @@ export class View {
           itemView,
         );
       // cache array views of unspecified length
-      if (currentField.maxLength === undefined) this.Views.set(viewId, View);
+      if (currentField.maxLength === undefined) {
+        this.Views.set(viewId, CurrentView);
+      }
     } else {
-      View = this.Views.get(viewId)!;
+      CurrentView = this.Views.get(viewId)!;
     }
     // initialize nested arrays
-    let itemLength = isArray ? View.getLength(currentArray.maxItems) : 0;
+    let itemLength = isArray ? CurrentView.getLength(currentArray.maxItems) : 0;
     for (let i = arrays.length - 1; i >= 0; i--) {
       currentArray = arrays[i];
       if (currentArray.btype !== "vector") {
-        View = this.getArrayView(
+        CurrentView = this.getArrayView(
           currentArray.items as ViewSchema<unknown>,
-          View as ViewConstructor<unknown>,
+          CurrentView as ViewConstructor<unknown>,
           itemLength,
         );
-        itemLength = View.getLength(currentArray.maxItems);
+        itemLength = CurrentView.getLength(currentArray.maxItems);
       } else {
-        View = this.Views.get("vector")!.initialize(
+        CurrentView = this.Views.get("vector")!.initialize(
           currentArray.items,
           this,
-          View,
+          CurrentView,
         );
       }
     }
-    return [(View as unknown) as ViewConstructor<T>, itemLength];
+    return [(CurrentView as unknown) as ViewConstructor<T>, itemLength];
   }
 
-  static getArrayView<T>(
+  getArrayView<T>(
     schema: ViewSchema<T>,
     SchemaView?: ViewConstructor<T>,
     length?: number,
@@ -262,7 +267,8 @@ export class View {
     ) as Constructor<T>;
   }
 
-  static getExistingView<T>(schema: ViewSchema<T>): ViewConstructor<T> {
+  getExistingView<T>(schema: ViewSchema<T>): ViewConstructor<T> {
+    const { AbstractViews } = this.constructor as typeof View;
     let type = schema.$id || schema.$ref?.slice(1);
     if (type) {
       if (!this.Views.has(type)) throw Error(`View "${type}" is not found.`);
@@ -270,14 +276,14 @@ export class View {
       type = schema.btype || schema.type;
       if (!this.Views.has(type)) {
         throw TypeError(`Type "${type}" is not supported.`);
-      } else if (this.AbstractViews.has(type)) {
+      } else if (AbstractViews.has(type)) {
         throw TypeError(`Type ${type} is abstract.`);
       }
     }
     return this.Views.get(type) as ViewConstructor<T>;
   }
 
-  static getFieldLayout<T>(
+  getFieldLayout<T>(
     field: ViewSchema<T>,
     start: number,
     required: boolean,

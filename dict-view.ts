@@ -162,7 +162,7 @@ export class DictView<T extends object> extends DataView
   // deno-lint-ignore ban-types
   static initialize<T extends object>(
     schema: ViewSchema<T>,
-    Factory: typeof View,
+    Factory: View,
   ): ViewConstructor<T, ComplexView<T>> {
     const keySchema = schema.propertyNames!;
     const valueSchema = schema.additionalProperties!;

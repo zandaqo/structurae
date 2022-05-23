@@ -104,9 +104,11 @@ export class ObjectView<T extends object> extends DataView
 
   static initialize<T extends object>(
     schema: ViewSchema<T>,
-    Factory: typeof View,
+    Factory: View,
     constructor?: Constructor<T>,
   ): ViewConstructor<T, ComplexView<T>> {
+    const { getDefaultConstructor, getDefaultData } = Factory
+      .constructor as typeof View;
     const fields = Object.keys(schema.properties!) as Array<keyof T>;
     const layout = {} as ViewLayout<T>;
     let lastOffset = 0;
@@ -121,9 +123,9 @@ export class ObjectView<T extends object> extends DataView
       lastOffset += fieldLayout.length;
       layout[property] = fieldLayout;
     }
-    const defaultData = Factory.getDefaultData(layout, lastOffset, fields);
+    const defaultData = getDefaultData(layout, lastOffset, fields);
     const ObjectConstructor = constructor ||
-      Factory.getDefaultConstructor(fields, layout);
+      getDefaultConstructor(fields, layout);
     return class extends this<T> {
       static viewLength = lastOffset;
       static layout = layout;

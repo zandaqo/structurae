@@ -84,13 +84,17 @@ serialization of tagged objects.
 
 ```typescript
 import { View } from "structurae";
+
+// instantiate a view protocol
+const view = new View();
+
 // define interface for out animal objects
 interface Animal {
   name: string;
   age: number;
 }
 // create and return a view class (extension of DataView) that handles our Animal objects
-const AnimalView = View.create<Animal>({
+const AnimalView = view.create<Animal>({
   $id: "Pet",
   type: "object",
   properties: {
@@ -124,7 +128,7 @@ interface Person {
   bestFriend: Friend;
   friends: Array<Friend>;
 }
-const PersonView = View.create<Person>({
+const PersonView = view.create<Person>({
   // each object requires a unique id
   $id: "Person",
   type: "object",
@@ -181,7 +185,7 @@ interface Town {
   railstation: boolean;
   clacks?: number;
 }
-const TownView = View.create<Town>({
+const TownView = view.create<Town>({
     $id: "Town",
     type: "object",
     btype: "map",
@@ -213,8 +217,15 @@ cannot be set later, and those set cannot be resized, that is, assigned a value
 that is greater than their current size.
 
 For performance sake, all variable size views are encoded using single global
-ArrayBuffer that is 8192 bytes long, if you expect to handle bigger views, set
-`View.maxLength` to desired max length before instantiating any view.
+ArrayBuffer that is 8192 bytes long, if you expect to handle bigger views,
+supply a bigger DataView when instantiating a view protocol:
+
+```ts
+import { View } from "structurae";
+
+// instantiate a view protocol
+const view = new View(new DataView(new ArrayBuffer(65536)));
+```
 
 There are certain requirements for a JSON Schema used for fixed sized objects:
 
@@ -237,7 +248,7 @@ values are applied upon creation of a view:
 interface House {
   size: number;
 }
-const House = View.create<House>({
+const House = view.create<House>({
   $id: "House",
   type: "object",
   properties: {
@@ -256,7 +267,7 @@ interface Neighborhood {
   house: House;
   biggerHouse: House;
 }
-const Neighborhood = View.create<Neighborhood>({
+const Neighborhood = view.create<Neighborhood>({
   $id: "Neighborhood",
   type: "object",
   properties: {
@@ -278,7 +289,7 @@ or records in TypeScript) with varying amount of properties and known type of
 values, we can use a dictionary view:
 
 ```typescript
-const NumberDict = View.create<Record<number, string | undefined>>({
+const NumberDict = view.create<Record<number, string | undefined>>({
   $id: "NumberDict",
   type: "object",
   btype: "dict", // dictionaries use btype dict
@@ -304,7 +315,7 @@ variable sized values. The type of items held by both "container" views is
 defined in `items` field of the schema.
 
 ```typescript
-const Street = View.create<Array<House>>({
+const Street = view.create<Array<House>>({
   type: "array",
   items: {
     type: "object",
@@ -324,7 +335,7 @@ street.get(0); //=> { size: 100 }
 For vectors set `btype` to `vector`:
 
 ```typescript
-const Names = View.create<Array<string | undefined>>({
+const Names = view.create<Array<string | undefined>>({
   type: "array",
   btype: "vector",
   items: {
@@ -403,7 +414,7 @@ interface Cat {
   tag: 1;
   name: string;
 }
-const DogView = View.create<Dog>({
+const DogView = view.create<Dog>({
   type: "object",
   $id: "Dog",
   properties: {
@@ -412,7 +423,7 @@ const DogView = View.create<Dog>({
     name: { type: "string", maxLength: 10 }
   },
 });
-const CatView = View.create<Cat>({
+const CatView = view.create<Cat>({
   type: "object",
   $id: "Cat",
   properties: {
@@ -423,44 +434,9 @@ const CatView = View.create<Cat>({
 });
 
 // now we can encode tagged objects without specifying views first:
-const animal = View.encode({ tag: 0, name: "Gaspode" });
+const animal = view.encode({ tag: 0, name: "Gaspode" });
 // and decode them:
-View.decode(animal) //=> { tag: 0, name: "Gaspode" }
-```
-
-By default, the tag field is named `tag` and has the type of `uint8`. A
-different tag name can be specified in `View.tagName`.
-
-```javascript
-const View = ObjectViewMixin({
-  $id: "Items",
-  type: "object",
-  properties: {
-    tagId: { type: "integer", btype: "uint32", default: 1 },
-    id: { type: "integer", btype: "uint32" },
-    items: {
-      type: "array",
-      maxItems: 3,
-      items: { type: "string", maxLength: 10 },
-    },
-  },
-});
-
-const protocol = new BinaryProtocol(
-  {
-    0: {
-      $id: "Person",
-      type: "object",
-      properties: {
-        age: { type: "integer", btype: "int8" },
-        name: { type: "string", length: 10 },
-      },
-    },
-    1: { $ref: "#Items" },
-  },
-  "tagId",
-  "uint32",
-);
+view.decode(animal) //=> { tag: 0, name: "Gaspode" }
 ```
 
 ### Bit Structures
