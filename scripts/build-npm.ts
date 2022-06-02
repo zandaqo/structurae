@@ -20,7 +20,7 @@ await build({
   package: {
     name: "structurae",
     version: Deno.args[0],
-    main: "index.js",
+    main: "./esm/index.js",
     type: "module",
     description:
       "Data structures for performance-sensitive modern JavaScript applications.",
