@@ -51,5 +51,6 @@ export type {
   ViewConstructor,
   ViewInstance,
   ViewSchema,
+  ViewSchemaTypeMap,
 } from "./view-types.ts";
 export { View } from "./view.ts";

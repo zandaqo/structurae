@@ -259,7 +259,7 @@ export class View {
         default:
           value = "null";
       }
-      content.push(`${field}:${value}`);
+      content.push(`${field as string}:${value}`);
     }
     return new Function(
       "return {" + content.join(",") +
@@ -336,8 +336,8 @@ export class View {
       if (!object.properties) continue;
       const properties = Object.keys(object.properties);
       for (const property of properties) {
-        let field =
-          (object.properties! as Record<string, ViewSchema<unknown>>)[property];
+        let field: ViewSchema<unknown> =
+          (object.properties as Record<string, ViewSchema<unknown>>)[property];
         if (field.type === "array") {
           while (field.type === "array") field = field.items!;
         }

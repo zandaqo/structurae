@@ -439,6 +439,67 @@ const animal = view.encode({ tag: 0, name: "Gaspode" });
 view.decode(animal) //=> { tag: 0, name: "Gaspode" }
 ```
 
+#### Extending View Types
+
+The view protocol is designed with extensibility in mind. While built-in view
+types are ample for most cases, creating a special type can reduce boilerplate
+in certain situations. You can check out a full example of creating and using a
+custom view type for BitArray in
+[examples/bit-array-view](https://github.com/zandaqo/structurae/tree/master/examples/bit-array-view).
+
+To create a new view type, first create a class extending DataView and
+implementing one of the view type interfaces, for example `PrimitiveView`:
+
+```ts
+export class BitArrayView extends DataView implements PrimitiveView<BitArray> {
+  ...
+}
+```
+
+To let TypeScript know about our new type, we use
+[module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation)
+to add our new type name to `ViewSchemaTypeMap` interface:
+
+```ts
+declare module "structurae" {
+  interface ViewSchemaTypeMap {
+    bitarray: "string";
+  }
+}
+```
+
+This way, it will be a binary subtype (or `btype`) of JSONSchema type `string`.
+
+And finally, we add the new class to the list of views used by our protocol
+instance:
+
+```ts
+const protocol = new View();
+protocol.Views.set("bitarray", BitArrayView);
+```
+
+Now we can use the new type in our schemas, for example:
+
+```ts
+class UserSettings {
+  id = 0;
+  settings = new BitArray(3);
+}
+
+const UserSettingsView = protocol.create<UserSettings>({
+  $id: "UserSettings",
+  type: "object",
+  properties: {
+    id: { type: "integer" },
+    settings: {
+      type: "string",
+      btype: "bitarray",
+      maxLength: 12,
+    },
+  },
+}, UserSettings);
+```
+
 ### Bit Structures
 
 #### BitField & BigBitField

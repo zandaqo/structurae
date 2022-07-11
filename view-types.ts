@@ -221,23 +221,34 @@ export type ViewLayout<T> = {
   [key in keyof T]: ViewFieldLayout<T[key]>;
 };
 
-export type ViewSchemaPrimitiveType =
-  | "string"
-  | "number"
-  | "integer"
-  | "boolean";
+export type ViewSchemaTypeField<T> = [T] extends [number | bigint | undefined]
+  ? "number" | "integer"
+  : [T] extends [string | ArrayBufferLike | undefined] ? "string"
+  : [T] extends [boolean | undefined] ? "boolean"
+  : T extends Array<unknown> ? "array"
+  : T extends object ? "object"
+  : never;
 
-export type ViewSchemaNumberType =
-  | "int8"
-  | "uint8"
-  | "int16"
-  | "uint16"
-  | "int32"
-  | "uint32"
-  | "float32"
-  | "float64"
-  | "bigint64"
-  | "biguint64";
+export interface ViewSchemaTypeMap {
+  int8: "number";
+  uint8: "number";
+  int16: "number";
+  uint16: "number";
+  int32: "number";
+  uint32: "number";
+  float32: "number";
+  float64: "number";
+  bigint64: "number";
+  biguint64: "number";
+  dict: "object";
+  map: "object";
+  vector: "array";
+  binary: "string";
+}
+
+type ReverseTypeMap = {
+  [P in keyof ViewSchemaTypeMap as ViewSchemaTypeMap[P]]: P;
+};
 
 export interface ViewSchema<T> {
   $id?: string;
@@ -255,16 +266,11 @@ export interface ViewSchema<T> {
   };
   propertyNames?: ViewSchema<number> | ViewSchema<string>;
   additionalProperties?: ViewSchema<T[keyof T]>;
-  type: [T] extends [number | bigint | undefined] ? "number" | "integer"
-    : [T] extends [string | ArrayBufferLike | undefined] ? "string"
-    : [T] extends [boolean | undefined] ? "boolean"
-    : T extends Array<unknown> ? "array"
-    : T extends object ? "object"
-    : never;
-  btype?: T extends number ? ViewSchemaNumberType
-    : T extends ArrayBufferLike ? "binary"
-    : T extends Array<unknown> ? "vector"
-    : T extends object ? "map" | "dict"
+  type: ViewSchemaTypeField<T>;
+  btype?: ViewSchemaTypeField<T> extends "number" | "integer"
+    ? ReverseTypeMap["number"]
+    : ViewSchemaTypeField<T> extends keyof ReverseTypeMap
+      ? ReverseTypeMap[ViewSchemaTypeField<T>]
     : never;
   default?: T;
 }

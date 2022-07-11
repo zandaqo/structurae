@@ -9,7 +9,7 @@ jobs:
       - name: download deno
         uses: denoland/setup-deno@main
         with:
-          deno-version: 1.22
+          deno-version: 1.23.3
       - name: check format
         run: deno fmt --check
       - name: lint
