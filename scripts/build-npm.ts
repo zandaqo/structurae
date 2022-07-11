@@ -1,7 +1,7 @@
 import {
   build,
   emptyDir,
-} from "https://raw.githubusercontent.com/denoland/dnt/0.23.0/mod.ts";
+} from "https://raw.githubusercontent.com/denoland/dnt/0.28.0/mod.ts";
 
 await emptyDir("./npm");
 
@@ -50,8 +50,15 @@ await build({
     bugs: {
       url: "https://github.com/zandaqo/structurae/issues",
     },
-    engines: {
-      node: ">=14.0.0",
+    exports: {
+      ".": {
+        types: "./types/index.d.ts",
+        import: "./esm/index.js",
+      },
+      "./*": {
+        types: "./types/*.d.ts",
+        import: "./esm/*.js",
+      },
     },
   },
 });
