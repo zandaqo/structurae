@@ -270,11 +270,11 @@ export class SortedArray<ItemType> extends Array<ItemType> {
       : this.getIndex<T, U>(arr, start, comparator, true);
     const endIndex = end === undefined
       ? arr.length
-      : this.getIndex(arr, end, comparator, true, startIndex) + 1;
+      : this.getIndex<T, U>(arr, end, comparator, true, startIndex) + 1;
     return subarray
       ? (arr as unknown as Int32Array).subarray(startIndex, endIndex)
-      : // deno-lint-ignore no-explicit-any
-        (arr as any).slice(startIndex, endIndex);
+      // deno-lint-ignore no-explicit-any
+      : (arr as any).slice(startIndex, endIndex);
   }
 
   /**

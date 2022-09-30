@@ -14,7 +14,7 @@ export function GridMixin<
    * Extends built-in indexed collections to handle 2 dimensional data.
    */
   return class Grid extends Base {
-    [key: number]: ItemType
+    [key: number]: ItemType;
 
     size = 0;
 

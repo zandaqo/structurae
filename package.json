@@ -1,0 +1,43 @@
+{
+  "name": "structurae",
+  "version": "4.0.2",
+  "main": "./esm/index.js",
+  "type": "module",
+  "description": "Data structures for high-performance JavaScript applications.",
+  "keywords": [
+    "optimization",
+    "binary",
+    "binary protocol",
+    "data structures",
+    "sorted",
+    "array",
+    "bitfield",
+    "bigint",
+    "graph",
+    "matrix",
+    "heap",
+    "list",
+    "adjacency"
+  ],
+  "author": "Maga D. Zandaqo <denelxan@gmail.com> (http://maga.name)",
+  "license": "MIT",
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zandaqo/structurae.git"
+  },
+  "homepage": "https://github.com/zandaqo/structurae#readme",
+  "bugs": {
+    "url": "https://github.com/zandaqo/structurae/issues"
+  },
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./esm/index.js"
+    },
+    "./*": {
+      "types": "./types/*.d.ts",
+      "import": "./esm/*.js"
+    }
+  }
+}

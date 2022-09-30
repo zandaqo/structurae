@@ -708,7 +708,7 @@ graph.hasEdge(0, 1); //=> true
 graph.getEdge(0, 1); //=> 5
 ```
 
-Since the maximum amount of egdes in AdjacencyList is limited to the number
+Since the maximum amount of edges in AdjacencyList is limited to the number
 specified at creation, adding edges can overflow throwing a RangeError. If
 that's a possibility, use `AdjacencyList#isFull` method to check if the limit is
 reached before adding an edge.

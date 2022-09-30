@@ -1,3 +1,4 @@
+// deno-lint-ignore-file ban-types
 import type {
   ComplexView,
   ViewConstructor,
@@ -8,7 +9,6 @@ import type { View } from "./view.ts";
 import type { ArrayView } from "./array-view.ts";
 import type { VectorView } from "./vector-view.ts";
 
-// deno-lint-ignore ban-types
 export class DictView<T extends object> extends DataView
   implements ComplexView<T> {
   static viewLength = 0;
@@ -41,7 +41,7 @@ export class DictView<T extends object> extends DataView
     return result;
   }
 
-  static encode<T>(
+  static encode<T extends object>(
     value: T,
     view: DataView,
     start = 0,
@@ -66,13 +66,12 @@ export class DictView<T extends object> extends DataView
     return written;
   }
 
-  // deno-lint-ignore ban-types
   static from<T extends object, U extends DictView<T>>(value: T): U {
     const end = this.encode<T>(value, this.maxView, 0, undefined);
     return new this<T>(this.maxView.buffer.slice(0, end)) as U;
   }
 
-  static getLength<T>(value: T): number {
+  static getLength<T extends object>(value: T): number {
     const { KeysView, ValuesView } = this;
     const keyLength = KeysView.itemLength!;
     // required length
@@ -159,7 +158,6 @@ export class DictView<T extends object> extends DataView
     return (this.constructor as typeof DictView).decode<T>(this);
   }
 
-  // deno-lint-ignore ban-types
   static initialize<T extends object>(
     schema: ViewSchema<T>,
     Factory: View,

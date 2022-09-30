@@ -10,7 +10,7 @@ and this project adheres to
 
 ### Fixed
 
-- Fix main intry point for the NPM package.
+- Fix main entry point for the NPM package.
 
 ## [4.0.0] - 2022-05-23
 
@@ -70,7 +70,7 @@ and this project adheres to
 
 ### Changed
 
-- `StringView#search` renamed into `StringView#indexof`.
+- `StringView#search` renamed into `StringView#indexOf`.
 
 ## [4.0.0-pre.6] - 2021-06-26
 
@@ -259,7 +259,7 @@ Deprecated classes and methods:
 ### Changed
 
 - (potentially breaking) `ObjectView.from` no longer initializes ObjectView upon
-  the first call. Call `ObjectView.intialize()` upon setting the schema
+  the first call. Call `ObjectView.initialize()` upon setting the schema
   (`ObjectView.schema`) for the extending class, or use ObjectViewMixin
 
 ## [1.7.5] - 2019-09-22

@@ -13,7 +13,7 @@ export function SymmetricGridMixin<
    * Implements a grid to handle symmetric or triangular matrices using half the space required for a normal grid.
    */
   return class SymmetricGrid extends Base {
-    [key: number]: ItemType
+    [key: number]: ItemType;
 
     size = 0;
 
