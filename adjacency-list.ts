@@ -46,8 +46,8 @@ export function AdjacencyListMixin<U extends TypedArrayConstructors>(
     }
 
     /*
-    * Returns the dimensions, vertices and maximum edge count, of an existing AdjacencyList
-    */
+     * Returns the dimensions, vertices and maximum edge count, of an existing AdjacencyList
+     */
     static getDimensions(
       list: IndexedCollection,
     ): [vertices: number, edges: number] {

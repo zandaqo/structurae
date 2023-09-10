@@ -1,4 +1,3 @@
-// deno-lint-ignore-file ban-types
 import type { Constructor } from "./utility-types.ts";
 import type { View } from "./view.ts";
 import type {
