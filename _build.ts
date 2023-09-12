@@ -12,14 +12,13 @@ await build({
   entryPoints: ["./index.ts"],
   outDir: "./npm",
   typeCheck: false,
-  test: false,
   scriptModule: false,
   compilerOptions: {
     target: "ES2021",
     sourceMap: true,
     inlineSources: true,
   },
-  shims: {},
+  shims: { deno: "dev" },
   package: packageJson,
 });
 

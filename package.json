@@ -2,7 +2,6 @@
   "name": "structurae",
   "version": "4.0.2",
   "main": "./esm/index.js",
-  "type": "module",
   "description": "Data structures for high-performance JavaScript applications.",
   "keywords": [
     "optimization",
