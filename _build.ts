@@ -15,9 +15,7 @@ await build({
     sourceMap: true,
     inlineSources: true,
   },
-  shims: {
-    deno: true,
-  },
+  shims: {},
   package: packageJson,
   postBuild() {
     Deno.copyFileSync("LICENSE", "npm/LICENSE");
