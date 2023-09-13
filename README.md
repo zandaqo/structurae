@@ -643,7 +643,7 @@ using a BitArray.
 const { Pool } = require("structurae");
 
 // create a pool of 1600 indexes
-const pool = new Pool(100 * 16);
+const pool = Pool.create(100 * 16);
 
 // get the next available index and make it unavailable
 pool.get(); //=> 0
