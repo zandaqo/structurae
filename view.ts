@@ -1,4 +1,3 @@
-// deno-lint-ignore-file ban-types
 import type {
   UnknownViewConstructor,
   ViewConstructor,

@@ -32,11 +32,11 @@
   },
   "exports": {
     ".": {
-      "types": "./types/index.d.ts",
+      "types": "./esm/index.d.ts",
       "import": "./esm/index.js"
     },
     "./*": {
-      "types": "./types/*.d.ts",
+      "types": "./esm/*.d.ts",
       "import": "./esm/*.js"
     }
   }

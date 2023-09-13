@@ -5,11 +5,11 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: download deno
-        uses: denoland/setup-deno@main
+        uses: denoland/setup-deno@v1
         with:
-          deno-version: 1.26.0
+          deno-version: 1.36.4
       - name: check format
         run: deno fmt --check
       - name: lint

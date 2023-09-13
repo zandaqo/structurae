@@ -36,18 +36,18 @@ that includes:
 
 Node.js:
 
-```
+```shell
 npm i structurae
 ```
 
-```
+```javascript
 import {...} from "structurae";
 ```
 
 Deno:
 
-```
-import {...} from "https://deno.land/x/structurae@4.0.0/index.ts"
+```typescript
+import {...} from "https://deno.land/x/structurae/index.ts"
 ```
 
 ## Documentation
