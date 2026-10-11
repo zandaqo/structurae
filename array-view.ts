@@ -1,4 +1,3 @@
-import { log2 } from "./utilities.ts";
 import type {
   ComplexView,
   ContainerView,
@@ -179,7 +178,7 @@ export class ArrayView<T> extends DataView<ArrayBufferLike>
     return class extends this<T> {
       static override View = ItemView;
       static override itemLength = itemLength;
-      static offset = log2[itemLength];
+      static offset = 31 - Math.clz32(itemLength);
     };
   }
 }

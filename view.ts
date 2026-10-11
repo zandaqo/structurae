@@ -27,7 +27,6 @@ import { DictView } from "./dict-view.ts";
 import { StringView } from "./string-view.ts";
 import { TypedArrayView } from "./typed-array-view.ts";
 import { BinaryView } from "./binary-view.ts";
-import { log2 } from "./utilities.ts";
 import type { Constructor } from "./utility-types.ts";
 
 export class View {
@@ -199,7 +198,8 @@ export class View {
     length?: number,
   ): ViewConstructor<Array<T>> {
     const itemLength = length || SchemaView?.viewLength;
-    const isTypedArray = Reflect.has(log2, itemLength!);
+    const isTypedArray = itemLength !== undefined && itemLength >= 1 &&
+      itemLength === 2 ** (31 - Math.clz32(itemLength));
     return this.Views.get(isTypedArray ? "typedarray" : "array")!
       .initialize(schema, this, SchemaView, itemLength) as ViewConstructor<
         Array<T>
