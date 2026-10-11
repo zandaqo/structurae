@@ -1,21 +1,23 @@
-import { build, emptyDir } from "https://deno.land/x/dnt@0.38.1/mod.ts";
-import packageJson from "./package.json" assert { type: "json" };
+import { build, emptyDir } from "@deno/dnt";
+import packageJson from "./package.json" with { type: "json" };
 
 await emptyDir("./npm");
 
-packageJson.version = Deno.args[0];
+packageJson.version = Deno.args[0] ?? packageJson.version;
 
 await build({
   entryPoints: ["./index.ts"],
   outDir: "./npm",
-  test: false,
   scriptModule: false,
   compilerOptions: {
     target: "ES2021",
+    lib: ["ES2022", "ESNext.Collection", "DOM", "DOM.Iterable"],
     sourceMap: true,
     inlineSources: true,
   },
-  shims: {},
+  shims: {
+    deno: { test: "dev" },
+  },
   package: packageJson,
   postBuild() {
     Deno.copyFileSync("LICENSE", "npm/LICENSE");

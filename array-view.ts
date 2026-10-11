@@ -9,7 +9,8 @@ import type {
 } from "./view-types.ts";
 import type { View } from "./view.ts";
 
-export class ArrayView<T> extends DataView implements ContainerView<T> {
+export class ArrayView<T> extends DataView<ArrayBufferLike>
+  implements ContainerView<T> {
   static View: ViewConstructor<
     unknown,
     PrimitiveView<unknown> | ContainerView<unknown> | ComplexView<unknown>
@@ -176,8 +177,8 @@ export class ArrayView<T> extends DataView implements ContainerView<T> {
       throw TypeError("ArrayView should have fixed sized items.");
     }
     return class extends this<T> {
-      static View = ItemView;
-      static itemLength = itemLength;
+      static override View = ItemView;
+      static override itemLength = itemLength;
       static offset = log2[itemLength];
     };
   }

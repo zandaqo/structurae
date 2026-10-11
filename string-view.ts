@@ -1,7 +1,8 @@
 import type { IndexedCollection } from "./utility-types.ts";
 import type { PrimitiveView, ViewConstructor } from "./view-types.ts";
 
-export class StringView extends DataView implements PrimitiveView<string> {
+export class StringView extends DataView<ArrayBufferLike>
+  implements PrimitiveView<string> {
   static viewLength = 0;
   static masks = new Int8Array(256).fill(-1);
   static decoder = new TextDecoder();
@@ -424,7 +425,7 @@ export class StringView extends DataView implements PrimitiveView<string> {
   /**
    * Returns a string value of the StringView.
    */
-  toString(): string {
+  override toString(): string {
     return this.get();
   }
 

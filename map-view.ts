@@ -8,7 +8,7 @@ import type {
   ViewSchema,
 } from "./view-types.ts";
 
-export class MapView<T extends object> extends DataView
+export class MapView<T extends object> extends DataView<ArrayBufferLike>
   implements ComplexView<T> {
   static viewLength = 0;
   static layout: ViewLayout<unknown>;
@@ -235,14 +235,14 @@ export class MapView<T extends object> extends DataView
     const ObjectConstructor = constructor ||
       getDefaultConstructor(required as Array<keyof T>, layout);
     return class extends this<T> {
-      static layout = layout;
-      static lengthOffset = optionalOffset + (optional.length << 2);
-      static optionalOffset = optionalOffset;
-      static fields = required;
-      static optionalFields = optional;
-      static maxView = Factory.maxView;
-      static defaultData = defaultData;
-      static ObjectConstructor = ObjectConstructor;
+      static override layout = layout;
+      static override lengthOffset = optionalOffset + (optional.length << 2);
+      static override optionalOffset = optionalOffset;
+      static override fields = required;
+      static override optionalFields = optional;
+      static override maxView = Factory.maxView;
+      static override defaultData = defaultData;
+      static override ObjectConstructor = ObjectConstructor;
     };
   }
 }

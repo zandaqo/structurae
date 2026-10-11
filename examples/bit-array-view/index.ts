@@ -1,14 +1,16 @@
 import type { PrimitiveView, ViewConstructor } from "../../view-types.ts";
 import { BitArray } from "../../bit-array.ts";
 
-export class BitArrayView extends DataView implements PrimitiveView<BitArray> {
+export class BitArrayView extends DataView<ArrayBufferLike>
+  implements PrimitiveView<BitArray> {
   static viewLength = 0;
   static decode(view: DataView, start = 0, length = view.byteLength) {
     return new BitArray(
-      view.buffer.slice(
+      new Uint8Array(
+        view.buffer,
         view.byteOffset + start,
-        view.byteOffset + start + length,
-      ),
+        length,
+      ).slice().buffer,
     );
   }
   static encode(value: BitArray, view: DataView, start = 0, length?: number) {

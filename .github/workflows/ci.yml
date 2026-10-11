@@ -4,15 +4,26 @@ on: [push, pull_request]
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [24.21.0, 26.11.1]
     steps:
-      - uses: actions/checkout@v3
-      - name: download deno
-        uses: denoland/setup-deno@v1
+      - uses: actions/checkout@v7.0.1
+      - name: download node
+        uses: actions/setup-node@v7.1.0
         with:
-          deno-version: 1.36.4
+          node-version: ${{ matrix.node-version }}
+      - name: download deno
+        uses: denoland/setup-deno@v2.0.5
+        with:
+          deno-version: 2.9.7
       - name: check format
         run: deno fmt --check
       - name: lint
         run: deno lint
       - name: run tests
-        run: deno test --allow-read --allow-write
+        run: deno task test
+      - name: check library, build script, and benchmarks
+        run: deno task check
+      - name: build npm package
+        run: deno task build

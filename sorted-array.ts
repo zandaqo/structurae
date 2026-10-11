@@ -25,9 +25,9 @@ export class SortedArray<ItemType> extends Array<ItemType> {
   /**
    * Creates a new SortedArray from a given array-like object.
    */
-  static from<T>(iterable: Iterable<T> | ArrayLike<T>): SortedArray<T>;
+  static override from<T>(iterable: Iterable<T> | ArrayLike<T>): SortedArray<T>;
 
-  static from<T, U>(
+  static override from<T, U>(
     iterable: Iterable<T> | ArrayLike<T>,
     mapfn?: (v: T, k: number) => U,
     thisArg?: unknown,
@@ -272,9 +272,15 @@ export class SortedArray<ItemType> extends Array<ItemType> {
       ? arr.length
       : this.getIndex<T, U>(arr, end, comparator, true, startIndex) + 1;
     return subarray
-      ? (arr as unknown as Int32Array).subarray(startIndex, endIndex)
-      // deno-lint-ignore no-explicit-any
-      : (arr as any).slice(startIndex, endIndex);
+      ? (arr as unknown as { subarray(start: number, end: number): U })
+        .subarray(
+          startIndex,
+          endIndex,
+        )
+      : (arr as unknown as { slice(start: number, end: number): U }).slice(
+        startIndex,
+        endIndex,
+      );
   }
 
   /**
@@ -410,7 +416,7 @@ export class SortedArray<ItemType> extends Array<ItemType> {
    * @param elements the elements of which to create the array
    * @return the new SortedArray
    */
-  static of<U>(...elements: Array<U>): SortedArray<U> {
+  static override of<U>(...elements: Array<U>): SortedArray<U> {
     const result = (super.of(...elements) as unknown) as SortedArray<U>;
     result.sort();
     return result;
@@ -422,7 +428,7 @@ export class SortedArray<ItemType> extends Array<ItemType> {
    * @param arrays sorted array(s) to merge
    * @return a new SortedArray
    */
-  concat(...arrays: Array<Array<ItemType>>): SortedArray<ItemType> {
+  override concat(...arrays: Array<Array<ItemType>>): SortedArray<ItemType> {
     const constructor = this.constructor as typeof SortedArray;
     let result = this.slice(0) as SortedArray<ItemType>;
     // TODO rewrite
@@ -443,7 +449,7 @@ export class SortedArray<ItemType> extends Array<ItemType> {
    * @param element the element to check
    * @return whether the element is in the array
    */
-  includes(element: ItemType): boolean {
+  override includes(element: ItemType): boolean {
     return !!~this.indexOf(element);
   }
 
@@ -453,7 +459,7 @@ export class SortedArray<ItemType> extends Array<ItemType> {
    * @param element the element to look for
    * @return the element's index in the array or -1
    */
-  indexOf(element: ItemType): number {
+  override indexOf(element: ItemType): number {
     return (this.constructor as typeof SortedArray).getIndex(this, element);
   }
 
@@ -494,7 +500,7 @@ export class SortedArray<ItemType> extends Array<ItemType> {
    * @param elements the elements to add to the array
    * @return the new length of the array
    */
-  push(...elements: Array<ItemType>): number {
+  override push(...elements: Array<ItemType>): number {
     const { compare } = this.constructor as typeof SortedArray;
     const m = this.length;
     if (!m) return super.push(...elements.sort(compare));
@@ -582,7 +588,7 @@ export class SortedArray<ItemType> extends Array<ItemType> {
    *
    * @param compareFunction the function to use for comparison
    */
-  sort(
+  override sort(
     compareFunction: Comparator<ItemType> = (this
       .constructor as typeof SortedArray).compare,
   ): this {
@@ -597,7 +603,7 @@ export class SortedArray<ItemType> extends Array<ItemType> {
    * @param elements the elements to add to the array
    * @return an array of deleted elements
    */
-  splice(
+  override splice(
     start: number,
     deleteCount: number,
     ...elements: Array<ItemType>
@@ -632,7 +638,7 @@ export class SortedArray<ItemType> extends Array<ItemType> {
    * @param elements the elements to add to the array
    * @return the new length of the array
    */
-  unshift(...elements: Array<ItemType>) {
+  override unshift(...elements: Array<ItemType>) {
     return this.push(...elements);
   }
 }

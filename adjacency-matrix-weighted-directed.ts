@@ -13,7 +13,6 @@ import type {
 export function AdjacencyMatrixWeightedDirectedMixin<
   U extends TypedArrayConstructors,
 >(Base: U): AdjacencyStructureConstructor<U> {
-  // deno-lint-ignore no-empty-interface
   interface AdjacencyMatrixWeightedDirected extends IndexedCollection {}
   /**
    * Implements Adjacency Matrix for weighted directed graphs.

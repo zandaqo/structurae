@@ -139,7 +139,8 @@ export interface ComplexView<T> extends DataView {
 }
 
 export type ViewInstance<T> = [T] extends
-  [boolean | number | string | bigint | ArrayBufferLike] ? PrimitiveView<T>
+  [boolean | number | string | bigint | ArrayBufferLike | ArrayBufferView]
+  ? PrimitiveView<T>
   : T extends Array<infer U> ? ContainerView<U>
   : T extends object ? ComplexView<T>
   : never;
@@ -222,7 +223,8 @@ export type ViewLayout<T> = {
 
 export type ViewSchemaTypeField<T> = [T] extends [number | bigint | undefined]
   ? "number" | "integer"
-  : [T] extends [string | ArrayBufferLike | undefined] ? "string"
+  : [T] extends [string | ArrayBufferLike | ArrayBufferView | undefined]
+    ? "string"
   : [T] extends [boolean | undefined] ? "boolean"
   : T extends Array<unknown> ? "array"
   : T extends object ? "object"

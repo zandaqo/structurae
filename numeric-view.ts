@@ -1,6 +1,7 @@
 import type { PrimitiveView, ViewConstructor } from "./view-types.ts";
 
-export class Uint8View extends DataView implements PrimitiveView<number> {
+export class Uint8View extends DataView<ArrayBufferLike>
+  implements PrimitiveView<number> {
   static viewLength = 1;
 
   static decode(view: DataView, start = 0): number {
@@ -41,83 +42,84 @@ export class Uint8View extends DataView implements PrimitiveView<number> {
 }
 
 export class Int8View extends Uint8View {
-  static viewLength = 1;
-  static decode(view: DataView, start = 0): number {
+  static override viewLength = 1;
+  static override decode(view: DataView, start = 0): number {
     return DataView.prototype.getInt8.call(view, start);
   }
-  static encode(value: number, view: DataView, start = 0): number {
+  static override encode(value: number, view: DataView, start = 0): number {
     DataView.prototype.setInt8.call(view, start, value);
     return this.viewLength;
   }
 }
 
 export class Int16View extends Uint8View {
-  static viewLength = 2;
-  static decode(view: DataView, start = 0): number {
+  static override viewLength = 2;
+  static override decode(view: DataView, start = 0): number {
     return DataView.prototype.getInt16.call(view, start, true);
   }
-  static encode(value: number, view: DataView, start = 0): number {
+  static override encode(value: number, view: DataView, start = 0): number {
     DataView.prototype.setInt16.call(view, start, value, true);
     return this.viewLength;
   }
 }
 
 export class Uint16View extends Uint8View {
-  static viewLength = 2;
-  static decode(view: DataView, start = 0): number {
+  static override viewLength = 2;
+  static override decode(view: DataView, start = 0): number {
     return DataView.prototype.getUint16.call(view, start, true);
   }
-  static encode(value: number, view: DataView, start = 0): number {
+  static override encode(value: number, view: DataView, start = 0): number {
     DataView.prototype.setUint16.call(view, start, value, true);
     return this.viewLength;
   }
 }
 
 export class Int32View extends Uint8View {
-  static viewLength = 4;
-  static decode(view: DataView, start = 0): number {
+  static override viewLength = 4;
+  static override decode(view: DataView, start = 0): number {
     return DataView.prototype.getInt32.call(view, start, true);
   }
-  static encode(value: number, view: DataView, start = 0): number {
+  static override encode(value: number, view: DataView, start = 0): number {
     DataView.prototype.setInt32.call(view, start, value, true);
     return this.viewLength;
   }
 }
 
 export class Uint32View extends Uint8View {
-  static viewLength = 4;
-  static decode(view: DataView, start = 0): number {
+  static override viewLength = 4;
+  static override decode(view: DataView, start = 0): number {
     return DataView.prototype.getUint32.call(view, start, true);
   }
-  static encode(value: number, view: DataView, start = 0): number {
+  static override encode(value: number, view: DataView, start = 0): number {
     DataView.prototype.setUint32.call(view, start, value, true);
     return this.viewLength;
   }
 }
 
 export class Float32View extends Uint8View {
-  static viewLength = 4;
-  static decode(view: DataView, start = 0): number {
+  static override viewLength = 4;
+  static override decode(view: DataView, start = 0): number {
     return DataView.prototype.getFloat32.call(view, start, true);
   }
-  static encode(value: number, view: DataView, start = 0): number {
+  static override encode(value: number, view: DataView, start = 0): number {
     DataView.prototype.setFloat32.call(view, start, value, true);
     return this.viewLength;
   }
 }
 
 export class Float64View extends Uint8View {
-  static viewLength = 8;
-  static decode(view: DataView, start = 0): number {
+  static override viewLength = 8;
+  static override decode(view: DataView, start = 0): number {
     return DataView.prototype.getFloat64.call(view, start, true);
   }
-  static encode(value: number, view: DataView, start = 0): number {
+  static override encode(value: number, view: DataView, start = 0): number {
     DataView.prototype.setFloat64.call(view, start, value, true);
     return this.viewLength;
   }
 }
 
-export class BigInt64View extends DataView implements PrimitiveView<bigint> {
+export class BigInt64View extends DataView<ArrayBufferLike>
+  implements PrimitiveView<bigint> {
   static viewLength = 8;
 
   static decode(view: DataView, start = 0): bigint {
@@ -159,11 +161,11 @@ export class BigInt64View extends DataView implements PrimitiveView<bigint> {
 }
 
 export class BigUint64View extends BigInt64View {
-  static viewLength = 8;
-  static decode(view: DataView, start = 0): bigint {
+  static override viewLength = 8;
+  static override decode(view: DataView, start = 0): bigint {
     return DataView.prototype.getBigUint64.call(view, start, true);
   }
-  static encode(value: bigint, view: DataView, start = 0): number {
+  static override encode(value: bigint, view: DataView, start = 0): number {
     DataView.prototype.setBigUint64.call(view, start, value, true);
     return this.viewLength;
   }

@@ -16,7 +16,7 @@ export type Colors = typeof Colors[keyof typeof Colors];
 type Vertex = { e: number; w: number };
 
 class VertexHeap extends BinaryHeap<Vertex> {
-  static compare(a: Vertex, b: Vertex): boolean {
+  static override compare(a: Vertex, b: Vertex): boolean {
     return a.w < b.w;
   }
 }
@@ -28,7 +28,6 @@ export function GraphMixin<
   T extends TypedArrayConstructors,
   U extends AdjacencyStructureConstructor<T>,
 >(Base: U) {
-  // deno-lint-ignore no-empty-interface
   interface Graph extends AdjacencyStructure {}
 
   /**

@@ -22,6 +22,9 @@
   "author": "Maga D. Zandaqo <denelxan@gmail.com> (http://maga.name)",
   "license": "MIT",
   "dependencies": {},
+  "devDependencies": {
+    "@types/node": "26.6.5"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/zandaqo/structurae.git"

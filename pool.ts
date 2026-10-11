@@ -31,7 +31,7 @@ export class Pool extends BitArray {
    * @param size the size of the pool
    * @return a new Pool
    */
-  static create<T extends typeof BitArray>(
+  static override create<T extends typeof BitArray>(
     this: T,
     size: number,
   ): InstanceType<T> {

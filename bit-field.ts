@@ -198,10 +198,10 @@ export function BitFieldMixin<
   }
 
   return class extends BitField<K> {
-    static schema = schema;
-    static fields = fields;
-    static masks = masks;
-    static offsets = offsets;
+    static override schema = schema;
+    static override fields = fields;
+    static override masks = masks;
+    static override offsets = offsets;
     size = lastOffset;
     mask = 2 << (lastOffset - 1);
   };

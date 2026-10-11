@@ -19,7 +19,7 @@ export class RankedBitArray extends BitArray {
   /**
    * The amount of bits in the array.
    */
-  get size(): number {
+  override get size(): number {
     return (this.length >> 1) << 5;
   }
 
@@ -29,7 +29,7 @@ export class RankedBitArray extends BitArray {
    * @param size the amount of bits
    * @return the required length
    */
-  static getLength(size: number): number {
+  static override getLength(size: number): number {
     return Math.ceil(size / 32) << 1;
   }
 
@@ -98,7 +98,7 @@ export class RankedBitArray extends BitArray {
    * @param value the value
    * @return this
    */
-  setBit(index: number, value: Bit = 1): this {
+  override setBit(index: number, value: Bit = 1): this {
     super.setBit(index, value);
     const change = value || -1;
     for (

@@ -8,15 +8,15 @@ const StringVector: ViewConstructor<
   Array<string | undefined>,
   ContainerView<string | undefined>
 > = class extends VectorView<string | undefined> {
-  static View = StringView;
-  static maxView = new DataView(new ArrayBuffer(1024));
+  static override View = StringView;
+  static override maxView = new DataView(new ArrayBuffer(1024));
 };
 
 const NestedVector: ViewConstructor<
   Array<Array<string | undefined> | undefined>
 > = class extends VectorView<Array<string | undefined>> {
-  static View = StringVector;
-  static maxView = new DataView(new ArrayBuffer(1024));
+  static override View = StringVector;
+  static override maxView = new DataView(new ArrayBuffer(1024));
 };
 
 test("[VectorView.from] creates a vector view from a given value", () => {

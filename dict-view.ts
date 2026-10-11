@@ -8,7 +8,7 @@ import type { View } from "./view.ts";
 import type { ArrayView } from "./array-view.ts";
 import type { VectorView } from "./vector-view.ts";
 
-export class DictView<T extends object> extends DataView
+export class DictView<T extends object> extends DataView<ArrayBufferLike>
   implements ComplexView<T> {
   static viewLength = 0;
   static maxView: DataView;
@@ -176,9 +176,9 @@ export class DictView<T extends object> extends DataView
         : undefined,
     ) as typeof VectorView;
     return class extends this<T> {
-      static maxView = Factory.maxView;
-      static KeysView = KeysView;
-      static ValuesView = ValuesView;
+      static override maxView = Factory.maxView;
+      static override KeysView = KeysView;
+      static override ValuesView = ValuesView;
     };
   }
 }

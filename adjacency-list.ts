@@ -13,7 +13,6 @@ import type {
 export function AdjacencyListMixin<U extends TypedArrayConstructors>(
   Base: U,
 ): AdjacencyStructureConstructor<U> {
-  // deno-lint-ignore no-empty-interface
   interface AdjacencyList extends IndexedCollection {}
 
   /**

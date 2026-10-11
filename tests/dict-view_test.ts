@@ -11,20 +11,20 @@ const { test } = Deno;
 const maxView = new DataView(new ArrayBuffer(1024));
 
 class Uint32ArrayView extends ArrayView<number> {
-  static View = Uint32View;
-  static itemLength = Uint32View.viewLength;
+  static override View = Uint32View;
+  static override itemLength = Uint32View.viewLength;
 }
 
 class StringVector extends VectorView<string | undefined> {
-  static View = StringView;
-  static maxView = maxView;
+  static override View = StringView;
+  static override maxView = maxView;
 }
 
 const IntegerDict: ViewConstructor<Record<number, string | undefined>> = class
   extends DictView<Record<number, string | undefined>> {
-  static maxView = maxView;
-  static KeysView = Uint32ArrayView as typeof ArrayView;
-  static ValuesView = StringVector as typeof VectorView;
+  static override maxView = maxView;
+  static override KeysView = Uint32ArrayView as typeof ArrayView;
+  static override ValuesView = StringVector as typeof VectorView;
 };
 
 test("[DictView.encode] encodes a JavaScript value into a given view", () => {

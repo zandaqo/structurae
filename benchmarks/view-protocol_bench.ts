@@ -1,6 +1,6 @@
 import { getIndex } from "./helpers.ts";
-import jsf from "https://jspm.dev/json-schema-faker";
-import { deflateRaw } from "https://deno.land/x/compress@v0.3.8/mod.ts";
+import { generate } from "json-schema-faker";
+import { deflateRaw } from "compress";
 import { View } from "../view.ts";
 import { StringView } from "../string-view.ts";
 import { ViewSchema } from "../view-types.ts";
@@ -35,7 +35,7 @@ interface Person {
   parents: Array<string>;
 }
 
-const JSONSchema: ViewSchema<Person> = {
+const JSONSchema = {
   type: "object",
   $id: "Person",
   properties: {
@@ -127,7 +127,7 @@ const JSONSchema: ViewSchema<Person> = {
     "house",
     "parents",
   ],
-};
+} satisfies ViewSchema<Person>;
 
 const protocol = new View();
 
@@ -140,8 +140,7 @@ const People = protocol.create<Array<Person>>({
 const objects: Person[] = [];
 
 for (let i = 0; i < 100; i++) {
-  // deno-lint-ignore no-explicit-any
-  objects.push((jsf as any).generate(JSONSchema));
+  objects.push(await generate(JSONSchema) as Person);
 }
 const Encoder = new TextEncoder();
 const Decoder = new TextDecoder();

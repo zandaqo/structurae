@@ -203,11 +203,11 @@ export function BigBitFieldMixin<
   }
 
   return class extends BigBitField<K> {
-    static schema = _schema;
-    static fields = fields;
-    static masks = masks;
-    static offsets = offsets;
-    static size = lastOffset;
-    static mask = TWO << (BigInt(lastOffset) - ONE);
+    static override schema = _schema;
+    static override fields = fields;
+    static override masks = masks;
+    static override offsets = offsets;
+    static override size = lastOffset;
+    static override mask = TWO << (BigInt(lastOffset) - ONE);
   };
 }

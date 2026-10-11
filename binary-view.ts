@@ -1,6 +1,7 @@
 import type { PrimitiveView, ViewConstructor } from "./view-types.ts";
 
-export class BinaryView extends DataView implements PrimitiveView<Uint8Array> {
+export class BinaryView extends DataView<ArrayBufferLike>
+  implements PrimitiveView<Uint8Array> {
   static viewLength = 0;
   static decode(view: DataView, start = 0, length = view.byteLength) {
     return new Uint8Array(

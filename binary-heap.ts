@@ -10,7 +10,7 @@ export class BinaryHeap<T> extends Array<T> {
     this.heapify();
   }
 
-  static get [Symbol.species](): ArrayConstructor {
+  static override get [Symbol.species](): ArrayConstructor {
     return Array;
   }
 
@@ -28,8 +28,8 @@ export class BinaryHeap<T> extends Array<T> {
   /**
    * Creates a new BinaryHeap from a given array-like object.
    */
-  static from<T>(iterable: Iterable<T> | ArrayLike<T>): BinaryHeap<T>;
-  static from<T, U>(
+  static override from<T>(iterable: Iterable<T> | ArrayLike<T>): BinaryHeap<T>;
+  static override from<T, U>(
     iterable: Iterable<T> | ArrayLike<T>,
     mapfn?: (v: T, k: number) => U,
     thisArg?: unknown,
@@ -88,7 +88,7 @@ export class BinaryHeap<T> extends Array<T> {
    * @param elements the elements of which to create the heap
    * @return the new BinaryHeap
    */
-  static of<T>(...elements: Array<T>): BinaryHeap<T> {
+  static override of<T>(...elements: Array<T>): BinaryHeap<T> {
     return (super.of(...elements) as BinaryHeap<T>).heapify();
   }
 
@@ -136,7 +136,7 @@ export class BinaryHeap<T> extends Array<T> {
    * @param elements items to add
    * @return new length of the heap
    */
-  push(...elements: Array<T>): number {
+  override push(...elements: Array<T>): number {
     for (let i = 0; i < elements.length; i++) {
       super.push(elements[i]);
       this.siftUp(this.length - 1);
@@ -167,7 +167,7 @@ export class BinaryHeap<T> extends Array<T> {
   /**
    * Extracts the first element of the heap.
    */
-  shift(): T | undefined {
+  override shift(): T | undefined {
     // extract min/max
     if (this.length < 2) return this.pop();
     const item = this[0];
@@ -217,7 +217,11 @@ export class BinaryHeap<T> extends Array<T> {
    * @param items elements to add
    * @return the deleted elements
    */
-  splice(start: number, deleteCount?: number, ...items: Array<T>): Array<T> {
+  override splice(
+    start: number,
+    deleteCount?: number,
+    ...items: Array<T>
+  ): Array<T> {
     const deletedItems = deleteCount === undefined
       ? super.splice(start)
       : super.splice(start, deleteCount, ...items);
@@ -244,7 +248,7 @@ export class BinaryHeap<T> extends Array<T> {
    * @param items elements to add
    * @return the new length of the heap
    */
-  unshift(...items: Array<T>): number {
+  override unshift(...items: Array<T>): number {
     return this.push(...items);
   }
 

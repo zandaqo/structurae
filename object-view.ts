@@ -8,7 +8,7 @@ import type {
 } from "./view-types.ts";
 import type { View } from "./view.ts";
 
-export class ObjectView<T extends object> extends DataView
+export class ObjectView<T extends object> extends DataView<ArrayBufferLike>
   implements ComplexView<T> {
   static viewLength: number;
   static layout?: ViewLayout<unknown>;
@@ -126,11 +126,11 @@ export class ObjectView<T extends object> extends DataView
     const ObjectConstructor = constructor ||
       getDefaultConstructor(fields, layout);
     return class extends this<T> {
-      static viewLength = lastOffset;
-      static layout = layout;
-      static fields = fields;
-      static defaultData = defaultData;
-      static ObjectConstructor = ObjectConstructor;
+      static override viewLength = lastOffset;
+      static override layout = layout;
+      static override fields = fields;
+      static override defaultData = defaultData;
+      static override ObjectConstructor = ObjectConstructor;
     };
   }
 }

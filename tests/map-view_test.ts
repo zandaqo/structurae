@@ -20,17 +20,17 @@ interface Family {
 }
 
 const PersonView: ViewConstructor<Person> = class extends MapView<Person> {
-  static layout = {
+  static override layout = {
     age: { View: Uint8View, start: 0, length: 1, required: true },
     name: { View: StringView, start: 1, length: Infinity, required: false },
   };
-  static lengthOffset = 5;
-  static optionalOffset = 1;
-  static fields = ["age"];
-  static optionalFields = ["name"];
-  static maxView = maxView;
-  static defaultData = new Uint8Array(new ArrayBuffer(1));
-  static ObjectConstructor = (function () {
+  static override lengthOffset = 5;
+  static override optionalOffset = 1;
+  static override fields = ["age"];
+  static override optionalFields = ["name"];
+  static override maxView = maxView;
+  static override defaultData = new Uint8Array(new ArrayBuffer(1));
+  static override ObjectConstructor = (function () {
     return { name: "", age: 0 };
   }) as unknown as Constructor<
     Person
@@ -40,22 +40,22 @@ const PersonView: ViewConstructor<Person> = class extends MapView<Person> {
 const Members: ViewConstructor<
   Array<Person | undefined>
 > = class extends VectorView<Person> {
-  static View = PersonView;
-  static maxView = maxView;
+  static override View = PersonView;
+  static override maxView = maxView;
 };
 
 const FamilyView: ViewConstructor<Family> = class extends MapView<Family> {
-  static layout = {
+  static override layout = {
     name: { View: StringView, start: 0, length: 10, required: true },
     members: { View: Members, start: 10, length: Infinity, required: false },
   };
-  static lengthOffset = 14;
-  static optionalOffset = 10;
-  static fields = ["name"];
-  static optionalFields = ["members"];
-  static maxView = maxView;
-  static defaultData = new Uint8Array(new ArrayBuffer(10));
-  static ObjectConstructor = (function () {
+  static override lengthOffset = 14;
+  static override optionalOffset = 10;
+  static override fields = ["name"];
+  static override optionalFields = ["members"];
+  static override maxView = maxView;
+  static override defaultData = new Uint8Array(new ArrayBuffer(10));
+  static override ObjectConstructor = (function () {
     return { name: "", members: null };
   }) as unknown as Constructor<Family>;
 };

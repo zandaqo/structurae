@@ -1,5 +1,15 @@
 {
-  "lint": {
-    "exclude": ["./npm"]
+  "exclude": ["./npm"],
+  "nodeModulesDir": "none",
+  "imports": {
+    "@deno/dnt": "jsr:@deno/dnt@0.44.0",
+    "@std/assert": "jsr:@std/assert@1.0.19",
+    "compress": "https://deno.land/x/compress@v0.5.6/zlib/deflate.ts",
+    "json-schema-faker": "npm:json-schema-faker@0.6.3"
+  },
+  "tasks": {
+    "test": "deno test",
+    "check": "deno check index.ts _build.ts benchmarks/*_bench.ts",
+    "build": "deno run -A _build.ts"
   }
 }

@@ -8,7 +8,8 @@ import type {
   ViewSchema,
 } from "./view-types.ts";
 
-export class VectorView<T> extends DataView implements ContainerView<T> {
+export class VectorView<T> extends DataView<ArrayBufferLike>
+  implements ContainerView<T> {
   static View: ViewConstructor<
     unknown,
     PrimitiveView<unknown> | ContainerView<unknown> | ComplexView<unknown>
@@ -205,8 +206,8 @@ export class VectorView<T> extends DataView implements ContainerView<T> {
   ): ViewConstructor<Array<T | undefined>> {
     const ItemView = SchemaView ?? Factory.getExistingView(schema);
     return class extends this<T> {
-      static View = ItemView;
-      static maxView = Factory.maxView;
+      static override View = ItemView;
+      static override maxView = Factory.maxView;
     };
   }
 }

@@ -1,6 +1,7 @@
 import type { PrimitiveView, ViewConstructor } from "./view-types.ts";
 
-export class BooleanView extends DataView implements PrimitiveView<boolean> {
+export class BooleanView extends DataView<ArrayBufferLike>
+  implements PrimitiveView<boolean> {
   static viewLength = 1;
 
   static decode(view: DataView, start = 0): boolean {

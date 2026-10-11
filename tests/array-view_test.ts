@@ -4,8 +4,8 @@ import { assertEquals } from "./test_deps.ts";
 
 const { test } = Deno;
 class Uint32ArrayView extends ArrayView<number> {
-  static View = Uint32View;
-  static itemLength = Uint32View.viewLength;
+  static override View = Uint32View;
+  static override itemLength = Uint32View.viewLength;
 }
 
 test("[ArrayView.encode] encodes a JavaScript value into a given view", () => {
